@@ -1,12 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TypeScriptToolsVersion>3.3</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\scripts\app.ts" />
+    <Content Remove="wwwroot\scripts\app1.ts" />
   </ItemGroup>
 
 
@@ -21,7 +22,7 @@
 
 
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\scripts\app.ts" />
+    <Folder Include="wwwroot\js\tsCompiled\" />
   </ItemGroup>
 
 </Project>

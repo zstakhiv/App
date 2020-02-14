@@ -8,13 +8,15 @@ var gulp = require('gulp');
 var del = require('del');
 
 var paths = {
-    scripts: ['scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.map'],
+    scripts: ['wwwroot/scripts/**/*.js'],
 };
 
 gulp.task('clean', function () {
-    return del(['wwwroot/scripts/**/*']);
+    return del(['wwwroot/js/tsCompiled/*']);
 });
 
-gulp.task('default', function () {
-    gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/scripts'))
+gulp.task('scripts', function () {
+    gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js/tsCompiled'));
 });
+
+gulp.task('default', gulp.series('clean', 'scripts'));
