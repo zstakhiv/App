@@ -47,6 +47,7 @@ namespace EPlast
             }
 
             app.UseStaticFiles();
+            app.UseDefaultFiles();
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>
