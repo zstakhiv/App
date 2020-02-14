@@ -1,0 +1,13 @@
+body {
+  font-family: Verdana;
+  background-color: #f7f7fa;
+}
+div {
+  margin: 10px;
+}
+div .article {
+  font-size: 13px;
+}
+h2 {
+  font-size: 18px;
+}
