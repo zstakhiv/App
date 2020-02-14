@@ -6,32 +6,28 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 
 var gulp = require('gulp');
 var del = require('del');
+var less = require('gulp-less'); // adding less module
 
 var paths = {
     scripts: ['wwwroot/scripts/**/*.js'],
+    webroot: 'wwwroot/'
 };
 
 gulp.task('clean', function () {
-    return del(['wwwroot/js/tsCompiled/*']);
+    return del(['wwwroot/js/tsCompiled/*', 'wwwroot/css/lessCompiled/*']);
 });
 
 gulp.task('scripts', function () {
-    gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js/tsCompiled'));
+    return gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js/tsCompiled'));
 });
 
-gulp.task('default', gulp.series('clean', 'scripts'));
-/// <binding Clean='clean' />
-"use strict";
-
-var gulp = require("gulp"),
-    less = require("gulp-less"); // adding less module
-
-var paths = {
-    webroot: "./wwwroot/"
-};
 // registrating task for transforming styles.less into css file 
-gulp.task("less", function () {
-    return gulp.src('./wwwroot/less/styles.less')
+gulp.task('less', function () {
+    return gulp.src('wwwroot/less/**/*.less')
         .pipe(less())
-        .pipe(gulp.dest(paths.webroot + '/css' ))
+        .pipe(gulp.dest(paths.webroot + 'css/lessCompiled'));
 });
+
+gulp.task('build', gulp.parallel('scripts', 'less'));
+
+gulp.task('default', gulp.series('clean', 'build'));
