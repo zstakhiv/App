@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\lessCompiled\" />
     <Folder Include="wwwroot\js\tsCompiled\" />
+    <Folder Include="wwwroot\sassComplited\" />
   </ItemGroup>
 
 </Project>
