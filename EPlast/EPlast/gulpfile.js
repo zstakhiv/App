@@ -7,7 +7,7 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 var gulp = require('gulp');
 var del = require('del');
 var less = require('gulp-less'); // adding less module
-var sass = require('gulp-sass'); // добавляем модуль sass
+var sass = require('gulp-sass'); // adding sass module
 
 var paths = {
     scripts: ['wwwroot/scripts/**/*.js'],
@@ -30,11 +30,13 @@ gulp.task('less', function () {
 });
 
 gulp.task("sass", function () {
-    return gulp.src('wwwroot/less/**/*.scss')
+    return gulp.src('wwwroot/sass/**/*.scss')
         .pipe(sass())
         .pipe(gulp.dest(paths.webroot + 'css/sassCompiled'));
 });
 
 gulp.task('build', gulp.parallel('scripts', 'less'));
+
+gulp.task('build', gulp.parallel('scripts', 'sass'));
 
 gulp.task('default', gulp.series('clean', 'build'));
