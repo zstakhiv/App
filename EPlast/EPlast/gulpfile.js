@@ -35,8 +35,6 @@ gulp.task("sass", function () {
         .pipe(gulp.dest(paths.webroot + 'css/sassCompiled'));
 });
 
-gulp.task('buildless', gulp.parallel('scripts', 'less'));
+gulp.task('stvles', gulp.parallel('less', 'sass'));
 
-gulp.task('buildsass', gulp.parallel('less', 'sass'));
-
-gulp.task('default', gulp.series('clean', 'buildless','buildsass'));
+gulp.task('default', gulp.series('clean','scripts','stvles'));
