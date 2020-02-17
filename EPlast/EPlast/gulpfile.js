@@ -15,7 +15,7 @@ var paths = {
 };
 
 gulp.task('clean', function () {
-    return del(['wwwroot/js/tsCompiled/*', 'wwwroot/css/lessCompiled/*']);
+    return del(['wwwroot/js/tsCompiled/*', 'wwwroot/css/lessCompiled/*','wwwroot/css/sassCompiled/*']);
 });
 
 gulp.task('scripts', function () {
@@ -35,8 +35,8 @@ gulp.task("sass", function () {
         .pipe(gulp.dest(paths.webroot + 'css/sassCompiled'));
 });
 
-gulp.task('build', gulp.parallel('scripts', 'less'));
+gulp.task('buildless', gulp.parallel('scripts', 'less'));
 
-gulp.task('build', gulp.parallel('scripts', 'sass'));
+gulp.task('buildsass', gulp.parallel('less', 'sass'));
 
-gulp.task('default', gulp.series('clean', 'build'));
+gulp.task('default', gulp.series('clean', 'buildless','buildsass'));
