@@ -39,6 +39,10 @@ namespace EPlast
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IEducationRepository, EducationRepository>();
             services.AddScoped<IDegreeRepository, DegreeRepository>();
+            services.AddScoped<IReligionRepository, ReligionRepository>();
+            services.AddScoped<ISexRepository, SexRepository>();
+            services.AddScoped<IWorkRepository, WorkRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

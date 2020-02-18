@@ -14,5 +14,6 @@ namespace EPlast.DataAccess.Entities
         public string Speciality { get; set; }
         
         public Degree Degree { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }

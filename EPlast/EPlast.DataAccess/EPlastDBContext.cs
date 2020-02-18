@@ -14,5 +14,7 @@ namespace EPlast.DataAccess
         public DbSet<Religion> Religions { get; set; }
         public DbSet<Sex> Sexes { get; set; }
         public DbSet<Work> Works { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
+        public DbSet<Education> Educations { get; set; }
     }
 }
