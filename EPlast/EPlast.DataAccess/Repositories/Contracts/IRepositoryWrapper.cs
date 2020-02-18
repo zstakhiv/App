@@ -5,6 +5,7 @@
         IUserRepository User { get; }
         INationalityRepository Nationality { get; }
         IEventRepository Event { get;  }
+        IGallaryRepository Gallary { get; }
         void Save();
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-  public  class Event
+    public  class Event
     {
         public int ID { get; set; }
         [Required]
