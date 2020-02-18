@@ -28,4 +28,9 @@
 
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\EPlast.DataAccess\EPlast.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>
