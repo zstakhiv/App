@@ -4,6 +4,8 @@
     {
         IUserRepository User { get; }
         INationalityRepository Nationality { get; }
+        IEducationRepository Education { get;  }
+        IDegreeRepository Degree { get; }
         void Save();
     }
 }

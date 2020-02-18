@@ -5,6 +5,8 @@
         private EPlastDBContext _dbContext;
         private IUserRepository _user;
         private INationalityRepository _nationality;
+        private IEducationRepository _education;
+        private IDegreeRepository _degree;
 
         public IUserRepository User
         {
@@ -29,6 +31,32 @@
                 }
 
                 return _nationality;
+            }
+        }
+
+        public IEducationRepository Education
+        {
+            get
+            {
+                if (_education == null)
+                {
+                    _education = new EducationRepository(_dbContext);
+                }
+
+                return _education;
+            }
+        }
+
+        public IDegreeRepository Degree
+        {
+            get
+            {
+                if (_degree == null)
+                {
+                    _degree = new DegreeRepository(_dbContext);
+                }
+
+                return _degree;
             }
         }
 
