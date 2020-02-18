@@ -1,4 +1,6 @@
-﻿namespace EPlast.DataAccess.Repositories
+﻿using EPlast.DataAccess.Repositories;
+
+namespace EPlast.DataAccess.Repositories
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
@@ -6,6 +8,8 @@
         private IUserRepository _user;
         private INationalityRepository _nationality;
         private IEventRepository _event;
+        private IParticipantStatusRepository _participantStatuses;
+
 
         public IUserRepository User
         {
@@ -46,7 +50,20 @@
             }
         }
 
-       // public IEventRepository Events => throw new System.NotImplementedException();
+        public IParticipantStatusRepository ParticipantStatus
+        {
+            get
+            {
+                if (_participantStatuses == null)
+                {
+                    _participantStatuses = new ParticipantStatusRepository(_dbContext);
+                }
+
+                return _participantStatuses;
+            }
+        }
+
+        // public IEventRepository Events => throw new System.NotImplementedException();
 
         public RepositoryWrapper(EPlastDBContext ePlastDBContext)
         {
