@@ -58,7 +58,9 @@ namespace EPlast.DataAccess.Repositories
                 {
                     _gallary = new GallaryRepository(_dbContext);
                 }
-
+                return _gallary;
+            }
+        }
         public IParticipantStatusRepository ParticipantStatus
         {
             get
