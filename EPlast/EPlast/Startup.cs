@@ -31,12 +31,17 @@ namespace EPlast
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContextPool<EPlastDBContext>(options => 
+            services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
+            services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
+            services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
+            services.AddScoped<IOrgranRepository, OrganRepository>();
+            services.AddScoped<IDecesionRepository, DecesionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
