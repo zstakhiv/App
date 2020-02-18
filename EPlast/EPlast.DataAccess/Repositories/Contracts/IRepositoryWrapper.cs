@@ -6,6 +6,12 @@
         INationalityRepository Nationality { get; }
         IEducationRepository Education { get;  }
         IDegreeRepository Degree { get; }
+
+        IReligionRepository Religion { get; }
+
+        ISexRepository Sex { get; }
+
+        IWorkRepository Work { get; }
         void Save();
     }
 }

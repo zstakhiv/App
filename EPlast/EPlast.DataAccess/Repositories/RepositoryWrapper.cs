@@ -5,6 +5,9 @@
         private EPlastDBContext _dbContext;
         private IUserRepository _user;
         private INationalityRepository _nationality;
+        private IReligionRepository _religion;
+        private ISexRepository _sex;
+        private IWorkRepository _work;
         private IEducationRepository _education;
         private IDegreeRepository _degree;
 
@@ -31,6 +34,45 @@
                 }
 
                 return _nationality;
+            }
+        }
+
+        public IReligionRepository Religion
+        {
+            get
+            {
+                if(_religion==null)
+                {
+                    _religion = new ReligionRepository(_dbContext);
+                }
+
+                return _religion;
+            }
+        }
+
+        public ISexRepository Sex
+        {
+            get
+            {
+                if (_sex == null)
+                {
+                    _sex = new SexRepository(_dbContext);
+                }
+
+                return _sex;
+            }
+        }
+
+        public IWorkRepository Work
+        {
+            get
+            {
+                if (_work == null)
+                {
+                    _work = new WorkRepository(_dbContext);
+                }
+
+                return _work ;
             }
         }
 
