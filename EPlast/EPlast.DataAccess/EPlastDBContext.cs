@@ -1,9 +1,10 @@
 ﻿using EPlast.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : DbContext
+    public class EPlastDBContext : IdentityDbContext<User>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options): base(options)
         {           

@@ -1,8 +1,10 @@
 ﻿using EPlast.DataAccess;
+using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +33,7 @@ namespace EPlast
 
             services.AddDbContextPool<EPlastDBContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
@@ -51,6 +54,7 @@ namespace EPlast
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
