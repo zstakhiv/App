@@ -8,6 +8,8 @@
         IReligionRepository Religion { get; }
 
         ISexRepository Sex { get; }
+
+        IWorkRepository Work { get; }
         void Save();
     }
 }
