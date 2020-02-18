@@ -5,6 +5,7 @@
         private EPlastDBContext _dbContext;
         private IUserRepository _user;
         private INationalityRepository _nationality;
+        private IEventRepository _event;
 
         public IUserRepository User
         {
@@ -31,6 +32,21 @@
                 return _nationality;
             }
         }
+
+        public IEventRepository Event
+        {
+            get
+            {
+                if (_event == null)
+                {
+                    _event = new EventRepository(_dbContext);
+                }
+
+                return _event;
+            }
+        }
+
+       // public IEventRepository Events => throw new System.NotImplementedException();
 
         public RepositoryWrapper(EPlastDBContext ePlastDBContext)
         {
