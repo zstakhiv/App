@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface INationalityRepository : IRepositoryBase<Nationality>
+    public interface IOrgranRepository : IRepositoryBase<Organ>
     {
     }
 }
