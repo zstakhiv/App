@@ -9,6 +9,7 @@ namespace EPlast.DataAccess.Repositories
         private INationalityRepository _nationality;
         private IEventRepository _event;
         private IParticipantStatusRepository _participantStatuses;
+        private IGallaryRepository _gallary;
 
 
         public IUserRepository User
@@ -49,6 +50,14 @@ namespace EPlast.DataAccess.Repositories
                 return _event;
             }
         }
+        public IGallaryRepository Gallary
+        {
+            get
+            {
+                if (_gallary == null)
+                {
+                    _gallary = new GallaryRepository(_dbContext);
+                }
 
         public IParticipantStatusRepository ParticipantStatus
         {

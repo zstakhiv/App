@@ -4,7 +4,8 @@
     {
         IUserRepository User { get; }
         INationalityRepository Nationality { get; }
-        IEventRepository Event { get; }
+        IEventRepository Event { get;  }
+        IGallaryRepository Gallary { get; }
         IParticipantStatusRepository ParticipantStatus { get;}
         void Save();
     }
