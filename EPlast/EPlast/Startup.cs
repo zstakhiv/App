@@ -37,6 +37,7 @@ namespace EPlast
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IReligionRepository, ReligionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
