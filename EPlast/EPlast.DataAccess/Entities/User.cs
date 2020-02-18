@@ -10,6 +10,5 @@ namespace EPlast.DataAccess.Entities
         [Required, MaxLength(50, ErrorMessage = "LastName cannot exceed 50 characters")]
         public string LastName { get; set; }
         public Nationality Nationality { get; set; }
-        public Religion Religion { get; set; }
     }
 }

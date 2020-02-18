@@ -6,6 +6,7 @@
         private IUserRepository _user;
         private INationalityRepository _nationality;
         private IReligionRepository _religion;
+        private ISexRepository _sex;
 
         public IUserRepository User
         {
@@ -43,6 +44,19 @@
                 }
 
                 return _religion;
+            }
+        }
+
+        public ISexRepository Sex
+        {
+            get
+            {
+                if (_sex == null)
+                {
+                    _sex = new SexRepository(_dbContext);
+                }
+
+                return _sex;
             }
         }
 
