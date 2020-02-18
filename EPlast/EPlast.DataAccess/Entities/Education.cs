@@ -12,8 +12,8 @@ namespace EPlast.DataAccess.Entities
 
         [Required, MaxLength(50, ErrorMessage = "Speciality cannot exceed 50 characters")]
         public string Speciality { get; set; }
-        
+
         public Degree Degree { get; set; }
-        public ICollection<User> Users { get; set; }
+        public ICollection<UserProfile> UsersProfiles { get; set; }
     }
 }

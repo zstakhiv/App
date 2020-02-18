@@ -1,6 +1,7 @@
 ﻿using EPlast.DataAccess;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.DataAccess.Repositories.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,7 @@ namespace EPlast
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IEducationRepository, EducationRepository>();

@@ -1,9 +1,12 @@
-﻿namespace EPlast.DataAccess.Repositories
+﻿using EPlast.DataAccess.Repositories.Contracts;
+
+namespace EPlast.DataAccess.Repositories
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private EPlastDBContext _dbContext;
         private IUserRepository _user;
+        private IUserProfileRepository _userprofile;
         private INationalityRepository _nationality;
         private IReligionRepository _religion;
         private ISexRepository _sex;
@@ -21,6 +24,18 @@
                 }
 
                 return _user;
+            }
+        }
+
+        public IUserProfileRepository UserProfile
+        {
+            get
+            {
+                if(_userprofile == null)
+                {
+                    _userprofile = new UserProfileRepository(_dbContext);
+                }
+                return _userprofile;
             }
         }
 
