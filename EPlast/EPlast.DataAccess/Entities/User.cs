@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
         [Required, MaxLength(50, ErrorMessage = "FirstName cannot exceed 50 characters")]
         public string FirstName { get; set; }

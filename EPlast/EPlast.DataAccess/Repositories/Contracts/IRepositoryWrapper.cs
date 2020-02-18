@@ -7,7 +7,7 @@ namespace EPlast.DataAccess.Repositories
         IUserRepository User { get; }
         IUserProfileRepository UserProfile { get; }
         INationalityRepository Nationality { get; }
-        IEducationRepository Education { get;  }
+        IEducationRepository Education { get; }
         IDegreeRepository Degree { get; }
         IReligionRepository Religion { get; }
         ISexRepository Sex { get; }

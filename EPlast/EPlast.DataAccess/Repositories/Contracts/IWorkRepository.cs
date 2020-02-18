@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface IWorkRepository:IRepositoryBase<Work>
+    public interface IWorkRepository : IRepositoryBase<Work>
     {
     }
 }

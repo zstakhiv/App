@@ -9,6 +9,5 @@ namespace EPlast.DataAccess.Entities
         [Required, MaxLength(10, ErrorMessage = "Sex name cannot exceed 10 characters")]
         public string SexName { get; set; }
         public ICollection<User> Users { get; set; }
-
     }
 }

@@ -31,7 +31,7 @@ namespace EPlast.DataAccess.Repositories
         {
             get
             {
-                if(_userprofile == null)
+                if (_userprofile == null)
                 {
                     _userprofile = new UserProfileRepository(_dbContext);
                 }
@@ -56,7 +56,7 @@ namespace EPlast.DataAccess.Repositories
         {
             get
             {
-                if(_religion==null)
+                if (_religion == null)
                 {
                     _religion = new ReligionRepository(_dbContext);
                 }
@@ -87,7 +87,7 @@ namespace EPlast.DataAccess.Repositories
                     _work = new WorkRepository(_dbContext);
                 }
 
-                return _work ;
+                return _work;
             }
         }
 

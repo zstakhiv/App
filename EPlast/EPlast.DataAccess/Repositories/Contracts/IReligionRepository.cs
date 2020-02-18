@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface IReligionRepository:IRepositoryBase<Religion>
+    public interface IReligionRepository : IRepositoryBase<Religion>
     {
     }
 }
