@@ -6,7 +6,8 @@ namespace EPlast.DataAccess.Entities
     public class Religion
     {
         public int ID { get; set; }
-        [Required, MaxLength(50, ErrorMessage = "Nationality name cannot exceed 50 characters")]
+        [Required, MaxLength(50, ErrorMessage = "Religion name cannot exceed 50 characters")]
         public string ReligionName { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }
