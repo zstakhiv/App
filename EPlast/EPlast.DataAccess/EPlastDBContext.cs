@@ -15,12 +15,31 @@ namespace EPlast.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Gallary> Gallarys { get; set; }
+        public DbSet<EventGallary> EventGallarys { get; set; }
         public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
         public DbSet<Participant> Participants { get; set; }
-
         public DbSet<EventCategory> EventCategories { get; set; }
         public DbSet<SubEventCategory> SubEventCategories { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Event>()
+                .HasKey(x => x.ID);
 
+            modelBuilder.Entity<Gallary>()
+                .HasKey(x => x.ID);
+
+            modelBuilder.Entity<EventGallary>()
+                .HasKey(x => new { x.EventID, x.GallaryID });
+            modelBuilder.Entity<EventGallary>()
+                .HasOne(x => x.Event)
+                .WithMany(m => m.EventGallarys)
+                .HasForeignKey(x => x.EventID);
+            modelBuilder.Entity<EventGallary>()
+                .HasOne(x => x.Gallary)
+                .WithMany(e => e.Events)
+                .HasForeignKey(x => x.GallaryID);
+        }
 
     }
 }

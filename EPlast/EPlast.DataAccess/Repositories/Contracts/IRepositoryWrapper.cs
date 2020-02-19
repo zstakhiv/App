@@ -10,6 +10,7 @@ namespace EPlast.DataAccess.Repositories
         IParticipantStatusRepository ParticipantStatus { get;}
         IParticipantRepository Participant { get; }
         IEventCategoryRepository EventCategory { get; }
+        IEventGallaryRepository EventGallary { get; }
         ISubEventCategoryRepository SubEventCategory { get; }
 
 

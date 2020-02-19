@@ -9,5 +9,6 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
         [Required]
         public string GalaryFileName { get; set; }
+        public ICollection<EventGallary> Events { get; set; }
     }
 }
