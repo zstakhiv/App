@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    class Club
+    public class Club
     {
         public int ID { get; set; }
         [Required, MaxLength(50, ErrorMessage = "Club name cannot exceed 50 characters")]

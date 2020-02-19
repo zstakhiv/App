@@ -11,5 +11,6 @@ namespace EPlast.DataAccess.Entities
         public DateTime? EndDate { get; set; }
         public City City { get; set; }
         public CityMembers CityMembers { get; set; }
+        public AdminType AdminType { get; set; }
     }
 }

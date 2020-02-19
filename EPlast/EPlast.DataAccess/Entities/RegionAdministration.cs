@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    class RegionAdministration
+    public class RegionAdministration
     {
         public int ID { get; set; }
         [Required]
