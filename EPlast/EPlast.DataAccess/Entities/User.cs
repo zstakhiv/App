@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace EPlast.DataAccess.Entities
@@ -10,6 +11,6 @@ namespace EPlast.DataAccess.Entities
         [Required, MaxLength(50, ErrorMessage = "LastName cannot exceed 50 characters")]
         public string LastName { get; set; }
         public Nationality Nationality { get; set; }
-        //public  Participant Participant { get; set; }
+        public ICollection<EventAdmin> Events { get; set; }
     }
 }

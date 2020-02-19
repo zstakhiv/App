@@ -1,4 +1,5 @@
-﻿using EPlast.DataAccess.Entities;
+﻿using System;
+using EPlast.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,23 @@ namespace EPlast.DataAccess
                 .HasOne(x => x.Gallary)
                 .WithMany(e => e.Events)
                 .HasForeignKey(x => x.GallaryID);
+
+            modelBuilder.Entity<Event>()
+                .HasKey(x => x.ID);
+
+            modelBuilder.Entity<User>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<EventAdmin>()
+                .HasKey(x => new { x.EventID, x.UserID });
+            modelBuilder.Entity<EventAdmin>()
+                .HasOne(x => x.Event)
+                .WithMany(m => m.EventAdmins)
+                .HasForeignKey(x => x.EventID);
+            modelBuilder.Entity<EventAdmin>()
+                .HasOne(x => x.User)
+                .WithMany(e => e.Events)
+                .HasForeignKey(x => x.UserID);
         }
 
     }

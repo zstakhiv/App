@@ -14,6 +14,7 @@ namespace EPlast.DataAccess.Repositories
         private IEventGallaryRepository _eventGallary;
         private IParticipantRepository _participant;
         private IEventCategoryRepository _eventCategory;
+        private IEventAdminRepository _eventAdmin;
         private ISubEventCategoryRepository _subEventCategory;
 
 
@@ -91,7 +92,6 @@ namespace EPlast.DataAccess.Repositories
                 return _participantStatuses;
             }
         }
-
         public IParticipantRepository Participant
         {
             get
@@ -131,7 +131,18 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        // public IEventRepository Events => throw new System.NotImplementedException();
+        public IEventAdminRepository EventAdmin
+        {
+            get
+            {
+                if (_eventAdmin == null)
+                {
+                    _eventAdmin = new EventAdminRepository(_dbContext);
+                }
+
+                return _eventAdmin;
+            }
+        }
 
         public RepositoryWrapper(EPlastDBContext ePlastDBContext)
         {
