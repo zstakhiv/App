@@ -12,6 +12,8 @@ namespace EPlast.DataAccess.Repositories
         IEventCategoryRepository EventCategory { get; }
         IEventGallaryRepository EventGallary { get; }
         ISubEventCategoryRepository SubEventCategory { get; }
+        IEventStatusRepository EventStatus { get; }
+
 
 
         void Save();
