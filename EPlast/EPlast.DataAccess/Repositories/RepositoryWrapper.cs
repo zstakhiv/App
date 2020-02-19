@@ -16,6 +16,8 @@ namespace EPlast.DataAccess.Repositories
         private IEventCategoryRepository _eventCategory;
         private IEventAdminRepository _eventAdmin;
         private ISubEventCategoryRepository _subEventCategory;
+        private IEventStatusRepository _eventStatus;
+
 
 
 
@@ -131,6 +133,20 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
+        public IEventStatusRepository EventStatus
+        {
+            get
+            {
+                if (_eventStatus == null)
+                {
+                    _eventStatus = new EventStatusRepository(_dbContext);
+                }
+
+                return _eventStatus;
+            }
+        }
+
+        // public IEventRepository Events => throw new System.NotImplementedException();
         public IEventAdminRepository EventAdmin
         {
             get

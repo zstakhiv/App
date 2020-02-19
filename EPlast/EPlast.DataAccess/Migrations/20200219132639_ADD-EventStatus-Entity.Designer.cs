@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200219132639_ADD-EventStatus-Entity")]
+    partial class ADDEventStatusEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,19 +51,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasIndex("EventStatusID");
 
                     b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdmin", b =>
-                {
-                    b.Property<int>("EventID");
-
-                    b.Property<string>("UserID");
-
-                    b.HasKey("EventID", "UserID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("EventAdmin");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.EventCategory", b =>
@@ -368,19 +357,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.EventStatus", "EventStatus")
                         .WithMany("Events")
                         .HasForeignKey("EventStatusID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdmin", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
-                        .WithMany("EventAdmins")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany("Events")
-                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

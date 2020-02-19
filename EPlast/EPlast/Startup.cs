@@ -43,6 +43,7 @@ namespace EPlast
             services.AddScoped<IEventCategoryRepository, EventCategoryRepository>();
             services.AddScoped<IEventGallaryRepository, EventGallaryRepository>();
             services.AddScoped<ISubEventCategoryRepository, SubEventCategoryRepository>();
+            services.AddScoped<IEventStatusRepository, EventStatusRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 

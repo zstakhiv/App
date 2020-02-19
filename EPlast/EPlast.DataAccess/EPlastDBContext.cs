@@ -21,6 +21,8 @@ namespace EPlast.DataAccess
         public DbSet<Participant> Participants { get; set; }
         public DbSet<EventCategory> EventCategories { get; set; }
         public DbSet<SubEventCategory> SubEventCategories { get; set; }
+        public DbSet<EventStatus> EventStatuses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
