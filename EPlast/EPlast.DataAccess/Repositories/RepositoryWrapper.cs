@@ -13,6 +13,7 @@ namespace EPlast.DataAccess.Repositories
         private IWorkRepository _work;
         private IEducationRepository _education;
         private IDegreeRepository _degree;
+        private IUserComissionRepository _userComission;
 
         public IUserRepository User
         {
@@ -114,6 +115,19 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _degree;
+            }
+        }
+
+        public IUserComissionRepository UserComission
+        {
+            get
+            {
+                if (_userComission == null)
+                {
+                    _userComission = new UserComissionRepository(_dbContext);
+                }
+
+                return _userComission;
             }
         }
 
