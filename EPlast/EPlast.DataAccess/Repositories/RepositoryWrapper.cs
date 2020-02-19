@@ -12,6 +12,12 @@ namespace EPlast.DataAccess.Repositories
         private ICityDocumentTypeRepository _cityDocumentType;
         private ICityMembersRepository _cityMembers;
         private ICityRepository _city;
+        private IAdminTypeRepository _admintype;
+        private IClubRepository _club;
+        private IClubMembersRepository _clubMembers;
+        private IClubAdministrationRepository _clubAdministration;
+        private IRegionRepository _region;
+        private IRegionAdministrationRepository _regionAdministration;
 
         public IUserRepository User
         {
@@ -101,6 +107,84 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _city;
+            }
+        }
+
+        public IAdminTypeRepository AdminType
+        {
+            get
+            {
+                if (_admintype == null)
+                {
+                    _admintype = new AdminTypeRepository(_dbContext);
+                }
+
+                return _admintype;
+            }
+        }
+
+        public IClubRepository Club
+        {
+            get
+            {
+                if (_club == null)
+                {
+                    _club = new ClubRepository(_dbContext);
+                }
+
+                return _club;
+            }
+        }
+
+        public IClubMembersRepository ClubMembers
+        {
+            get
+            {
+                if (_clubMembers==null)
+                {
+                    _clubMembers = new ClubMembersRepository(_dbContext);
+                }
+
+                return _clubMembers;
+            }
+        }
+
+        public IClubAdministrationRepository GetClubAdministration
+        {
+            get
+            {
+                if(_clubAdministration==null)
+                {
+                    _clubAdministration = new ClubAdministrationRepository(_dbContext);
+                }
+
+                return _clubAdministration;
+            }
+        }
+
+        public IRegionRepository Region
+        {
+            get
+            {
+                if (_region == null)
+                {
+                    _region = new RegionRepository(_dbContext);
+                }
+
+                return _region;
+            }
+        }
+
+        public IRegionAdministrationRepository RegionAdministration
+        {
+            get
+            {
+                if (_regionAdministration == null)
+                {
+                    _regionAdministration = new RegionAdministrationRepository(_dbContext);
+                }
+
+                return _regionAdministration;
             }
         }
 

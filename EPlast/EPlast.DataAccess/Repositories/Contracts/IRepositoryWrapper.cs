@@ -11,6 +11,13 @@ namespace EPlast.DataAccess.Repositories
         ICityDocumentTypeRepository CityDocumentType { get; }
         ICityMembersRepository CityMembers { get; }
         ICityRepository City { get; }
+        IAdminTypeRepository AdminType { get;  }
+        IClubRepository Club { get; }
+        IClubMembersRepository ClubMembers { get; }
+        IClubAdministrationRepository GetClubAdministration { get; }
+        IRegionRepository Region { get; }
+        IRegionAdministrationRepository RegionAdministration { get; }
+        
         void Save();
     }
 }
