@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200219125026_Init")]
+    [Migration("20200219140553_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,8 +114,6 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<int?>("EducationID");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -137,8 +135,6 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<int?>("NationalityID");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
 
@@ -155,20 +151,16 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<int?>("SexID");
-
                     b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<int?>("UserComissionID");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("WorkID");
+                    b.Property<int>("UserProfileID");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EducationID");
-
-                    b.HasIndex("NationalityID");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -178,9 +170,10 @@ namespace EPlast.DataAccess.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("SexID");
+                    b.HasIndex("UserComissionID");
 
-                    b.HasIndex("WorkID");
+                    b.HasIndex("UserProfileID")
+                        .IsUnique();
 
                     b.ToTable("AspNetUsers");
                 });
@@ -193,19 +186,52 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("ComissionDate");
 
-                    b.Property<string>("UserConfignerId")
-                        .IsRequired();
+                    b.Property<int>("UserConfignerID");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<int>("UserID");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserConfignerId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("UsersComissions");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<int?>("EducationID");
+
+                    b.Property<int?>("NationalityID");
+
+                    b.Property<int>("PhoneNumber");
+
+                    b.Property<int?>("ReligionID");
+
+                    b.Property<int?>("SexID");
+
+                    b.Property<int>("UserID");
+
+                    b.Property<int?>("WorkID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EducationID");
+
+                    b.HasIndex("NationalityID");
+
+                    b.HasIndex("ReligionID");
+
+                    b.HasIndex("SexID");
+
+                    b.HasIndex("WorkID");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Work", b =>
@@ -346,34 +372,37 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.Education")
-                        .WithMany("Users")
-                        .HasForeignKey("EducationID");
+                    b.HasOne("EPlast.DataAccess.Entities.UserComission", "UserComission")
+                        .WithMany()
+                        .HasForeignKey("UserComissionID");
 
-                    b.HasOne("EPlast.DataAccess.Entities.Nationality")
-                        .WithMany("Users")
-                        .HasForeignKey("NationalityID");
-
-                    b.HasOne("EPlast.DataAccess.Entities.Sex")
-                        .WithMany("Users")
-                        .HasForeignKey("SexID");
-
-                    b.HasOne("EPlast.DataAccess.Entities.Work")
-                        .WithMany("Users")
-                        .HasForeignKey("WorkID");
+                    b.HasOne("EPlast.DataAccess.Entities.UserProfile", "UserProfile")
+                        .WithOne("User")
+                        .HasForeignKey("EPlast.DataAccess.Entities.User", "UserProfileID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.User", "UserConfigner")
-                        .WithMany()
-                        .HasForeignKey("UserConfignerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("EPlast.DataAccess.Entities.Education", "Education")
+                        .WithMany("UsersProfiles")
+                        .HasForeignKey("EducationID");
 
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("EPlast.DataAccess.Entities.Nationality", "Nationality")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("NationalityID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Religion", "Religion")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("ReligionID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Sex", "Sex")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("SexID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Work", "Work")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("WorkID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

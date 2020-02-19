@@ -8,9 +8,9 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
         [Required]
-        public User User { get; set; }
+        public int UserID { get; set; }
         [Required]
-        public User UserConfigner { get; set; }
+        public int UserConfignerID { get; set; }
         [Required]
         public DateTime ComissionDate { get; set; }
 

@@ -13,7 +13,8 @@ namespace EPlast.DataAccess.Entities
         [Required, MaxLength(50, ErrorMessage = "FatherName cannot exceed 50 characters")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
-
-        //добавити звязок з UserProfile
+        public int UserProfileID { get; set; }
+        public UserProfile UserProfile { get; set; }
+        public UserComission UserComission { get; set; }
     }
 }
