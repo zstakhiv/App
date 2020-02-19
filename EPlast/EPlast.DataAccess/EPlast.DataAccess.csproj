@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200218203900_AddedTable-Organ-DocumentTemplate-DecesionTarget-DecesionStatus-Decesion.cs" />
     <Compile Remove="Migrations\20200218203900_AddedTable-Organ-DocumentTemplate-DecesionTarget-DecesionStatus-Decesion.Designer.cs" />
+    <Compile Remove="Migrations\20200219153310_1.cs" />
+    <Compile Remove="Migrations\20200219153310_1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

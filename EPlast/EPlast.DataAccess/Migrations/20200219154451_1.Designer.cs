@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200218215946_AddedTable-Organ-DocumentTemplate-DecesionTarget-DecesionStatus-Decesion")]
-    partial class AddedTableOrganDocumentTemplateDecesionTargetDecesionStatusDecesion
+    [Migration("20200219154451_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

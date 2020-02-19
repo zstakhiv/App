@@ -17,5 +17,6 @@ namespace EPlast.DataAccess
         public DbSet<DecesionStatus> DecesionStatuses { get; set; }
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
+        public DbSet<AnnualReport> AnnualReports { get; set; }
     }
 }
