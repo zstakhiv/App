@@ -17,6 +17,11 @@ namespace EPlast.DataAccess.Entities
         public DateTime EventDateEnd { get; set; }
         [Required]
         public string Eventlocation { get; set; }
+        [Required]
+        public int EventCategoryID { get; set; }
+
+        public EventCategory EventCategory { get; set; }
+        public ICollection<Participant> Participants { get; set; }
         public ICollection<Gallary> EventGallary { get; set; }
 
     }

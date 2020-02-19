@@ -1,4 +1,5 @@
 ﻿using EPlast.DataAccess.Repositories;
+//using EPlast.DataAccess.Repositories.Contracts;
 
 namespace EPlast.DataAccess.Repositories
 {
@@ -10,6 +11,11 @@ namespace EPlast.DataAccess.Repositories
         private IEventRepository _event;
         private IParticipantStatusRepository _participantStatuses;
         private IGallaryRepository _gallary;
+        private IParticipantRepository _participant;
+        private IEventCategoryRepository _eventCategory;
+        private ISubEventCategoryRepository _subEventCategory;
+
+
 
 
         public IUserRepository User
@@ -71,6 +77,45 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _participantStatuses;
+            }
+        }
+
+        public IParticipantRepository Participant
+        {
+            get
+            {
+                if (_participant == null)
+                {
+                    _participant = new ParticipantRepository(_dbContext);
+                }
+
+                return _participant;
+            }
+        }
+
+        public IEventCategoryRepository EventCategory
+        {
+            get
+            {
+                if (_eventCategory == null)
+                {
+                    _eventCategory = new EventCategoryRepository(_dbContext);
+                }
+
+                return _eventCategory;
+            }
+        }
+
+        public ISubEventCategoryRepository SubEventCategory
+        {
+            get
+            {
+                if (_subEventCategory == null)
+                {
+                    _subEventCategory = new SubEventCategoryRepository(_dbContext);
+                }
+
+                return _subEventCategory;
             }
         }
 

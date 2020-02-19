@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200219105038_Add-SubEventCategory-Entity")]
+    partial class AddSubEventCategoryEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,14 +69,10 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("EventID");
-
                     b.Property<string>("GalaryFileName")
                         .IsRequired();
 
                     b.HasKey("ID");
-
-                    b.HasIndex("EventID");
 
                     b.ToTable("Gallarys");
                 });
@@ -316,13 +314,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Gallary", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Event")
-                        .WithMany("EventGallary")
-                        .HasForeignKey("EventID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
