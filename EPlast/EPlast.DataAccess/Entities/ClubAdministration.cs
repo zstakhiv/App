@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    class ClubAdministration
+    public class ClubAdministration
     {
         public int ID { get; set; }
         public AdminType AdminType { get; set; }

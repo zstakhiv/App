@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EPlast.DataAccess.Entities
 {
-    class ClubMembers
+    public class ClubMembers
     {
         public int ID { get; set; }
         public User User { get; set; }

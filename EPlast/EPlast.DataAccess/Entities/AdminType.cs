@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    class AdminType
+    public class AdminType
     {
         public int ID { get; set; }
         [Required, MaxLength(30, ErrorMessage = "AdminTypeName name cannot exceed 30 characters")]

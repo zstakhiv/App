@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EPlast.DataAccess.Entities
 {
-    class Region
+    public class Region
     {
         public int ID { get; set; }
         [Required, MaxLength(50, ErrorMessage = "Region name cannot exceed 50 characters")]
