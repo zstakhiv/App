@@ -16,5 +16,6 @@ namespace EPlast.DataAccess
         public DbSet<Work> Works { get; set; }
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Education> Educations { get; set; }
+        public DbSet<UserComission> UsersComissions { get; set; }
     }
 }

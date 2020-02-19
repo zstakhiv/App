@@ -12,6 +12,8 @@
         ISexRepository Sex { get; }
 
         IWorkRepository Work { get; }
+
+        IUserComissionRepository UserComission { get; }
         void Save();
     }
 }

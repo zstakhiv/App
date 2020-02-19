@@ -42,7 +42,7 @@ namespace EPlast
             services.AddScoped<IReligionRepository, ReligionRepository>();
             services.AddScoped<ISexRepository, SexRepository>();
             services.AddScoped<IWorkRepository, WorkRepository>();
-
+            services.AddScoped<IUserComissionRepository, UserComissionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

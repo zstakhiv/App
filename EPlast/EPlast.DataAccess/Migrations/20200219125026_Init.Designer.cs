@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200218143853_AddTablesNationalityEducationDegree")]
-    partial class AddTablesNationalityEducationDegree
+    [Migration("20200219125026_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,6 +74,36 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("Nationalities");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Religion", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ReligionName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Religions");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Sex", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SexName")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Sexes");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -84,10 +114,16 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int?>("EducationID");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FatherName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -115,14 +151,22 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<DateTime>("RegistredOn");
+
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int?>("SexID");
 
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<int?>("WorkID");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("EducationID");
 
                     b.HasIndex("NationalityID");
 
@@ -134,7 +178,53 @@ namespace EPlast.DataAccess.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("SexID");
+
+                    b.HasIndex("WorkID");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ComissionDate");
+
+                    b.Property<string>("UserConfignerId")
+                        .IsRequired();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserConfignerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersComissions");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Work", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PlaceOfwork")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Works");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -256,9 +346,34 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.Nationality", "Nationality")
+                    b.HasOne("EPlast.DataAccess.Entities.Education")
+                        .WithMany("Users")
+                        .HasForeignKey("EducationID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Nationality")
                         .WithMany("Users")
                         .HasForeignKey("NationalityID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Sex")
+                        .WithMany("Users")
+                        .HasForeignKey("SexID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Work")
+                        .WithMany("Users")
+                        .HasForeignKey("WorkID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.User", "UserConfigner")
+                        .WithMany()
+                        .HasForeignKey("UserConfignerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -112,10 +112,16 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int?>("EducationID");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FatherName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -143,7 +149,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<int?>("ReligionID");
+                    b.Property<DateTime>("RegistredOn");
 
                     b.Property<string>("SecurityStamp");
 
@@ -158,6 +164,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EducationID");
+
                     b.HasIndex("NationalityID");
 
                     b.HasIndex("NormalizedEmail")
@@ -168,13 +176,34 @@ namespace EPlast.DataAccess.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("ReligionID");
-
                     b.HasIndex("SexID");
 
                     b.HasIndex("WorkID");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ComissionDate");
+
+                    b.Property<string>("UserConfignerId")
+                        .IsRequired();
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserConfignerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersComissions");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Work", b =>
@@ -315,13 +344,13 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.Nationality", "Nationality")
+                    b.HasOne("EPlast.DataAccess.Entities.Education")
+                        .WithMany("Users")
+                        .HasForeignKey("EducationID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Nationality")
                         .WithMany("Users")
                         .HasForeignKey("NationalityID");
-
-                    b.HasOne("EPlast.DataAccess.Entities.Religion")
-                        .WithMany("Users")
-                        .HasForeignKey("ReligionID");
 
                     b.HasOne("EPlast.DataAccess.Entities.Sex")
                         .WithMany("Users")
@@ -330,6 +359,19 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.Work")
                         .WithMany("Users")
                         .HasForeignKey("WorkID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.User", "UserConfigner")
+                        .WithMany()
+                        .HasForeignKey("UserConfignerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
