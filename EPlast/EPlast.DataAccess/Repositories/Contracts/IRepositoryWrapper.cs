@@ -9,6 +9,8 @@ namespace EPlast.DataAccess.Repositories
         IGallaryRepository Gallary { get; }
         IParticipantStatusRepository ParticipantStatus { get;}
         IParticipantRepository Participant { get; }
+        IEventCategoryRepository EventCategory { get; }
+
         void Save();
     }
 }

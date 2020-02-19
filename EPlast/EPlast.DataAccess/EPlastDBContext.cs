@@ -18,6 +18,7 @@ namespace EPlast.DataAccess
         public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
         public DbSet<Participant> Participants { get; set; }
 
+        public DbSet<EventCategory> EventCategories { get; set; }
 
     }
 }

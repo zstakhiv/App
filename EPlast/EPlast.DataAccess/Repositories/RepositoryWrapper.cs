@@ -12,6 +12,8 @@ namespace EPlast.DataAccess.Repositories
         private IParticipantStatusRepository _participantStatuses;
         private IGallaryRepository _gallary;
         private IParticipantRepository _participant;
+        private IEventCategoryRepository _eventCategory;
+
 
 
         public IUserRepository User
@@ -86,6 +88,19 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _participant;
+            }
+        }
+
+        public IEventCategoryRepository EventCategory
+        {
+            get
+            {
+                if (_eventCategory == null)
+                {
+                    _eventCategory = new EventCategoryRepository(_dbContext);
+                }
+
+                return _eventCategory;
             }
         }
 
