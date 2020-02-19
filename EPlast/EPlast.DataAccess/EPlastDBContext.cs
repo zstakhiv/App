@@ -16,5 +16,6 @@ namespace EPlast.DataAccess
         public DbSet<CityDocuments> CityDocuments { get; set; }
         public DbSet<CityDocumentType> CityDocumentTypes { get; set; }
         public DbSet<CityMembers> CityMembers { get; set; }
+        public DbSet<UnconfirmedCityMember> UnconfirmedCityMember { get; set; }
     }
 }
