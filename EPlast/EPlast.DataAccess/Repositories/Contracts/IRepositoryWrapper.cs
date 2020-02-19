@@ -1,4 +1,5 @@
-﻿namespace EPlast.DataAccess.Repositories
+﻿
+namespace EPlast.DataAccess.Repositories
 {
     public interface IRepositoryWrapper
     {
@@ -7,6 +8,7 @@
         IEventRepository Event { get;  }
         IGallaryRepository Gallary { get; }
         IParticipantStatusRepository ParticipantStatus { get;}
+        IParticipantRepository Participant { get; }
         void Save();
     }
 }

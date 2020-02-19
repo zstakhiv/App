@@ -9,7 +9,7 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
         [Required]
         public string UserEventStatusName { get; set; }
- 
+        public ICollection<Participant> Participants { get; set; }
 
     }
 }

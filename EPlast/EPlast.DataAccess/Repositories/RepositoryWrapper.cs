@@ -1,4 +1,5 @@
 ﻿using EPlast.DataAccess.Repositories;
+//using EPlast.DataAccess.Repositories.Contracts;
 
 namespace EPlast.DataAccess.Repositories
 {
@@ -10,6 +11,7 @@ namespace EPlast.DataAccess.Repositories
         private IEventRepository _event;
         private IParticipantStatusRepository _participantStatuses;
         private IGallaryRepository _gallary;
+        private IParticipantRepository _participant;
 
 
         public IUserRepository User
@@ -71,6 +73,19 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _participantStatuses;
+            }
+        }
+
+        public IParticipantRepository Participant
+        {
+            get
+            {
+                if (_participant == null)
+                {
+                    _participant = new ParticipantRepository(_dbContext);
+                }
+
+                return _participant;
             }
         }
 

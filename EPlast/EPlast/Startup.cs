@@ -38,7 +38,10 @@ namespace EPlast
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IGallaryRepository, GallaryRepository>();
+            services.AddScoped<IParticipantStatusRepository, ParticipantStatusRepository>();
+            services.AddScoped<IParticipantRepository, ParticipantRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
 
         }
 
