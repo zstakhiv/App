@@ -12,8 +12,8 @@ namespace EPlast.DataAccess.Repositories
         IReligionRepository Religion { get; }
         ISexRepository Sex { get; }
         IWorkRepository Work { get; }
-
-        IUserComissionRepository UserComission { get; }
+        IConfirmedUserRepository ConfirmedUser { get; }
+        IConfirmatorRepository Confirmator { get; }
         void Save();
     }
 }

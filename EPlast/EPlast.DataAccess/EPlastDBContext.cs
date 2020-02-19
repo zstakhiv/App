@@ -9,6 +9,7 @@ namespace EPlast.DataAccess
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
         }
+       
 
         public DbSet<User> Users { get; set;}
         public DbSet<UserProfile> UserProfiles {get; set;}
@@ -18,6 +19,8 @@ namespace EPlast.DataAccess
         public DbSet<Work> Works { get; set; }
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Education> Educations { get; set; }
-        public DbSet<UserComission> UsersComissions { get; set; }
+        public DbSet<ConfirmedUser> ConfirmedUsers { get; set; }
+        public DbSet<Confirmator> Confirmators { get; set; }
+        
     }
 }

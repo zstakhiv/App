@@ -13,7 +13,8 @@ namespace EPlast.DataAccess.Repositories
         private IWorkRepository _work;
         private IEducationRepository _education;
         private IDegreeRepository _degree;
-        private IUserComissionRepository _userComission;
+        private IConfirmedUserRepository _confirmedUser;
+        private IConfirmatorRepository _confirmator;
 
         public IUserRepository User
         {
@@ -118,16 +119,29 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IUserComissionRepository UserComission
+        public IConfirmedUserRepository ConfirmedUser
         {
             get
             {
-                if (_userComission == null)
+                if (_confirmedUser == null)
                 {
-                    _userComission = new UserComissionRepository(_dbContext);
+                    _confirmedUser = new ConfirmedUserRepository(_dbContext);
                 }
 
-                return _userComission;
+                return _confirmedUser;
+            }
+        }
+
+        public IConfirmatorRepository Confirmator
+        {
+            get
+            {
+                if (_confirmator == null)
+                {
+                    _confirmator = new ConfirmatorRepository(_dbContext);
+                }
+
+                return _confirmator;
             }
         }
 
