@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200218140008_Adding-Event-Migration")]
-    partial class AddingEventMigration
+    [Migration("20200219081148_Adding-Event-Entity")]
+    partial class AddingEventEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -45,6 +45,24 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Gallary", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("EventID");
+
+                    b.Property<string>("GalaryFileName")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EventID");
+
+                    b.ToTable("Gallarys");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.Nationality", b =>
                 {
                     b.Property<int>("ID")
@@ -58,6 +76,20 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Nationalities");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ParticipantStatus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UserEventStatusName")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ParticipantStatuses");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
@@ -231,6 +263,13 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Gallary", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Event")
+                        .WithMany("EventGallary")
+                        .HasForeignKey("EventID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>

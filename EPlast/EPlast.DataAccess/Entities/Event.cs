@@ -17,7 +17,7 @@ namespace EPlast.DataAccess.Entities
         public DateTime EventDateEnd { get; set; }
         [Required]
         public string Eventlocation { get; set; }
-
+        public ICollection<Gallary> EventGallary { get; set; }
 
     }
 }

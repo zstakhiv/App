@@ -49,10 +49,14 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("EventID");
+
                     b.Property<string>("GalaryFileName")
                         .IsRequired();
 
                     b.HasKey("ID");
+
+                    b.HasIndex("EventID");
 
                     b.ToTable("Gallarys");
                 });
@@ -257,6 +261,13 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Gallary", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Event")
+                        .WithMany("EventGallary")
+                        .HasForeignKey("EventID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
