@@ -6,7 +6,6 @@ namespace EPlast.DataAccess.Entities
 {
     public class Participant
     {
-      
         public int ID { get; set; }
         [Required]
         public int ParticipantStatusId { get; set; }
@@ -14,9 +13,8 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public int EventId { get; set; }
         public Event Event { get; set; }
-
-
-       // public  User User { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
 
 
 
