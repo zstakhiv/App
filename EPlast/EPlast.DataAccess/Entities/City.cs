@@ -24,8 +24,10 @@ namespace EPlast.DataAccess.Entities
         public string OfficeNumber { get; set; }
         [MaxLength(7, ErrorMessage = "City post index cannot exceed 7 characters")]
         public string PostIndex { get; set; }
+        public Region Region { get; set; }
         public ICollection<CityDocuments> CityDocuments { get; set; }
         public ICollection<CityMembers> CityMembers { get; set; }
+        public ICollection<UnconfirmedCityMember> UnconfirmedCityMember { get; set; }
         public ICollection<CityAdministration> CityAdministration { get; set; }
     }
 }

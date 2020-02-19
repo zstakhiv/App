@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
@@ -9,7 +10,8 @@ namespace EPlast.DataAccess.Entities
         public User User { get; set; }
         public City City { get; set; }
         [Required]
-        public bool IsApproved { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public ICollection<CityAdministration> CityAdministration { get; set; }
     }
 }
