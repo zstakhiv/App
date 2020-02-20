@@ -2,3 +2,9 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+$(function () {
+    $("#datepicker").datepicker();
+});
+$("#sbmt").click(function () {
+    alert("Рапорт додано!");
+});
