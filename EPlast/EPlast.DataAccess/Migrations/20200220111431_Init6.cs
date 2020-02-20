@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EPlast.DataAccess.Migrations
 {
-    public partial class Init : Migration
+    public partial class Init6 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -72,21 +72,6 @@ namespace EPlast.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sexes", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersComissions",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserID = table.Column<int>(nullable: false),
-                    UserConfignerID = table.Column<int>(nullable: false),
-                    ComissionDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersComissions", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,18 +204,11 @@ namespace EPlast.DataAccess.Migrations
                     LastName = table.Column<string>(maxLength: 50, nullable: false),
                     FatherName = table.Column<string>(maxLength: 50, nullable: false),
                     RegistredOn = table.Column<DateTime>(nullable: false),
-                    UserProfileID = table.Column<int>(nullable: false),
-                    UserComissionID = table.Column<int>(nullable: true)
+                    UserProfileID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_UsersComissions_UserComissionID",
-                        column: x => x.UserComissionID,
-                        principalTable: "UsersComissions",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_UserProfiles_UserProfileID",
                         column: x => x.UserProfileID,
@@ -324,6 +302,52 @@ namespace EPlast.DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Confirmators",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Confirmators", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Confirmators_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfirmedUsers",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: false),
+                    ConfirmatorID = table.Column<int>(nullable: true),
+                    ConfirmDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfirmedUsers", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ConfirmedUsers_Confirmators_ConfirmatorID",
+                        column: x => x.ConfirmatorID,
+                        principalTable: "Confirmators",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ConfirmedUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -364,15 +388,27 @@ namespace EPlast.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserComissionID",
-                table: "AspNetUsers",
-                column: "UserComissionID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_UserProfileID",
                 table: "AspNetUsers",
                 column: "UserProfileID",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Confirmators_UserId",
+                table: "Confirmators",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfirmedUsers_ConfirmatorID",
+                table: "ConfirmedUsers",
+                column: "ConfirmatorID",
+                unique: true,
+                filter: "[ConfirmatorID] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfirmedUsers_UserId",
+                table: "ConfirmedUsers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Educations_DegreeID",
@@ -423,13 +459,16 @@ namespace EPlast.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConfirmedUsers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Confirmators");
 
             migrationBuilder.DropTable(
-                name: "UsersComissions");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "UserProfiles");

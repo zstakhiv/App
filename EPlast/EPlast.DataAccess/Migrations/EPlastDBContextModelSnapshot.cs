@@ -25,13 +25,9 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ConfirmedUserID");
-
                     b.Property<string>("UserId");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ConfirmedUserID");
 
                     b.HasIndex("UserId");
 
@@ -46,10 +42,16 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("ConfirmDate");
 
+                    b.Property<int?>("ConfirmatorID");
+
                     b.Property<string>("UserId")
                         .IsRequired();
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ConfirmatorID")
+                        .IsUnique()
+                        .HasFilter("[ConfirmatorID] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -379,10 +381,6 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Confirmator", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.ConfirmedUser", "ConfirmedUser")
-                        .WithMany("Confirmators")
-                        .HasForeignKey("ConfirmedUserID");
-
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("Confirmators")
                         .HasForeignKey("UserId");
@@ -390,6 +388,10 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
                 {
+                    b.HasOne("EPlast.DataAccess.Entities.Confirmator", "Confirmator")
+                        .WithOne("ConfirmedUser")
+                        .HasForeignKey("EPlast.DataAccess.Entities.ConfirmedUser", "ConfirmatorID");
+
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("ConfirmedUsers")
                         .HasForeignKey("UserId")
