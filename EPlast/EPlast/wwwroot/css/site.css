@@ -1,7 +1,4 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
+﻿a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
@@ -9,6 +6,7 @@ a.navbar-brand {
 
 /* Sticky footer styles
 -------------------------------------------------- */
+
 html {
   font-size: 14px;
 }
@@ -53,4 +51,205 @@ body {
   /* Set the fixed height of the footer here */
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
+}
+
+
+/*css from LoginAndRegister.cshtml*/
+body {
+    font-family: "SourceSansPro";
+}
+
+form input[type="text"].form-control,
+form input[type="email"].form-control,
+form input[type="password"].form-control {
+    background-color: black;
+}
+
+
+.login-register-switcher {
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.login-rectangle {
+    position: relative;
+    border-radius: 5px;
+    background-color: rgba(55, 73, 84, 0.702);
+    width: 100%;
+    height: 56px;
+    overflow: hidden;
+}
+
+.circle-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    top: -10px;
+    display: flex;
+    justify-content: center;
+}
+
+.login-circle {
+    border-radius: 100%;
+    background-color: #3c5438;
+    width: 82px;
+    height: 82px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .login-circle p {
+        font-size: 33px;
+        color: rgb(255, 255, 255);
+        text-align: left;
+        margin: 0;
+    }
+
+.active-rectangle {
+    position: absolute;
+    background-color: #3c5438;
+    width: 50%;
+    height: 100%;
+    transition: all linear 0.5s;
+    z-index: -1;
+}
+
+.register-active .active-rectangle {
+    transform: translate(100%, 0);
+}
+
+.register-active .register-text {
+    color: rgb(255, 255, 255)
+}
+
+.login-active .active-rectangle {
+    transform: translate(0%, 0);
+}
+
+.login-active .login-text {
+    color: rgb(255, 255, 255)
+}
+
+.switcher-text {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 20px;
+    color: rgb(164, 168, 171);
+    display: flex;
+    align-items: center;
+}
+
+    .switcher-text a {
+        color: inherit;
+        transition: color linear 0.5s;
+    }
+
+.login-text {
+    margin-left: 10px;
+    margin-right: auto;
+}
+
+.register-text {
+    margin-right: 10px;
+}
+
+.register-text:hover, .login-text:hover {
+        text-decoration: unset;
+}
+
+    .register-text:hover ~ .active-rectangle {
+        transform: translate(100%, 0);
+    }
+
+    .login-text:hover ~ .active-rectangle {
+        transform: translate(0%, 0);
+    }
+
+    .register-text:hover, .login-text:hover {
+        color: rgb(255, 255, 255);
+    }
+
+.login-clean {
+    margin-top: 45px;
+}
+
+    .login-clean .form {
+        max-width: 520px;
+        width: 90%;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 4px;
+        color: #505e6c;
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, .1)
+    }
+
+        .login-clean .form .form-control {
+            background: #f7f9fc;
+            border: none;
+            border-bottom: 1px solid #dfe7f1;
+            border-radius: 0;
+            box-shadow: none;
+            outline: 0;
+            color: inherit;
+            text-indent: 8px;
+            height: 42px
+        }
+
+        .login-clean .form .btn-primary {
+            background: #f4476b;
+            border: none;
+            border-radius: 4px;
+            padding: 11px;
+            box-shadow: none;
+            margin-top: 26px;
+            text-shadow: none;
+            outline: 0 !important
+        }
+
+            .login-clean .form .btn-primary:active,
+            .login-clean .form .btn-primary:hover {
+                background: #eb3b60
+            }
+
+            .login-clean .form .btn-primary:active {
+                transform: translateY(1px)
+            }
+
+        .login-clean .form .forgot {
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            color: #6f7a85;
+            opacity: .9;
+            text-decoration: none
+        }
+
+            .login-clean .form .forgot:active,
+            .login-clean .form .forgot:hover {
+                opacity: 1;
+                text-decoration: none
+            }
+
+.login-text:hover, .register-text:hover {
+    cursor: pointer;
+}
+
+.form-network {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 80px;
+}
+
+#button-form-network {
+    width: 170px;
+    height: 40px;
+    font-size: 10px;
+    margin: 0 auto;
 }
