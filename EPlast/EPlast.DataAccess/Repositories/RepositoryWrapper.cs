@@ -12,6 +12,7 @@ namespace EPlast.DataAccess.Repositories
         private ICityDocumentTypeRepository _cityDocumentType;
         private ICityMembersRepository _cityMembers;
         private ICityRepository _city;
+        private IUnconfirmedCityMemberRepository _unconfirmedCityMember;
         private IAdminTypeRepository _admintype;
         private IClubRepository _club;
         private IClubMembersRepository _clubMembers;
@@ -107,6 +108,19 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _city;
+            }
+        }
+
+        public IUnconfirmedCityMemberRepository UnconfirmedCityMember
+        {
+            get
+            {
+                if (_unconfirmedCityMember == null)
+                {
+                    _unconfirmedCityMember = new UnconfirmedCityMemberRepository(_dbContext);
+                }
+
+                return _unconfirmedCityMember;
             }
         }
 
