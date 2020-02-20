@@ -32,6 +32,31 @@
 
 
   <ItemGroup>
+    <None Include="wwwroot\MDB\js\addons\datatables-select.min.js" />
+    <None Include="wwwroot\MDB\js\addons\datatables.min.js" />
+    <None Include="wwwroot\MDB\js\addons\directives.min.js" />
+    <None Include="wwwroot\MDB\js\addons\flag.min.js" />
+    <None Include="wwwroot\MDB\js\addons\imagesloaded.pkgd.min.js" />
+    <None Include="wwwroot\MDB\js\addons\jquery.zmd.hierarchical-display.min.js" />
+    <None Include="wwwroot\MDB\js\addons\masonry.pkgd.min.js" />
+    <None Include="wwwroot\MDB\js\addons\rating.min.js" />
+    <None Include="wwwroot\MDB\js\bootstrap.js" />
+    <None Include="wwwroot\MDB\js\bootstrap.min.js" />
+    <None Include="wwwroot\MDB\js\jquery.js" />
+    <None Include="wwwroot\MDB\js\jquery.min.js" />
+    <None Include="wwwroot\MDB\js\mdb.js" />
+    <None Include="wwwroot\MDB\js\mdb.min.js" />
+    <None Include="wwwroot\MDB\js\modules\animations-extended.min.js" />
+    <None Include="wwwroot\MDB\js\modules\forms-free.min.js" />
+    <None Include="wwwroot\MDB\js\modules\scrolling-navbar.min.js" />
+    <None Include="wwwroot\MDB\js\modules\treeview.min.js" />
+    <None Include="wwwroot\MDB\js\modules\wow.min.js" />
+    <None Include="wwwroot\MDB\js\popper.js" />
+    <None Include="wwwroot\MDB\js\popper.min.js" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <ProjectReference Include="..\EPlast.DataAccess\EPlast.DataAccess.csproj" />
   </ItemGroup>
 
