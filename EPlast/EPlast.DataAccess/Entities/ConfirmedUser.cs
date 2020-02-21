@@ -10,7 +10,8 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
         [Required]
         public User User { get; set; }
-        public ICollection<Confirmator> Confirmators{ get; set; }
+        public int? ConfirmatorID { get; set; }
+        public Confirmator Confirmator{ get; set; }
         public DateTime ConfirmDate { get; set; }
 
     }

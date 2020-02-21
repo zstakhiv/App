@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200219135749_Migration10")]
-    partial class Migration10
+    [Migration("20200220111431_Init6")]
+    partial class Init6
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,45 @@ namespace EPlast.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Confirmator", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Confirmators");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ConfirmDate");
+
+                    b.Property<int?>("ConfirmatorID");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ConfirmatorID")
+                        .IsUnique()
+                        .HasFilter("[ConfirmatorID] IS NOT NULL");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ConfirmedUsers");
+                });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Degree", b =>
                 {
@@ -156,6 +195,8 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<int>("UserProfileID");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -166,30 +207,10 @@ namespace EPlast.DataAccess.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserProfileID")
+                        .IsUnique();
+
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ComissionDate");
-
-                    b.Property<string>("UserConfignerId")
-                        .IsRequired();
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserConfignerId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersComissions");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
@@ -212,7 +233,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int?>("SexID");
 
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserID");
 
                     b.Property<int?>("WorkID");
 
@@ -225,8 +246,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasIndex("ReligionID");
 
                     b.HasIndex("SexID");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkID");
 
@@ -362,6 +381,25 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Confirmator", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("Confirmators")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Confirmator", "Confirmator")
+                        .WithOne("ConfirmedUser")
+                        .HasForeignKey("EPlast.DataAccess.Entities.ConfirmedUser", "ConfirmatorID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("ConfirmedUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
                 {
                     b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
@@ -369,16 +407,11 @@ namespace EPlast.DataAccess.Migrations
                         .HasForeignKey("DegreeID");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.UserComission", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.User", "UserConfigner")
-                        .WithMany()
-                        .HasForeignKey("UserConfignerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("EPlast.DataAccess.Entities.UserProfile", "UserProfile")
+                        .WithOne("User")
+                        .HasForeignKey("EPlast.DataAccess.Entities.User", "UserProfileID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -399,10 +432,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.Sex", "Sex")
                         .WithMany("UserProfiles")
                         .HasForeignKey("SexID");
-
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
 
                     b.HasOne("EPlast.DataAccess.Entities.Work", "Work")
                         .WithMany("UserProfiles")
