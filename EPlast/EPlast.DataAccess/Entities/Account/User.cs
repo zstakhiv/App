@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,6 +16,7 @@ namespace EPlast.DataAccess.Entities
         public DateTime RegistredOn { get; set; }
         public int UserProfileID { get; set; }
         public UserProfile UserProfile { get; set; }
-        public UserComission UserComission { get; set; }
+        public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
+        public ICollection<Confirmator> Confirmators { get; set; }
     }
 }

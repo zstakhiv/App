@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface IUserComissionRepository : IRepositoryBase<UserComission>
+    public interface IConfirmedUserRepository : IRepositoryBase<ConfirmedUser>
     {
     }
 }
