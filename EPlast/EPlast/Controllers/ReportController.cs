@@ -18,5 +18,13 @@ namespace EPlast.Controllers
         {
             return View();
         }
+
+        [System.Obsolete]
+        public void CreatePDF()
+        {
+            Models.PDFCreator creator = new Models.PDFCreator();
+            creator.CreateDoucment();
+            Response.Redirect(Url.Content("~/Report.pdf"));
+        }
     }
 }

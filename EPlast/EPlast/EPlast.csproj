@@ -10,7 +10,6 @@
     <Content Remove="wwwroot\scripts\app1.ts" />
   </ItemGroup>
 
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -20,16 +19,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
   </ItemGroup>
-
 
   <ItemGroup>
     <Folder Include="wwwroot\css\lessCompiled\" />
     <Folder Include="wwwroot\js\tsCompiled\" />
     <Folder Include="wwwroot\css\sassCompiled\" />
-
   </ItemGroup>
-
 
   <ItemGroup>
     <None Include="wwwroot\MDB\js\addons\datatables-select.min.js" />
@@ -55,9 +55,7 @@
     <None Include="wwwroot\MDB\js\popper.min.js" />
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\EPlast.DataAccess\EPlast.DataAccess.csproj" />
   </ItemGroup>
-
 </Project>
