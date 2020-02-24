@@ -15,8 +15,6 @@ namespace EPlast.Models
 
             Document document = Documents.CreateDocument();
 
-            MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToFile(document, "Report.mdddl");
-
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfFontEmbedding.Always)
             {
                 Document = document
@@ -24,7 +22,6 @@ namespace EPlast.Models
 
             renderer.RenderDocument();
 
-            // Save the document...
             string filename = "wwwroot/Report.pdf";
             renderer.PdfDocument.Save(filename);
         }
