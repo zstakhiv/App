@@ -7,11 +7,13 @@ namespace EPlast.DataAccess
 {
     public class EPlastDBContext : IdentityDbContext<User>
     {
-        public EPlastDBContext(DbContextOptions<EPlastDBContext> options): base(options)
-        {           
+        public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
+        {
         }
+       
 
-        
+        public DbSet<User> Users { get; set;}
+        public DbSet<UserProfile> UserProfiles {get; set;}
         public DbSet<Nationality> Nationalities { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }

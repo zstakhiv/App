@@ -1,0 +1,104 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>LoginRegisterPage</title>
+    <link rel="stylesheet" href="~/css/site.css" type="text/css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-social.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/example.css">
+</head>
+
+<body style="background-color: rgb(245, 245, 245);">
+    <div class="login-clean" style="background-color: rgb(245, 245, 245);">
+        <div class="form">
+            <div class="login-register-switcher">
+                <div class="login-rectangle">
+                    <div class="switcher-text login-active">
+                        <a class="login-text">Увійти</a>
+                        <a class="register-text">Зареєструватись</a>
+                        <div class="active-rectangle"></div>
+                    </div>
+                </div>
+                <div class="circle-wrapper">
+                    <div class="login-circle">
+                        <p>АБО</p>
+                    </div>
+                </div>
+            </div>
+            <form method="post" class="login-form">
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration"><i class="icon ion-ios-navigate" style="color: #3c5438;"></i></div>
+                <div class="form-group">
+                    <input class="form-control" type="email" name="email"
+                           placeholder="Електронна пошта"
+                           pattern="^([a-zA-Z0-9_\-\.]+)@@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password"
+                           placeholder="Пароль">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit"
+                            style="background-color: #3c5438">
+                        Увійти
+                    </button>
+                </div>
+                <a class="forgot" href="#">Забули електронну пошту або пароль?</a>
+
+                <div class="form-network">
+                    <button type="button" class="btn btn-fb"><i class="fab fa-facebook-f pr-1" ></i> Facebook</button>
+                    <button type="button" class="btn btn-gplus"><i class="fab fa-google-plus-g pr-1"></i> Google +</button>
+                </div>
+            </form>
+
+            <form method="post" class="register-form d-none">
+                <h2 class="sr-only">Registration Form</h2>
+                <div class="form-group">
+                    <input class="form-control" type="email" name="email"
+                           placeholder="Електронна пошта"
+                           pattern="^([a-zA-Z0-9_\-\.]+)@@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password"
+                           placeholder="Пароль">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password"
+                           placeholder="Повторіть пароль">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="FirstName" placeholder="Імя"
+                           pattern="[A-Za-z]{1,32}">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="LastName" placeholder="Прізвище"
+                           pattern="[A-Za-z]{1,32}">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit"
+                            style="background-color: #3c5438;">
+                        Зареєструватись
+                    </button>
+                </div>
+                <a class="forgot" href="#">Забули електронну пошту або пароль?</a>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="~/js/site.js"></script>
+</body>
+
+</html>

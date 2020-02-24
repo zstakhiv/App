@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200220111431_Init6")]
+    partial class Init6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,104 +81,21 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int?>("DegreeID");
 
-                    b.Property<string>("Description")
-                        .IsRequired();
+                    b.Property<string>("PlaceOfStudy")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
-                    b.Property<int>("EventCategoryID");
-
-                    b.Property<DateTime>("EventDateEnd");
-
-                    b.Property<DateTime>("EventDateStart");
-
-                    b.Property<string>("EventName")
-                        .IsRequired();
-
-                    b.Property<int>("EventStatusID");
-
-                    b.Property<string>("Eventlocation")
-                        .IsRequired();
+                    b.Property<string>("Speciality")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.HasKey("ID");
 
-                    b.HasIndex("EventCategoryID");
+                    b.HasIndex("DegreeID");
 
-                    b.HasIndex("EventStatusID");
-
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdmin", b =>
-                {
-                    b.Property<int>("EventID");
-
-                    b.Property<string>("UserID");
-
-                    b.HasKey("EventID", "UserID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("EventAdmin");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventCategory", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EventCategoryName")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.ToTable("EventCategories");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventGallary", b =>
-                {
-                    b.Property<int>("EventID");
-
-                    b.Property<int>("GallaryID");
-
-                    b.HasKey("EventID", "GallaryID");
-
-                    b.HasIndex("GallaryID");
-
-                    b.ToTable("EventGallarys");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("EventStatusName")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.ToTable("EventStatuses");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Gallary", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("GalaryFileName")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Gallarys");
+                    b.ToTable("Educations");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Nationality", b =>
@@ -194,59 +113,34 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("Nationalities");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Participant", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Religion", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EventId");
-
-                    b.Property<int>("ParticipantStatusId");
-
-                    b.Property<string>("UserId");
+                    b.Property<string>("ReligionName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.HasKey("ID");
 
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("ParticipantStatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Participants");
+                    b.ToTable("Religions");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.ParticipantStatus", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Sex", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserEventStatusName")
-                        .IsRequired();
+                    b.Property<string>("SexName")
+                        .IsRequired()
+                        .HasMaxLength(10);
 
                     b.HasKey("ID");
 
-                    b.ToTable("ParticipantStatuses");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.SubEventCategory", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EventCategoryID");
-
-                    b.Property<string>("SubEventCategoryName")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EventCategoryID");
-
-                    b.ToTable("SubEventCategories");
+                    b.ToTable("Sexes");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
@@ -487,68 +381,30 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Confirmator", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
-                        .WithMany("Events")
-                        .HasForeignKey("EventCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.EventStatus", "EventStatus")
-                        .WithMany("Events")
-                        .HasForeignKey("EventStatusID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdmin", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
-                        .WithMany("EventAdmins")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany("Events")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.EventGallary", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
-                        .WithMany("EventGallarys")
-                        .HasForeignKey("EventID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.Gallary", "Gallary")
-                        .WithMany("Events")
-                        .HasForeignKey("GallaryID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Participant", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
-                        .WithMany("Participants")
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.ParticipantStatus", "ParticipantStatus")
-                        .WithMany("Participants")
-                        .HasForeignKey("ParticipantStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany("Participants")
+                        .WithMany("Confirmators")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.SubEventCategory", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
-                        .WithMany("SubEventCategories")
-                        .HasForeignKey("EventCategoryID")
+                    b.HasOne("EPlast.DataAccess.Entities.Confirmator", "Confirmator")
+                        .WithOne("ConfirmedUser")
+                        .HasForeignKey("EPlast.DataAccess.Entities.ConfirmedUser", "ConfirmatorID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("ConfirmedUsers")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
+                        .WithMany("Educations")
+                        .HasForeignKey("DegreeID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
