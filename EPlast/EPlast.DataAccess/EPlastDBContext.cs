@@ -10,7 +10,6 @@ namespace EPlast.DataAccess
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
         }
-       
 
         public DbSet<User> Users { get; set;}
         public DbSet<UserProfile> UserProfiles {get; set;}
@@ -62,5 +61,12 @@ namespace EPlast.DataAccess
                 .HasForeignKey(x => x.UserID);
         }
 
+        public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
+        public DbSet<Organ> Organs { get; set; }
+        public DbSet<DecesionStatus> DecesionStatuses { get; set; }
+        public DbSet<DecesionTarget> DecesionTargets { get; set; }
+        public DbSet<Decesion> Decesions { get; set; }
+        public DbSet<AnnualReport> AnnualReports { get; set; }
+        public DbSet<AnnualReportStatus> AnnualReportStatuses { get; set; }
     }
 }

@@ -1,4 +1,15 @@
-﻿/*js from LoginAndRegister*/
+﻿$("#sbmt").click(function () {
+    alert("Рапорт додано!");
+});
+$(document).ready(function () {
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+    //
+    $('#dtBasicExample').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+});
+/*js from LoginAndRegister*/
 
 function registerClick() {
     $(".switcher-text").addClass("register-active").removeClass("login-active");
@@ -15,5 +26,3 @@ function loginClick() {
 
 $(".register-text").click(registerClick);
 $(".login-text").click(loginClick);
-
-

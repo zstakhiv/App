@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Raport";
+}
+<div class="contact-clean">
+    <form method="post">
+        <h2 class="text-center">Додати рішення пластового проводу<br></h2>
+        <div class="form-group">
+            <label>
+                <strong>Назва рішення</strong>
+                <br>
+            </label>
+            <input class="form-control" type="text" name="DesiconName" placeholder="Назва рішення">
+        </div>
+        <div class="form-group">
+            <label>
+                <strong>Рішення органу</strong>
+                <br>
+            </label>
+            <select class="form-control">
+                <optgroup label="Виберіть КПР чи КРК">
+                    <option value="1" selected="">КПР</option>
+                    <option value="2">КРК</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>
+                <strong>Тематика рішення</strong>
+                <br>
+            </label>
+            <input class="form-control" type="text" name="DecisionType" placeholder="Тематика рішення" list="DecisionType-value">
+            <datalist id="DecisionType-value">
+                <option>соціальні мережі</option>
+                <option>осередки</option>
+                <option>спеціалізяція</option>
+                <option>вишкіл</option>
+                <option>зустріч</option>
+                <option>заява</option>
+            </datalist>
+        </div>
+        <div class="form-group">
+            <label>
+                <strong>Дата рішення</strong>
+                <br>
+            </label>
+            <br>
+            <input class="form-control" type="text" id="datepicker">
+        </div>
+        <label>
+            <strong>Текст рішення</strong>
+            <br>
+        </label>
+        <div class="form-group">
+            <textarea class="form-control" name="message" placeholder="Message" rows="14"></textarea>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
+        </div>
+    </form>
+</div>

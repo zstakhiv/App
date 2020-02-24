@@ -1,8 +1,5 @@
 ﻿using EPlast.DataAccess.Repositories.Contracts;
 
-using EPlast.DataAccess.Repositories;
-//using EPlast.DataAccess.Repositories.Contracts;
-
 namespace EPlast.DataAccess.Repositories
 {
     public class RepositoryWrapper : IRepositoryWrapper
@@ -11,13 +8,11 @@ namespace EPlast.DataAccess.Repositories
         private IUserRepository _user;
         private IUserProfileRepository _userprofile;
         private INationalityRepository _nationality;
-        private IReligionRepository _religion;
-        private ISexRepository _sex;
-        private IWorkRepository _work;
-        private IEducationRepository _education;
-        private IDegreeRepository _degree;
-        private IConfirmedUserRepository _confirmedUser;
-        private IConfirmatorRepository _confirmator;
+        private IOrgranRepository _oragn;
+        private IDecesionTargetRepository _decesionTarget;
+        private IDecesionStatusRepository _decesionStatus;
+        private IDocumentTemplateRepository _documentTemplate;
+        private IDecesionRepository _decesion;
         private IEventRepository _event;
         private IParticipantStatusRepository _participantStatuses;
         private IGallaryRepository _gallary;
@@ -27,10 +22,73 @@ namespace EPlast.DataAccess.Repositories
         private IEventAdminRepository _eventAdmin;
         private ISubEventCategoryRepository _subEventCategory;
         private IEventStatusRepository _eventStatus;
+        private IReligionRepository _religion;
+        private ISexRepository _sex;
+        private IWorkRepository _work;
+        private IEducationRepository _education;
+        private IDegreeRepository _degree;
+        private IConfirmedUserRepository _confirmedUser;
+        private IConfirmatorRepository _confirmator;
 
+        public IDecesionRepository Decesion
+        {
+            get
+            {
+                if (_decesion == null)
+                {
+                    _decesion = new DecesionRepository(_dbContext);
+                }
+                return _decesion;
+            }
+        }
 
+        public IDocumentTemplateRepository DocumentTemplate
+        {
+            get
+            {
+                if (_documentTemplate == null)
+                {
+                    _documentTemplate = new DocumentTemplateRepository(_dbContext);
+                }
+                return _documentTemplate;
+            }
+        }
 
+        public IDecesionStatusRepository DecesionStatus
+        {
+            get
+            {
+                if (_decesionStatus == null)
+                {
+                    _decesionStatus = new DecesionStatusRepository(_dbContext);
+                }
+                return _decesionStatus;
+            }
+        }
 
+        public IDecesionTargetRepository DecesionTarget
+        {
+            get
+            {
+                if (_decesionTarget == null)
+                {
+                    _decesionTarget = new DecesionTargetRepository(_dbContext);
+                }
+                return _decesionTarget;
+            }
+        }
+
+        public IOrgranRepository Orgran
+        {
+            get
+            {
+                if (_oragn == null)
+                {
+                    _oragn = new OrganRepository(_dbContext);
+                }
+                return _oragn;
+            }
+        }
 
         public IUserRepository User
         {
@@ -82,6 +140,7 @@ namespace EPlast.DataAccess.Repositories
                 return _event;
             }
         }
+
         public IGallaryRepository Gallary
         {
             get
@@ -93,6 +152,7 @@ namespace EPlast.DataAccess.Repositories
                 return _gallary;
             }
         }
+
         public IEventGallaryRepository EventGallary
         {
             get
@@ -104,6 +164,7 @@ namespace EPlast.DataAccess.Repositories
                 return _eventGallary;
             }
         }
+
         public IParticipantStatusRepository ParticipantStatus
         {
             get
@@ -116,6 +177,7 @@ namespace EPlast.DataAccess.Repositories
                 return _participantStatuses;
             }
         }
+
         public IParticipantRepository Participant
         {
             get
@@ -168,7 +230,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        // public IEventRepository Events => throw new System.NotImplementedException();
         public IEventAdminRepository EventAdmin
         {
             get

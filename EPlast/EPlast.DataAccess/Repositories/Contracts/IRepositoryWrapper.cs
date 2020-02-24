@@ -7,6 +7,12 @@ namespace EPlast.DataAccess.Repositories
         IUserRepository User { get; }
         IUserProfileRepository UserProfile { get; }
         INationalityRepository Nationality { get; }
+        IOrgranRepository Orgran { get; }
+        IDecesionTargetRepository DecesionTarget { get; }
+        IDecesionStatusRepository DecesionStatus { get; }
+        IDocumentTemplateRepository DocumentTemplate { get; }
+        IDecesionRepository Decesion { get; }
+
         IEventRepository Event { get;  }
         IGallaryRepository Gallary { get; }
         IParticipantStatusRepository ParticipantStatus { get;}
@@ -16,8 +22,6 @@ namespace EPlast.DataAccess.Repositories
         IEventAdminRepository EventAdmin { get; }
         ISubEventCategoryRepository SubEventCategory { get; }
         IEventStatusRepository EventStatus { get; }
-
-
 
         IEducationRepository Education { get; }
         IDegreeRepository Degree { get; }

@@ -38,14 +38,6 @@ namespace EPlast
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<INationalityRepository, NationalityRepository>();
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<IGallaryRepository, GallaryRepository>();
-            services.AddScoped<IParticipantStatusRepository, ParticipantStatusRepository>();
-            services.AddScoped<IParticipantRepository, ParticipantRepository>();
-            services.AddScoped<IEventCategoryRepository, EventCategoryRepository>();
-            services.AddScoped<IEventGallaryRepository, EventGallaryRepository>();
-            services.AddScoped<ISubEventCategoryRepository, SubEventCategoryRepository>();
-            services.AddScoped<IEventStatusRepository, EventStatusRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped<IEducationRepository, EducationRepository>();
             services.AddScoped<IDegreeRepository, DegreeRepository>();
@@ -55,6 +47,11 @@ namespace EPlast
             services.AddScoped<IConfirmatorRepository, ConfirmatorRepository>();
             services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
 
+            services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
+            services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
+            services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
+            services.AddScoped<IOrgranRepository, OrganRepository>();
+            services.AddScoped<IDecesionRepository, DecesionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

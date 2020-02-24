@@ -4,10 +4,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EPlast.DataAccess.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AnnualReportStatuses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnnualReportStatuses", x => x.ID);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -23,6 +36,32 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DecesionStatuses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DecesionStatusName = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DecesionStatuses", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DecesionTargets",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TargetName = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DecesionTargets", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Degree",
                 columns: table => new
                 {
@@ -33,6 +72,20 @@ namespace EPlast.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Degree", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTemplates",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DocumentName = table.Column<string>(maxLength: 50, nullable: false),
+                    DocumentFIleName = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTemplates", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,11 +133,25 @@ namespace EPlast.DataAccess.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    NationalityName = table.Column<string>(maxLength: 50, nullable: false)
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    NationalityName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Nationalities", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    OrganName = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organs", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -138,6 +205,32 @@ namespace EPlast.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Work", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AnnualReports",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(nullable: false),
+                    GovernmentFunds = table.Column<int>(nullable: false),
+                    ContributionFunds = table.Column<int>(nullable: false),
+                    PlastFunds = table.Column<int>(nullable: false),
+                    SponsorFunds = table.Column<int>(nullable: false),
+                    PropertyList = table.Column<string>(maxLength: 500, nullable: false),
+                    ImprovementNeeds = table.Column<string>(maxLength: 500, nullable: false),
+                    AnnualReportStatusId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AnnualReports", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_AnnualReports_AnnualReportStatuses_AnnualReportStatusId",
+                        column: x => x.AnnualReportStatusId,
+                        principalTable: "AnnualReportStatuses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,6 +322,41 @@ namespace EPlast.DataAccess.Migrations
                         name: "FK_Events_EventStatuses_EventStatusID",
                         column: x => x.EventStatusID,
                         principalTable: "EventStatuses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Decesions",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DecesionStatusID = table.Column<int>(nullable: false),
+                    OrganID = table.Column<int>(nullable: false),
+                    DecesionTargetID = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Decesions", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Decesions_DecesionStatuses_DecesionStatusID",
+                        column: x => x.DecesionStatusID,
+                        principalTable: "DecesionStatuses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Decesions_DecesionTargets_DecesionTargetID",
+                        column: x => x.DecesionTargetID,
+                        principalTable: "DecesionTargets",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Decesions_Organs_OrganID",
+                        column: x => x.OrganID,
+                        principalTable: "Organs",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -331,11 +459,18 @@ namespace EPlast.DataAccess.Migrations
                     LastName = table.Column<string>(maxLength: 50, nullable: false),
                     FatherName = table.Column<string>(maxLength: 50, nullable: false),
                     RegistredOn = table.Column<DateTime>(nullable: false),
-                    UserProfileID = table.Column<int>(nullable: false)
+                    UserProfileID = table.Column<int>(nullable: false),
+                    NationalityID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Nationalities_NationalityID",
+                        column: x => x.NationalityID,
+                        principalTable: "Nationalities",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_UserProfiles_UserProfileID",
                         column: x => x.UserProfileID,
@@ -533,6 +668,11 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AnnualReports_AnnualReportStatusId",
+                table: "AnnualReports",
+                column: "AnnualReportStatusId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -558,6 +698,11 @@ namespace EPlast.DataAccess.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_NationalityID",
+                table: "AspNetUsers",
+                column: "NationalityID");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -593,6 +738,21 @@ namespace EPlast.DataAccess.Migrations
                 name: "IX_ConfirmedUser_UserId",
                 table: "ConfirmedUser",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decesions_DecesionStatusID",
+                table: "Decesions",
+                column: "DecesionStatusID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decesions_DecesionTargetID",
+                table: "Decesions",
+                column: "DecesionTargetID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decesions_OrganID",
+                table: "Decesions",
+                column: "OrganID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Education_DegreeID",
@@ -668,6 +828,9 @@ namespace EPlast.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AnnualReports");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -686,6 +849,12 @@ namespace EPlast.DataAccess.Migrations
                 name: "ConfirmedUser");
 
             migrationBuilder.DropTable(
+                name: "Decesions");
+
+            migrationBuilder.DropTable(
+                name: "DocumentTemplates");
+
+            migrationBuilder.DropTable(
                 name: "EventAdmin");
 
             migrationBuilder.DropTable(
@@ -698,10 +867,22 @@ namespace EPlast.DataAccess.Migrations
                 name: "SubEventCategories");
 
             migrationBuilder.DropTable(
+                name: "AnnualReportStatuses");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Confirmator");
+
+            migrationBuilder.DropTable(
+                name: "DecesionStatuses");
+
+            migrationBuilder.DropTable(
+                name: "DecesionTargets");
+
+            migrationBuilder.DropTable(
+                name: "Organs");
 
             migrationBuilder.DropTable(
                 name: "Gallarys");
