@@ -173,17 +173,17 @@ form input[type="password"].form-control {
     margin-right: 10px;
 }
 
-.register-text:hover, .login-text:hover {
+    .register-text:hover, .login-text:hover {
         text-decoration: unset;
-}
-
-    .register-text:hover ~ .active-rectangle {
-        transform: translate(100%, 0);
     }
 
-    .login-text:hover ~ .active-rectangle {
-        transform: translate(0%, 0);
-    }
+        .register-text:hover ~ .active-rectangle {
+            transform: translate(100%, 0);
+        }
+
+        .login-text:hover ~ .active-rectangle {
+            transform: translate(0%, 0);
+        }
 
     .register-text:hover, .login-text:hover {
         color: rgb(255, 255, 255);

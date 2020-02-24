@@ -1,8 +1,5 @@
 ﻿using EPlast.DataAccess.Repositories.Contracts;
 
-using EPlast.DataAccess.Repositories;
-//using EPlast.DataAccess.Repositories.Contracts;
-
 namespace EPlast.DataAccess.Repositories
 {
     public class RepositoryWrapper : IRepositoryWrapper
@@ -16,6 +13,22 @@ namespace EPlast.DataAccess.Repositories
         private IDecesionStatusRepository _decesionStatus;
         private IDocumentTemplateRepository _documentTemplate;
         private IDecesionRepository _decesion;
+        private IEventRepository _event;
+        private IParticipantStatusRepository _participantStatuses;
+        private IGallaryRepository _gallary;
+        private IEventGallaryRepository _eventGallary;
+        private IParticipantRepository _participant;
+        private IEventCategoryRepository _eventCategory;
+        private IEventAdminRepository _eventAdmin;
+        private ISubEventCategoryRepository _subEventCategory;
+        private IEventStatusRepository _eventStatus;
+        private IReligionRepository _religion;
+        private ISexRepository _sex;
+        private IWorkRepository _work;
+        private IEducationRepository _education;
+        private IDegreeRepository _degree;
+        private IConfirmedUserRepository _confirmedUser;
+        private IConfirmatorRepository _confirmator;
 
         public IDecesionRepository Decesion
         {
@@ -76,15 +89,6 @@ namespace EPlast.DataAccess.Repositories
                 return _oragn;
             }
         }
-        private IEventRepository _event;
-        private IParticipantStatusRepository _participantStatuses;
-        private IGallaryRepository _gallary;
-        private IEventGallaryRepository _eventGallary;
-        private IParticipantRepository _participant;
-        private IEventCategoryRepository _eventCategory;
-        private IEventAdminRepository _eventAdmin;
-        private ISubEventCategoryRepository _subEventCategory;
-        private IEventStatusRepository _eventStatus;
 
         public IUserRepository User
         {
@@ -136,6 +140,7 @@ namespace EPlast.DataAccess.Repositories
                 return _event;
             }
         }
+
         public IGallaryRepository Gallary
         {
             get
@@ -147,6 +152,7 @@ namespace EPlast.DataAccess.Repositories
                 return _gallary;
             }
         }
+
         public IEventGallaryRepository EventGallary
         {
             get
@@ -158,6 +164,7 @@ namespace EPlast.DataAccess.Repositories
                 return _eventGallary;
             }
         }
+
         public IParticipantStatusRepository ParticipantStatus
         {
             get
@@ -170,6 +177,7 @@ namespace EPlast.DataAccess.Repositories
                 return _participantStatuses;
             }
         }
+
         public IParticipantRepository Participant
         {
             get
@@ -222,7 +230,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        // public IEventRepository Events => throw new System.NotImplementedException();
         public IEventAdminRepository EventAdmin
         {
             get
