@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200224124048_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,131 +149,6 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.AnnualReport", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AnnualReportStatusId");
-
-                    b.Property<int>("ContributionFunds");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<int>("GovernmentFunds");
-
-                    b.Property<string>("ImprovementNeeds")
-                        .IsRequired()
-                        .HasMaxLength(500);
-
-                    b.Property<int>("PlastFunds");
-
-                    b.Property<string>("PropertyList")
-                        .IsRequired()
-                        .HasMaxLength(500);
-
-                    b.Property<int>("SponsorFunds");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AnnualReportStatusId");
-
-                    b.ToTable("AnnualReports");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.AnnualReportStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("AnnualReportStatus");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Decesion", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<int>("DecesionStatusID");
-
-                    b.Property<int>("DecesionTargetID");
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int>("OrganID");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("DecesionStatusID");
-
-                    b.HasIndex("DecesionTargetID");
-
-                    b.HasIndex("OrganID");
-
-                    b.ToTable("Decesions");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("DecesionStatusName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DecesionStatuses");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionTarget", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TargetName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DecesionTargets");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.DocumentTemplate", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("DocumentFIleName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DocumentTemplates");
-                });
-
                     b.Property<string>("EventCategoryName")
                         .IsRequired();
 
@@ -334,21 +211,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Nationalities");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Organ", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("OrganName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Organs");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Participant", b =>
@@ -761,32 +623,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
                         .WithMany("SubEventCategories")
                         .HasForeignKey("EventCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.AnnualReport", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.AnnualReportStatus", "Status")
-                        .WithMany("AnnualReports")
-                        .HasForeignKey("AnnualReportStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Decesion", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.DecesionStatus", "DecesionStatus")
-                        .WithMany()
-                        .HasForeignKey("DecesionStatusID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.DecesionTarget", "DecesionTarget")
-                        .WithMany()
-                        .HasForeignKey("DecesionTargetID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.Organ", "Organ")
-                        .WithMany()
-                        .HasForeignKey("OrganID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -20,11 +20,8 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public int EventCategoryID { get; set; }
         public int EventStatusID { get; set; }
-
-
         public EventCategory EventCategory { get; set; }
         public EventStatus EventStatus { get; set; }
-
         public ICollection<Participant> Participants { get; set; }
         public ICollection<EventGallary> EventGallarys { get; set; }
         public ICollection<EventAdmin> EventAdmins { get; set; }

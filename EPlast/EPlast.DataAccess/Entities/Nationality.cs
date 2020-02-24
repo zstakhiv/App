@@ -11,5 +11,7 @@ namespace EPlast.DataAccess.Entities
         public string Name { get; set; }
 
         public ICollection<User> Users { get; set; }
+        public string NationalityName { get; set; }
+        public ICollection<UserProfile> UserProfiles { get; set; }
     }
 }

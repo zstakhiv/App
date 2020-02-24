@@ -10,8 +10,10 @@ namespace EPlast.DataAccess
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
         }
+
+        public DbSet<User> Users { get; set;}
+        public DbSet<UserProfile> UserProfiles {get; set;}
         public DbSet<Nationality> Nationalities { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Gallary> Gallarys { get; set; }
         public DbSet<EventGallary> EventGallarys { get; set; }
