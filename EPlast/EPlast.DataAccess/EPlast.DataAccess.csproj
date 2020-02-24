@@ -4,7 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="bootstrap" Version="4.3.1" />
     <Compile Remove="Migrations\20200220073146_club_city_region.cs" />
     <Compile Remove="Migrations\20200220073146_club_city_region.Designer.cs" />
   </ItemGroup>

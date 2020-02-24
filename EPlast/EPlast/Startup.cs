@@ -1,6 +1,7 @@
 ﻿using EPlast.DataAccess;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.DataAccess.Repositories.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,12 +32,26 @@ namespace EPlast
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContextPool<EPlastDBContext>(options => 
+            services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IEducationRepository, EducationRepository>();
+            services.AddScoped<IDegreeRepository, DegreeRepository>();
+            services.AddScoped<IReligionRepository, ReligionRepository>();
+            services.AddScoped<ISexRepository, SexRepository>();
+            services.AddScoped<IWorkRepository, WorkRepository>();
+            services.AddScoped<IConfirmatorRepository, ConfirmatorRepository>();
+            services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
+
+            services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
+            services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
+            services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
+            services.AddScoped<IOrgranRepository, OrganRepository>();
+            services.AddScoped<IDecesionRepository, DecesionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
