@@ -1,4 +1,6 @@
-﻿using EPlast.DataAccess.Repositories;
+﻿using EPlast.DataAccess.Repositories.Contracts;
+
+using EPlast.DataAccess.Repositories;
 //using EPlast.DataAccess.Repositories.Contracts;
 
 namespace EPlast.DataAccess.Repositories
@@ -7,7 +9,15 @@ namespace EPlast.DataAccess.Repositories
     {
         private EPlastDBContext _dbContext;
         private IUserRepository _user;
+        private IUserProfileRepository _userprofile;
         private INationalityRepository _nationality;
+        private IReligionRepository _religion;
+        private ISexRepository _sex;
+        private IWorkRepository _work;
+        private IEducationRepository _education;
+        private IDegreeRepository _degree;
+        private IConfirmedUserRepository _confirmedUser;
+        private IConfirmatorRepository _confirmator;
         private IEventRepository _event;
         private IParticipantStatusRepository _participantStatuses;
         private IGallaryRepository _gallary;
@@ -32,6 +42,18 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _user;
+            }
+        }
+
+        public IUserProfileRepository UserProfile
+        {
+            get
+            {
+                if (_userprofile == null)
+                {
+                    _userprofile = new UserProfileRepository(_dbContext);
+                }
+                return _userprofile;
             }
         }
 
@@ -157,6 +179,97 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _eventAdmin;
+            }
+        }
+
+        public IReligionRepository Religion
+        {
+            get
+            {
+                if (_religion == null)
+                {
+                    _religion = new ReligionRepository(_dbContext);
+                }
+
+                return _religion;
+            }
+        }
+
+        public ISexRepository Sex
+        {
+            get
+            {
+                if (_sex == null)
+                {
+                    _sex = new SexRepository(_dbContext);
+                }
+
+                return _sex;
+            }
+        }
+
+        public IWorkRepository Work
+        {
+            get
+            {
+                if (_work == null)
+                {
+                    _work = new WorkRepository(_dbContext);
+                }
+
+                return _work;
+            }
+        }
+
+        public IEducationRepository Education
+        {
+            get
+            {
+                if (_education == null)
+                {
+                    _education = new EducationRepository(_dbContext);
+                }
+
+                return _education;
+            }
+        }
+
+        public IDegreeRepository Degree
+        {
+            get
+            {
+                if (_degree == null)
+                {
+                    _degree = new DegreeRepository(_dbContext);
+                }
+
+                return _degree;
+            }
+        }
+
+        public IConfirmedUserRepository ConfirmedUser
+        {
+            get
+            {
+                if (_confirmedUser == null)
+                {
+                    _confirmedUser = new ConfirmedUserRepository(_dbContext);
+                }
+
+                return _confirmedUser;
+            }
+        }
+
+        public IConfirmatorRepository Confirmator
+        {
+            get
+            {
+                if (_confirmator == null)
+                {
+                    _confirmator = new ConfirmatorRepository(_dbContext);
+                }
+
+                return _confirmator;
             }
         }
 

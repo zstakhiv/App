@@ -1,4 +1,19 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿/*js from LoginAndRegister*/
 
-// Write your JavaScript code.
+function registerClick() {
+    $(".switcher-text").addClass("register-active").removeClass("login-active");
+    $(".register-form").removeClass("d-none");
+    $(".login-form").addClass("d-none");
+    // $(".login-form").hide(500);
+}
+
+function loginClick() {
+    $(".switcher-text").addClass("login-active").removeClass("register-active");
+    $(".register-form").addClass("d-none");
+    $(".login-form").removeClass("d-none");
+}
+
+$(".register-text").click(registerClick);
+$(".login-text").click(loginClick);
+
+

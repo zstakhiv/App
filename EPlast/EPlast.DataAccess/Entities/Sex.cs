@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class Nationality
+    public class Sex
     {
         public int ID { get; set; }
-        [Required, MaxLength(50, ErrorMessage = "Nationality name cannot exceed 50 characters")]
-        public string NationalityName { get; set; }
+        [Required, MaxLength(10, ErrorMessage = "Sex name cannot exceed 10 characters")]
+        public string SexName { get; set; }
         public ICollection<UserProfile> UserProfiles { get; set; }
     }
 }
