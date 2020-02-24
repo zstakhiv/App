@@ -36,5 +36,9 @@ namespace EPlast.Controllers
         {
             return View();
         }
+        public IActionResult LoginAndRegister()
+        {
+            return View();
+        }
     }
 }

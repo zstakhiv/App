@@ -62,7 +62,7 @@ body {
 form input[type="text"].form-control,
 form input[type="email"].form-control,
 form input[type="password"].form-control {
-    background-color: black;
+    background-color: white;
 }
 
 

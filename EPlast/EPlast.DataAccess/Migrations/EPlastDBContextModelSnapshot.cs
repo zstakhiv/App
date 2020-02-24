@@ -31,7 +31,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Confirmators");
+                    b.ToTable("Confirmator");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
@@ -55,7 +55,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ConfirmedUsers");
+                    b.ToTable("ConfirmedUser");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Degree", b =>
@@ -70,7 +70,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Degrees");
+                    b.ToTable("Degree");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
@@ -78,6 +78,23 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DegreeID");
+
+                    b.Property<string>("PlaceOfStudy")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Speciality")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DegreeID");
+
+                    b.ToTable("Education");
+                });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
                 {
@@ -231,6 +248,36 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("ParticipantStatuses");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Religion", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ReligionName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Religion");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Sex", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SexName")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Sex");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.SubEventCategory", b =>
                 {
                     b.Property<int>("ID")
@@ -374,7 +421,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Works");
+                    b.ToTable("Work");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -485,6 +532,32 @@ namespace EPlast.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Confirmator", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("Confirmators")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Confirmator", "Confirmator")
+                        .WithOne("ConfirmedUser")
+                        .HasForeignKey("EPlast.DataAccess.Entities.ConfirmedUser", "ConfirmatorID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("ConfirmedUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
+                        .WithMany("Educations")
+                        .HasForeignKey("DegreeID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>

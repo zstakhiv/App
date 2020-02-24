@@ -13,7 +13,6 @@ namespace EPlast.DataAccess.Entities
         public Work Work { get; set; }
         public Sex Sex { get; set; }
         public string Address { get; set; }
-
         public int UserID { get; set; }
         public User User { get; set; }
     }

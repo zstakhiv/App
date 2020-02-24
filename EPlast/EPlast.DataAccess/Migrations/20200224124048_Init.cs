@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EPlast.DataAccess.Migrations
 {
-    public partial class Init6 : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,7 +23,7 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Degrees",
+                name: "Degree",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -32,7 +32,46 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Degrees", x => x.ID);
+                    table.PrimaryKey("PK_Degree", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventCategories",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EventCategoryName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventCategories", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventStatuses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EventStatusName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventStatuses", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gallarys",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    GalaryFileName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gallarys", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +88,20 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Religions",
+                name: "ParticipantStatuses",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserEventStatusName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticipantStatuses", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Religion",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -58,11 +110,11 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Religions", x => x.ID);
+                    table.PrimaryKey("PK_Religion", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sexes",
+                name: "Sex",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -71,11 +123,11 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sexes", x => x.ID);
+                    table.PrimaryKey("PK_Sex", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Works",
+                name: "Work",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -85,7 +137,7 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Works", x => x.ID);
+                    table.PrimaryKey("PK_Work", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,7 +162,7 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Educations",
+                name: "Education",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -121,13 +173,64 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Educations", x => x.ID);
+                    table.PrimaryKey("PK_Education", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Educations_Degrees_DegreeID",
+                        name: "FK_Education_Degree_DegreeID",
                         column: x => x.DegreeID,
-                        principalTable: "Degrees",
+                        principalTable: "Degree",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubEventCategories",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SubEventCategoryName = table.Column<string>(nullable: false),
+                    EventCategoryID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubEventCategories", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_SubEventCategories_EventCategories_EventCategoryID",
+                        column: x => x.EventCategoryID,
+                        principalTable: "EventCategories",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EventName = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    EventDateStart = table.Column<DateTime>(nullable: false),
+                    EventDateEnd = table.Column<DateTime>(nullable: false),
+                    Eventlocation = table.Column<string>(nullable: false),
+                    EventCategoryID = table.Column<int>(nullable: false),
+                    EventStatusID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Events_EventCategories_EventCategoryID",
+                        column: x => x.EventCategoryID,
+                        principalTable: "EventCategories",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Events_EventStatuses_EventStatusID",
+                        column: x => x.EventStatusID,
+                        principalTable: "EventStatuses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,9 +253,9 @@ namespace EPlast.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_UserProfiles", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_UserProfiles_Educations_EducationID",
+                        name: "FK_UserProfiles_Education_EducationID",
                         column: x => x.EducationID,
-                        principalTable: "Educations",
+                        principalTable: "Education",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -162,23 +265,47 @@ namespace EPlast.DataAccess.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserProfiles_Religions_ReligionID",
+                        name: "FK_UserProfiles_Religion_ReligionID",
                         column: x => x.ReligionID,
-                        principalTable: "Religions",
+                        principalTable: "Religion",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserProfiles_Sexes_SexID",
+                        name: "FK_UserProfiles_Sex_SexID",
                         column: x => x.SexID,
-                        principalTable: "Sexes",
+                        principalTable: "Sex",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserProfiles_Works_WorkID",
+                        name: "FK_UserProfiles_Work_WorkID",
                         column: x => x.WorkID,
-                        principalTable: "Works",
+                        principalTable: "Work",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventGallarys",
+                columns: table => new
+                {
+                    EventID = table.Column<int>(nullable: false),
+                    GallaryID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventGallarys", x => new { x.EventID, x.GallaryID });
+                    table.ForeignKey(
+                        name: "FK_EventGallarys_Events_EventID",
+                        column: x => x.EventID,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventGallarys_Gallarys_GallaryID",
+                        column: x => x.GallaryID,
+                        principalTable: "Gallarys",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -303,7 +430,7 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Confirmators",
+                name: "Confirmator",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -312,9 +439,9 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Confirmators", x => x.ID);
+                    table.PrimaryKey("PK_Confirmator", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Confirmators_AspNetUsers_UserId",
+                        name: "FK_Confirmator_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -322,7 +449,64 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConfirmedUsers",
+                name: "EventAdmin",
+                columns: table => new
+                {
+                    EventID = table.Column<int>(nullable: false),
+                    UserID = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventAdmin", x => new { x.EventID, x.UserID });
+                    table.ForeignKey(
+                        name: "FK_EventAdmin_Events_EventID",
+                        column: x => x.EventID,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventAdmin_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Participants",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ParticipantStatusId = table.Column<int>(nullable: false),
+                    EventId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Participants", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Participants_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Participants_ParticipantStatuses_ParticipantStatusId",
+                        column: x => x.ParticipantStatusId,
+                        principalTable: "ParticipantStatuses",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Participants_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfirmedUser",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -333,15 +517,15 @@ namespace EPlast.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConfirmedUsers", x => x.ID);
+                    table.PrimaryKey("PK_ConfirmedUser", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_ConfirmedUsers_Confirmators_ConfirmatorID",
+                        name: "FK_ConfirmedUser_Confirmator_ConfirmatorID",
                         column: x => x.ConfirmatorID,
-                        principalTable: "Confirmators",
+                        principalTable: "Confirmator",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ConfirmedUsers_AspNetUsers_UserId",
+                        name: "FK_ConfirmedUser_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -394,26 +578,66 @@ namespace EPlast.DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Confirmators_UserId",
-                table: "Confirmators",
+                name: "IX_Confirmator_UserId",
+                table: "Confirmator",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConfirmedUsers_ConfirmatorID",
-                table: "ConfirmedUsers",
+                name: "IX_ConfirmedUser_ConfirmatorID",
+                table: "ConfirmedUser",
                 column: "ConfirmatorID",
                 unique: true,
                 filter: "[ConfirmatorID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConfirmedUsers_UserId",
-                table: "ConfirmedUsers",
+                name: "IX_ConfirmedUser_UserId",
+                table: "ConfirmedUser",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Educations_DegreeID",
-                table: "Educations",
+                name: "IX_Education_DegreeID",
+                table: "Education",
                 column: "DegreeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventAdmin_UserID",
+                table: "EventAdmin",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventGallarys_GallaryID",
+                table: "EventGallarys",
+                column: "GallaryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_EventCategoryID",
+                table: "Events",
+                column: "EventCategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_EventStatusID",
+                table: "Events",
+                column: "EventStatusID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participants_EventId",
+                table: "Participants",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participants_ParticipantStatusId",
+                table: "Participants",
+                column: "ParticipantStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participants_UserId",
+                table: "Participants",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubEventCategories_EventCategoryID",
+                table: "SubEventCategories",
+                column: "EventCategoryID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_EducationID",
@@ -459,37 +683,64 @@ namespace EPlast.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ConfirmedUsers");
+                name: "ConfirmedUser");
+
+            migrationBuilder.DropTable(
+                name: "EventAdmin");
+
+            migrationBuilder.DropTable(
+                name: "EventGallarys");
+
+            migrationBuilder.DropTable(
+                name: "Participants");
+
+            migrationBuilder.DropTable(
+                name: "SubEventCategories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Confirmators");
+                name: "Confirmator");
+
+            migrationBuilder.DropTable(
+                name: "Gallarys");
+
+            migrationBuilder.DropTable(
+                name: "Events");
+
+            migrationBuilder.DropTable(
+                name: "ParticipantStatuses");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "EventCategories");
+
+            migrationBuilder.DropTable(
+                name: "EventStatuses");
+
+            migrationBuilder.DropTable(
                 name: "UserProfiles");
 
             migrationBuilder.DropTable(
-                name: "Educations");
+                name: "Education");
 
             migrationBuilder.DropTable(
                 name: "Nationalities");
 
             migrationBuilder.DropTable(
-                name: "Religions");
+                name: "Religion");
 
             migrationBuilder.DropTable(
-                name: "Sexes");
+                name: "Sex");
 
             migrationBuilder.DropTable(
-                name: "Works");
+                name: "Work");
 
             migrationBuilder.DropTable(
-                name: "Degrees");
+                name: "Degree");
         }
     }
 }
