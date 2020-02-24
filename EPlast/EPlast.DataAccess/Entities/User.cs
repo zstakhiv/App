@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace EPlast.DataAccess.Entities
 {
@@ -12,5 +13,7 @@ namespace EPlast.DataAccess.Entities
         public string LastName { get; set; }
 
         public Nationality Nationality { get; set; }
+        public ICollection<EventAdmin> Events { get; set; }
+        public ICollection<Participant> Participants { get; set; }
     }
 }
