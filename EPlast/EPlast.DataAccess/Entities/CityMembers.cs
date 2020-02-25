@@ -12,6 +12,5 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public ICollection<CityAdministration> CityAdministration { get; set; }
     }
 }
