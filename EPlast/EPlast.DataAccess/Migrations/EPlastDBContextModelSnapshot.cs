@@ -140,6 +140,224 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.AdminType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminTypeName")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("AdminTypes");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.City", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CityURL")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("OfficeNumber")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(16);
+
+                    b.Property<string>("PostIndex")
+                        .HasMaxLength(7);
+
+                    b.Property<int?>("RegionID");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(60);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RegionID");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityAdministration", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdminTypeID");
+
+                    b.Property<int?>("CityID");
+
+                    b.Property<int?>("CityMembersID");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdminTypeID");
+
+                    b.HasIndex("CityID");
+
+                    b.HasIndex("CityMembersID");
+
+                    b.ToTable("CityAdministrations");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityDocumentType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("CityDocumentTypes");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityDocuments", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CityDocumentTypeID");
+
+                    b.Property<int?>("CityID");
+
+                    b.Property<string>("DocumentURL")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.Property<DateTime?>("SubmitDate");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CityDocumentTypeID");
+
+                    b.HasIndex("CityID");
+
+                    b.ToTable("CityDocuments");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CityID");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CityID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CityMembers");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Club", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClubName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ClubURL");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Clubs");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ClubAdministration", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdminTypeID");
+
+                    b.Property<int?>("ClubID");
+
+                    b.Property<int?>("ClubMembersID");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdminTypeID");
+
+                    b.HasIndex("ClubID");
+
+                    b.HasIndex("ClubMembersID");
+
+                    b.ToTable("ClubAdministrations");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ClubMembers", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ClubID");
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ClubID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ClubMembers");
+                });
+
                     b.Property<string>("DecesionStatusName")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -436,6 +654,70 @@ namespace EPlast.DataAccess.Migrations
                     b.HasIndex("EventCategoryID");
 
                     b.ToTable("SubEventCategories");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Region", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1024);
+
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Regions");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.RegionAdministration", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdminTypeID");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<int?>("RegionID");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdminTypeID");
+
+                    b.HasIndex("RegionID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RegionAdministrations");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UnconfirmedCityMember", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CityID");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CityID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UnconfirmedCityMember");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>
@@ -794,6 +1076,103 @@ namespace EPlast.DataAccess.Migrations
                         .WithMany("SubEventCategories")
                         .HasForeignKey("EventCategoryID")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.City", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Region", "Region")
+                        .WithMany("Cities")
+                        .HasForeignKey("RegionID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityAdministration", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.AdminType", "AdminType")
+                        .WithMany("CityAdministration")
+                        .HasForeignKey("AdminTypeID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.City", "City")
+                        .WithMany("CityAdministration")
+                        .HasForeignKey("CityID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.CityMembers", "CityMembers")
+                        .WithMany("CityAdministration")
+                        .HasForeignKey("CityMembersID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityDocuments", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.CityDocumentType", "CityDocumentType")
+                        .WithMany("CityDocuments")
+                        .HasForeignKey("CityDocumentTypeID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.City", "City")
+                        .WithMany("CityDocuments")
+                        .HasForeignKey("CityID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.City", "City")
+                        .WithMany("CityMembers")
+                        .HasForeignKey("CityID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("CityMembers")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ClubAdministration", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.AdminType", "AdminType")
+                        .WithMany("ClubAdministration")
+                        .HasForeignKey("AdminTypeID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.Club", "Club")
+                        .WithMany("ClubAdministration")
+                        .HasForeignKey("ClubID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.ClubMembers", "ClubMembers")
+                        .WithMany("ClubAdministration")
+                        .HasForeignKey("ClubMembersID");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.ClubMembers", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Club", "Club")
+                        .WithMany("ClubMembers")
+                        .HasForeignKey("ClubID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.RegionAdministration", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.AdminType", "AdminType")
+                        .WithMany("RegionAdministration")
+                        .HasForeignKey("AdminTypeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EPlast.DataAccess.Entities.Region", "Region")
+                        .WithMany("RegionAdministration")
+                        .HasForeignKey("RegionID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UnconfirmedCityMember", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.City", "City")
+                        .WithMany("UnconfirmedCityMember")
+                        .HasForeignKey("CityID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.User", b =>

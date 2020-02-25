@@ -68,5 +68,18 @@ namespace EPlast.DataAccess
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }
         public DbSet<AnnualReportStatus> AnnualReportStatuses { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<CityAdministration> CityAdministrations { get; set; }
+        public DbSet<CityDocuments> CityDocuments { get; set; }
+        public DbSet<CityDocumentType> CityDocumentTypes { get; set; }
+        public DbSet<CityMembers> CityMembers { get; set; }
+        public DbSet<UnconfirmedCityMember> UnconfirmedCityMember { get; set; }
+        public DbSet<AdminType> AdminTypes  { get; set; }
+        public DbSet<ClubMembers> ClubMembers { get; set; }
+        public DbSet<ClubAdministration> ClubAdministrations { get; set; }
+        public DbSet<Club> Clubs { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<RegionAdministration> RegionAdministrations { get; set; }
+
     }
 }

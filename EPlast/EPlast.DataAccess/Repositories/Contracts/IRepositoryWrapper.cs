@@ -30,6 +30,19 @@ namespace EPlast.DataAccess.Repositories
         IWorkRepository Work { get; }
         IConfirmedUserRepository ConfirmedUser { get; }
         IConfirmatorRepository Confirmator { get; }
+        ICityAdministrationRepository CityAdministration{ get; }
+        ICityDocumentsRepository CityDocuments { get; }
+        ICityDocumentTypeRepository CityDocumentType { get; }
+        ICityMembersRepository CityMembers { get; }
+        ICityRepository City { get; }
+        IUnconfirmedCityMemberRepository UnconfirmedCityMember { get; }
+        IAdminTypeRepository AdminType { get;  }
+        IClubRepository Club { get; }
+        IClubMembersRepository ClubMembers { get; }
+        IClubAdministrationRepository GetClubAdministration { get; }
+        IRegionRepository Region { get; }
+        IRegionAdministrationRepository RegionAdministration { get; }
+        
         void Save();
     }
 }
