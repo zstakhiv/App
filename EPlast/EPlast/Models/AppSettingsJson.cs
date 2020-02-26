@@ -5,6 +5,9 @@ using System.IO;
 
 namespace EPlast.Controllers
 {
+    /// <summary>
+    /// Get ConnectionStrings from Appsetting.json
+    /// </summary>
     public static class AppSettingsJson
     {
         private static string ApplicationExeDirectory()
@@ -26,6 +29,10 @@ namespace EPlast.Controllers
             return builder.Build();
         }
 
+        /// <summary>
+        /// Create DbContextOptionsBuilder for EPlastDBContext
+        /// </summary>
+        /// <returns> return Options from DbContextOptionsBuilder </returns>
         public static DbContextOptions<EPlastDBContext> GetConnectionString()
         {
             var appSettingsJson = GetAppSettings();
