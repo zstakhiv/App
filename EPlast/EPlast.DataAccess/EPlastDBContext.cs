@@ -9,6 +9,7 @@ namespace EPlast.DataAccess
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
+           
         }
 
         public DbSet<User> Users { get; set;}
