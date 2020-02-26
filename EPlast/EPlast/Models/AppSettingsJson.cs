@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EPlast.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.IO;
 
 namespace EPlast.Controllers
@@ -23,11 +25,14 @@ namespace EPlast.Controllers
 
             return builder.Build();
         }
-        public static string GetConnectionString()
-        {
-            var appSettingsJson = AppSettingsJson.GetAppSettings();
-            return appSettingsJson["ConnectionStrings:EPlastDBConnection"];
-        }
 
+        public static DbContextOptions<EPlastDBContext> GetConnectionString()
+        {
+            var appSettingsJson = GetAppSettings();
+            var connectionString = GetConnectionString();
+            var options = new DbContextOptionsBuilder<EPlastDBContext>();
+            options.UseSqlServer(appSettingsJson["ConnectionStrings:EPlastDBConnection"]);
+            return options.Options;
+        }
     }
 }
