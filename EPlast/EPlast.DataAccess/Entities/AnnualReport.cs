@@ -38,5 +38,8 @@ namespace EPlast.DataAccess.Entities
 
         public int AnnualReportStatusId { get; set; }
         public AnnualReportStatus Status { get; set; }
+
+        public int CityId { get; set; }
+        public City City { get; set; }
     }
 }
