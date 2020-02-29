@@ -7,15 +7,15 @@ namespace EPlast.DataAccess.Repositories
         IUserRepository User { get; }
         IUserProfileRepository UserProfile { get; }
         INationalityRepository Nationality { get; }
-        IOrgranRepository Orgran { get; }
+        IOrganizationRepository Organization { get; }
         IDecesionTargetRepository DecesionTarget { get; }
         IDecesionStatusRepository DecesionStatus { get; }
         IDocumentTemplateRepository DocumentTemplate { get; }
         IDecesionRepository Decesion { get; }
 
-        IEventRepository Event { get;  }
+        IEventRepository Event { get; }
         IGallaryRepository Gallary { get; }
-        IParticipantStatusRepository ParticipantStatus { get;}
+        IParticipantStatusRepository ParticipantStatus { get; }
         IParticipantRepository Participant { get; }
         IEventCategoryRepository EventCategory { get; }
         IEventGallaryRepository EventGallary { get; }
@@ -30,19 +30,19 @@ namespace EPlast.DataAccess.Repositories
         IWorkRepository Work { get; }
         IConfirmedUserRepository ConfirmedUser { get; }
         IConfirmatorRepository Confirmator { get; }
-        ICityAdministrationRepository CityAdministration{ get; }
+        ICityAdministrationRepository CityAdministration { get; }
         ICityDocumentsRepository CityDocuments { get; }
         ICityDocumentTypeRepository CityDocumentType { get; }
         ICityMembersRepository CityMembers { get; }
         ICityRepository City { get; }
         IUnconfirmedCityMemberRepository UnconfirmedCityMember { get; }
-        IAdminTypeRepository AdminType { get;  }
+        IAdminTypeRepository AdminType { get; }
         IClubRepository Club { get; }
         IClubMembersRepository ClubMembers { get; }
         IClubAdministrationRepository GetClubAdministration { get; }
         IRegionRepository Region { get; }
         IRegionAdministrationRepository RegionAdministration { get; }
-        
+
         void Save();
     }
 }

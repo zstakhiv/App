@@ -8,7 +8,7 @@ namespace EPlast.DataAccess.Repositories
         private IUserRepository _user;
         private IUserProfileRepository _userprofile;
         private INationalityRepository _nationality;
-        private IOrgranRepository _oragn;
+        private IOrganizationRepository _organization;
         private IDecesionTargetRepository _decesionTarget;
         private IDecesionStatusRepository _decesionStatus;
         private IDocumentTemplateRepository _documentTemplate;
@@ -90,15 +90,15 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IOrgranRepository Orgran
+        public IOrganizationRepository Organization
         {
             get
             {
-                if (_oragn == null)
+                if (_organization == null)
                 {
-                    _oragn = new OrganRepository(_dbContext);
+                    _organization = new OrganizationRepository(_dbContext);
                 }
-                return _oragn;
+                return _organization;
             }
         }
 
@@ -454,7 +454,7 @@ namespace EPlast.DataAccess.Repositories
         {
             get
             {
-                if (_clubMembers==null)
+                if (_clubMembers == null)
                 {
                     _clubMembers = new ClubMembersRepository(_dbContext);
                 }
@@ -467,7 +467,7 @@ namespace EPlast.DataAccess.Repositories
         {
             get
             {
-                if(_clubAdministration==null)
+                if (_clubAdministration == null)
                 {
                     _clubAdministration = new ClubAdministrationRepository(_dbContext);
                 }

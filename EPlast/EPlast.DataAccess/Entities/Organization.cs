@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class Organ
+    public class Organization
     {
         public int ID { get; set; }
 
-        [DisplayName("Organ Name")]
+        [DisplayName("Organization Name")]
         [Required, MaxLength(50, ErrorMessage = "Organ  Name cannot exceed 50 characters")]
-        public string OrganName { get; set; }
+        public string OrganizationName { get; set; }
     }
 }
