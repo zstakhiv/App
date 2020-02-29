@@ -50,7 +50,7 @@ namespace EPlast
             services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
             services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
-            services.AddScoped<IOrgranRepository, OrganRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
         }
 

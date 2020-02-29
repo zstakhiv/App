@@ -11,7 +11,7 @@ namespace EPlast.DataAccess.Entities
         public DecesionStatus DecesionStatus { get; set; }
 
         [Required]
-        public Organ Organ { get; set; }
+        public Organization Organization { get; set; }
 
         [Required]
         public DecesionTarget DecesionTarget { get; set; }

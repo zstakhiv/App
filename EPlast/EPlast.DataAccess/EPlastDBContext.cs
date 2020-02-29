@@ -9,11 +9,10 @@ namespace EPlast.DataAccess
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
-           
         }
 
-        public DbSet<User> Users { get; set;}
-        public DbSet<UserProfile> UserProfiles {get; set;}
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Nationality> Nationalities { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Gallary> Gallarys { get; set; }
@@ -63,7 +62,7 @@ namespace EPlast.DataAccess
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
-        public DbSet<Organ> Organs { get; set; }
+        public DbSet<Organization> Organization { get; set; }
         public DbSet<DecesionStatus> DecesionStatuses { get; set; }
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
@@ -75,12 +74,11 @@ namespace EPlast.DataAccess
         public DbSet<CityDocumentType> CityDocumentTypes { get; set; }
         public DbSet<CityMembers> CityMembers { get; set; }
         public DbSet<UnconfirmedCityMember> UnconfirmedCityMember { get; set; }
-        public DbSet<AdminType> AdminTypes  { get; set; }
+        public DbSet<AdminType> AdminTypes { get; set; }
         public DbSet<ClubMembers> ClubMembers { get; set; }
         public DbSet<ClubAdministration> ClubAdministrations { get; set; }
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<RegionAdministration> RegionAdministrations { get; set; }
-
     }
 }
