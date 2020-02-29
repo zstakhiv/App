@@ -20,6 +20,9 @@ namespace EPlast.DataAccess.Entities
         public string Description { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date")]
         public DateTime Date { get; set; }
     }
 }
