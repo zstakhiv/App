@@ -68,7 +68,7 @@
 
   <ItemGroup>
     <None Update="C:\Users\USER\.nuget\packages\nlog.config\4.6.8\contentFiles\any\any\NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
