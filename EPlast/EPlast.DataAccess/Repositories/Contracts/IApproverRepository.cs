@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface IConfirmatorRepository:IRepositoryBase<Confirmator>
+    public interface IApproverRepository:IRepositoryBase<Approver>
     {
     }
 }

@@ -14,6 +14,13 @@ namespace EPlast.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Nationality> Nationalities { get; set; }
+        public DbSet<Religion> Religions { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<Work> Works { get; set; }
+        public DbSet<ConfirmedUser> ConfirmedUsers { get; set; }
+        public DbSet<Approver> Approvers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Gallary> Gallarys { get; set; }
         public DbSet<EventGallary> EventGallarys { get; set; }

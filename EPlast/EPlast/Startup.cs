@@ -42,9 +42,9 @@ namespace EPlast
             services.AddScoped<IEducationRepository, EducationRepository>();
             services.AddScoped<IDegreeRepository, DegreeRepository>();
             services.AddScoped<IReligionRepository, ReligionRepository>();
-            services.AddScoped<ISexRepository, SexRepository>();
+            services.AddScoped<IGenderRepository, GenderRepository>();
             services.AddScoped<IWorkRepository, WorkRepository>();
-            services.AddScoped<IConfirmatorRepository, ConfirmatorRepository>();
+            services.AddScoped<IApproverRepository, ApproverRepository>();
             services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
 
             services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
