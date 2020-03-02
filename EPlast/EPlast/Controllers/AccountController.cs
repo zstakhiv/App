@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
-using EPlast.DataAccess.Entities.Account;
 using EPlast.Models;
 using EPlast.ViewModels;
 
@@ -19,10 +18,10 @@ namespace EPlast.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -49,7 +48,7 @@ namespace EPlast.Controllers
                 return View("LoginAndRegister");
             }
 
-            var user = new ApplicationUser() { UserName = registerVM.Email, Email = registerVM.Email };
+            var user = new User() { UserName = registerVM.Email, Email = registerVM.Email };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)

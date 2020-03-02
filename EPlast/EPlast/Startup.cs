@@ -27,13 +27,6 @@ namespace EPlast
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
@@ -48,13 +41,13 @@ namespace EPlast
             services.AddScoped<IWorkRepository, WorkRepository>();
             services.AddScoped<IConfirmatorRepository, ConfirmatorRepository>();
             services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
-
             services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
             services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
-            services.AddIdentity<ApplicationUser, IdentityRole>();
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
             services.Configure<IdentityOptions>(options =>
             {
                 //password settings
@@ -73,7 +66,7 @@ namespace EPlast
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
-                options.LoginPath = "/Account/Login";
+                options.LoginPath = "/Account/LoginAndRegister";
             });
         }
 
