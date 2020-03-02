@@ -3,7 +3,7 @@
 });
 $(document).ready(function () {
     $(function () {
-        $("#datepicker").datepicker({ dateFormat: 'dd/mm/yy'}).datepicker("setDate", "0");
+        $("#datepicker").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", "0");
     })
     //
     $('#dtBasicExample').DataTable();
