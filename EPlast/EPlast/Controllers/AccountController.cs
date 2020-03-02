@@ -12,21 +12,21 @@ using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Entities.Account;
 using EPlast.Models;
+using EPlast.ViewModels;
 
 namespace EPlast.Controllers
 {
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController()
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-           
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
-
-       
-        
 
         public IActionResult Index()
         {
@@ -39,6 +39,42 @@ namespace EPlast.Controllers
         public IActionResult LoginAndRegister()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Registered(RegisterViewModel registerVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Something went wrong");
+                return View("LoginAndRegister");
+            }
+
+            var user = new ApplicationUser() { UserName = registerVM.Email, Email = registerVM.Email };
+            var result = await _userManager.CreateAsync(user, registerVM.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("User/GetPage");
+            }
+
+            return View("LoginAndRegister");
+        }
+
+        public async Task<IActionResult> LoggedIn(LoginViewModel loginVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, "Something went wrong");
+                return View("Login");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe, false);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("User/GetPage");
+            }
+            else
+                return View("LoginAndRegister");
         }
     }
 }
