@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EPlast.DataAccess.Migrations
 {
-    public partial class ChangedDecesionAddedNewFieldName : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("ALTER DATABASE EPlast COLLATE SQL_Ukrainian_CP1251_CI_AS", suppressTransaction: true);
-
             migrationBuilder.CreateTable(
                 name: "AdminTypes",
                 columns: table => new
