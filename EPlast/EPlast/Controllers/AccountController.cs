@@ -12,17 +12,17 @@ using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Entities.Account;
 using EPlast.Models;
+using NLog;
 
 namespace EPlast.Controllers
 {
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        
-
+        private Logger logger;
         public AccountController()
         {
-           
+            logger = LogManager.GetCurrentClassLogger();
         }
 
        
