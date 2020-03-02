@@ -8,6 +8,8 @@ namespace EPlast.DataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("ALTER DATABASE EPlast COLLATE SQL_Ukrainian_CP1251_CI_AS", suppressTransaction: true);
+
             migrationBuilder.CreateTable(
                 name: "AdminTypes",
                 columns: table => new
