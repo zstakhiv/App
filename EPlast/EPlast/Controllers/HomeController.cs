@@ -31,5 +31,7 @@ namespace EPlast.Controllers
         {
             return View("Views/Account/LoginAndRegister.cshtml");
         }
+
+        
     }
 }

@@ -48,12 +48,12 @@ namespace EPlast.Controllers
                 return View("LoginAndRegister");
             }
 
-            var user = new User() { UserName = registerVM.Email, Email = registerVM.Email };
+            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName};
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)
             {
-                return RedirectToAction("User/GetPage");
+                return RedirectToAction("Index", "LoginAndRegister");
             }
 
             return View("LoginAndRegister");
@@ -64,16 +64,26 @@ namespace EPlast.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError(string.Empty, "Something went wrong");
-                return View("Login");
+                return RedirectToAction("Index", "Account");
             }
+            var user = await _userManager.FindByEmailAsync(loginVM.Email);
+            var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, false);
 
-            var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe, false);
             if (result.Succeeded)
             {
-                return RedirectToAction("User/GetPage");
+                return RedirectToAction("Index", "Account");
             }
             else
+            {
                 return View("LoginAndRegister");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("LoginAndRegister", "Account");
         }
     }
 }

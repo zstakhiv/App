@@ -14,6 +14,10 @@
     <Compile Remove="Migrations\20200220073146_club_city_region.Designer.cs" />
     <Compile Remove="Migrations\20200301105345_migration1.cs" />
     <Compile Remove="Migrations\20200301105345_migration1.Designer.cs" />
+    <Compile Remove="Migrations\20200302213825_migration20.cs" />
+    <Compile Remove="Migrations\20200302213825_migration20.Designer.cs" />
+    <Compile Remove="Migrations\20200302230656_Migration17.cs" />
+    <Compile Remove="Migrations\20200302230656_Migration17.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
