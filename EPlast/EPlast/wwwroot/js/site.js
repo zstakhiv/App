@@ -3,8 +3,8 @@
 });
 $(document).ready(function () {
     $(function () {
-        $("#datepicker").datepicker();
-    });
+        $("#datepicker").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", "0");
+    })
     //
     $('#dtBasicExample').DataTable();
     $('.dataTables_length').addClass('bs-select');

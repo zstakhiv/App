@@ -1,41 +1,38 @@
-﻿@{
+﻿@using EPlast.DataAccess.Entities
+@model EPlast.DataAccess.Entities.Decesion
+@{
     ViewData["Title"] = "Raport";
 }
 <div class="contact-clean">
-    <form method="post">
+    <form method="post" asp-action="SaveReport" asp-control ler="Report">
         <h2 class="text-center">Додати рішення пластового проводу<br></h2>
         <div class="form-group">
             <label>
                 <strong>Назва рішення</strong>
                 <br>
             </label>
-            <input class="form-control" type="text" name="DesiconName" placeholder="Назва рішення">
+            @Html.TextBoxFor(x => x.Name, new { @placeholder = "Назва рішення", @class = "form-control" })
         </div>
         <div class="form-group">
             <label>
                 <strong>Рішення органу</strong>
                 <br>
             </label>
-            <select class="form-control">
-                <optgroup label="Виберіть КПР чи КРК">
-                    <option value="1" selected="">КПР</option>
-                    <option value="2">КРК</option>
-                </optgroup>
-            </select>
+            @Html.DropDownListFor(x => x.Organization.ID, (IEnumerable<SelectListItem>)ViewBag.Organization, "Виберіть орган влади рішення"
+            , new { @class = "form-control" })
         </div>
         <div class="form-group">
             <label>
                 <strong>Тематика рішення</strong>
                 <br>
             </label>
-            <input class="form-control" type="text" name="DecisionType" placeholder="Тематика рішення" list="DecisionType-value">
+            @Html.TextBoxFor(x => x.DecesionTarget.TargetName,
+            new { @placeholder = "Тематика рішення", @list = "DecisionType-value", @class = "form-control", @Value = "" })
             <datalist id="DecisionType-value">
-                <option>соціальні мережі</option>
-                <option>осередки</option>
-                <option>спеціалізяція</option>
-                <option>вишкіл</option>
-                <option>зустріч</option>
-                <option>заява</option>
+                @foreach (DecesionTarget item in ViewBag.DecesionTargets)
+                {
+                    <option>@item.TargetName</option>
+                }
             </datalist>
         </div>
         <div class="form-group">
@@ -44,14 +41,15 @@
                 <br>
             </label>
             <br>
-            <input class="form-control" type="text" id="datepicker">
+            @Html.TextBoxFor(x => x.Date,
+            new { type = "datetime", @placeholder = "Назва рішення", @id = "datepicker", @class = "form-control" })
         </div>
         <label>
             <strong>Текст рішення</strong>
             <br>
         </label>
         <div class="form-group">
-            <textarea class="form-control" name="message" placeholder="Message" rows="14"></textarea>
+            @Html.TextAreaFor(x => x.Description, new { @placeholder = "Опис", @rows = "14", @class = "form-control" })
         </div>
         <div class="form-group">
             <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
