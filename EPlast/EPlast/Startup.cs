@@ -1,7 +1,9 @@
-﻿using EPlast.DataAccess;
+﻿using System;
+using EPlast.DataAccess;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Repositories.Contracts;
+using EPlast.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace EPlast
 {
@@ -25,16 +28,10 @@ namespace EPlast
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<INationalityRepository, NationalityRepository>();
@@ -46,12 +43,32 @@ namespace EPlast
             services.AddScoped<IWorkRepository, WorkRepository>();
             services.AddScoped<IApproverRepository, ApproverRepository>();
             services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
-
             services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
             services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                //password settings111
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+
+                //user settings
+                options.User.RequireUniqueEmail = true;
+
+                //lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.Expiration = TimeSpan.FromDays(5);
+                options.LoginPath = "/Account/LoginAndRegister";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +87,8 @@ namespace EPlast
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseStatusCodePages();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

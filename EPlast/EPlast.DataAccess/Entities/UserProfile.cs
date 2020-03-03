@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EPlast.DataAccess.Entities
 {
@@ -13,7 +15,7 @@ namespace EPlast.DataAccess.Entities
         public Work Work { get; set; }
         public Gender Gender { get; set; }
         public string Address { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         public User User { get; set; }
     }
 }

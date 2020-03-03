@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+    <TypeScriptCompile Remove="NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Class.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-min-loginregister.css" />
     <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-social.css" />
     <Content Remove="wwwroot\lib\bootstrap\dist\css\example.css" />

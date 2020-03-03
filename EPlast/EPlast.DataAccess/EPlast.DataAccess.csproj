@@ -8,10 +8,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="4.3.1" />
+    <Compile Remove="Migrations\20200220073146_club_city_region.cs" />
+    <Compile Remove="Migrations\20200220073146_club_city_region.Designer.cs" />
+    <Compile Remove="Migrations\20200301105345_migration1.cs" />
+    <Compile Remove="Migrations\20200301105345_migration1.Designer.cs" />
+    <Compile Remove="Migrations\20200302213825_migration20.cs" />
+    <Compile Remove="Migrations\20200302213825_migration20.Designer.cs" />
+    <Compile Remove="Migrations\20200302230656_Migration17.cs" />
+    <Compile Remove="Migrations\20200302230656_Migration17.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.4">
       <PrivateAssets>all</PrivateAssets>
