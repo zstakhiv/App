@@ -1,75 +1,107 @@
-﻿
-<div class="row">
-    <div class="col-7">
-        <form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5"style="background-color:white" >
-            <h1>Редагування профілю</h1>
-            <div class="form-group">
-                <label for="exampleInputEmail1" >Ім'я</label>
-                <input type="text" class="form-control" placeholder="Ім'я" value="Володимир">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Прізвище</label>
-                <input type="text" class="form-control" placeholder="Прізвище" value="Вермій">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">По-батькові</label>
-                <input type="text" class="form-control" placeholder="По-батькові" value="Вікторович">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Національність</label>
-                <input type="text" class="form-control" placeholder="Національність" value="Українець">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Телефон</label>
-                <input type="text" class="form-control" placeholder="Телефон" value="+3806314814444">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Віровизнання</label>
-                <input type="text" class="form-control" placeholder="Віровизнання" value="Християнство">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Дата народження</label>
-                <input type="text" class="form-control" placeholder="Дата народження" value="31.01.1990">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Місце навчання</label>
-                <input type="text" class="form-control" placeholder="Місце навчання" value="ЛНУ ім.Івана Франка">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Стать</label>
-                <input type="text" class="form-control" placeholder="Стать" value="Чоловіча">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Місце проживання</label>
-                <input type="text" class="form-control" placeholder="Місце проживання" value="вул.Стрийська">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail1">Робота</label>
-                <input type="text" class="form-control" placeholder="Робота" value=".NET Developer">
-            </div>
-            <button type="submit" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
-        </form>
-    </div>
-    <div class="col ">
-        <div class="row">
-            <div class="col ">
+﻿@model EPlast.Models.UserProfileViewModel;
 
-            </div>
-            <div class="col">
-                <form class="bg-light m-5 pt-2 pb-5 pr-5 pl-5">
-                    <img class="rounded-circle" style="width:200px;height:200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS7HBrTji1jiZda9gKgUjIAk7WhVhpSGelEVnZFqXrEAHg2-qAg">
-                    <div class="custom-file mt-3" id="customFile">
-                        <input type="file" class="custom-file-input" id="file" name="file" value="dvas" aria-describedby="fileHelp" onchange="readURL(this, 'selectedImg')">
-                        <label class="custom-file-label" for="file">
-                            Вибрати фото...
-                        </label>
+    <form asp-action="EditConfirmed" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-7">
+                <form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white">
+                    <h1>Редагування профілю</h1>
+                    @Html.HiddenFor(model => model.UserProfile.ID)
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label">Ім'я</label>
+                        <input asp-for="UserProfile.User.FirstName" class="form-control">
+                        <span asp-validation-for="UserProfile.User.FirstName" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label">Прізвище</label>
+                        <input asp-for="UserProfile.User.LastName" class="form-control">
+                        <span asp-validation-for="UserProfile.User.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">По-батькові</label>
+                        <input asp-for="UserProfile.User.FatherName" class="form-control">
+                        <span asp-validation-for="UserProfile.User.FatherName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Національність</label>
+                        <input asp-for="UserProfile.Nationality.Name" class="form-control" />
+                        <span asp-validation-for="UserProfile.Nationality.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Номер телефону</label>
+                        <input asp-for="UserProfile.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="UserProfile.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Віровизнання</label>
+                        <input asp-for="UserProfile.Religion.ReligionName" class="form-control" />
+                        <span asp-validation-for="UserProfile.Religion.ReligionName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Дата народження</label>
+                        <input asp-for="UserProfile.DateTime" class="form-control" />
+                        <span asp-validation-for="UserProfile.DateTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Місце навчання</label>
+                        <input asp-for="UserProfile.Education.PlaceOfStudy" class="form-control" />
+                        <span asp-validation-for="UserProfile.Education.PlaceOfStudy" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Спеціальність</label>
+                        <input asp-for="UserProfile.Education.Speciality" class="form-control" />
+                        <span asp-validation-for="UserProfile.Education.Speciality" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Ступінь</label>
+                        <input asp-for="UserProfile.Education.Degree.DegreeName" class="form-control" />
+                        <span asp-validation-for="UserProfile.Education.Degree.DegreeName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Стать</label>
+                        <input asp-for="UserProfile.Gender.GenderName" class="form-control" />
+                        <span asp-validation-for="UserProfile.Gender.GenderName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Місце проживання</label>
+                        <input asp-for="UserProfile.Address" class="form-control" />
+                        <span asp-validation-for="UserProfile.Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Місце праці</label>
+                        <input asp-for="UserProfile.Work.PlaceOfwork" class="form-control" />
+                        <span asp-validation-for="UserProfile.Work.PlaceOfwork" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Посада</label>
+                        <input asp-for="UserProfile.Work.Position" class="form-control" />
+                        <span asp-validation-for="UserProfile.Work.Position" class="text-danger"></span>
+                    </div>
+                    <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
                 </form>
             </div>
-            <div class="col">
+            <div class="col ">
+                <div class="row">
+                    <div class="col ">
+
+                    </div>
+                    <div class="col">
+                        <form class="bg-light m-5 pt-2 pb-5 pr-5 pl-5">
+                            <img class="rounded-circle" style="width:200px;height:200px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS7HBrTji1jiZda9gKgUjIAk7WhVhpSGelEVnZFqXrEAHg2-qAg">
+                            <div class="custom-file mt-3" id="customFile">
+                                <input type="file" class="custom-file-input" id="file" name="file" value="dvas" aria-describedby="fileHelp" onchange="readURL(this, 'selectedImg')">
+                                <label class="custom-file-label" for="file">
+                                    Вибрати фото...
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
 
             </div>
         </div>
-        
-    </div>
-</div>
+
+    </form>
