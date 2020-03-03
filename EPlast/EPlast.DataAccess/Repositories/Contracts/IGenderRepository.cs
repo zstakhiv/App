@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public interface ISexRepository : IRepositoryBase<Sex>
+    public interface IGenderRepository : IRepositoryBase<Gender>
     {
     }
 }

@@ -23,12 +23,12 @@ namespace EPlast.DataAccess.Repositories
         private ISubEventCategoryRepository _subEventCategory;
         private IEventStatusRepository _eventStatus;
         private IReligionRepository _religion;
-        private ISexRepository _sex;
+        private IGenderRepository _gender;
         private IWorkRepository _work;
         private IEducationRepository _education;
         private IDegreeRepository _degree;
         private IConfirmedUserRepository _confirmedUser;
-        private IConfirmatorRepository _confirmator;
+        private IApproverRepository _approver;
         private ICityAdministrationRepository _cityAdministration;
         private ICityDocumentsRepository _cityDocuments;
         private ICityDocumentTypeRepository _cityDocumentType;
@@ -268,16 +268,16 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public ISexRepository Sex
+        public IGenderRepository Gender
         {
             get
             {
-                if (_sex == null)
+                if (_gender == null)
                 {
-                    _sex = new SexRepository(_dbContext);
+                    _gender = new GenderRepository(_dbContext);
                 }
 
-                return _sex;
+                return _gender;
             }
         }
 
@@ -333,16 +333,16 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IConfirmatorRepository Confirmator
+        public IApproverRepository Approver
         {
             get
             {
-                if (_confirmator == null)
+                if (_approver == null)
                 {
-                    _confirmator = new ConfirmatorRepository(_dbContext);
+                    _approver = new ApproverRepository(_dbContext);
                 }
 
-                return _confirmator;
+                return _approver;
             }
         }
 

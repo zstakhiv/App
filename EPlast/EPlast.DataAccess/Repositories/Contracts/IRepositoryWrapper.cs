@@ -26,10 +26,10 @@ namespace EPlast.DataAccess.Repositories
         IEducationRepository Education { get; }
         IDegreeRepository Degree { get; }
         IReligionRepository Religion { get; }
-        ISexRepository Sex { get; }
+        IGenderRepository Gender { get; }
         IWorkRepository Work { get; }
         IConfirmedUserRepository ConfirmedUser { get; }
-        IConfirmatorRepository Confirmator { get; }
+        IApproverRepository Approver { get; }
         ICityAdministrationRepository CityAdministration { get; }
         ICityDocumentsRepository CityDocuments { get; }
         ICityDocumentTypeRepository CityDocumentType { get; }

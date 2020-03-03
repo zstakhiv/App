@@ -5,9 +5,9 @@ using System.Text;
 
 namespace EPlast.DataAccess.Repositories
 {
-    public class ConfirmatorRepository : RepositoryBase<Confirmator>, IConfirmatorRepository
+    public class ApproverRepository : RepositoryBase<Approver>, IApproverRepository
     {
-        public ConfirmatorRepository(EPlastDBContext dbContext)
+        public ApproverRepository(EPlastDBContext dbContext)
            : base(dbContext)
         {
         }

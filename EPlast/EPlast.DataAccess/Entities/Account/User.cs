@@ -17,7 +17,7 @@ namespace EPlast.DataAccess.Entities
         public DateTime RegistredOn { get; set; }
         public UserProfile UserProfile { get; set; }
         public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
-        public ICollection<Confirmator> Confirmators { get; set; }
+        public ICollection<Approver> Approvers { get; set; }
         public ICollection<EventAdmin> Events { get; set; }
         public ICollection<Participant> Participants { get; set; }
         public ICollection<CityMembers> CityMembers { get; set; }

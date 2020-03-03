@@ -8,6 +8,9 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
 
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         public DecesionStatus DecesionStatus { get; set; }
 
         [Required]

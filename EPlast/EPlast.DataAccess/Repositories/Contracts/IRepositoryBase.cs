@@ -15,5 +15,9 @@ namespace EPlast.DataAccess.Repositories
         void Update(T entity);
 
         void Delete(T entity);
+
+        void Attach(T entity);
+
+        IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
     }
 }

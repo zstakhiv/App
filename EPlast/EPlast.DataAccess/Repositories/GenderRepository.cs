@@ -2,9 +2,9 @@
 
 namespace EPlast.DataAccess.Repositories
 {
-    public class SexRepository : RepositoryBase<Sex>, ISexRepository
+    public class GenderRepository : RepositoryBase<Gender>, IGenderRepository
     {
-        public SexRepository(EPlastDBContext dbContext)
+        public GenderRepository(EPlastDBContext dbContext)
             : base(dbContext)
         {
         }

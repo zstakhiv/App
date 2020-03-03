@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class Confirmator
+    public class Approver
     {
         public int ID { get; set; }
         public User User { get; set; }

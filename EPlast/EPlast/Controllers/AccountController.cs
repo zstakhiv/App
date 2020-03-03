@@ -11,6 +11,7 @@ using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models;
+using NLog;
 using EPlast.ViewModels;
 
 namespace EPlast.Controllers
@@ -20,9 +21,10 @@ namespace EPlast.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-
+        private Logger logger;
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            logger = LogManager.GetCurrentClassLogger();
             _signInManager = signInManager;
             _userManager = userManager;
         }

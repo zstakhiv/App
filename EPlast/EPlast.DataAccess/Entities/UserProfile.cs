@@ -13,7 +13,7 @@ namespace EPlast.DataAccess.Entities
         public Nationality Nationality { get; set; }
         public Religion Religion { get; set; }
         public Work Work { get; set; }
-        public Sex Sex { get; set; }
+        public Gender Gender { get; set; }
         public string Address { get; set; }
         public string UserID { get; set; }
         public User User { get; set; }
