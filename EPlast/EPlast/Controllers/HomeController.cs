@@ -25,5 +25,11 @@ namespace EPlast.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet("User/GetPage")]
+        public IActionResult GetInformation()
+        {
+            return View("Views/Account/LoginAndRegister.cshtml");
+        }
     }
 }
