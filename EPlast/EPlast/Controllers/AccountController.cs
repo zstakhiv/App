@@ -14,6 +14,7 @@ using EPlast.Models;
 using NLog;
 using EPlast.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EPlast.Controllers
 {
@@ -29,57 +30,35 @@ namespace EPlast.Controllers
             logger = LogManager.GetCurrentClassLogger();
             _signInManager = signInManager;
             _userManager = userManager;
+            _repoWrapper = repoWrapper;
         }
 
         public IActionResult Index()
         {
-            var work=new Work() { PlaceOfwork = "55555555555555555",Position="vasv"};
-            UserProfile userProfile = new UserProfile() { Address = "sdava", PhoneNumber = 5145, Work = work };
-            _repoWrapper.UserProfile.Create(userProfile);
-            _repoWrapper.Save();
-            try
-            {
-                var res=_repoWrapper.UserProfile.FindAll().Include(i=>i.Work);
-                //var user = _userService.GetUserProfile(User);
-                //var model = _mapper.Map<UserProfile, UserProfileViewModel>(user);
-                return View();
-            }
-            catch (Exception e)
-            {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                   // Exception = e
-                });
-            }
             return View();
         }
         
-        public UserProfile createUsers()
-        {
-            var _degree = new Degree() { DegreeName = "Бакалавр" };
-            var userProfile = new UserProfile()
-            {
-                Nationality = new Nationality() { Name = "Українець" },
-                Gender = new Gender() { GenderName = "Чоловіча" },
-                Religion = new Religion() { ReligionName = "Християнин" },
-                Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "Комп.науки", Degree = _degree },
-                Work = new Work() { PlaceOfwork = "SoftServe", Position = "Директор" },
-                Address = "Stryiska",
-                PhoneNumber = 123456789
-            };
-            var user = new User() { FirstName = "Іван", LastName = "Іваненко", FatherName = "Іванович", Email = "ivan333@gmail.com", UserProfile = userProfile };
-            userProfile.User = user;
-            _repoWrapper.UserProfile.Create(userProfile);
-            _repoWrapper.Save();
-            return userProfile;
-        }
+        [HttpGet]
         public IActionResult Edit()
         {
-            var user=createUsers();
-            var model = new UserProfileViewModel() { UserProfile=user};
+            ViewBag.nationalities = _repoWrapper.Nationality.FindAll();
+
+            ViewBag.genders = (from item in _repoWrapper.Gender.FindAll()
+                               select new SelectListItem
+                               {
+                                   Text = item.GenderName,
+                                   Value = item.ID.ToString()
+                               });
             try
             {
+                var user = _repoWrapper.User.
+                FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                ThenInclude(x => x.Nationality ).
+                Include(g=>g.UserProfile).
+                ThenInclude(g=>g.Gender).
+                FirstOrDefault();
+                var model = new UserViewModel() { User = user };
                 return View(model);
             }
             catch (Exception e)
@@ -90,12 +69,23 @@ namespace EPlast.Controllers
                 });
             }
         }
-        public IActionResult EditConfirmed(UserProfileViewModel user)
+        [HttpPost]
+        public IActionResult EditConfirmed(UserViewModel userVM)
         {
-            
             try
             {
-                _repoWrapper.UserProfile.Update(user.UserProfile);
+                var nationalities = _repoWrapper.Nationality.FindAll().ToList();
+                bool exist = nationalities.Any(x => x.Name.Equals(userVM.User.UserProfile.Nationality.Name));
+                if (exist)
+                {
+                    userVM.User.UserProfile.Nationality.ID = nationalities.Where(x => x.Name.Equals(userVM.User.UserProfile.Nationality.Name))
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
+                }
+                _repoWrapper.UserProfile.Attach(userVM.User.UserProfile);
+                _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
+                _repoWrapper.User.Update(userVM.User);
+                _repoWrapper.Save();
                 return RedirectToAction("Index");
             }
             catch (Exception e)
@@ -119,12 +109,12 @@ namespace EPlast.Controllers
                 return View("LoginAndRegister");
             }
 
-            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName};
+            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName, EmailConfirmed = true, UserProfile = new UserProfile() { } };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "LoginAndRegister");
+                return RedirectToAction("Index", "Account");
             }
 
             return View("LoginAndRegister");
@@ -138,6 +128,7 @@ namespace EPlast.Controllers
                 return RedirectToAction("Index", "Account");
             }
             var user = await _userManager.FindByEmailAsync(loginVM.Email);
+            
             var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, false);
 
             if (result.Succeeded)
