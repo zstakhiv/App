@@ -41,6 +41,9 @@ namespace EPlast.DataAccess.Repositories
         private IClubAdministrationRepository _clubAdministration;
         private IRegionRepository _region;
         private IRegionAdministrationRepository _regionAdministration;
+        private IAnnualReportsRepository _annualReports;
+        private IAnnualReportStatusesRepository _annualReportStatuses;
+        private IMembersStatisticsRepository _membersStatistics;
 
         public IDecesionRepository Decesion
         {
@@ -499,6 +502,42 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _regionAdministration;
+            }
+        }
+
+        public IAnnualReportsRepository AnnualReports
+        {
+            get
+            {
+                if (_annualReports == null)
+                {
+                    _annualReports = new AnnualReportsRepository(_dbContext);
+                }
+                return _annualReports;
+            }
+        }
+
+        public IAnnualReportStatusesRepository AnnualReportStatuses
+        {
+            get
+            {
+                if (_annualReportStatuses == null)
+                {
+                    _annualReportStatuses = new AnnualReportStatusesRepository(_dbContext);
+                }
+                return _annualReportStatuses;
+            }
+        }
+
+        public IMembersStatisticsRepository MembersStatistics
+        {
+            get
+            {
+                if (_membersStatistics == null)
+                {
+                    _membersStatistics = new MembersStatisticsRepository(_dbContext);
+                }
+                return _membersStatistics;
             }
         }
 
