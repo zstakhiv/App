@@ -65,7 +65,7 @@ namespace EPlast
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseCookiePolicy();
