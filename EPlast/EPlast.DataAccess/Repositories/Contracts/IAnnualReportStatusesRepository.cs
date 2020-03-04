@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Repositories.Contracts
 {
-    public interface IStatisticsRepository : IRepositoryBase<Statistic>
+    public interface IAnnualReportStatusesRepository : IRepositoryBase<AnnualReportStatus>
     {
     }
 }
