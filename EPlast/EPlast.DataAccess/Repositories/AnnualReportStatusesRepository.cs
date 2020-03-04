@@ -3,9 +3,9 @@ using EPlast.DataAccess.Repositories.Contracts;
 
 namespace EPlast.DataAccess.Repositories
 {
-    public class AnnualReportRepository : RepositoryBase<AnnualReport>, IAnnualReportRepository
+    public class AnnualReportStatusesRepository : RepositoryBase<AnnualReportStatus>, IAnnualReportStatusesRepository
     {
-        public AnnualReportRepository(EPlastDBContext dbContext)
+        public AnnualReportStatusesRepository(EPlastDBContext dbContext)
             : base(dbContext)
         {
         }
