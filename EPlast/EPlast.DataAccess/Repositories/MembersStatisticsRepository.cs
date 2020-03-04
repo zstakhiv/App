@@ -3,9 +3,9 @@ using EPlast.DataAccess.Repositories.Contracts;
 
 namespace EPlast.DataAccess.Repositories
 {
-    public class StatisticsRepository : RepositoryBase<Statistic>, IStatisticsRepository
+    public class MembersStatisticsRepository : RepositoryBase<MembersStatistic>, IMembersStatisticsRepository
     {
-        public StatisticsRepository(EPlastDBContext dBContext)
+        public MembersStatisticsRepository(EPlastDBContext dBContext)
             : base(dBContext)
         {
 
