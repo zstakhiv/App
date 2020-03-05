@@ -1,4 +1,7 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
+@inject UserManager<EPlast.DataAccess.Entities.User> UserManager
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +26,8 @@
     <script src="~/js/menuFunctions.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
     <!-- Material Design Bootstrap -->
     <link rel="stylesheet" href="~/MDB/css/mdb.min.css">
     <!-- MDB datatable  CSS-->
@@ -33,6 +37,7 @@
           rel="stylesheet">
     <!---->
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/error_styles.css" />
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
@@ -119,5 +124,5 @@
             </div>
         </div>
     </main>
-</body> 
+</body>
 </html>
