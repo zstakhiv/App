@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,7 +6,7 @@
     <title>@ViewData["Title"] - EPlast</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/sassCompiled/bootstrap.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -31,7 +30,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-   
+
     <nav class="navbar  sticky-top" style="font-size: 1.1em; background-color:#3c5438">
         <div class="container">
             <div class="navbar-header">
@@ -41,15 +40,12 @@
                 <ul class="nav justify-content-start">
                     <li class="nav-item"><a asp-action="Index" id="menu_admin" asp-controller="Account" class="nav-link text-light">Профіль</a></li>
                     <li class="nav-item"><a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light">Увійти/Зареєструватись</a></li>
-
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container">
-        
-            @RenderBody()
-        
+        @RenderBody()
     </div>
 
     <footer class="border-top footer text-muted">
@@ -59,31 +55,18 @@
     </footer>
 
     <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     </environment>
-    <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
-        </script>
-    </environment>
-    <script src="~/js/jquery-ui.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/js/jquery-ui.js"></script>
+        <script src="~/MDB/js/addons/datatables.min.js"></script>*@
+    <script src="~/js/site.js"></script>
     <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="~/MDB/js/popper.min.js"></script>
+    @*<script type="text/javascript" src="~/MDB/js/popper.min.js"></script>*@
     <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="~/MDB/js/mdb.min.js"></script>
+    @*<script type="text/javascript" src="~/MDB/js/mdb.min.js"></script>*@
     <!-- MDB datatable JavaScript -->
-    <script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>
-    <script type="text/javascript" src="~/js/site.js"></script>
+    @*<script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>*@
+    @*<script type="text/javascript" src="~/js/site.js"></script>*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

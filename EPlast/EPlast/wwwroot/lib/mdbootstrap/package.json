@@ -1,0 +1,43 @@
+{
+  "_from": "mdbootstrap@4.14.0",
+  "_id": "mdbootstrap@4.14.0",
+  "_inBundle": false,
+  "_integrity": "sha512-RBa3uB64m1DpO1exIupqQkL0Ca108zpjXnOH+xyJ6bIyr4BJw2djSmWoizQHhN5o1v3ujN3PtNJ3x7k+ITmFRw==",
+  "_location": "/mdbootstrap",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "mdbootstrap@4.14.0",
+    "name": "mdbootstrap",
+    "escapedName": "mdbootstrap",
+    "rawSpec": "4.14.0",
+    "saveSpec": null,
+    "fetchSpec": "4.14.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/mdbootstrap/-/mdbootstrap-4.14.0.tgz",
+  "_shasum": "dec274a9190fca15f1385e95a4d108d2c71bbab2",
+  "_spec": "mdbootstrap@4.14.0",
+  "_where": "C:\\Users\\Johnny\\source\\repos\\zstakhiv\\App\\EPlast\\EPlast",
+  "author": {
+    "name": "MDBootstrap"
+  },
+  "bugs": {
+    "url": "https://github.com/mdbootstrap/bootstrap-material-design/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "<p align=\"center\">\r   <a href=\"https://mdbootstrap.com/docs/jquery/getting-started/download/\">\r     <img src=\"https://mdbootstrap.com/img/Marketing/general/logo/medium/mdb-r.png\">\r   </a>\r </p>",
+  "homepage": "https://github.com/mdbootstrap/bootstrap-material-design#readme",
+  "license": "MIT",
+  "main": "js/mdb.min.js",
+  "name": "mdbootstrap",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdbootstrap/bootstrap-material-design.git"
+  },
+  "version": "4.14.0"
+}
