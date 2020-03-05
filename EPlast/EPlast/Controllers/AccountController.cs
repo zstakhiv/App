@@ -12,17 +12,16 @@ using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Entities.Account;
 using EPlast.Models;
-using NLog;
 
-namespace EPlast.Controllers
+namespace EPlast.Controllerss
 {
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private Logger logger;
-        public AccountController()
+        private readonly ILogger _logger;
+        public AccountController(ILogger<AccountController> logger)
         {
-            logger = LogManager.GetCurrentClassLogger();
+            _logger = logger;
         }
 
        
@@ -30,6 +29,7 @@ namespace EPlast.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogDebug("Indexxxxxxxxxxxxxxxxxxxxxxxxxx");
             return View();
         }
         public IActionResult Edit()
