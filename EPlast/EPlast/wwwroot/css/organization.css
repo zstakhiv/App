@@ -1,2 +1,383 @@
-﻿body {
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+.profile-icon {
+    background-image: url('http://plast-dev.sitegist.net/images2/eplast/menu-profile.png');
+}
+
+.decision-icon {
+    background-image: url('http://plast-dev.sitegist.net/images2/eplast/plast-document-36.png');
+}
+
+.dictionary-icon {
+    background-image: url('http://plast-dev.sitegist.net/images2/eplast/menu-handbook.png');
+}
+
+.admin-icon {
+    background-image: url('http://plast-dev.sitegist.net/images2/eplast/menu-admin.png');
+}
+
+.cabinet-icon {
+    background-image: url('http://plast-dev.sitegist.net/images2/eplast/menu-dashboard.png');
+}
+
+.sidebar-logo {
+    padding: 0px;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.plast-logo {
+    width: 40px !important;
+    height: 40px !important;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.page-header-title {
+    color: white !important;
+    line-height: 1 !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.plast-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    background-image: url('https://galinfo.com.ua/media/gallery/full/p/l/plast1.jpg');
+}
+
+.nav-logo {
+    padding: 0px;
+    color: white !important;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.sidebar-logo:hover {
+    opacity: 1;
+}
+
+.menu-button-holder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-button {
+    width: 100%;
+    background-color: #3c5438;
+    color: white;
+    border: 1px solid #374d34;
+    padding: 5px;
+}
+
+    .menu-button:hover {
+        background-color: #374d34;
+    }
+
+.backdrop {
+    background-color: rgba(0,0,0,0.6);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 9;
+    left: 56px;
+}
+
+.hidden {
+    visibility: hidden !important;
+}
+
+.slider {
+    width: 300px;
+    background-color: #374d34;
+    height: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.plast-header {
+    background-color: #3c5438 !important;
+    border: 0px !important;
+    color: white;
+    line-height: 1 !important;
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+}
+
+.profile {
+    margin-left: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.main-block {
+    display: flex;
+    align-items: stretch;
+    flex-grow: 1;
+    position: relative;
+}
+
+.back-pic-inner {
+    border: 4px solid goldenrod;
+    height: 150px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.back-pic {
+    background-color: #3c5438;
+    border: 4px solid firebrick;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100vh;
+}
+
+.grid-header {
+    text-align: center;
+}
+
+.content {
+    background-color: #eeeeee;
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+.club-page-wrapper {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.info {
+    text-align: justify;
+}
+
+.top-info {
+    display: flex;
+    align-items: flex-start;
+}
+
+.top-info-content {
+    padding: 10px;
+}
+
+.buttons {
+    border: 0;
+    color: white;
+    background-color: #3c5438;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    display: block;
+    margin: 0 auto;
+}
+
+.line-pair {
+    font-size: 12px;
+}
+
+.line-upper {
+    font-size: 1em;
+    color: #888;
+    margin: 0;
+}
+
+.line-lower {
+    font-size: 1.5em;
+}
+
+.curin-img {
+    width: 150px;
+}
+
+.horizontal-grid {
+    display: flex;
+    align-items: stretch;
+}
+
+.people-info, .members-info, .followers-info {
+    flex-grow: 1;
+}
+
+.vertical-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.member-img {
+    width: 50px;
+    height: 50px;
+}
+
+.member-img-block {
+    width: 50px;
+    height: 50px;
+    background-repeat: repeat-y;
+    background-repeat: repeat-x;
+    background-size: cover;
+    background-position: center center;
+    text-align: center;
+}
+
+.member-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px;
+}
+
+.members-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.member-name {
+    margin-bottom: 0;
+}
+
+.member-wrapper {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.plus {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    color: #3c5438;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.grid-block {
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+}
+
+.sidebar {
+    flex-direction: column;
+    display: flex;
+    align-items: stretch;
+    background-color: darkgray;
+    z-index: 10;
+}
+
+.sidebar-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    position: relative;
+}
+
+@media (max-width: 767px),(orientation: portrait) {
+    .container-header {
+        flex-direction: column;
+    }
+
+    .nav-content {
+        flex-direction: column;
+    }
+
+    .profile {
+        margin-left: 0;
+    }
+
+    .content {
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .non-scrollable {
+        overflow: hidden;
+        height: 100vh;
+    }
+
+    .people-info {
+        flex-direction: column;
+    }
+
+    .main-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content-wrapper {
+        margin-top: -100vh;
+    }
+
+    .club-page-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: sticky;
+        height: 100vh;
+        top: 0;
+    }
+
+    .backdrop {
+        position: sticky;
+        height: 100vh;
+        top: 0;
+    }
+
+    .slider {
+        width: 100%;
+    }
+}
+
+.header-name {
+    display: inline-block;
+    line-height: 1 !important;
 }
