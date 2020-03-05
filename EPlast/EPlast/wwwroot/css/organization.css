@@ -288,6 +288,10 @@
     font-weight: bold;
 }
 
+.white-border {
+    border: 2px solid white;
+}
+
 .grid-block {
     padding: 10px;
     margin: 10px;
@@ -370,6 +374,7 @@
         position: sticky;
         height: 100vh;
         top: 0;
+        left: 0;
     }
 
     .slider {

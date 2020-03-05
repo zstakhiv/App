@@ -49,18 +49,34 @@ function init() {
     document.getElementsByClassName('menu-button-holder')[0].removeChild(buttonClone);
 }
 function onMenuHover(index) {
-    if (open && currentIndex === index || menuOptionsBySection[index] === 0) {
-        closeMenu();
-        var checkVisible = setInterval(function () {
-            if (window.scrollY === scrollBeforeMenu) {
-                clearInterval(checkVisible);
-            } else {
-                window.scrollTo(0, scrollBeforeMenu);
-            }
-        }, 10);
+    console.log(open);
+    console.log(index);
+    console.log(currentIndex);
+    console.log(profileListing[index].length);
+    if (open) {
+
+        if (currentIndex === index || profileListing[index].length === 0) {
+            closeMenu();
+
+            var checkVisible = setInterval(function () {
+                if (window.scrollY === scrollBeforeMenu) {
+                    clearInterval(checkVisible);
+                } else {
+                    window.scrollTo(0, scrollBeforeMenu);
+                    console.log('scroll');
+                }
+            }, 10);
+
+            return;
+        }
+    } else {
+        scrollBeforeMenu = +window.scrollY;
+    }
+    if (profileListing[index].length === 0) {
+        console.log('yess');
         return;
     }
-    scrollBeforeMenu = +window.scrollY;
+    console.log('no');
     currentIndex = index;
     mainWrapper.classList.add('non-scrollable');
     show(backdrop);
