@@ -35,63 +35,92 @@
                             <option>@item.Name</option>
                         }
                     </datalist>
-
-                    @*<label class="control-label">Національність</label>
-        <input asp-for="UserProfile.Nationality.Name" class="form-control" />
-        <span asp-validation-for="UserProfile.Nationality.Name" class="text-danger"></span>*@
                 </div>
-                @*<div class="form-group">
-            <label class="control-label">Номер телефону</label>
-            <input asp-for="UserProfile.PhoneNumber" class="form-control" />
-            <span asp-validation-for="UserProfile.PhoneNumber" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Віровизнання</label>
-            <input asp-for="UserProfile.Religion.ReligionName" class="form-control" />
-            <span asp-validation-for="UserProfile.Religion.ReligionName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Дата народження</label>
-            <input asp-for="UserProfile.DateTime" class="form-control" />
-            <span asp-validation-for="UserProfile.DateTime" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Місце навчання</label>
-            <input asp-for="UserProfile.Education.PlaceOfStudy" class="form-control" />
-            <span asp-validation-for="UserProfile.Education.PlaceOfStudy" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Спеціальність</label>
-            <input asp-for="UserProfile.Education.Speciality" class="form-control" />
-            <span asp-validation-for="UserProfile.Education.Speciality" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Ступінь</label>
-            <input asp-for="UserProfile.Education.Degree.DegreeName" class="form-control" />
-            <span asp-validation-for="UserProfile.Education.Degree.DegreeName" class="text-danger"></span>
-        </div>*@
+                <div class="form-group">
+                    <label class="control-label">Номер телефону</label>
+                    <input asp-for="User.UserProfile.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="User.UserProfile.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Віровизнання</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Religion.Name,
+                    new { @placeholder = Model.User.UserProfile.Religion.Name, @list = "ReligionType-value", @class = "form-control", @Value = "" })
+                    <datalist id="ReligionType-value">
+                        @foreach (Religion item in ViewBag.religions)
+                        {
+                            <option>@item.Name</option>
+                        }
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Дата народження</label>
+                    <input asp-for="User.UserProfile.DateTime" class="form-control" />
+                    <span asp-validation-for="User.UserProfile.DateTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Місце навчання</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Education.PlaceOfStudy,
+                    new { @placeholder = Model.User.UserProfile.Education.PlaceOfStudy, @list = "EducationPlaceType-value", @class = "form-control", @Value = "" })
+                    <datalist id="EducationPlaceType-value">
+                        @foreach (Education item in ViewBag.educations)
+                        {
+                            <option>@item.PlaceOfStudy</option>
+                        }
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Спеціальність</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Education.Speciality,
+                    new { @placeholder = Model.User.UserProfile.Education.Speciality, @list = "EducationSpecType-value", @class = "form-control", @Value = "" })
+                    <datalist id="EducationSpecType-value">
+                        @foreach (Education item in ViewBag.educations)
+                        {
+                            <option>@item.Speciality</option>
+                        }
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Ступінь</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Education.Degree.Name,
+                     new { @placeholder = Model.User.UserProfile.Education.Degree.Name, @list = "DegreeType-value", @class = "form-control", @Value = "" })
+                    <datalist id="DegreeType-value">
+                        @foreach (Degree item in ViewBag.degrees)
+                        {
+                            <option>@item.Name</option>
+                        }
+                    </datalist>
+                </div>
                 <div class="form-group">
                     <label class="control-label">Стать</label>
                     @Html.DropDownListFor(x => x.User.UserProfile.Gender.ID, (IEnumerable<SelectListItem>)ViewBag.genders, new { @placeholder = "Стать", @class = "form-control" })
-
-                    @*<input asp-for="User.UserProfile.Gender.GenderName" class="form-control" />
-                    <span asp-validation-for="User.UserProfile.Gender.GenderName" class="text-danger"></span>*@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Місце проживання</label>
                     <input asp-for="User.UserProfile.Address" class="form-control" />
                     <span asp-validation-for="User.UserProfile.Address" class="text-danger"></span>
                 </div>
-                @*<div class="form-group">
-            <label class="control-label">Місце праці</label>
-            <input asp-for="User.UserProfile.Work.PlaceOfwork" class="form-control" />
-            <span asp-validation-for="User.UserProfile.Work.PlaceOfwork" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Посада</label>
-            <input asp-for="UserProfile.Work.Position" class="form-control" />
-            <span asp-validation-for="UserProfile.Work.Position" class="text-danger"></span>
-        </div>*@
+                <div class="form-group">
+                    <label class="control-label">Місце праці</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Work.PlaceOfwork,
+                     new { @placeholder = Model.User.UserProfile.Work.PlaceOfwork, @list = "WorkPlaceType-value", @class = "form-control", @Value = "" })
+                    <datalist id="WorkPlaceType-value">
+                        @foreach (Work item in ViewBag.works)
+                        {
+                            <option>@item.PlaceOfwork</option>
+                        }
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Посада</label>
+                    @Html.TextBoxFor(x => x.User.UserProfile.Work.Position,
+                     new { @placeholder = Model.User.UserProfile.Work.Position, @list = "WorkPositionType-value", @class = "form-control", @Value = "" })
+                    <datalist id="WorkPositionType-value">
+                        @foreach (Work item in ViewBag.works)
+                        {
+                            <option>@item.Position</option>
+                        }
+                    </datalist>
+                </div>
                 <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
             </form>
         </div>

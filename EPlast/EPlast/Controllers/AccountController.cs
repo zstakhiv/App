@@ -42,22 +42,37 @@ namespace EPlast.Controllers
         public IActionResult Edit()
         {
             ViewBag.nationalities = _repoWrapper.Nationality.FindAll();
+            ViewBag.religions = _repoWrapper.Religion.FindAll();
+            ViewBag.works = _repoWrapper.Work.FindAll();
+            ViewBag.educations = _repoWrapper.Education.FindAll();
+            ViewBag.degrees = _repoWrapper.Degree.FindAll();
+
 
             ViewBag.genders = (from item in _repoWrapper.Gender.FindAll()
                                select new SelectListItem
                                {
-                                   Text = item.GenderName,
+                                   Text = item.Name,
                                    Value = item.ID.ToString()
                                });
             try
             {
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == _userManager.GetUserId(User)).
-                Include(i => i.UserProfile).
-                ThenInclude(x => x.Nationality ).
-                Include(g=>g.UserProfile).
-                ThenInclude(g=>g.Gender).
-                FirstOrDefault();
+                    Include(i => i.UserProfile).
+                        ThenInclude(x => x.Nationality).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Gender).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Education).
+                            ThenInclude(q => q.Degree).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Religion).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Work).
+                    FirstOrDefault();
+               
+               
+
                 var model = new UserViewModel() { User = user };
                 return View(model);
             }
@@ -74,15 +89,60 @@ namespace EPlast.Controllers
         {
             try
             {
-                var nationalities = _repoWrapper.Nationality.FindAll().ToList();
-                bool exist = nationalities.Any(x => x.Name.Equals(userVM.User.UserProfile.Nationality.Name));
+                var nationalities = _repoWrapper.Nationality.FindAll().Include(i=>i.UserProfiles).ToList();
+                var religions = _repoWrapper.Religion.FindAll().Include(i => i.UserProfiles).ToList();
+                var works = _repoWrapper.Work.FindAll().Include(i => i.UserProfiles).ToList();
+                var degrees = _repoWrapper.Degree.FindAll().Include(i=>i.Educations).ToList();
+                var educations = _repoWrapper.Education.FindAll().Include(i => i.UsersProfiles).Include(i=>i.Degree).ToList();
+
+                bool exist = nationalities.Any(x => x.Name==userVM.User.UserProfile.Nationality.Name);
                 if (exist)
                 {
-                    userVM.User.UserProfile.Nationality.ID = nationalities.Where(x => x.Name.Equals(userVM.User.UserProfile.Nationality.Name))
+                    userVM.User.UserProfile.Nationality.ID = nationalities.Where(x => x.Name==userVM.User.UserProfile.Nationality.Name)
                         .Select(x => x.ID)
                         .FirstOrDefault();
                 }
-                _repoWrapper.UserProfile.Attach(userVM.User.UserProfile);
+
+                bool exist2 = religions.Any(x => x.Name==userVM.User.UserProfile.Religion.Name);
+                if (exist2)
+                {
+                    userVM.User.UserProfile.Religion.ID = religions.Where(x => x.Name==userVM.User.UserProfile.Religion.Name)
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
+                }
+
+                bool exist3 = works.Any(x => x.Position==userVM.User.UserProfile.Work.Position && x.PlaceOfwork==userVM.User.UserProfile.Work.PlaceOfwork);
+                if (exist3)
+                {
+                    userVM.User.UserProfile.Work.ID = works.Where(x => x.Position==userVM.User.UserProfile.Work.Position && x.PlaceOfwork==userVM.User.UserProfile.Work.PlaceOfwork)
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
+                }
+
+                bool exist4 = educations.Any(x => x.PlaceOfStudy==userVM.User.UserProfile.Education.PlaceOfStudy && x.Speciality==userVM.User.UserProfile.Education.Speciality);
+                if (exist4)
+                {
+                    userVM.User.UserProfile.Education.ID = educations.Where(x => x.PlaceOfStudy==userVM.User.UserProfile.Education.PlaceOfStudy && x.Speciality == userVM.User.UserProfile.Education.Speciality)
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
+
+                }
+
+                bool exist5 = degrees.Any(x => x.Name==userVM.User.UserProfile.Education.Degree.Name);
+                if (exist5)
+                {
+                    userVM.User.UserProfile.Education.Degree.ID = degrees.Where(x => x.Name==userVM.User.UserProfile.Education.Degree.Name)
+                        .Select(x => x.ID)
+                        .FirstOrDefault();
+                }
+
+                _repoWrapper.Gender.Attach(userVM.User.UserProfile.Gender);
+                _repoWrapper.Nationality.Attach(userVM.User.UserProfile.Nationality);
+                _repoWrapper.Religion.Attach(userVM.User.UserProfile.Religion);
+                _repoWrapper.Work.Attach(userVM.User.UserProfile.Work);
+                _repoWrapper.Degree.Attach(userVM.User.UserProfile.Education.Degree);
+                _repoWrapper.Education.Attach(userVM.User.UserProfile.Education);
+
                 _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
                 _repoWrapper.User.Update(userVM.User);
                 _repoWrapper.Save();
@@ -109,7 +169,16 @@ namespace EPlast.Controllers
                 return View("LoginAndRegister");
             }
 
-            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName, EmailConfirmed = true, UserProfile = new UserProfile() { } };
+            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName, EmailConfirmed = true,
+                UserProfile = new UserProfile()
+                {
+                    Education = new Education { Degree = new Degree() },
+                    Work = new Work (),
+                    Religion = new Religion (),
+                    Nationality = new Nationality (),
+                    Gender = new Gender ()
+                }
+            };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)
