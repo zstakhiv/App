@@ -70,9 +70,6 @@ namespace EPlast.Controllers
                     Include(g => g.UserProfile).
                         ThenInclude(g => g.Work).
                     FirstOrDefault();
-               
-               
-
                 var model = new UserViewModel() { User = user };
                 return View(model);
             }
@@ -89,51 +86,40 @@ namespace EPlast.Controllers
         {
             try
             {
-                var nationalities = _repoWrapper.Nationality.FindAll().Include(i=>i.UserProfiles).ToList();
-                var religions = _repoWrapper.Religion.FindAll().Include(i => i.UserProfiles).ToList();
-                var works = _repoWrapper.Work.FindAll().Include(i => i.UserProfiles).ToList();
-                var degrees = _repoWrapper.Degree.FindAll().Include(i=>i.Educations).ToList();
-                var educations = _repoWrapper.Education.FindAll().Include(i => i.UsersProfiles).Include(i=>i.Degree).ToList();
+                var nationalities = _repoWrapper.Nationality.FindAll().Include(i=>i.UserProfiles);
+                var religions = _repoWrapper.Religion.FindAll().Include(i => i.UserProfiles);
+                var works = _repoWrapper.Work.FindAll().Include(i => i.UserProfiles);
+                var degrees = _repoWrapper.Degree.FindAll().Include(i=>i.Educations);
+                var educations = _repoWrapper.Education.FindAll().Include(i => i.UsersProfiles).Include(i=>i.Degree);
 
-                bool exist = nationalities.Any(x => x.Name==userVM.User.UserProfile.Nationality.Name);
-                if (exist)
+                var nationality = nationalities.FirstOrDefault(x => x.Name.Contains(userVM.User.UserProfile.Nationality.Name));
+                if (nationality != null)
                 {
-                    userVM.User.UserProfile.Nationality.ID = nationalities.Where(x => x.Name==userVM.User.UserProfile.Nationality.Name)
-                        .Select(x => x.ID)
-                        .FirstOrDefault();
+                    userVM.User.UserProfile.Nationality.ID = nationality.ID;
                 }
 
-                bool exist2 = religions.Any(x => x.Name==userVM.User.UserProfile.Religion.Name);
-                if (exist2)
+                var religion = religions.FirstOrDefault(x => x.Name.Contains(userVM.User.UserProfile.Religion.Name));
+                if (religion != null)
                 {
-                    userVM.User.UserProfile.Religion.ID = religions.Where(x => x.Name==userVM.User.UserProfile.Religion.Name)
-                        .Select(x => x.ID)
-                        .FirstOrDefault();
+                    userVM.User.UserProfile.Religion.ID = religion.ID;
                 }
 
-                bool exist3 = works.Any(x => x.Position==userVM.User.UserProfile.Work.Position && x.PlaceOfwork==userVM.User.UserProfile.Work.PlaceOfwork);
-                if (exist3)
+                var work = works.FirstOrDefault(x => x.PlaceOfwork.Contains(userVM.User.UserProfile.Work.PlaceOfwork) && x.Position.Contains(userVM.User.UserProfile.Work.Position));
+                if (work != null)
                 {
-                    userVM.User.UserProfile.Work.ID = works.Where(x => x.Position==userVM.User.UserProfile.Work.Position && x.PlaceOfwork==userVM.User.UserProfile.Work.PlaceOfwork)
-                        .Select(x => x.ID)
-                        .FirstOrDefault();
+                    userVM.User.UserProfile.Work.ID = work.ID;
                 }
 
-                bool exist4 = educations.Any(x => x.PlaceOfStudy==userVM.User.UserProfile.Education.PlaceOfStudy && x.Speciality==userVM.User.UserProfile.Education.Speciality);
-                if (exist4)
+                var education = educations.FirstOrDefault(x => x.PlaceOfStudy.Contains(userVM.User.UserProfile.Education.PlaceOfStudy) && x.Speciality.Contains(userVM.User.UserProfile.Education.Speciality));
+                if (education != null)
                 {
-                    userVM.User.UserProfile.Education.ID = educations.Where(x => x.PlaceOfStudy==userVM.User.UserProfile.Education.PlaceOfStudy && x.Speciality == userVM.User.UserProfile.Education.Speciality)
-                        .Select(x => x.ID)
-                        .FirstOrDefault();
-
+                    userVM.User.UserProfile.Education.ID = education.ID;
                 }
 
-                bool exist5 = degrees.Any(x => x.Name==userVM.User.UserProfile.Education.Degree.Name);
-                if (exist5)
+                var degree = degrees.FirstOrDefault(x => x.Name.Contains(userVM.User.UserProfile.Education.Degree.Name));
+                if (degree != null)
                 {
-                    userVM.User.UserProfile.Education.Degree.ID = degrees.Where(x => x.Name==userVM.User.UserProfile.Education.Degree.Name)
-                        .Select(x => x.ID)
-                        .FirstOrDefault();
+                    userVM.User.UserProfile.Education.Degree.ID = degree.ID;
                 }
 
                 _repoWrapper.Gender.Attach(userVM.User.UserProfile.Gender);
