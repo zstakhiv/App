@@ -12,7 +12,6 @@ namespace EPlast.Controllers
 {
     public class ErrorController : Controller
     {
-
         public IActionResult HandleError(int code)
         {
             ViewBag.Code = code;
