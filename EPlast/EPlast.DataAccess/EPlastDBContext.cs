@@ -1,11 +1,12 @@
 ﻿using System;
 using EPlast.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<User>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
@@ -52,9 +53,6 @@ namespace EPlast.DataAccess
 
             modelBuilder.Entity<Event>()
                 .HasKey(x => x.ID);
-
-            modelBuilder.Entity<User>()
-                .HasKey(x => x.Id);
 
             modelBuilder.Entity<EventAdmin>()
                 .HasKey(x => new { x.EventID, x.UserID });
