@@ -7,14 +7,12 @@
 
     <environment include="Development">
         <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/themes/base/all.css" rel="stylesheet" />
         <link href="~/lib/mdbootstrap/css/bootstrap.min.css" />
         <link href="~/lib/mdbootstrap/css/mdb.min.css" />
         <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
         <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
         <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/compiled/css/site.css" rel="stylesheet" />
-        <link href="~/compiled/css/raport.css" rel="stylesheet" />
+        <link href="~/bundles/css/bundle.css" rel="stylesheet" />
     </environment>
 
     <!-- Font Awesome -->
@@ -48,30 +46,16 @@
     </footer>
 
     <environment include="Development">
-        @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="~/lib/popper.js/dist/popper.min.js"></script>
-            <script src="~/lib/jquery-ui/Gruntfile.js"></script>
-            <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
-            <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>*@
+
         <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
         <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
         <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
         <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
         <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
         <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-        <script src="~/compiled/js/site.js"></script>
+        <script src="~/bundles/js/bundle.js"></script>
     </environment>
-    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/js/jquery-ui.js"></script>
-        <script src="~/MDB/js/addons/datatables.min.js"></script>*@
-    <!-- Bootstrap tooltips -->
-    @*<script type="text/javascript" src="~/MDB/js/popper.min.js"></script>*@
-    <!-- MDB core JavaScript -->
-    @*<script type="text/javascript" src="~/MDB/js/mdb.min.js"></script>*@
-    <!-- MDB datatable JavaScript -->
-    @*<script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>*@
-    @*<script type="text/javascript" src="~/js/site.js"></script>*@
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

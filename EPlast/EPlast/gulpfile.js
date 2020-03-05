@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var del = require('del');
 var less = require('gulp-less');
 var sass = require('gulp-sass');
+var concat = require('gulp-concat');
 
 var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
 var paths = {
@@ -12,7 +13,7 @@ var paths = {
 };
 
 gulp.task('clean', function () {
-    return del(['wwwroot/compiled/js/*', 'wwwroot/compiled/css/*']);
+    return del(['wwwroot/compiled/js/*', 'wwwroot/compiled/css/*', 'wwwroot/bundles/css/*', 'wwwroot/bundles/js/*']);
 });
 
 gulp.task('scripts', function () {
@@ -30,6 +31,18 @@ gulp.task("sass", function () {
     return gulp.src('wwwroot/uncompiled/sass/**/*.scss')
         .pipe(sass())
         .pipe(gulp.dest(paths.webroot + 'compiled/css'));
+});
+
+gulp.task('bundle-js', function () {
+    return gulp.src(paths.webroot + 'compiled/js/*.js')
+        .pipe(concat('bundle.js'))
+        .pipe(gulp.dest(paths.webroot + '/bundles/js'));
+});
+
+gulp.task('bundle-css', function () {
+    return gulp.src(paths.webroot + 'compiled/css/*.css')
+        .pipe(concat('bundle.css'))
+        .pipe(gulp.dest(paths.webroot + '/bundles/css'));
 });
 
 async function ClearLib() {
@@ -51,6 +64,8 @@ async function ModulesToLib() {
 
 gulp.task('style', gulp.parallel('less', 'sass'));
 
-gulp.task('default', gulp.series('clean', 'scripts', 'style'));
+gulp.task('bundle', gulp.parallel('bundle-css', 'bundle-js'));
+
+gulp.task('default', gulp.series('clean', 'scripts', 'style', 'bundle'));
 
 gulp.task("update-lib", gulp.series(ClearLib, ModulesToLib));
