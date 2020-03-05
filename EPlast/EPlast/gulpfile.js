@@ -5,7 +5,7 @@ var del = require('del');
 var less = require('gulp-less');
 var sass = require('gulp-sass');
 
-var modules = ['bootstrap', 'jquery', 'jquery-ui', 'mdbootstrap', 'popper.js'];
+var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
 var paths = {
     scripts: ['wwwroot/uncompiled/ts/**/*.js'],
     webroot: 'wwwroot/'

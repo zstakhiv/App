@@ -6,28 +6,21 @@
     <title>@ViewData["Title"] - EPlast</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/css/sassCompiled/bootstrap.css" />
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui/themes/base/all.css" rel="stylesheet" />
+        <link href="~/lib/mdbootstrap/css/bootstrap.min.css" />
+        <link href="~/lib/mdbootstrap/css/mdb.min.css" />
+        <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
+        <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/compiled/css/site.css" rel="stylesheet" />
+        <link href="~/compiled/css/raport.css" rel="stylesheet" />
     </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
-    </environment>
-    <link href="~/css/jquery-ui.css" rel="stylesheet" />
-    <link href="~/css/Raport.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <!-- Material Design Bootstrap -->
-    <link rel="stylesheet" href="~/MDB/css/mdb.min.css">
-    <!-- MDB datatable  CSS-->
-    <link href="~/MDB/css/addons/datatables.min.css" rel="stylesheet" />
-    <!---->
-    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
 
@@ -55,11 +48,23 @@
     </footer>
 
     <environment include="Development">
+        @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/lib/popper.js/dist/popper.min.js"></script>
+            <script src="~/lib/jquery-ui/Gruntfile.js"></script>
+            <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+            <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>*@
+        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+        <script src="~/compiled/js/site.js"></script>
     </environment>
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/js/jquery-ui.js"></script>
         <script src="~/MDB/js/addons/datatables.min.js"></script>*@
-    <script src="~/js/site.js"></script>
     <!-- Bootstrap tooltips -->
     @*<script type="text/javascript" src="~/MDB/js/popper.min.js"></script>*@
     <!-- MDB core JavaScript -->
