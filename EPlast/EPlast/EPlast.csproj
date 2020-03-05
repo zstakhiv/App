@@ -30,7 +30,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\compiled\css\" />
     <Folder Include="wwwroot\compiled\js\" />
-    <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\uncompiled\less\" />
   </ItemGroup>
 
@@ -38,6 +37,9 @@
     <ProjectReference Include="..\EPlast.DataAccess\EPlast.DataAccess.csproj" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
