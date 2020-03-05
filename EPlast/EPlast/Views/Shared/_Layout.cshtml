@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-   
+
     <nav class="navbar  sticky-top" style="font-size: 1.1em; background-color:#3c5438">
         <div class="container">
             <div class="navbar-header">
@@ -47,9 +47,9 @@
         </div>
     </nav>
     <div class="container">
-        
-            @RenderBody()
-        
+
+        @RenderBody()
+
     </div>
 
     <footer class="border-top footer text-muted">
@@ -84,6 +84,7 @@
     <!-- MDB datatable JavaScript -->
     <script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>
     <script type="text/javascript" src="~/js/site.js"></script>
+    @RenderBody()
     @RenderSection("Scripts", required: false)
 </body>
 </html>
