@@ -1,4 +1,7 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
+@inject UserManager<EPlast.DataAccess.Entities.User> UserManager
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +36,7 @@
 
 </head>
 <body>
-   
+
     <nav class="navbar  sticky-top" style="font-size: 1.1em; background-color:#3c5438">
         <div class="container">
             <div class="navbar-header">
@@ -41,17 +44,19 @@
             </div>
             <div class="navbar">
                 <ul class="nav justify-content-start">
-                    <li class="nav-item"><a asp-action="Index" id="menu_admin" asp-controller="Account" class="nav-link text-light">Профіль</a></li>
-                    <li class="nav-item"><a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light">Увійти/Зареєструватись</a></li>
-
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item"><a asp-action="Index" id="menu_admin" asp-controller="Account" style="margin-top:8px;" class="nav-link text-light">Профіль</a></li>
+                    }
+                    @Html.Partial("_LoginPartial")
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container">
-        
-            @RenderBody()
-        
+
+        @RenderBody()
+
     </div>
 
     <footer class="border-top footer text-muted">
