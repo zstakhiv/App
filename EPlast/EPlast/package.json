@@ -7,10 +7,9 @@
   "dependencies": {},
   "devDependencies": {
     "@types/bootstrap": "4.3.1",
+    "@types/datatables.net": "1.10.18",
     "@types/jquery": "3.3.33",
-    "@types/jquery.datatables": "1.10.36",
     "@types/jqueryui": "1.12.10",
-    "@types/node": "13.7.7",
     "babel-core": "6.26.3",
     "babel-preset-env": "1.7.0",
     "babel-register": "6.26.0",
@@ -26,10 +25,8 @@
     "gulp-less": "4.0.1",
     "gulp-sass": "4.0.2",
     "gulp-uglify": "3.0.2",
-    "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
     "mdbootstrap": "4.14.0",
-    "popper.js": "1.16.1",
     "rimraf": "3.0.2"
   }
 }
