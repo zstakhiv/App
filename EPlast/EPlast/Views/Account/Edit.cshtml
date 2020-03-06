@@ -1,5 +1,6 @@
-﻿@model EPlast.Models.UserViewModel
-
+﻿@using EPlast.DataAccess.Repositories
+@model EPlast.Models.UserViewModel
+@inject IRepositoryWrapper _repository
 <form asp-action="EditConfirmed" enctype="multipart/form-data">
     <div class="row">
         <div class="col-7">
@@ -15,6 +16,7 @@
                     <input asp-for="User.FirstName" class="form-control">
                     <span asp-validation-for="User.FirstName" class="text-danger"></span>
                 </div>
+                
                 <div class="form-group">
                     <label class="control-label">Прізвище</label>
                     <input asp-for="User.LastName" class="form-control">
@@ -30,7 +32,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Nationality.Name,
                     new { @placeholder = Model.User.UserProfile.Nationality.Name, @list = "NationalityType-value", @class = "form-control", @Value = "" })
                     <datalist id="NationalityType-value">
-                        @foreach (Nationality item in ViewBag.nationalities)
+                        @foreach (Nationality item in _repository.Nationality.FindAll())
                         {
                             <option>@item.Name</option>
                         }
@@ -46,7 +48,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Religion.Name,
                     new { @placeholder = Model.User.UserProfile.Religion.Name, @list = "ReligionType-value", @class = "form-control", @Value = "" })
                     <datalist id="ReligionType-value">
-                        @foreach (Religion item in ViewBag.religions)
+                        @foreach (Religion item in _repository.Religion.FindAll())
                         {
                             <option>@item.Name</option>
                         }
@@ -62,7 +64,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Education.PlaceOfStudy,
                     new { @placeholder = Model.User.UserProfile.Education.PlaceOfStudy, @list = "EducationPlaceType-value", @class = "form-control", @Value = "" })
                     <datalist id="EducationPlaceType-value">
-                        @foreach (Education item in ViewBag.educations)
+                        @foreach (Education item in _repository.Education.FindAll())
                         {
                             <option>@item.PlaceOfStudy</option>
                         }
@@ -73,7 +75,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Education.Speciality,
                     new { @placeholder = Model.User.UserProfile.Education.Speciality, @list = "EducationSpecType-value", @class = "form-control", @Value = "" })
                     <datalist id="EducationSpecType-value">
-                        @foreach (Education item in ViewBag.educations)
+                        @foreach (Education item in _repository.Education.FindAll())
                         {
                             <option>@item.Speciality</option>
                         }
@@ -84,7 +86,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Education.Degree.Name,
                      new { @placeholder = Model.User.UserProfile.Education.Degree.Name, @list = "DegreeType-value", @class = "form-control", @Value = "" })
                     <datalist id="DegreeType-value">
-                        @foreach (Degree item in ViewBag.degrees)
+                        @foreach (Degree item in _repository.Degree.FindAll())
                         {
                             <option>@item.Name</option>
                         }
@@ -104,7 +106,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Work.PlaceOfwork,
                      new { @placeholder = Model.User.UserProfile.Work.PlaceOfwork, @list = "WorkPlaceType-value", @class = "form-control", @Value = "" })
                     <datalist id="WorkPlaceType-value">
-                        @foreach (Work item in ViewBag.works)
+                        @foreach (Work item in _repository.Work.FindAll())
                         {
                             <option>@item.PlaceOfwork</option>
                         }
@@ -115,7 +117,7 @@
                     @Html.TextBoxFor(x => x.User.UserProfile.Work.Position,
                      new { @placeholder = Model.User.UserProfile.Work.Position, @list = "WorkPositionType-value", @class = "form-control", @Value = "" })
                     <datalist id="WorkPositionType-value">
-                        @foreach (Work item in ViewBag.works)
+                        @foreach (Work item in _repository.Work.FindAll())
                         {
                             <option>@item.Position</option>
                         }
