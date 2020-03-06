@@ -25,3 +25,7 @@ function loginClick() {
 
 $(".register-text").click(registerClick);
 $(".login-text").click(loginClick);
+
+$("#autocomplete_input").change(function () {
+    $('#autocomplete_input_id').val($('option[value="' + $('#autocomplete_input').val() + '"]').data('value'));
+});
