@@ -1,40 +1,71 @@
 ﻿/// <binding AfterBuild='default' Clean='clean' />
-/*
-This file is the main entry point for defining Gulp tasks and using Gulp plugins.
-Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
-*/
 
 var gulp = require('gulp');
 var del = require('del');
-var less = require('gulp-less'); // adding less module
-var sass = require('gulp-sass'); // adding sass module
+var less = require('gulp-less');
+var sass = require('gulp-sass');
+var concat = require('gulp-concat');
 
+var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
 var paths = {
-    scripts: ['wwwroot/scripts/**/*.js'],
+    scripts: ['wwwroot/uncompiled/ts/**/*.js'],
     webroot: 'wwwroot/'
 };
 
 gulp.task('clean', function () {
-    return del(['wwwroot/js/tsCompiled/*', 'wwwroot/css/lessCompiled/*','wwwroot/css/sassCompiled/*']);
+    return del(['wwwroot/compiled/js/*', 'wwwroot/compiled/css/*', 'wwwroot/bundles/css/*', 'wwwroot/bundles/js/*']);
 });
 
 gulp.task('scripts', function () {
-    return gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js/tsCompiled'));
+    return gulp.src(paths.scripts)
+        .pipe(gulp.dest('wwwroot/compiled/js'));
 });
 
-// registrating task for transforming styles.less into css file 
 gulp.task('less', function () {
-    return gulp.src('wwwroot/less/**/*.less')
+    return gulp.src('wwwroot/uncompiled/less/**/*.less')
         .pipe(less())
-        .pipe(gulp.dest(paths.webroot + 'css/lessCompiled'));
+        .pipe(gulp.dest(paths.webroot + 'compiled/css'));
 });
 
 gulp.task("sass", function () {
-    return gulp.src('wwwroot/sass/**/*.scss')
+    return gulp.src('wwwroot/uncompiled/sass/**/*.scss')
         .pipe(sass())
-        .pipe(gulp.dest(paths.webroot + 'css/sassCompiled'));
+        .pipe(gulp.dest(paths.webroot + 'compiled/css'));
 });
 
-gulp.task('stvles', gulp.parallel('less', 'sass'));
+gulp.task('bundle-js', function () {
+    return gulp.src(paths.webroot + 'compiled/js/*.js')
+        .pipe(concat('bundle.js'))
+        .pipe(gulp.dest(paths.webroot + '/bundles/js'));
+});
 
-gulp.task('default', gulp.series('clean','scripts','stvles'));
+gulp.task('bundle-css', function () {
+    return gulp.src(paths.webroot + 'compiled/css/*.css')
+        .pipe(concat('bundle.css'))
+        .pipe(gulp.dest(paths.webroot + '/bundles/css'));
+});
+
+async function ClearLib() {
+    return del('wwwroot/lib/*');
+};
+async function ModulesToLib() {
+    gulp
+    try {
+        for (var i = 0; i < modules.length; i++) {
+            gulp.src('node_modules/' + modules[i] + '/**')
+                .pipe(gulp.dest(paths.webroot + 'lib/' + modules[i]));
+        }
+    }
+    catch (e) {
+        return -1;
+    }
+    return 0;
+};
+
+gulp.task('style', gulp.parallel('less', 'sass'));
+
+gulp.task('bundle', gulp.parallel('bundle-css', 'bundle-js'));
+
+gulp.task('default', gulp.series('clean', 'scripts', 'style', 'bundle'));
+
+gulp.task("update-lib", gulp.series(ClearLib, ModulesToLib));

@@ -49,7 +49,7 @@ namespace EPlast.Controllers
                     .Select(x => x.ID)
                     .FirstOrDefault();
             }
-            _repoWrapper.Decesion.Attach(decesion);
+            //_repoWrapper.Decesion.Attach(decesion);
             _repoWrapper.Decesion.Create(decesion);
             _repoWrapper.Save();
             return RedirectToAction("CreateRaport");

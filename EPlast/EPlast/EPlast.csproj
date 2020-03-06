@@ -7,20 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-min-loginregister.css" />
-    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-social.css" />
-    <Content Remove="wwwroot\lib\bootstrap\dist\css\example.css" />
-    <Content Remove="wwwroot\lib\bootstrap\dist\css\mdb.min.css" />
-    <Content Remove="wwwroot\scripts\app1.ts" />
+    <Compile Remove="wwwroot\uncompiled\css\**" />
+    <Content Remove="wwwroot\uncompiled\css\**" />
+    <EmbeddedResource Remove="wwwroot\uncompiled\css\**" />
+    <None Remove="wwwroot\uncompiled\css\**" />
+    <TypeScriptCompile Remove="wwwroot\uncompiled\css\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\uncompiled\ts\site.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
-    <PackageReference Include="bootstrap" Version="4.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.4">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.8.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -34,33 +37,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\lessCompiled\" />
-    <Folder Include="wwwroot\js\tsCompiled\" />
-    <Folder Include="wwwroot\css\sassCompiled\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\MDB\js\addons\datatables-select.min.js" />
-    <None Include="wwwroot\MDB\js\addons\datatables.min.js" />
-    <None Include="wwwroot\MDB\js\addons\directives.min.js" />
-    <None Include="wwwroot\MDB\js\addons\flag.min.js" />
-    <None Include="wwwroot\MDB\js\addons\imagesloaded.pkgd.min.js" />
-    <None Include="wwwroot\MDB\js\addons\jquery.zmd.hierarchical-display.min.js" />
-    <None Include="wwwroot\MDB\js\addons\masonry.pkgd.min.js" />
-    <None Include="wwwroot\MDB\js\addons\rating.min.js" />
-    <None Include="wwwroot\MDB\js\bootstrap.js" />
-    <None Include="wwwroot\MDB\js\bootstrap.min.js" />
-    <None Include="wwwroot\MDB\js\jquery.js" />
-    <None Include="wwwroot\MDB\js\jquery.min.js" />
-    <None Include="wwwroot\MDB\js\mdb.js" />
-    <None Include="wwwroot\MDB\js\mdb.min.js" />
-    <None Include="wwwroot\MDB\js\modules\animations-extended.min.js" />
-    <None Include="wwwroot\MDB\js\modules\forms-free.min.js" />
-    <None Include="wwwroot\MDB\js\modules\scrolling-navbar.min.js" />
-    <None Include="wwwroot\MDB\js\modules\treeview.min.js" />
-    <None Include="wwwroot\MDB\js\modules\wow.min.js" />
-    <None Include="wwwroot\MDB\js\popper.js" />
-    <None Include="wwwroot\MDB\js\popper.min.js" />
+    <Folder Include="wwwroot\bundles\css\" />
+    <Folder Include="wwwroot\bundles\css\" />
+    <Folder Include="wwwroot\bundles\js\" />
+    <Folder Include="wwwroot\bundles\js\" />
+    <Folder Include="wwwroot\compiled\css\" />
+    <Folder Include="wwwroot\compiled\css\" />
+    <Folder Include="wwwroot\compiled\js\" />
+    <Folder Include="wwwroot\compiled\js\" />
+    <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\uncompiled\less\" />
+    <Folder Include="wwwroot\uncompiled\less\" />
+    <Folder Include="wwwroot\uncompiled\sass\" />
+    <Folder Include="wwwroot\uncompiled\sass\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +58,9 @@
     <ProjectReference Include="..\EPlast.DataAccess\EPlast.DataAccess.csproj" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
