@@ -350,10 +350,16 @@ MigrationBackup/
 .ionide/
 
 # Ignore lib files
-**/wwwroot/lib/
+**/wwwroot/lib/*
 
-# Ignore compiled files
-**/wwwroot/compiled/
+# Ignore compiled files css
+**/wwwroot/compiled/css/*
 
-# Ignore bundles
-**/wwwroot/bundles/
+# Ignore compiled files css
+**/wwwroot/compiled/js/*
+
+# Ignore bundles files js
+**/wwwroot/bundles/js/*
+
+# Ignore bundles files css
+**/wwwroot/bundles/css/*
