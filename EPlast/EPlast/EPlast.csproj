@@ -30,6 +30,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\compiled\css\" />
     <Folder Include="wwwroot\compiled\js\" />
+    <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\uncompiled\less\" />
   </ItemGroup>
 
