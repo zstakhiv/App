@@ -95,6 +95,10 @@
                     $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
                 });
             });
+           
+            $('#input_date').datepicker({
+                    format: 'dd M yyyy'
+                });
     </script>
     @RenderSection("Scripts", required: false)
 

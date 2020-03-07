@@ -41,6 +41,13 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
+            //!!
+            if(!_repoWrapper.Gender.FindAll().Any())
+            {
+                _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
+                _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
+                _repoWrapper.Save();
+            }
             try
             {
                 var user = _repoWrapper.User.
@@ -153,7 +160,7 @@ namespace EPlast.Controllers
                     throw new ArgumentException("Field can`t be empty");
                 }
 
-                //Потрібні правки
+                //!!
                 userVM.User.UserProfile.Gender = _repoWrapper.Gender.FindByCondition(x => x.ID == userVM.User.UserProfile.Gender.ID).First();
 
                 _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
