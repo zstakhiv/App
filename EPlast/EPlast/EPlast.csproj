@@ -49,8 +49,6 @@
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\uncompiled\less\" />
     <Folder Include="wwwroot\uncompiled\less\" />
-    <Folder Include="wwwroot\uncompiled\sass\" />
-    <Folder Include="wwwroot\uncompiled\sass\" />
   </ItemGroup>
 
   <ItemGroup>
