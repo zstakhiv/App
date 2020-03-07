@@ -1,7 +1,8 @@
-﻿using EPlast.DataAccess.Entities;
+﻿using EPlast.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using EPlast.DataAccess.Entities;
 using System.Linq;
 
 namespace EPlast.Controllers
@@ -22,42 +23,28 @@ namespace EPlast.Controllers
 
         public IActionResult CreateRaport()
         {
-            ViewBag.DecesionTargets = _repoWrapper.DecesionTarget.FindAll();
-            ViewBag.Organization = (from item in _repoWrapper.Organization.FindAll()
-                                    select new SelectListItem
-                                    {
-                                        Text = item.OrganizationName,
-                                        Value = item.ID.ToString()
-                                    });
-            return View(new Decesion());
+            return View(new DecesionViewModel());
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SaveReport(Decesion decesion)
+        public IActionResult SaveReport(DecesionViewModel decesionViewModel)
         {
-            if (decesion is null)
-            {
-                return StatusCode(500);
-            }
-            decesion.DecesionStatus = _repoWrapper.DecesionStatus.FindAll().Where(x => x.ID == 1).FirstOrDefault();
-            List<DecesionTarget> decesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList();
-            bool exist = decesionTargets.Any(x => x.TargetName.Equals(decesion.DecesionTarget.TargetName));
-            if (exist)
-            {
-                decesion.DecesionTarget.ID = decesionTargets.Where(x => x.TargetName.Equals(decesion.DecesionTarget.TargetName))
-                    .Select(x => x.ID)
-                    .FirstOrDefault();
-            }
-            //_repoWrapper.Decesion.Attach(decesion);
-            _repoWrapper.Decesion.Create(decesion);
+            decesionViewModel.Decesion.DecesionStatus = new DecesionStatus { ID = 1, DecesionStatusName = "У розгляді" };
+            _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
+            _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
             _repoWrapper.Save();
             return RedirectToAction("CreateRaport");
         }
 
         public IActionResult ReadRaport()
         {
-            List<Decesion> decesions = _repoWrapper.Decesion.Include(x => x.DecesionStatus, x => x.DecesionTarget, x => x.Organization).Take(200).ToList();
+            List<DecesionViewModel> decesions = new List<DecesionViewModel>(
+                _repoWrapper.Decesion
+                .Include(x => x.DecesionStatus, x => x.DecesionTarget, x => x.Organization)
+                .Take(200)
+                .Select(decesion => new DecesionViewModel { Decesion = decesion })
+                .ToList());
+
             return View(decesions);
         }
 

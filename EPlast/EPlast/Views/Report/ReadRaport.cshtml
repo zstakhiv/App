@@ -1,5 +1,5 @@
-﻿@using EPlast.DataAccess.Entities
-@model List<Decesion>
+﻿@using EPlast.ViewModels
+@model List<DecesionViewModel>
 @{
     ViewData["Title"] = "ReadRaport";
 }
@@ -12,9 +12,7 @@
             <th class="th-sm">
                 Керівний орган
             </th>
-            <th class="th-sm">
-                Номер рішення
-            </th>
+
             <th class="th-sm">
                 Статус
             </th>
@@ -36,13 +34,12 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.ID</td>
-                <td>@item.Organization.OrganizationName</td>
-                <td>Here must be desisuion numner</td>
-                <td>@item.DecesionStatus.DecesionStatusName</td>
-                <td>@item.DecesionTarget.TargetName</td>
-                <td>@item.Description</td>
-                <td>@item.Date</td>
+                <td>@item.Decesion.ID</td>
+                <td>@item.Decesion.Organization.OrganizationName</td>
+                <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
+                <td>@item.Decesion.DecesionTarget.TargetName</td>
+                <td>@item.Decesion.Description</td>
+                <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
                 <td>must be desision file</td>
             </tr>
         }
