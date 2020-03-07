@@ -41,28 +41,28 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            ViewBag.genders = (from item in _repoWrapper.Gender.FindAll()
-                               select new SelectListItem
-                               {
-                                   Text = item.Name,
-                                   Value = item.ID.ToString()
-                               });
             try
             {
                 var user = _repoWrapper.User.
-                FindByCondition(q => q.Id == _userManager.GetUserId(User)).
-                    Include(i => i.UserProfile).
-                        ThenInclude(x => x.Nationality).
-                    Include(g => g.UserProfile).
-                        ThenInclude(g => g.Gender).
-                    Include(g => g.UserProfile).
-                        ThenInclude(g => g.Education).
-                            ThenInclude(q => q.Degree).
-                    Include(g => g.UserProfile).
-                        ThenInclude(g => g.Religion).
-                    Include(g => g.UserProfile).
-                        ThenInclude(g => g.Work).
-                    FirstOrDefault();
+            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                    ThenInclude(x => x.Nationality).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Gender).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Education).
+                        ThenInclude(q => q.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Religion).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Work).
+                FirstOrDefault();
+                ViewBag.genders = (from item in _repoWrapper.Gender.FindAll()
+                                   select new SelectListItem
+                                   {
+                                       Text = item.Name,
+                                       Value = item.ID.ToString()
+                                   });
                 var model = new UserViewModel() { User = user };
                 return View(model);
             }
@@ -79,41 +79,82 @@ namespace EPlast.Controllers
         {
             try
             {
-                var nationalities = _repoWrapper.Nationality.FindAll().Include(i=>i.UserProfiles);
-                var religions = _repoWrapper.Religion.FindAll().Include(i => i.UserProfiles);
-                var works = _repoWrapper.Work.FindAll().Include(i => i.UserProfiles);
-                var degrees = _repoWrapper.Degree.FindAll().Include(i=>i.Educations);
-                var educations = _repoWrapper.Education.FindAll().Include(i => i.UsersProfiles).Include(i=>i.Degree);
-
-                var nationality = nationalities.FirstOrDefault(x => object.Equals(x.Name, userVM.User.UserProfile.Nationality.Name));
-                if (nationality != null)
+                if(userVM.User.UserProfile.Nationality.ID == 0)
                 {
-                    userVM.User.UserProfile.Nationality.ID = nationality.ID;
+                    string name= userVM.User.UserProfile.Nationality.Name;
+                    if ( name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Nationality = new Nationality() { Name = name };
+                    }
                 }
 
-                var religion = religions.FirstOrDefault(x => object.Equals(x.Name, userVM.User.UserProfile.Religion.Name));
-                if (religion != null)
+                if (userVM.User.UserProfile.Religion.ID == 0)
                 {
-                    userVM.User.UserProfile.Religion.ID = religion.ID;
+                    string name = userVM.User.UserProfile.Religion.Name;
+                    if (name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Religion = new Religion() { Name = name };
+                    }
                 }
 
-                var work = works.FirstOrDefault(x => object.Equals(x.PlaceOfwork, userVM.User.UserProfile.Work.PlaceOfwork) && object.Equals(x.Position, userVM.User.UserProfile.Work.Position));
-                if (work != null)
+                Degree degree= userVM.User.UserProfile.Education.Degree;
+                if (userVM.User.UserProfile.Education.Degree.ID == 0)
                 {
-                    userVM.User.UserProfile.Work.ID = work.ID;
+                    string name = userVM.User.UserProfile.Education.Degree.Name;
+                    if (name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Education.Degree = new Degree() { Name = name };
+                    }
                 }
 
-                var education = educations.FirstOrDefault(x => object.Equals(x.PlaceOfStudy, userVM.User.UserProfile.Education.PlaceOfStudy) && object.Equals(x.Speciality, userVM.User.UserProfile.Education.Speciality));
-                if (education != null)
+                if (userVM.User.UserProfile.Education.ID == 0)
                 {
-                    userVM.User.UserProfile.Education.ID = education.ID;
+                    string placeOfStudy = userVM.User.UserProfile.Education.PlaceOfStudy;
+                    string speciality = userVM.User.UserProfile.Education.Speciality;
+                    if (placeOfStudy == ""  || speciality=="")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        
+                        userVM.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality,Degree=degree};
+                    }
                 }
 
-                var degree = degrees.FirstOrDefault(x => object.Equals(x.Name, userVM.User.UserProfile.Education.Degree.Name));
-                if (degree != null)
+                if (userVM.User.UserProfile.Work.ID == 0)
                 {
-                    userVM.User.UserProfile.Education.Degree.ID = degree.ID;
+                    string placeOfWork = userVM.User.UserProfile.Work.PlaceOfwork;
+                    string position = userVM.User.UserProfile.Work.Position;
+                    if (placeOfWork == "" || position == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
+                    }
                 }
+
+                if(userVM.User.UserProfile.PhoneNumber=="" | userVM.User.UserProfile.Address == "" | userVM.User.FatherName=="")
+                {
+                    throw new ArgumentException("Field can`t be empty");
+                }
+
+                //Потрібні правки
+                userVM.User.UserProfile.Gender = _repoWrapper.Gender.FindByCondition(x => x.ID == userVM.User.UserProfile.Gender.ID).First();
 
                 _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
                 _repoWrapper.User.Update(userVM.User);
@@ -142,14 +183,8 @@ namespace EPlast.Controllers
             }
             var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, FirstName = registerVM.Name, LastName = registerVM.SurName, EmailConfirmed = true,
                 UserProfile = new UserProfile()
-                {
-                    Education = (_repoWrapper.Education.FindAll().Count() == 0) ? (new Education() {Degree=new Degree() }) : (_repoWrapper.Education.FindAll().First()),
-                    Work = (_repoWrapper.Work.FindAll().Count() == 0) ? (new Work()) : (_repoWrapper.Work.FindAll().First()),
-                    Religion = (_repoWrapper.Religion.FindAll().Count() == 0) ? (new Religion()) : (_repoWrapper.Religion.FindAll().First()),
-                    Nationality = (_repoWrapper.Nationality.FindAll().Count() == 0) ? (new Nationality()) : (_repoWrapper.Nationality.FindAll().First()),
-                    Gender = (_repoWrapper.Gender.FindAll().Count() == 0) ? (new Gender()) : (_repoWrapper.Gender.FindAll().First())
-                }
             };
+
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)

@@ -89,6 +89,14 @@
     <!-- MDB datatable JavaScript -->
     <script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>
     <script type="text/javascript" src="~/js/site.js"></script>
+    <script>
+            $("input#autocomplete_input").each(function (index) {
+                $(this).change(function () {
+                    $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
+                });
+            });
+    </script>
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>
