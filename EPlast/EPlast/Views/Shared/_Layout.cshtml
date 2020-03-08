@@ -1,7 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
-
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
+@inject UserManager<EPlast.DataAccess.Entities.User> UserManager
+  
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,28 +10,22 @@
     <title>@ViewData["Title"] - EPlast</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/lib/mdbootstrap/css/mdb.min.css" />
+        <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
+        <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/bundles/css/bundle.css" rel="stylesheet" />
     </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
-    </environment>
-    <link href="~/css/jquery-ui.css" rel="stylesheet" />
-    <link href="~/css/Raport.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-    <!-- Material Design Bootstrap -->
-    <link rel="stylesheet" href="~/MDB/css/mdb.min.css">
-    <!-- MDB datatable  CSS-->
-    <link href="~/MDB/css/addons/datatables.min.css" rel="stylesheet" />
-    <!---->
-    <link rel="stylesheet" href="~/css/site.css" />
+
+<!--  MOVE- ERROR_STYLE TO SASS AND TO OTHER FOLDER  -->
+    <link rel="stylesheet" href="~/css/error_styles.css" />
+
 </head>
 <body>
 
@@ -42,6 +36,8 @@
             </div>
             <div class="navbar">
                 <ul class="nav justify-content-start">
+                    <li class="nav-item"><a asp-action="Index" id="menu_admin" asp-controller="Account" class="nav-link text-light">Профіль</a></li>
+                    <li class="nav-item"><a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light">Увійти/Зареєструватись</a></li>
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li class="nav-item"><a asp-action="Index" id="menu_admin" asp-controller="Account" style="margin-top:8px;" class="nav-link text-light">Профіль</a></li>
@@ -52,9 +48,7 @@
         </div>
     </nav>
     <div class="container">
-
         @RenderBody()
-
     </div>
 
     <footer class="border-top footer text-muted">
@@ -64,43 +58,16 @@
     </footer>
 
     <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
-        </script>
-    </environment>
-    <script src="~/js/jquery-ui.js"></script>
-    <!-- Bootstrap tooltips -->
-    <script type="text/javascript" src="~/MDB/js/popper.min.js"></script>
-    <!-- MDB core JavaScript -->
-    <script type="text/javascript" src="~/MDB/js/mdb.min.js"></script>
-    <!-- MDB datatable JavaScript -->
-    <script type="text/javascript" src="~/MDB/js/addons/datatables.min.js"></script>
-    <script type="text/javascript" src="~/js/site.js"></script>
-    <script>
-            $("input#autocomplete_input").each(function (index) {
-                $(this).change(function () {
-                    $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
-                });
-            });
-           
-            $('#input_date').datepicker({
-                    format: 'dd M yyyy'
-                });
-    </script>
-    @RenderSection("Scripts", required: false)
 
+        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+        <script src="~/bundles/js/bundle.js"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

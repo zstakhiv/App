@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
+@inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
+@inject UserManager<EPlast.DataAccess.Entities.User> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
-    @using (Html.BeginForm("Logout", "Account", FormMethod.Post))
+    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
     {
         <div class="d-flex">
             <div class="btn navbar-btn text-light">

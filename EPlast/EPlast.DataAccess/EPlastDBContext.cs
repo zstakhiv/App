@@ -1,8 +1,8 @@
 ﻿using System;
 using EPlast.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 namespace EPlast.DataAccess
 {
@@ -54,7 +54,6 @@ namespace EPlast.DataAccess
             modelBuilder.Entity<Event>()
                 .HasKey(x => x.ID);
 
-
             modelBuilder.Entity<EventAdmin>()
                 .HasKey(x => new { x.EventID, x.UserID });
             modelBuilder.Entity<EventAdmin>()
@@ -73,7 +72,7 @@ namespace EPlast.DataAccess
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }
-        public DbSet<Statistic> Statistics { get; set; }
+        public DbSet<MembersStatistic> MembersStatistics { get; set; }
         public DbSet<AnnualReportStatus> AnnualReportStatuses { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<CityAdministration> CityAdministrations { get; set; }

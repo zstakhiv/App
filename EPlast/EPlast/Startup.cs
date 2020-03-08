@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 
 namespace EPlast
@@ -30,7 +31,10 @@ namespace EPlast
         {
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EPlastDBContext>();
+
+            services.AddIdentity<User, IdentityRole>()
+                    .AddEntityFrameworkStores<EPlastDBContext>()
+                    .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -51,15 +55,13 @@ namespace EPlast
 
             services.Configure<IdentityOptions>(options =>
             {
-                //password settings111
+                options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireUppercase = true;
 
-                //user settings
                 options.User.RequireUniqueEmail = true;
 
-                //lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
             });
@@ -69,6 +71,7 @@ namespace EPlast
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/LoginAndRegister";
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,13 +85,12 @@ namespace EPlast
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseStatusCodePages();
+            app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            app.UseStatusCodePages();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
