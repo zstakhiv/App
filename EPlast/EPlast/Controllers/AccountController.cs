@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models;
-using NLog;
 using EPlast.BussinessLayer.EmailConfirmationService;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,6 @@ namespace EPlast.Controllers
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
-            logger = LogManager.GetCurrentClassLogger();
             _repoWrapper = repoWrapper;
         }
 
