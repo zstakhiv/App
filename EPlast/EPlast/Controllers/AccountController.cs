@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
 using MimeKit;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models;
-using NLog;
 using EPlast.BussinessLayer.EmailConfirmationService;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +22,18 @@ namespace EPlast.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private Logger logger;
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
         private readonly IRepositoryWrapper _repoWrapper;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IRepositoryWrapper repoWrapper)
+        private readonly ILogger _logger;
+        public AccountController(UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IRepositoryWrapper repoWrapper,
+            ILogger<AccountController> logger)
         {
+            _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
-            logger = LogManager.GetCurrentClassLogger();
             _repoWrapper = repoWrapper;
         }
 
