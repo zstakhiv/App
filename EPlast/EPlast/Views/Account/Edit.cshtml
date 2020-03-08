@@ -2,137 +2,140 @@
 @using EPlast.DataAccess.Entities
 @model EPlast.ViewModels.UserViewModel
 @inject IRepositoryWrapper _repository
-<form asp-action="EditConfirmed" enctype="multipart/form-data">
+<form  class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-action="EditConfirmed" enctype="multipart/form-data">
     <div class="row">
         <div class="col-7">
-            <form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white">
-                <h1>Редагування профілю</h1>
-                @Html.HiddenFor(model => model.User.Id)
-                @Html.HiddenFor(model => model.User.UserProfile.ID)
-                @Html.HiddenFor(model => model.User.UserProfile.UserID)
-                @Html.HiddenFor(model => model.User.UserProfile.User)
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="control-label">Ім'я</label>
-                    <input required asp-for="User.FirstName" class="form-control">
-                    <span asp-validation-for="User.FirstName" class="text-danger"></span>
-                </div>
+            <h1>Редагування профілю</h1>
+            @Html.HiddenFor(model => model.User.Id)
+            @Html.HiddenFor(model => model.User.UserProfile.ID)
+            @Html.HiddenFor(model => model.User.UserProfile.UserID)
+            @Html.HiddenFor(model => model.User.UserProfile.User)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Ім'я</label>
+                <input required asp-for="User.FirstName" class="form-control">
+                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label class="control-label">Прізвище</label>
-                    <input required asp-for="User.LastName" class="form-control">
-                    <span asp-validation-for="User.LastName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">По-батькові</label>
-                    <input required asp-for="User.FatherName" class="form-control">
-                    <span asp-validation-for="User.FatherName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Національність</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Nationality.Name,
-                    new { @list = "NationalityType-value", @required = "required", @id = "autocomplete_input", @class = "form-control", @Value = "" })
-                    <datalist id="NationalityType-value">
-                        @foreach (Nationality item in _repository.Nationality.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.Name"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Nationality.ID, new { @id = "autocomplete_input_id_0" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Номер телефону</label>
-                    <input type="tel" required asp-for="User.UserProfile.PhoneNumber" class="form-control" />
-                    <span asp-validation-for="User.UserProfile.PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Віровизнання</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Religion.Name,
-                    new { @id = "autocomplete_input", @required = "required", @list = "ReligionType-value", @class = "form-control", @Value = "" })
-                    <datalist id="ReligionType-value">
-                        @foreach (Religion item in _repository.Religion.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.Name"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Religion.ID, new { @id = "autocomplete_input_id_1" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Дата народження</label>
-                    <input id="input_date" required asp-for="User.UserProfile.DateTime" class="form-control" />
-                    <span asp-validation-for="User.UserProfile.DateTime" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Місце навчання</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Education.PlaceOfStudy,
-                    new { @id = "autocomplete_input", @required = "required", @list = "EducationPlaceType-value", @class = "form-control", @Value = "" })
-                    <datalist id="EducationPlaceType-value">
-                        @foreach (Education item in _repository.Education.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.PlaceOfStudy"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Education.ID, new { @id = "autocomplete_input_id_2" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Спеціальність</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Education.Speciality,
-                    new { @id = "autocomplete_input", @required = "required", @list = "EducationSpecType-value", @class = "form-control", @Value = "" })
-                    <datalist id="EducationSpecType-value">
-                        @foreach (Education item in _repository.Education.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.Speciality"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Education.ID, new { @id = "autocomplete_input_id_3" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Ступінь</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Education.Degree.Name,
-                     new { @id = "autocomplete_input", @required = "required", @list = "DegreeType-value", @class = "form-control", @Value = "" })
-                    <datalist id="DegreeType-value">
-                        @foreach (Degree item in _repository.Degree.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.Name"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Education.Degree.ID, new { @id = "autocomplete_input_id_4" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Стать</label>
-                    @Html.DropDownListFor(x => x.User.UserProfile.Gender.ID, (IEnumerable<SelectListItem>)ViewBag.genders, new { @placeholder = "Стать", @class = "form-control", @required = "required" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Місце проживання</label>
-                    <input required asp-for="User.UserProfile.Address" class="form-control" />
-                    <span asp-validation-for="User.UserProfile.Address" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Місце праці</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Work.PlaceOfwork,
-                     new { @id = "autocomplete_input", @required = "required", @list = "WorkPlaceType-value", @class = "form-control", @Value = "" })
-                    <datalist id="WorkPlaceType-value">
-                        @foreach (Work item in _repository.Work.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.PlaceOfwork"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Work.ID, new { @id = "autocomplete_input_id_5" })
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Посада</label>
-                    @Html.TextBoxFor(x => x.User.UserProfile.Work.Position,
-                     new { @id = "autocomplete_input", @required = "required", @list = "WorkPositionType-value", @class = "form-control", @Value = "" })
-                    <datalist id="WorkPositionType-value">
-                        @foreach (Work item in _repository.Work.FindAll())
-                        {
-                            <option data-value="@item.ID" value="@item.Position"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.User.UserProfile.Work.ID, new { @id = "autocomplete_input_id_6" })
-                </div>
-                <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
-            </form>
+            <div class="form-group">
+                <label class="control-label">Прізвище</label>
+                <input required asp-for="User.LastName" class="form-control">
+                <span asp-validation-for="User.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">По-батькові</label>
+                <input required asp-for="User.FatherName" class="form-control">
+                <span asp-validation-for="User.FatherName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Національність</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Nationality.Name,
+                new { @list = "NationalityType-value", @required = "required", @id = "autocomplete_input", @class = "form-control", @Value = "" })
+                <datalist id="NationalityType-value">
+                    @foreach (Nationality item in _repository.Nationality.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.Name"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Nationality.ID, new { @id = "autocomplete_input_id_0" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Номер телефону</label>
+                <input type="tel" required asp-for="User.UserProfile.PhoneNumber" class="form-control" />
+                <span asp-validation-for="User.UserProfile.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Віровизнання</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Religion.Name,
+                new { @id = "autocomplete_input", @required = "required", @list = "ReligionType-value", @class = "form-control", @Value = "" })
+                <datalist id="ReligionType-value">
+                    @foreach (Religion item in _repository.Religion.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.Name"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Religion.ID, new { @id = "autocomplete_input_id_1" })
+            </div>
+            @*<div class="form-group">
+            <label class="control-label">Дата народження</label>
+            <input id="datetimepicker" required asp-for="User.UserProfile.DateTime" class="form-control" />
+            <span asp-validation-for="User.UserProfile.DateTime" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label class="control-label">Дата народження</label>
+                <input required asp-for="User.UserProfile.DateTime" type="text" id="datepicker" class="form-control" placeholder="Виберіть...">
+                <span  class="ui-datepicker"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Місце навчання</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Education.PlaceOfStudy,
+                new { @id = "autocomplete_input", @required = "required", @list = "EducationPlaceType-value", @class = "form-control", @Value = "" })
+                <datalist id="EducationPlaceType-value">
+                    @foreach (Education item in _repository.Education.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.PlaceOfStudy"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Education.ID, new { @id = "autocomplete_input_id_2" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Спеціальність</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Education.Speciality,
+                new { @id = "autocomplete_input", @required = "required", @list = "EducationSpecType-value", @class = "form-control", @Value = "" })
+                <datalist id="EducationSpecType-value">
+                    @foreach (Education item in _repository.Education.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.Speciality"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Education.ID, new { @id = "autocomplete_input_id_3" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ступінь</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Education.Degree.Name,
+                 new { @id = "autocomplete_input", @required = "required", @list = "DegreeType-value", @class = "form-control", @Value = "" })
+                <datalist id="DegreeType-value">
+                    @foreach (Degree item in _repository.Degree.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.Name"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Education.Degree.ID, new { @id = "autocomplete_input_id_4" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Стать</label>
+                @Html.DropDownListFor(x => x.User.UserProfile.Gender.ID, (IEnumerable<SelectListItem>)ViewBag.genders, new { @placeholder = "Стать", @class = "form-control", @required = "required" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Місце проживання</label>
+                <input required asp-for="User.UserProfile.Address" class="form-control" />
+                <span asp-validation-for="User.UserProfile.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Місце праці</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Work.PlaceOfwork,
+                 new { @id = "autocomplete_input", @required = "required", @list = "WorkPlaceType-value", @class = "form-control", @Value = "" })
+                <datalist id="WorkPlaceType-value">
+                    @foreach (Work item in _repository.Work.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.PlaceOfwork"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Work.ID, new { @id = "autocomplete_input_id_5" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Посада</label>
+                @Html.TextBoxFor(x => x.User.UserProfile.Work.Position,
+                 new { @id = "autocomplete_input", @required = "required", @list = "WorkPositionType-value", @class = "form-control", @Value = "" })
+                <datalist id="WorkPositionType-value">
+                    @foreach (Work item in _repository.Work.FindAll())
+                    {
+                        <option data-value="@item.ID" value="@item.Position"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.User.UserProfile.Work.ID, new { @id = "autocomplete_input_id_6" })
+            </div>
+            <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
         </div>
         <div class="col ">
             <div class="row">
