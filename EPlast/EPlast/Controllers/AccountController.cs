@@ -15,6 +15,8 @@ using EPlast.BussinessLayer.EmailConfirmationService;
 using EPlast.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System;
 
 namespace EPlast.Controllers
 {
