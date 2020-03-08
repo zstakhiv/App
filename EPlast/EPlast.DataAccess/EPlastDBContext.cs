@@ -86,5 +86,7 @@ namespace EPlast.DataAccess
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<RegionAdministration> RegionAdministrations { get; set; }
+        public DbSet<CityLegalStatus> CityLegalStatuses { get; set; }
+        public DbSet<CityLegalStatusType> CityLegalStatusTypes { get; set; }
     }
 }
