@@ -9,13 +9,11 @@ namespace EPlast.DataAccess.Entities
     {
         [Required, MaxLength(50, ErrorMessage = "FirstName cannot exceed 50 characters")]
         public string FirstName { get; set; }
-
         [Required, MaxLength(50, ErrorMessage = "LastName cannot exceed 50 characters")]
         public string LastName { get; set; }
         [Required, MaxLength(50, ErrorMessage = "FatherName cannot exceed 50 characters")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
-        public int UserProfileID { get; set; }
         public UserProfile UserProfile { get; set; }
         public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
         public ICollection<Approver> Approvers { get; set; }

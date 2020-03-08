@@ -1,11 +1,12 @@
 ﻿using System;
 using EPlast.DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<User>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
@@ -53,9 +54,6 @@ namespace EPlast.DataAccess
             modelBuilder.Entity<Event>()
                 .HasKey(x => x.ID);
 
-            modelBuilder.Entity<User>()
-                .HasKey(x => x.Id);
-
             modelBuilder.Entity<EventAdmin>()
                 .HasKey(x => new { x.EventID, x.UserID });
             modelBuilder.Entity<EventAdmin>()
@@ -88,5 +86,7 @@ namespace EPlast.DataAccess
         public DbSet<Club> Clubs { get; set; }
         public DbSet<Region> Regions { get; set; }
         public DbSet<RegionAdministration> RegionAdministrations { get; set; }
+        public DbSet<CityLegalStatus> CityLegalStatuses { get; set; }
+        public DbSet<CityLegalStatusType> CityLegalStatusTypes { get; set; }
     }
 }

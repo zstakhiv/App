@@ -46,6 +46,8 @@ namespace EPlast.DataAccess.Repositories
         IAnnualReportsRepository AnnualReports { get; }
         IAnnualReportStatusesRepository AnnualReportStatuses { get; }
         IMembersStatisticsRepository MembersStatistics { get; }
+        ICityLegalStatusesRepository CityLegalStatuses { get; }
+        ICityLegalStatusTypesRepository CityLegalStatusTypes { get; }
 
         void Save();
     }
