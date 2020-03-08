@@ -25,4 +25,9 @@ $(".login-text").click(loginClick);
 $("#autocomplete_input").change(function () {
     $('#autocomplete_input_id').val($('option[value="' + $('#autocomplete_input').val() + '"]').data('value'));
 });
+$("tr.read_row").dblclick(function () {
+    alert("Here with " + $(this).find('td').map(function () {
+        return $(this).text();
+    })[0]);
+});
 //# sourceMappingURL=site.js.map
