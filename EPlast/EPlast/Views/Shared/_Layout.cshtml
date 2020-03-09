@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
 @inject UserManager<EPlast.DataAccess.Entities.User> UserManager
-  
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,9 +25,6 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
-    <!--  MOVE- ERROR_STYLE TO SASS AND TO OTHER FOLDER  -->
-    <link rel="stylesheet" href="~/css/error_styles.css" />
-
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User))
@@ -95,7 +92,6 @@
         @RenderBody()
     }
 
-
     <environment include="Development">
 
         <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
@@ -104,7 +100,7 @@
         <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
         <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
         <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-        <script src="~/bundles/js/bundle.js"></script>
+        <script src="~/bundles/js/bundle-min.js"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

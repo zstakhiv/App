@@ -51,7 +51,6 @@ $(document).ready(() => {
 
 function onMenuHover(index: number) {
     if (menuOpen) {
-
         if (currentIndex === index || profileListing[index].length === 0) {
             closeMenu();
 

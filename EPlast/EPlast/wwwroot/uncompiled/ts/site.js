@@ -27,4 +27,18 @@ $("input#autocomplete_input").each(function (index) {
         $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
     });
 });
+
+$("tr.read_row").dblclick(function () {
+    var content = $(this).find('td').map(function () {
+        return $(this).text();
+    })[0];
+    window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
+});
+$("#datepickerBirthday").datepicker({
+    dateFormat: 'yy/mm/dd',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: '-100y:c+nn',
+    maxDate: '-1d'
+});
 //# sourceMappingURL=site.js.map
