@@ -5,7 +5,7 @@ var del = require('del');
 var less = require('gulp-less');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+const minify = require('gulp-minify');
 var cssmin = require('gulp-cssmin');
 
 var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
@@ -38,7 +38,7 @@ gulp.task("sass", function () {
 gulp.task('bundle-js', function () {
     return gulp.src(paths.webroot + 'compiled/js/*.js')
         .pipe(concat('bundle.js'))
-        .pipe(uglify())
+        .pipe(minify())
         .pipe(gulp.dest(paths.webroot + '/bundles/js'));
 });
 
