@@ -27,4 +27,11 @@ $("input#autocomplete_input").each(function (index) {
         $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
     });
 });
+$("#datepickerBirthday").datepicker({
+    dateFormat: 'yy/mm/dd',
+    changeMonth: true,
+    changeYear: true,
+    yearRange: '-100y:c+nn',
+    maxDate: '-1d'
+});
 //# sourceMappingURL=site.js.map
