@@ -1,11 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
     public class UserProfile
     {
         public int ID { get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date")]
         public DateTime DateTime { get; set; }
         public Education Education { get; set; }
         public Nationality Nationality { get; set; }

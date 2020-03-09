@@ -1,0 +1,146 @@
+﻿.club-page-wrapper {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+
+    .grid-block {
+        padding: 10px;
+        margin: 10px;
+        background-color: white;
+    }
+
+    .buttons {
+        border: 0;
+        color: white;
+        background-color: #3c5438;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 18px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .vertical-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .horizontal-grid {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .main-info {
+        .grid-header {
+            text-align: center;
+        }
+
+        .top-info {
+            display: flex;
+            align-items: flex-start;
+
+            .curin-img {
+                width: 150px;
+            }
+
+            .line-pair {
+                font-size: 12px;
+
+                .line-upper {
+                    font-size: 1em;
+                    color: #888;
+                    margin: 0;
+                }
+
+                .line-lower {
+                    font-size: 1.5em;
+                }
+            }
+
+            .top-info-content {
+                padding: 10px;
+            }
+        }
+    }
+
+    .secondary-info {
+        .about-info {
+            .info {
+                text-align: justify;
+            }
+        }
+
+        .people-info, .members-info, .followers-info {
+            flex-grow: 1;
+        }
+
+        .members-info {
+            .members-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        .followers-info {
+            .member-wrapper {
+                position: relative;
+                margin-bottom: 5px;
+
+                .plus {
+                    position: absolute;
+                    bottom: -5px;
+                    right: -5px;
+                    color: #3c5438;
+                    font-size: 23px;
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .member-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 8px;
+
+            .member-img-block {
+                width: 50px;
+                height: 50px;
+                background-repeat: repeat-y;
+                background-repeat: repeat-x;
+                background-size: cover;
+                background-position: center center;
+                text-align: center;
+            }
+
+            .member-img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .member-name {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 767px),(orientation: portrait) {
+    .club-page-wrapper {
+        flex-direction: column;
+
+        .main-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .secondary-info {
+            .people-info {
+                flex-direction: column;
+            }
+        }
+    }
+}
