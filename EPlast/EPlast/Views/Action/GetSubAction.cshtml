@@ -1,0 +1,28 @@
+﻿
+@model List<SubEventCategory>
+<body>
+    <div>
+        <div></div>
+    </div>
+    <div>
+        <div class="container">
+            <div class="cust_bloglistintro">
+                <h1 id="action-title" class="text-center-action">Акції</h1>
+            </div>
+            <div class="row">
+                @foreach (SubEventCategory subCat in Model)
+                {
+                    <div class="col-md-4 cust_blogteaser">
+                            <a href="#"><img class="rounded img-fluid" src="~/images/events/ActionLogo.png"></a>
+                            <h3>@subCat.SubEventCategoryName</h3>
+                            <button type="submit" id="completed-task" class="h4 event-fabutton">
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </button>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</body>
