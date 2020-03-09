@@ -5,6 +5,8 @@ var del = require('del');
 var less = require('gulp-less');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
+const minify = require('gulp-minify');
+var cssmin = require('gulp-cssmin');
 
 var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
 var paths = {
@@ -36,12 +38,14 @@ gulp.task("sass", function () {
 gulp.task('bundle-js', function () {
     return gulp.src(paths.webroot + 'compiled/js/*.js')
         .pipe(concat('bundle.js'))
+        .pipe(minify())
         .pipe(gulp.dest(paths.webroot + '/bundles/js'));
 });
 
 gulp.task('bundle-css', function () {
     return gulp.src(paths.webroot + 'compiled/css/*.css')
         .pipe(concat('bundle.css'))
+        .pipe(cssmin())
         .pipe(gulp.dest(paths.webroot + '/bundles/css'));
 });
 
