@@ -27,7 +27,6 @@ $("input#autocomplete_input").each(function (index) {
         $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
     });
 });
-
 $("tr.read_row").dblclick(function () {
     var content = $(this).find('td').map(function () {
         return $(this).text();
