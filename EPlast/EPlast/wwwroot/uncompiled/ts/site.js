@@ -26,8 +26,9 @@ $("#autocomplete_input").change(function () {
     $('#autocomplete_input_id').val($('option[value="' + $('#autocomplete_input').val() + '"]').data('value'));
 });
 $("tr.read_row").dblclick(function () {
-    alert("Here with " + $(this).find('td').map(function () {
+    var content = $(this).find('td').map(function () {
         return $(this).text();
-    })[0]);
+    })[0];
+    window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
 });
 //# sourceMappingURL=site.js.map

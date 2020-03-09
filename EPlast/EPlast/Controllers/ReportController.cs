@@ -1,9 +1,9 @@
-﻿using EPlast.ViewModels;
+﻿using EPlast.DataAccess.Entities;
+using EPlast.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using EPlast.DataAccess.Entities;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
@@ -48,11 +48,14 @@ namespace EPlast.Controllers
             return View(decesions);
         }
 
-        public void CreatePDF()
+        [HttpGet]
+        public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            Models.PDFCreator creator = new Models.PDFCreator();
-            creator.CreateDoucment();
-            Response.Redirect(Url.Content("~/Report.pdf"));
+            BussinessLayer.PDFService PDFService = new BussinessLayer.PDFService();
+            byte[] arr = await PDFService.CreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
+                                                                                       x => x.DecesionTarget,
+                                                                                       x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
+            return File(arr, "application/pdf");
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+﻿using EPlast.DataAccess.Entities;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
-using PdfSharp.Pdf;
-using EPlast.DataAccess.Entities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace EPlast.BussinessLayer
 {
@@ -66,12 +64,12 @@ namespace EPlast.BussinessLayer
             paragraph.Format.SpaceBefore = "5cm";
             paragraph.Format.Alignment = ParagraphAlignment.Right;
 
-            paragraph.AddDateField();
-
-            PdfDocumentRenderer renderer = new PdfDocumentRenderer(true)
+            renderer = new PdfDocumentRenderer(true)
             {
                 Document = document
             };
+
+            renderer.RenderDocument();
         }
 
         private void DefineStyles(Document document)
@@ -82,11 +80,14 @@ namespace EPlast.BussinessLayer
 
         internal byte[] GetBytes()
         {
-            MemoryStream stream = new MemoryStream();
-            renderer.PdfDocument.Save(stream, false);
-            byte[] bytes = stream.GetBuffer();
-            stream.Dispose();
-            return bytes;
+            byte[] fileContents = null;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                renderer.PdfDocument.Save(stream, true);
+                fileContents = stream.ToArray();
+                stream.Dispose();
+            }
+            return fileContents;
         }
     }
 }

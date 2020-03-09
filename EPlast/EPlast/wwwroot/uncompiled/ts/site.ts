@@ -31,7 +31,9 @@ $("#autocomplete_input").change(function () {
 });
 
 $("tr.read_row").dblclick(function () {
-    alert("Here with " + $(this).find('td').map(function () {
-        return $(this).text();
-    })[0]);
-})
+    var content = $(this).find('td').map(function () {
+        return $(this).text()
+    })[0];
+
+    window.open("/Report/CreatePDFAsync?objId=" + content, '_blank')
+});

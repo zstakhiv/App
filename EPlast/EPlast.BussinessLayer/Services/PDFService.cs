@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace EPlast.BussinessLayer
 {
@@ -10,7 +7,7 @@ namespace EPlast.BussinessLayer
         public async Task<byte[]> CreatePDFAsync(object pdfData)
         {
             PDFCreator creator = new PDFCreator(pdfData);
-            return creator.GetBytes();
+            return await Task.Run(() => creator.GetBytes());
         }
     }
 }
