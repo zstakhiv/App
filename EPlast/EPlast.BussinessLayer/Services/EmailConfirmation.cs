@@ -1,11 +1,12 @@
-﻿using MailKit.Net.Smtp;
+﻿using EPlast.BussinessLayer.Interfaces;
+using MailKit.Net.Smtp;
 using MimeKit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EPlast.BussinessLayer.EmailConfirmationService
+namespace EPlast.BussinessLayer
 {
-    public class EmailServiceConfirmation
+    public class EmailConfirmation:IEmailConfirmation
     {
         public async Task SendEmailAsync(string email, string subject, string message)
         {

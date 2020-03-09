@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models;
-using EPlast.BussinessLayer.EmailConfirmationService;
+using EPlast.BussinessLayer;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using EPlast.BussinessLayer.Interfaces;
 
 namespace EPlast.Controllers
 {
@@ -26,22 +27,26 @@ namespace EPlast.Controllers
         private UserManager<User> _userManager;
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly ILogger _logger;
+        private readonly IEmailConfirmation _emailConfirmation;
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IRepositoryWrapper repoWrapper,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger, IEmailConfirmation emailConfirmation)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _repoWrapper = repoWrapper;
+            _emailConfirmation = emailConfirmation;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult UserProfile()
         {
             return View();
@@ -53,8 +58,14 @@ namespace EPlast.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ConfirmedEmail()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Registered(RegisterViewModel registerVM)
+        public async Task<IActionResult> Registration(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid)
             {
@@ -76,13 +87,12 @@ namespace EPlast.Controllers
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmationLink = Url.Action(
-                    nameof(ConfirmEmail),
+                    nameof(ConfirmingEmail),
                     "Account",
                     new { code = code, userId = user.Id },
                     protocol: HttpContext.Request.Scheme);
 
-                EmailServiceConfirmation emailService = new EmailServiceConfirmation();
-                await emailService.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
+                await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
                     $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
 
                 return View("AcceptingEmail");
@@ -93,7 +103,7 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
             if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
             {
@@ -106,12 +116,12 @@ namespace EPlast.Controllers
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return RedirectToAction("Index", "Account");
+                return RedirectToAction("ConfirmedEmail", "Account");
             else
                 return View("Error");
         }
 
-        public async Task<IActionResult> LoggedIn(LoginViewModel loginVM)
+        public async Task<IActionResult> Logging(LoginViewModel loginVM)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +138,7 @@ namespace EPlast.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Account");
+                    return RedirectToAction("UserProfile", "Account");
                 }
                 else
                 {
