@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200308125001_Delete-Required-fields-PhoneNumber-int-to-string")]
+    partial class DeleteRequiredfieldsPhoneNumberinttostring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,41 +229,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasIndex("CityID");
 
                     b.ToTable("CityDocuments");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.CityLegalStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CityId");
-
-                    b.Property<int>("CityLegalStatusTypeId");
-
-                    b.Property<DateTime>("DateStart");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CityLegalStatusTypeId");
-
-                    b.ToTable("CityLegalStatuses");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.CityLegalStatusType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CityLegalStatusTypes");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>
@@ -1106,19 +1073,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.City", "City")
                         .WithMany("CityDocuments")
                         .HasForeignKey("CityID");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.CityLegalStatus", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.City", "City")
-                        .WithMany("CityLegalStatuses")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("EPlast.DataAccess.Entities.CityLegalStatusType", "LegalStatus")
-                        .WithMany("CityLegalStatuses")
-                        .HasForeignKey("CityLegalStatusTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>

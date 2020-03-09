@@ -30,5 +30,6 @@ namespace EPlast.DataAccess.Entities
         public ICollection<UnconfirmedCityMember> UnconfirmedCityMember { get; set; }
         public ICollection<CityAdministration> CityAdministration { get; set; }
         public ICollection<AnnualReport> AnnualReports { get; set; }
+        public ICollection<CityLegalStatus> CityLegalStatuses { get; set; }
     }
 }

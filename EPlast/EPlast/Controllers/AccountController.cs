@@ -12,6 +12,10 @@ using EPlast.DataAccess.Repositories;
 using EPlast.Models;
 using NLog;
 using EPlast.BussinessLayer.EmailConfirmationService;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 
 namespace EPlast.Controllers
 {
@@ -21,20 +25,156 @@ namespace EPlast.Controllers
         private Logger logger;
         private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IRepositoryWrapper _repoWrapper;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IRepositoryWrapper repoWrapper)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             logger = LogManager.GetCurrentClassLogger();
+            _repoWrapper = repoWrapper;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+        [HttpGet]
         public IActionResult Edit()
         {
-            return View();
+            //!!
+            if (!_repoWrapper.Gender.FindAll().Any())
+            {
+                _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
+                _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
+                _repoWrapper.Save();
+            }
+            try
+            {
+                var user = _repoWrapper.User.
+            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                    ThenInclude(x => x.Nationality).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Gender).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Education).
+                        ThenInclude(q => q.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Religion).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Work).
+                FirstOrDefault();
+                ViewBag.genders = (from item in _repoWrapper.Gender.FindAll()
+                                   select new SelectListItem
+                                   {
+                                       Text = item.Name,
+                                       Value = item.ID.ToString()
+                                   });
+                var model = new UserViewModel() { User = user };
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                });
+            }
+        }
+        [HttpPost]
+        public IActionResult EditConfirmed(UserViewModel userVM)
+        {
+            try
+            {
+                if (userVM.User.UserProfile.Nationality.ID == 0)
+                {
+                    string name = userVM.User.UserProfile.Nationality.Name;
+                    if (name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Nationality = new Nationality() { Name = name };
+                    }
+                }
+
+                if (userVM.User.UserProfile.Religion.ID == 0)
+                {
+                    string name = userVM.User.UserProfile.Religion.Name;
+                    if (name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Religion = new Religion() { Name = name };
+                    }
+                }
+
+                Degree degree = userVM.User.UserProfile.Education.Degree;
+                if (userVM.User.UserProfile.Education.Degree.ID == 0)
+                {
+                    string name = userVM.User.UserProfile.Education.Degree.Name;
+                    if (name == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Education.Degree = new Degree() { Name = name };
+                    }
+                }
+
+                if (userVM.User.UserProfile.Education.ID == 0)
+                {
+                    string placeOfStudy = userVM.User.UserProfile.Education.PlaceOfStudy;
+                    string speciality = userVM.User.UserProfile.Education.Speciality;
+                    if (placeOfStudy == "" || speciality == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+
+                        userVM.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
+                    }
+                }
+
+                if (userVM.User.UserProfile.Work.ID == 0)
+                {
+                    string placeOfWork = userVM.User.UserProfile.Work.PlaceOfwork;
+                    string position = userVM.User.UserProfile.Work.Position;
+                    if (placeOfWork == "" || position == "")
+                    {
+                        throw new ArgumentException("Field can`t be empty");
+                    }
+                    else
+                    {
+                        userVM.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
+                    }
+                }
+
+                if (userVM.User.UserProfile.PhoneNumber == "" | userVM.User.UserProfile.Address == "" | userVM.User.FatherName == "")
+                {
+                    throw new ArgumentException("Field can`t be empty");
+                }
+
+                //!!
+                userVM.User.UserProfile.Gender = _repoWrapper.Gender.FindByCondition(x => x.ID == userVM.User.UserProfile.Gender.ID).First();
+
+                _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
+                _repoWrapper.User.Update(userVM.User);
+                _repoWrapper.Save();
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Request.HttpContext.TraceIdentifier,
+                });
+            }
         }
 
         [HttpGet]
@@ -52,7 +192,8 @@ namespace EPlast.Controllers
                 return View("LoginAndRegister");
             }
 
-            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName };
+            var user = new User() { Email = registerVM.Email, UserName = registerVM.Name, LastName = registerVM.SurName, FirstName = registerVM.Name,
+                UserProfile=new UserProfile() };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
 
             if (result.Succeeded)

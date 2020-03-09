@@ -22,8 +22,10 @@ function loginClick() {
 }
 $(".register-text").click(registerClick);
 $(".login-text").click(loginClick);
-$("#autocomplete_input").change(function () {
-    $('#autocomplete_input_id').val($('option[value="' + $('#autocomplete_input').val() + '"]').data('value'));
+$("input#autocomplete_input").each(function (index) {
+    $(this).change(function () {
+        $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
+    });
 });
 $("tr.read_row").dblclick(function () {
     var content = $(this).find('td').map(function () {
