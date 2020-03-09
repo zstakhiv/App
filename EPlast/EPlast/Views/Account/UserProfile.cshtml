@@ -2,94 +2,114 @@
 @inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
 @inject UserManager<EPlast.DataAccess.Entities.User> UserManager
 
-<div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
-    <div class="row">
-        <div class="col-8">
-            <div class="row ">
+<!DOCTYPE html>
+<html>
 
-                <div class="col-md-10">
-                    <div class="row ">
-                        <div class="col-md-6">
-                            <h1>Профіль</h1>
-                        </div>
+<head>
+    <title>UserProfile Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+    <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Персональні дані</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Дійсне членство</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Діловодства</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Вишколи</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">З'їзди</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Бланки</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Поручення</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Редагувати</a>
+            </li>
+        </ul>
+        <div class="col-md-12 mt-4 d-flex">
+            <div class="col-md-4">
+                <div class="portlet light profile-sidebar-portlet bordered">
+                    <div class="profile-userpic">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt="">
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <small>Email</small>
-                            <p class="font-weight-bold">who@gmail.com</p>
-                        </div>
-                        <div class="col-md-6">
-                            <small>Національність</small>
-                            <p class="font-weight-bold">Українець</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small>Телефон</small>
-                            <p class="font-weight-bold">+38012345678</p>
-                        </div>
-                        <div class="col-md-6">
-                            <small>Віровизнання</small>
-                            <p class="font-weight-bold">Християнство</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small>Дата народження</small>
-                            <p class="font-weight-bold">31.01.1990</p>
-                        </div>
-                        <div class="col-md-6">
-                            <small>Ступінь в УПЮ</small>
-                            <p class="font-weight-bold">Не був у юнацтві</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small>Місце навчання</small>
-                            <p class="font-weight-bold">ЛНУ ім.Івана Франка</p>
-                        </div>
-                        <div class="col-md-6">
-                            <small>Стать</small>
-                            <p class="font-weight-bold">Чоловіча</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <small>Місце проживання</small>
-                            <p class="font-weight-bold">вул.Стрийська</p>
-                        </div>
-                        <div class="col-md-6">
-                            <small>Робота</small>
-                            <p class="font-weight-bold">.NET Developer</p>
-                        </div>
+                    <div class="profile-usertitle">
+                        <div class="profile-usertitle-name"> Андрій Шайнога </div>
+                        <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="row mt-5">
-            </div>
-            <div class="row mt-3">
-                <div class="col">
+            <div class="col-md-8">
+                <div class="card-body">
                     <div class="row">
-
-                        <img class="rounded-circle ml-4" style="width:300px;height:300px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS7HBrTji1jiZda9gKgUjIAk7WhVhpSGelEVnZFqXrEAHg2-qAg">
-
-                    </div>
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h5 class="card-title">@UserManager.GetUserName(User)</h5>
+                        <div class="col-md-12">
+                            <h4>Мій профіль</h4>
+                            <hr>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label for="username" class="col-6 col-form-label font-weight-bold">Прізвище</label>
+                                <p class="col-6 col-form-label">Шайнога</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
+                                <p class="col-6 col-form-label">Андрій</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
+                                <p class="col-6 col-form-label">Українець</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Імейл</label>
+                                <p class="col-6 col-form-label">andriishainoha@gmail.com</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
+                                <p class="col-6 col-form-label">Греко-Католик</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь в ЮПЮ</label>
+                                <p class="col-6 col-form-label">Був в юнацтві</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
+                                <p class="col-6 col-form-label">Чоловіча</p>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+                                <p class="col-6 col-form-label">Львівська Політехніка</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-            <div class="row  ">
-                <div class="col"></div>
-                <div class=" col-5">
-                    <a asp-action="Edit" class="btn" asp-controller="Account" style="background-color:#3c5438 ;color:white">Редагувати профіль</a>
-                </div>
-                <div class="col"></div>
             </div>
         </div>
     </div>
-</div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>
