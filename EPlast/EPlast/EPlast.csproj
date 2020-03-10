@@ -35,10 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\bundles\css\*" />
-    <Folder Include="wwwroot\bundles\js\*" />
-    <Folder Include="wwwroot\compiled\css\*" />
-    <Folder Include="wwwroot\compiled\js\*" />
+    <Folder Include="wwwroot\bundles\css\**" />
+    <Folder Include="wwwroot\bundles\js\**" />
+    <Folder Include="wwwroot\compiled\css\**" />
+    <Folder Include="wwwroot\compiled\js\**" />
     <Folder Include="wwwroot\uncompiled\less\" />
     <Folder Include="wwwroot\uncompiled\ts\" />
     <Folder Include="wwwroot\uncompiled\sass\" />
