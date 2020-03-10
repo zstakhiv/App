@@ -15,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Account\ConfirmedEmail.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
   </ItemGroup>
