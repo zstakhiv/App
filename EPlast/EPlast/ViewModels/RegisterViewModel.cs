@@ -10,7 +10,6 @@ namespace EPlast.ViewModels
     {
         [Required]
         [EmailAddress]
-        //тут добавляти патерни
         public string Email { get; set; }
 
         [Required]

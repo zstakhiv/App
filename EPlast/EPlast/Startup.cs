@@ -1,6 +1,4 @@
-﻿using EPlast.BussinessLayer;
-using EPlast.BussinessLayer.Interfaces;
-using EPlast.DataAccess;
+﻿using EPlast.DataAccess;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Repositories.Contracts;
@@ -52,7 +50,6 @@ namespace EPlast
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
-            services.AddScoped<IEmailConfirmation, EmailConfirmation>();
 
             services.Configure<IdentityOptions>(options =>
             {
