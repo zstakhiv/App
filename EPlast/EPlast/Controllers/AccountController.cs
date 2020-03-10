@@ -47,7 +47,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserProfile()
+        public IActionResult UserProfile()
         {
             var user = _repoWrapper.User.
             FindByCondition(q => q.Id == _userManager.GetUserId(User)).
@@ -175,7 +175,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit()
+        public IActionResult Edit(string id)
         {
             //!!
             if (!_repoWrapper.Gender.FindAll().Any())
@@ -187,7 +187,7 @@ namespace EPlast.Controllers
             try
             {
                 var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+            FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
