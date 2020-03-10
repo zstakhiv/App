@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using EPlast.DataAccess.Entities;
+using System.Threading.Tasks;
 
 namespace EPlast.BussinessLayer
 {
     public class PDFService : IPDFService
     {
-        public async Task<byte[]> CreatePDFAsync(object pdfData)
+        public async Task<byte[]> DecesionCreatePDFAsync(Decesion pdfData)
         {
-            PDFCreator creator = new PDFCreator(pdfData);
+            DecesionPDFCreator creator = new DecesionPDFCreator(pdfData);
             return await Task.Run(() => creator.GetBytes());
         }
     }
