@@ -144,7 +144,8 @@
       .main-wrapper .main-block .content .content-wrapper {
         display: flex;
         align-items: stretch;
-        flex-direction: column; }
+        flex-direction: column;
+        height: 100%; }
 
 @media (max-width: 767px), (orientation: portrait) {
   .main-wrapper .plast-header .container-header {
