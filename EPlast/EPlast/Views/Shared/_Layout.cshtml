@@ -27,7 +27,7 @@
           rel="stylesheet">
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User))
+    @if (!SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
@@ -105,7 +105,12 @@
                 <a class="nav-link text-light ml-auto">Календар Подій</a>
                 <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
                 <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
-                <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
+                <!--<a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>-->
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="nav-item"><a asp-action="UserProfile" id="menu_admin" asp-controller="Account" style="margin-top:8px;" class="nav-link text-light">Профіль</a></li>
+                }
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>

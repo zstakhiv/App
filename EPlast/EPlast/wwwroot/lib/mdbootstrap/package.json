@@ -2,7 +2,7 @@
   "_args": [
     [
       "mdbootstrap@4.14.0",
-      "D:\\SS ITA\\GIT project\\App\\EPlast\\EPlast"
+      "C:\\Users\\andri\\Desktop\\project\\EPlast\\EPlast"
     ]
   ],
   "_development": true,
@@ -27,7 +27,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/mdbootstrap/-/mdbootstrap-4.14.0.tgz",
   "_spec": "4.14.0",
-  "_where": "D:\\SS ITA\\GIT project\\App\\EPlast\\EPlast",
+  "_where": "C:\\Users\\andri\\Desktop\\project\\EPlast\\EPlast",
   "author": {
     "name": "MDBootstrap"
   },
