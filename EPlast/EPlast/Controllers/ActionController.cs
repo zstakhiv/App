@@ -22,27 +22,27 @@ namespace EPlast.Controllers
         {
             List<EventCategoryViewModel> evc = new List<EventCategoryViewModel>()
             {
-                new EventCategoryViewModel(){ID=1,EventCategoryName="Інструкторський Вишкіл (УСП)"},
-                new EventCategoryViewModel(){ID=2,EventCategoryName="Конгрес"},
-                new EventCategoryViewModel(){ID=3,EventCategoryName="КПЗ"},
-                new EventCategoryViewModel(){ID=4,EventCategoryName="Крайовий Вишкіл Виховників УПЮ (КВВ УПЮ)"},
-                new EventCategoryViewModel(){ID=5,EventCategoryName="Крайовий Вишкіл Дійсного Членства (КВДЧ)"},
-                new EventCategoryViewModel(){ID=6,EventCategoryName="Крайовий Вишкіл Зв'язкових"},
-                new EventCategoryViewModel(){ID=7,EventCategoryName="Крайовий Вишкіл Провідників Вишколів"},
-                new EventCategoryViewModel(){ID=8,EventCategoryName="Крайовий Дошкіл Виховників УПЮ (КВВ УПЮ)"},
-                new EventCategoryViewModel(){ID=9,EventCategoryName="Крайовий табір"},
-                new EventCategoryViewModel(){ID=10,EventCategoryName="Курінний табір"},
-                new EventCategoryViewModel(){ID=11,EventCategoryName="ЛШ вишкіл булавних"},
-                new EventCategoryViewModel(){ID=12,EventCategoryName="ЛШ вишкіл бунчужних"},
-                new EventCategoryViewModel(){ID=13,EventCategoryName="Окружний табір"},
-                new EventCategoryViewModel(){ID=14,EventCategoryName="Рада Орлиної Спеціалізації (провідників вишколів)"},
-                new EventCategoryViewModel(){ID=15,EventCategoryName="Рада Орлиної Спеціалізації (провідників таборів)"},
-                new EventCategoryViewModel(){ID=16,EventCategoryName="Рада Орлиного Вогню (булавних)"},
-                new EventCategoryViewModel(){ID=17,EventCategoryName="Рада Орлиного Вогню (впорядників)"},
-                new EventCategoryViewModel(){ID=18,EventCategoryName="Рада Орлиного Вогню (гніздових)"},
-                new EventCategoryViewModel(){ID=19,EventCategoryName="Станичний табір"},
-                new EventCategoryViewModel(){ID=20,EventCategoryName="ШБ вишкіл булавних"},
-                new EventCategoryViewModel(){ID=21,EventCategoryName="ШБ вишкіл бунчужних"},
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=1,EventCategoryName="Інструкторський Вишкіл (УСП)" } },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=2,EventCategoryName="Конгрес"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=3,EventCategoryName="КПЗ"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=4,EventCategoryName="Крайовий Вишкіл Виховників УПЮ (КВВ УПЮ)"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=5,EventCategoryName="Крайовий Вишкіл Дійсного Членства (КВДЧ)"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=6,EventCategoryName="Крайовий Вишкіл Зв'язкових"}},
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=7,EventCategoryName="Крайовий Вишкіл Провідників Вишколів"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=8,EventCategoryName="Крайовий Дошкіл Виховників УПЮ (КВВ УПЮ)"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=9,EventCategoryName="Крайовий табір"} },
+                new EventCategoryViewModel(){EventCategory=new EventCategory{ID=10,EventCategoryName="Курінний табір"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =11,EventCategoryName="ЛШ вишкіл булавних" } },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =12,EventCategoryName="ЛШ вишкіл бунчужних"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =13,EventCategoryName="Окружний табір"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =14,EventCategoryName="Рада Орлиної Спеціалізації (провідників вишколів)"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory {ID = 15,EventCategoryName="Рада Орлиної Спеціалізації (провідників таборів)"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory {ID = 16,EventCategoryName="Рада Орлиного Вогню (булавних)"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =17,EventCategoryName="Рада Орлиного Вогню (впорядників)"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =18,EventCategoryName="Рада Орлиного Вогню (гніздових)"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =19,EventCategoryName="Станичний табір"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =20,EventCategoryName="ШБ вишкіл булавних"} },
+                new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =21,EventCategoryName="ШБ вишкіл бунчужних"} },
             };
             return View(evc);
         }
@@ -55,10 +55,10 @@ namespace EPlast.Controllers
             }
             List<SubEventCategoryViewModel> subCat = new List<SubEventCategoryViewModel>()
             {
-                new SubEventCategoryViewModel(){ID=1,SubEventCategoryName="Підкатегорія А",},
-                new SubEventCategoryViewModel(){ID=1,SubEventCategoryName="Підкатегорія Б",},
-                new SubEventCategoryViewModel(){ID=1,SubEventCategoryName="Підкатегорія В",},
-                new SubEventCategoryViewModel(){ID=1,SubEventCategoryName="Підкатегорія Г",}
+                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія А" },},
+                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Б" },},
+                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія В" },},
+                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Г" },},
             };
                return View(subCat);
         }
