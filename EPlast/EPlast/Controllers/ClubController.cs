@@ -20,8 +20,8 @@ namespace EPlast.Controllers
             List<ClubViewModel> clubs = new List<ClubViewModel>(
                 _repoWrapper.Club
                 .FindAll()
-                .Take(200)
                 .Select(club => new ClubViewModel { Club = club })
+                .OrderBy(club => club.Club.ClubName)
                 .ToList());
 
             return View(clubs);
