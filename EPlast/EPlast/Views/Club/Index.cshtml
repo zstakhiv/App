@@ -1,0 +1,36 @@
+﻿@using EPlast.ViewModels
+@model List<ClubViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+    <div class="all-clubs-view">
+        <h1 class="all-clubs-title">Курені</h1>
+        <div class="club-list">
+            @foreach (var item in Model)
+            {
+                
+                <form method="post" class="club-block-wrapper" action='~/Club/Club'>
+                    <span class="club-block">
+                        <button type="submit" class="club-block-submit rounded">
+                            <div class="club-img-wrapper">
+                                <div class="club-img" style="background-image:url('@item.Club.Logo')"></div>
+                            </div>
+                            <p class="club-name">@item.Club.ClubName</p>
+                            <input value="@item.Club.ID" type="hidden" name="Id" id="clubId" />
+                        </button>
+                    </span>
+                </form>
+                /*
+                <div class="club-block-wrapper">
+                    <div class="club-block rounded">
+                        <div class="club-img-wrapper">
+                            <div class="club-img" style="background-image:url('@item.Club.Logo')"></div>
+                        </div>
+                        <p class="club-name">@item.Club.ClubName</p>
+                    </div>
+                </div>
+                */
+            }
+        </div>
+    </div>
+    

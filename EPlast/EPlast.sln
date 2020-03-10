@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EPlast", "EPlast\EPlast.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EPlast.DataAccess", "EPlast.DataAccess\EPlast.DataAccess.csproj", "{4256BF70-E73D-43EF-9C53-D4694584CE8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPlast.BussinessLayer", "EPlast.BussinessLayer\EPlast.BussinessLayer.csproj", "{7215E9A4-C62F-4E07-AE44-48D2589C6137}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EPlast.BussinessLayer", "EPlast.BussinessLayer\EPlast.BussinessLayer.csproj", "{7215E9A4-C62F-4E07-AE44-48D2589C6137}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

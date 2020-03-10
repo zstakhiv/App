@@ -11,7 +11,7 @@ namespace EPlast.DataAccess.Entities
         public string ClubURL { get; set; }
         [MaxLength(1024, ErrorMessage = "Club description cannot exceed 1024 characters")]
         public string Description { get; set; }
-        
+        public string Logo { get; set; }
         public ICollection<ClubMembers> ClubMembers { get; set; }
         public ICollection<ClubAdministration> ClubAdministration { get; set; }
     }
