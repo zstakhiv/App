@@ -1,5 +1,5 @@
 ﻿
-@model List<SubEventCategory>
+@model List<SubEventCategoryViewModel>
     <div>
         <div></div>
     </div>
@@ -9,7 +9,7 @@
                 <h1 id="action-title" class="text-center-action">Акції</h1>
             </div>
             <div class="row">
-                @foreach (SubEventCategory subCat in Model)
+                @foreach (SubEventCategoryViewModel subCat in Model)
                 {
                     <div class="col-md-4 cust_blogteaser">
                             <a href="#"><img class="rounded img-fluid" src="~/images/events/ActionLogo.png"></a>

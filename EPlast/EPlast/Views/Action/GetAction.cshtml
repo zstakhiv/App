@@ -1,5 +1,5 @@
 ﻿
-@model List<EventCategory>
+@model List<EventCategoryViewModel>
     <div>
         <div></div>
     </div>
@@ -9,7 +9,7 @@
                 <h1 id="action-title" class="text-center-action">Акції</h1>
             </div>
             <div class="row">
-                @foreach(EventCategory evc in Model)
+                @foreach(EventCategoryViewModel evc in Model)
                 {
                 <div class="col-md-4 cust_blogteaser">
                     <form method="post" action="~/Action/GetSubAction">
