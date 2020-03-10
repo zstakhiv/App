@@ -7,14 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\uncompiled\css\**" />
-    <Content Remove="wwwroot\uncompiled\css\**" />
-    <EmbeddedResource Remove="wwwroot\uncompiled\css\**" />
-    <None Remove="wwwroot\uncompiled\css\**" />
-    <TypeScriptCompile Remove="wwwroot\uncompiled\css\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Views\Account\ConfirmedEmail.cshtml.cs" />
   </ItemGroup>
 
@@ -34,6 +26,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
     <PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
@@ -42,19 +35,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\bundles\css\" />
-    <Folder Include="wwwroot\bundles\css\" />
-    <Folder Include="wwwroot\bundles\js\" />
-    <Folder Include="wwwroot\bundles\js\" />
-    <Folder Include="wwwroot\compiled\css\" />
-    <Folder Include="wwwroot\compiled\css\" />
-    <Folder Include="wwwroot\compiled\js\" />
-    <Folder Include="wwwroot\compiled\js\" />
-    <Folder Include="wwwroot\lib\" />
-    <Folder Include="wwwroot\lib\" />
-    <Folder Include="wwwroot\sass\" />
+    <Folder Include="wwwroot\bundles\css\*" />
+    <Folder Include="wwwroot\bundles\js\*" />
+    <Folder Include="wwwroot\compiled\css\*" />
+    <Folder Include="wwwroot\compiled\js\*" />
     <Folder Include="wwwroot\uncompiled\less\" />
-    <Folder Include="wwwroot\uncompiled\less\" />
+    <Folder Include="wwwroot\uncompiled\ts\" />
+    <Folder Include="wwwroot\uncompiled\sass\" />
+    <Folder Include="wwwroot\lib\*" />
   </ItemGroup>
 
   <ItemGroup>
