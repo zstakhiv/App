@@ -86,32 +86,77 @@
                 </div>
             </div>
         </main>
+
+        <div class="footer-dark">
+            <footer>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3 item">
+                            <h3>Навігація</h3>
+                            <ul>
+                                <li><a href="#">Головна</a></li>
+                                <li><a href="#">Профіль</a></li>
+                                <li><a href="#">Календар подій</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 col-md-3 item">
+                            <h3>Деталі</h3>
+                            <ul>
+                                <li><a href="#">Про ПЛАСТ</a></li>
+                                <li><a href="#">Часті запитання</a></li>
+                                <li><a href="#">Контакти</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 item text">
+                            <h3>ПЛАСТ</h3>
+                            <p>Це національна скаутська організація України. Метою Пласту є сприяти всебічному патріотичному вихованню і самовихованню української молоді на засадах християнської моралі.</p>
+                        </div>
+                        <div class="col item social"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
+                    </div>
+                    <p class="copyright">ePlast © 2020</p>
+                </div>
+            </footer>
+        </div>
+
     }
     else
     {
-<div style="overflow-x: hidden;">
-    <nav class="navbar navbar-light navbar-expand-xl fixed-top sticky-top" style="font-size: 1.1em; background-color:#3c5438; padding-top:0;padding-bottom:0;">
-        <div class="container">
-
-            <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
-            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
-            </button>
-
-            <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
-                <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
-                <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
-                <a class="nav-link text-light ml-auto">Календар Подій</a>
-                <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
-                <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
-                <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
-            </div>
+        <div class="homelayout">
+            <nav class=" navbar homepage-navbar navbar-light navbar-expand-xl fixed-top sticky-top " style=" background-color:#3c5438; padding-top:0;padding-bottom:0;">
+                <div class="container">
+                    <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
+                    <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
+                    </button>
+                    <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
+                        <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
+                        <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
+                        <a class="nav-link text-light ml-auto">Календар Подій</a>
+                        <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
+                        <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
+                        <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
-</div>
         @RenderBody()
+
+        <div class="footer-dark">
+            <footer>
+                <div class="container">
+                    <div class="row">
+                        
+                        <div class="col item social"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
+                    </div>
+                    <p class="copyright">ePlast © 2020</p>
+                </div>
+            </footer>
+        </div>
+
     }
+
+
 
     <environment include="Development">
 
