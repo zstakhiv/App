@@ -47,6 +47,7 @@
     <Folder Include="wwwroot\compiled\js\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\sass\" />
     <Folder Include="wwwroot\uncompiled\less\" />
     <Folder Include="wwwroot\uncompiled\less\" />
   </ItemGroup>

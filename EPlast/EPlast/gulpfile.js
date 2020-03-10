@@ -8,7 +8,6 @@ var concat = require('gulp-concat');
 const minify = require('gulp-minify');
 var cssmin = require('gulp-cssmin');
 
-var modules = ['bootstrap', 'jquery', 'jquery-ui-dist', 'mdbootstrap', 'popper.js'];
 var paths = {
     scripts: ['wwwroot/uncompiled/ts/**/*.js'],
     webroot: 'wwwroot/'
@@ -49,27 +48,8 @@ gulp.task('bundle-css', function () {
         .pipe(gulp.dest(paths.webroot + '/bundles/css'));
 });
 
-async function ClearLib() {
-    return del('wwwroot/lib/*');
-};
-async function ModulesToLib() {
-    gulp
-    try {
-        for (var i = 0; i < modules.length; i++) {
-            gulp.src('node_modules/' + modules[i] + '/**')
-                .pipe(gulp.dest(paths.webroot + 'lib/' + modules[i]));
-        }
-    }
-    catch (e) {
-        return -1;
-    }
-    return 0;
-};
-
 gulp.task('style', gulp.parallel('less', 'sass'));
 
 gulp.task('bundle', gulp.parallel('bundle-css', 'bundle-js'));
 
 gulp.task('default', gulp.series('clean', 'scripts', 'style', 'bundle'));
-
-gulp.task("update-lib", gulp.series(ClearLib, ModulesToLib));
