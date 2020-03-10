@@ -21,10 +21,13 @@ namespace EPlast.Controllers
                 _repoWrapper.Club
                 .FindAll()
                 .Select(club => new ClubViewModel { Club = club })
-                .OrderBy(club => club.Club.ClubName)
                 .ToList());
 
             return View(clubs);
+        }
+        public IActionResult Club(int index)
+        {
+            return View(index);
         }
     }
 }
