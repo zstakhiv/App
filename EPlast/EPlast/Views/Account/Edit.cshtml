@@ -56,11 +56,6 @@
                 </datalist>
                 @Html.HiddenFor(i => i.User.UserProfile.Religion.ID, new { @id = "autocomplete_input_id_1" })
             </div>
-            @*<div class="form-group">
-            <label class="control-label">Дата народження</label>
-            <input id="datetimepicker" required asp-for="User.UserProfile.DateTime" class="form-control" />
-            <span asp-validation-for="User.UserProfile.DateTime" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label class="control-label">Дата народження</label>
                 <input required asp-for="User.UserProfile.DateTime" id="datepickerBirthday" class="form-control" placeholder="Виберіть...">
