@@ -10,6 +10,7 @@ namespace EPlast.ViewModels
     {
         [Required]
         [EmailAddress]
+        //отут вся хуйня
         public string Email { get; set; }
 
         [Required]

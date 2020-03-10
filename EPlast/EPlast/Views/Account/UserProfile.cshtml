@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using EPlast.DataAccess.Entities
 @inject SignInManager<EPlast.DataAccess.Entities.User> SignInManager
 @inject UserManager<EPlast.DataAccess.Entities.User> UserManager
+@model EPlast.ViewModels.UserViewModel
 
 <!DOCTYPE html>
 <html>
@@ -13,7 +15,7 @@
 </head>
 
 <body>
-    <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
+    <!--<div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" href="#">Персональні дані</a>
@@ -47,7 +49,7 @@
                         <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt="">
                     </div>
                     <div class="profile-usertitle">
-                        <div class="profile-usertitle-name"> Андрій Шайнога </div>
+                        <div class="profile-usertitle-name">  </div>
                         <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
                     </div>
                 </div>
@@ -64,35 +66,31 @@
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <label for="username" class="col-6 col-form-label font-weight-bold">Прізвище</label>
-                                <p class="col-6 col-form-label">Шайнога</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                             <div class="form-group row">
                                 <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
-                                <p class="col-6 col-form-label">Андрій</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                             <div class="form-group row">
                                 <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
-                                <p class="col-6 col-form-label">Українець</p>
-                            </div>
+                                <p class="col-6 col-form-label"></p>
+                            </div>9
                             <div class="form-group row">
                                 <label for="email" class="col-6 col-form-label font-weight-bold">Імейл</label>
-                                <p class="col-6 col-form-label">andriishainoha@gmail.com</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                             <div class="form-group row">
                                 <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
-                                <p class="col-6 col-form-label">Греко-Католик</p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь в ЮПЮ</label>
-                                <p class="col-6 col-form-label">Був в юнацтві</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                             <div class="form-group row">
                                 <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
-                                <p class="col-6 col-form-label">Чоловіча</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                             <div class="form-group row">
                                 <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
-                                <p class="col-6 col-form-label">Львівська Політехніка</p>
+                                <p class="col-6 col-form-label"></p>
                             </div>
                         </div>
                     </div>
@@ -109,7 +107,7 @@
             crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous"></script>-->
 </body>
 
 </html>
