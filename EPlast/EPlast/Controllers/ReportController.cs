@@ -52,7 +52,7 @@ namespace EPlast.Controllers
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
             BussinessLayer.PDFService PDFService = new BussinessLayer.PDFService();
-            byte[] arr = await PDFService.CreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
+            byte[] arr = await PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
                                                                                        x => x.DecesionTarget,
                                                                                        x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
             return File(arr, "application/pdf");

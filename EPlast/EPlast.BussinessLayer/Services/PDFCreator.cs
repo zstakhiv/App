@@ -8,26 +8,15 @@ using System.IO;
 
 namespace EPlast.BussinessLayer
 {
-    internal class PDFCreator
+    internal class DecesionPDFCreator
     {
-        private static readonly Dictionary<Type, int> typeDict = new Dictionary<Type, int> {
-            { typeof(Decesion), 0 }
-        };
-
         private PdfDocumentRenderer renderer;
 
-        public PDFCreator(object pdfData)
+        public DecesionPDFCreator(Decesion pdfData)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            switch (typeDict[pdfData.GetType()])
-            {
-                case 0:
-                    CreatPDF((Decesion)pdfData);
-                    break;
-
-                default: break;
-            }
+            CreatPDF(pdfData);
         }
 
         private void CreatPDF(Decesion decesion)
