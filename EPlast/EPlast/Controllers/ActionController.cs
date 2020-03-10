@@ -7,13 +7,11 @@ using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace EPlast.Controllers
 {
     public class ActionController : Controller
     {
-        // GET: /<controller>/
         private readonly IRepositoryWrapper _repoWrapper;
         public ActionController(IRepositoryWrapper repoWrapper)
         {
