@@ -27,7 +27,7 @@
           rel="stylesheet">
 </head>
 <body>
-    @if (!SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
@@ -48,7 +48,7 @@
                         <div class="profile">
                             <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
 
-                            <p class="header-name" style="margin: 0px; margin-left: 5px;">Наталя Іванюк</p>
+                            @Html.Partial("_LoginPartial")
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
     }
     else
     {
-<div style="overflow-x: hidden;">
+      <div style="overflow-x: hidden;">
     <nav class="navbar navbar-light navbar-expand-xl fixed-top sticky-top" style="font-size: 1.1em; background-color:#3c5438; padding-top:0;padding-bottom:0;">
         <div class="container">
 
@@ -105,12 +105,8 @@
                 <a class="nav-link text-light ml-auto">Календар Подій</a>
                 <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
                 <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
-                <!--<a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>-->
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <li class="nav-item"><a asp-action="UserProfile" id="menu_admin" asp-controller="Account" style="margin-top:8px;" class="nav-link text-light">Профіль</a></li>
-                }
-                @Html.Partial("_LoginPartial")
+                <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти/Зареєструватись</a>
+                
             </div>
         </div>
     </nav>

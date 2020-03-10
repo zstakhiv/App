@@ -47,9 +47,27 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserProfile()
+        public async Task<IActionResult> UserProfile()
         {
-            return View();
+            var user = _repoWrapper.User.
+            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                    ThenInclude(x => x.Nationality).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Gender).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Education).
+                        ThenInclude(q => q.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Religion).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Work).
+                FirstOrDefault();
+            if (user != null)
+            {
+                return View(new UserViewModel { User = user });
+            }
+            return View("Error/HandleError");
         }
 
         [HttpGet]

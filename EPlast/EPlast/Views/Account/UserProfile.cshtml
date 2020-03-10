@@ -4,110 +4,88 @@
 @inject UserManager<EPlast.DataAccess.Entities.User> UserManager
 @model EPlast.ViewModels.UserViewModel
 
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>UserProfile Page</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css" type="text/css">
-</head>
-
-<body>
-    <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Персональні дані</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Дійсне членство</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Діловодства</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Вишколи</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">З'їзди</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Бланки</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Поручення</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Редагувати</a>
-            </li>
-        </ul>
-        <div class="col-md-12 mt-4 d-flex">
-            <div class="col-md-4">
-                <div class="portlet light profile-sidebar-portlet bordered">
-                    <div class="profile-userpic">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt="">
-                    </div>
-                    <div class="profile-usertitle">
-                        <div class="profile-usertitle-name">  </div>
-                        <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
-                    </div>
+<div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Персональні дані</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Дійсне членство</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Діловодства</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Вишколи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">З'їзди</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Бланки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled">Поручення</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled">Редагувати</a>
+        </li>
+    </ul>
+    <div class="col-md-12 mt-4 d-flex">
+        <div class="col-md-4">
+            <div class="portlet light profile-sidebar-portlet bordered">
+                <div class="profile-userpic">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt="">
                 </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4>Мій профіль</h4>
-                            <hr>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label for="username" class="col-6 col-form-label font-weight-bold">Прізвище</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-6 col-form-label font-weight-bold">Імейл</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                            <div class="form-group row">
-                                <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
-                                <p class="col-6 col-form-label"></p>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name">  </div>
+                    <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>
-</body>
+        <div class="col-md-8">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Мій профіль</h4>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label for="username" class="col-6 col-form-label font-weight-bold">Прізвище</label>
+                            <p class="col-6 col-form-label">@Model.User.LastName</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
+                            <p class="col-6 col-form-label"></p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Nationality</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Імейл</label>
+                            <p class="col-6 col-form-label">@Model.User.Email</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Religion</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Gender</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education</p>
+                        </div>
+                    </div>
+                </div>
 
-</html>
+            </div>
+        </div>
+    </div>
+</div>
