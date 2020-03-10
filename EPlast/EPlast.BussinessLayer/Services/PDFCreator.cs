@@ -74,7 +74,6 @@ namespace EPlast.BussinessLayer
             {
                 renderer.PdfDocument.Save(stream, true);
                 fileContents = stream.ToArray();
-                stream.Dispose();
             }
             return fileContents;
         }
