@@ -13,7 +13,6 @@
     <Content Remove="wwwroot\uncompiled\css\**" />
     <EmbeddedResource Remove="wwwroot\sass\**" />
     <EmbeddedResource Remove="wwwroot\uncompiled\css\**" />
-    <None Remove="wwwroot\sass\**" />
     <None Remove="wwwroot\uncompiled\css\**" />
     <TypeScriptCompile Remove="wwwroot\sass\**" />
     <TypeScriptCompile Remove="wwwroot\uncompiled\css\**" />
