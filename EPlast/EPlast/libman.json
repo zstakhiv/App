@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "mdbootstrap@4.14.0",
+      "destination": "wwwroot/lib/mdbootstrap/",
+      "files": [
+        "js/bootstrap.min.js",
+        "js/jquery.min.js",
+        "js/mdb.min.js",
+        "js/popper.min.js",
+        "js/addons/datatables.min.js",
+        "css/bootstrap.min.css",
+        "css/mdb.min.css",
+        "css/style.css",
+        "css/addons/datatables.min.css"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "dist/css/bootstrap.min.css"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-ui-dist@1.12.1",
+      "destination": "wwwroot/lib/jquery-ui-dist/",
+      "files": [
+        "jquery-ui.min.css",
+        "jquery-ui.min.js"
+      ]
+    }
+  ]
+}
