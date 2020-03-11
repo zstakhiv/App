@@ -7,11 +7,14 @@ namespace EPlast.DataAccess.Entities
 {
     public class User : IdentityUser
     {
-        [Required, MaxLength(50, ErrorMessage = "FirstName cannot exceed 50 characters")]
+        [Display(Name = "Ім'я")]
+        [Required, MaxLength(50, ErrorMessage = "Ім'я не може перевищувати 50 символів")]
         public string FirstName { get; set; }
-        [Required, MaxLength(50, ErrorMessage = "LastName cannot exceed 50 characters")]
+        [Display(Name = "Прізвище")]
+        [Required, MaxLength(50, ErrorMessage = "Прізвище не може перевищувати 50 символів")]
         public string LastName { get; set; }
-        [Required, MaxLength(50, ErrorMessage = "FatherName cannot exceed 50 characters")]
+        [Display(Name = "По-батькові")]
+        [Required, MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
         public UserProfile UserProfile { get; set; }

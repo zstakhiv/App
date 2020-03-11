@@ -6,7 +6,8 @@ namespace EPlast.DataAccess.Entities
     public class Religion
     {
         public int ID { get; set; }
-        [MaxLength(50, ErrorMessage = "Religion name cannot exceed 50 characters")]
+        [Display(Name = "Віровизнання")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Віровизнання повинне складати від 3 до 20 символів")]
         public string Name { get; set; }
         public ICollection<UserProfile> UserProfiles { get; set; }
     }
