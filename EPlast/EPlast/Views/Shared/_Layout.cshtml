@@ -44,11 +44,10 @@
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
                         </ul>
-
                         <div class="profile">
                             <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
 
-                            <p class="header-name" style="margin: 0px; margin-left: 5px;">Наталя Іванюк</p>
+                            @Html.Partial("_LoginPartial")
                         </div>
                     </div>
                 </div>
@@ -89,27 +88,27 @@
     }
     else
     {
-<div style="overflow-x: hidden;">
-    <nav class="navbar navbar-light navbar-expand-xl fixed-top sticky-top" style="font-size: 1.1em; background-color:#3c5438; padding-top:0;padding-bottom:0;">
-        <div class="container">
+        <div style="overflow-x: hidden;">
+            <nav class="navbar navbar-light navbar-expand-xl fixed-top sticky-top" style="font-size: 1.1em; background-color:#3c5438; padding-top:0;padding-bottom:0;">
+                <div class="container">
 
-            <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
-            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
-            </button>
+                    <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
+                    <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
+                    </button>
 
-            <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
-                <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
-                <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
-                <a class="nav-link text-light ml-auto">Календар Подій</a>
-                <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
-                <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
-                <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
-            </div>
+                    <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
+                        <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
+                        <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
+                        <a class="nav-link text-light ml-auto">Календар Подій</a>
+                        <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
+                        <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
+                        <a asp-action="LoginAndRegister" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти/Зареєструватись</a>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
-</div>
         @RenderBody()
     }
 

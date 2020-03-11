@@ -1,0 +1,112 @@
+﻿@model EPlast.ViewModels.UserViewModel
+
+<div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 ">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" asp-action="UserProfile" asp-controller="Account">Персональні дані</a>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Дійсне членство</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Діловодства</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Вишколи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">З'їзди</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Бланки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled">Поручення</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled">Редагувати</a>
+        </li>
+    </ul>
+    <div class="col-md-12 mt-4 d-flex">
+        <div class="col-md-4">
+            <div class="portlet light profile-sidebar-portlet bordered">
+                <div class="profile-userpic">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-responsive" alt="">
+                </div>
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name">  </div>
+                    <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Мій профіль</h4>
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label for="username" class="col-6 col-form-label font-weight-bold">Прізвище</label>
+                            <p class="col-6 col-form-label">@Model.User.LastName</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
+                            <p class="col-6 col-form-label">@Model.User.FirstName</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
+                            <p class="col-6 col-form-label">@Model.User.FatherName</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
+                            <p class="col-6 col-form-label">@Model.User.Email</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Адреса</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Address</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Nationality.Name</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Religion.Name</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Gender.Name</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education.PlaceOfStudy</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Спеціальність</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Speciality</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Degree.Name</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце роботи</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Work.PlaceOfwork</p>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-6 col-form-label font-weight-bold">Посада</label>
+                            <p class="col-6 col-form-label">@Model.User.UserProfile.Work.Position</p>
+                        </div>
+                        <div class="form-group row">
+                            <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id" type="button" class="btn " style="background-color:#3c5438; color:white;">Змінити профіль</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
