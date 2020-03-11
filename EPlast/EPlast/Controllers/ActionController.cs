@@ -20,6 +20,7 @@ namespace EPlast.Controllers
         }
         public IActionResult GetAction()
         {
+            #region Old version
             List<EventCategoryViewModel> evc = new List<EventCategoryViewModel>()
             {
                 new EventCategoryViewModel(){EventCategory=new EventCategory{ID=1,EventCategoryName="Інструкторський Вишкіл (УСП)" } },
@@ -44,7 +45,11 @@ namespace EPlast.Controllers
                 new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =20,EventCategoryName="ШБ вишкіл булавних"} },
                 new EventCategoryViewModel(){ EventCategory = new EventCategory { ID =21,EventCategoryName="ШБ вишкіл бунчужних"} },
             };
-            return View(evc);
+            #endregion
+            List<EventCategoryViewModel> _evc = _repoWrapper.EventCategory.FindAll()
+            .Select(eventCategory => new EventCategoryViewModel() { EventCategory=eventCategory})
+            .ToList();
+             return View(_evc);
         }
 
         public IActionResult GetSubAction(int? ID)
