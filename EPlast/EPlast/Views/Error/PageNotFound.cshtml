@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Error/_ErrorLayout.cshtml";
 }
-<body id="ep-body">
+
     <div class="d-flex flex-row justify-content-around align-items-center" id="ep-div1">
         <div class="text-left" id="ep-div-left">
             <p class="text-center" id="ep-code">404</p>
@@ -12,7 +12,6 @@
         <div class="d-flex flex-column flex-shrink-0 align-items-center" id="ep-div-right">
             <i class="fas fa-exclamation-triangle" id="ep-icn"></i>
             <p id="error-page-msg">Page not found !</p>
-            <button class="btn btn-primary border rounded" id="error-page-btn" type="submit" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");">Go back</button>
+            <button class="btn btn-primary border rounded error-page-custom " id="error-page-btn" type="submit" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");">Go back</button>
         </div>
     </div>
-</body>
