@@ -1,11 +1,4 @@
 $(document).ready(function () {
-    $("#sbmt").click(function () {
-        alert("Рапорт додано!");
-    });
-    $(function () {
-        $("#datepicker").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", "0");
-    });
-    $('#dtBasicExample').DataTable();
     $('.dataTables_length').addClass('bs-select');
 });
 /*js from LoginAndRegister*/
@@ -26,12 +19,6 @@ $("input#autocomplete_input").each(function (index) {
     $(this).change(function () {
         $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
     });
-});
-$("tr.read_row").dblclick(function () {
-    var content = $(this).find('td').map(function () {
-        return $(this).text();
-    })[0];
-    window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
 });
 $("#datepickerBirthday").datepicker({
     dateFormat: 'yy/mm/dd',

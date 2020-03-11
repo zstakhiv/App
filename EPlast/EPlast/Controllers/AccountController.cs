@@ -68,7 +68,7 @@ namespace EPlast.Controllers
             {
                 return View(model);
             }
-            return View("Error/HandleError");
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
         [HttpGet]
