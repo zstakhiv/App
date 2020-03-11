@@ -1,49 +1,30 @@
 ﻿@using EPlast.ViewModels
-@model int
+@model ClubViewModel
 @{
     ViewData["Title"] = "Club";
 }
 <div class="content-wrapper">
           <div class="club-page-wrapper">
             <div class="main-info grid-block">
-              <h1 class="grid-header">Курінь</h1>
+              <h1 class="grid-header">@Model.Club.ClubName</h1>
   
               <div class="top-info">
-                <img src="curin.png" alt="" class="curin-img">
-  
-                <div class="top-info-content"> 
-                  <div class="line-pair">
-                    <p class="line-upper">tyiu785</p>
-                    <p class="line-lower">bi89p99</p>
-                  </div>
-  
-                  <div class="line-pair">
-                    <p class="line-upper">tyiu785</p>
-                    <p class="line-lower">bi89p99</p>
-                  </div>
-  
-                  <div class="line-pair">
-                    <p class="line-upper">tyiu785</p>
-                    <p class="line-lower">bi89p99</p>
-                  </div>
-                </div>
+                <img src="@Model.Club.Logo" alt="" class="curin-img">
               </div>
   
               <div class="bottom-info-content"> 
-                <div class="line-pair">
-                  <p class="line-upper">tyiu785</p>
-                  <p class="line-lower">bi89p99</p>
-                </div>
-  
-                <div class="line-pair">
-                  <p class="line-upper">tyiu785</p>
-                  <p class="line-lower">bi89p99</p>
-                </div>
-  
-                <div class="line-pair">
-                  <p class="line-upper">tyiu785</p>
-                  <p class="line-lower">bi89p99</p>
-                </div>
+                  @foreach (var item in Model.Club.ClubAdministration)
+                  {
+                  <div class="line-pair">
+                      <p class="line-upper">@item.AdminType.AdminTypeName</p>
+                      <p class="line-lower">Анна Гілета</p>
+
+
+    <p class="line-lower">@item.ClubMembers.User.FirstName + " " + @item.ClubMembers.User.LastName</p>
+
+
+                  </div>
+                  }
   
                 <button class="buttons">Більше</button>
               </div>
@@ -53,125 +34,59 @@
               <div class="about-info grid-block">
                 <h1 class="grid-header">Про нас</h1>
                 
-                <p class="info">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae deleniti a eligendi voluptates debitis accusamus soluta dolorum tempore libero. Natus, debitis necessitatibus. Eius quisquam minima, error voluptatibus rem dolorem doloremque?</p>
+                <p class="info">@Model.Club.Description</p>
                 
                 <button class="buttons" id="more-info-club" onclick="moreinfo()">Більше</button>
-                <script>
-                  function moreinfo(){
-                    $("#more-info-club").hide(100);
-                  }
-                </script>
               </div>
   
               <div class="people-info horizontal-grid">
                 <div class="members-info grid-block">
                   <h1 class="grid-header">Провід куреня</h1>
-  
                   <div class="members-list">
-                    <div class="member-block">
-                      <img src="girl.jpg" alt="" class="member-img rounded-circle">
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-  
-                    <div class="member-block">
-                      <img src="girl.jpg" alt="" class="member-img rounded-circle">
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-  
-                    <div class="member-block">
-                      <img src="girl.jpg" alt="" class="member-img rounded-circle">
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-  
-                    <div class="member-block">
-                      <img src="girl.jpg" alt="" class="member-img rounded-circle">
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-  
-                    <div class="member-block">
-                      <img src="girl.jpg" alt="" class="member-img rounded-circle">
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-  
-                    <div class="member-block">
-                      <div class="member-img-block rounded-circle"></div>
-  
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-                  </div>
-  
+                   @foreach(var item in Model.Club.ClubMembers) 
+                   {
+                     @if (@item.IsApproved)
+                     {
+                        <div class="member-block">
+                          <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                          <p class="member-name">Fyyf Hileta</p>
+    <!--
+                               
+                          <p class="member-name">item.User.FirstName + " " + item.User.LastName</p>
+                           -->
+                        </div>
+                     }
+                   }
+                </div>
                   <button class="buttons">Показати всіх</button>
                 </div>
-    
                 <div class="followers-info grid-block">
                   <h1 class="grid-header">Зацікавлені</h1>
     
                   <div class="members-list">
-                    <div class="member-block">
-                      <div class="member-wrapper">
-                        <img src="girl.jpg" alt="" class="member-img rounded-circle">
-                        
-                        <div class="plus">
-                          +
-                        </div>
-                      </div>
-    
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-        
-                    <div class="member-block">
-                      <div class="member-wrapper">
-                        <img src="girl.jpg" alt="" class="member-img rounded-circle">
-    
-                        <div class="plus">
-                          +
-                        </div>
-                      </div>
-    
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-        
-                    <div class="member-block">
-                      <div class="member-wrapper">
-                        <img src="girl.jpg" alt="" class="member-img rounded-circle">
-    
-                        <div class="plus">
-                          +
-                        </div>
-                      </div>
-    
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-        
-                    <div class="member-block">
-                      <div class="member-wrapper">
-                        <img src="girl.jpg" alt="" class="member-img rounded-circle">
-    
-                        <div class="plus">
-                          +
-                        </div>
-                      </div>
-    
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-      
-                    <div class="member-block">
-                        <div class="member-wrapper">
-                            <img src="girl.jpg" alt="" class="member-img rounded-circle">
+                      @foreach (var item in Model.Club.ClubMembers)
+                      {
+                          @if (!@item.IsApproved)
+                          {
+                      <div class="member-block">
+                          <div class="member-wrapper">
+                              <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
 
-                            <div class="plus">
-                                +
-                            </div>
-                        </div>
-    
-                      <p class="member-name">Аnna Hileta</p>
-                    </div>
-                  </div>
+                              <div class="plus">
+                                  +
+                                  https://www.youtube.com/watch?v=axySrE0Kg6k&list=RDaxySrE0Kg6k&start_radio=1
+                              </div>
+                          </div>
+
+                          <p class="member-name">Fyyf Hileta</p>
+                          <!--
+
+                            <p class="member-name">item.User.FirstName + " " + item.User.LastName</p>
+                          -->
+                      </div>
+                           }
+                       }
+                      </div>
     
                   <button class="buttons">Більше</button>
                 </div>
