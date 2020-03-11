@@ -7,6 +7,8 @@
     margin-bottom: 75px;
     min-height: 470px;
   }
+
+
 }
 
 @media (min-width: 576px) {
@@ -162,6 +164,11 @@
   }
 }
 
-#ep-body {
+.ep-body {
   background-color: #3c5438;
+}
+
+button.error-page-custom:hover
+{
+     color: #73bd79;
 }
