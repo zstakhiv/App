@@ -7,37 +7,37 @@ namespace EPlast.DataAccess.Entities
     {
         public int Id { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Ptashat must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfPtashata { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Novatstva must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfNovatstva { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Unatstva noname must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfUnatstvaNoname { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Unatstva supporters must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfUnatstvaSupporters { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Unatstva members must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfUnatstvaMembers { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Unatstva prospectors must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfUnatstvaProspectors { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Unatstva skob/virlyts must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfUnatstvaSkobVirlyts { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Senior Plastyn supporters must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeniorPlastynSupporters { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Senior Plastyn members must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeniorPlastynMembers { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Seigneur supporters must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeigneurSupporters { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Seigneur members must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeigneurMembers { get; set; }
 
         public int AnnualReportId { get; set; }
