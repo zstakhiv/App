@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using EPlast.ViewModels.Initialization;
+using EPlast.ViewModels.Initialization.Interfaces;
 
 namespace EPlast
 {
@@ -53,6 +55,7 @@ namespace EPlast
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
+            services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
 
             services.Configure<IdentityOptions>(options =>
             {

@@ -12,6 +12,7 @@ namespace EPlast.DataAccess.Entities
         public int CityLegalStatusTypeId { get; set; }
         public CityLegalStatusType LegalStatus { get; set; }
 
-        public DateTime DateStart { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateFinish { get; set; }
     }
 }
