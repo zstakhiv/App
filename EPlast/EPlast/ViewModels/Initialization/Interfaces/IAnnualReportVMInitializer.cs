@@ -8,6 +8,6 @@ namespace EPlast.ViewModels.Initialization.Interfaces
     {
         IEnumerable<SelectListItem> GetCityMembers(IEnumerable<User> cityMembers);
         IEnumerable<SelectListItem> GetCityLegalStatusTypes(IEnumerable<CityLegalStatusType> cityLegalStatusTypes);
-        AnnualReport GetAnnualReport(IEnumerable<User> cityMember);
+        AnnualReport GetAnnualReport(IEnumerable<User> cityMember, IEnumerable<UserPlastDegreeType> userPlastDegreeTypes);
     }
 }
