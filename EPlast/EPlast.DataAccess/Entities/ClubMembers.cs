@@ -9,6 +9,7 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
         public User User { get; set; }
+        public int UserId { get; set; }
         public Club Club { get; set; }
         [Required]
         public bool IsApproved { get; set; }
