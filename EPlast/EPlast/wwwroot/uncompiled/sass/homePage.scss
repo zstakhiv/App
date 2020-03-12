@@ -11,7 +11,15 @@
 
 .footer-dark {
     padding: 50px 0;
-    color: #3c5438;  
+}
+
+.footer-home {
+    color: #a9a9a9;
+    background-color: #3c5438;
+}
+
+.footer-main {
+    color: #3c5438;
     background-color: #a9a9a9;
 }
 
@@ -73,23 +81,6 @@
     }
 }
 
-.footer-dark .item.social > a {
-    font-size: 20px;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    display: inline-block;
-    text-align: center;
-    border-radius: 50%;
-    box-shadow: 0 0 0 1px rgba(60,84,56,0.4);
-    margin: 0 8px;
-    color: #3c5438;
-    opacity: 0.75;
-}
-
-.footer-dark .item.social > a:hover {
-    opacity: 0.9;
-}
 
 .footer-dark .copyright {
     text-align: center;
@@ -98,3 +89,5 @@
     font-size: 13px;
     margin-bottom: 0;
 }
+
+
