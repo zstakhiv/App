@@ -8,6 +8,7 @@ namespace EPlast.DataAccess.Entities
     public class ClubMembers
     {
         public int ID { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         public Club Club { get; set; }
         [Required]
