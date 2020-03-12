@@ -1,0 +1,199 @@
+﻿@model EPlast.ViewModels.AnnualReportViewModel
+@{
+    ViewData["Title"] = "Річний звіт станиці";
+}
+
+<div class="annual-report-form m-5 shadow-lg">
+    @using (Html.BeginForm(FormMethod.Post))
+    {
+        <h1 class="text-center">Річний звіт станиці @Model.CityName</h1>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h4>Голова новообраної Старшини</h4>
+                        @Html.DropDownListFor(x => x.CityAdministration.UserId, Model.CityMembers, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h4>Правовий статус осередку</h4>
+                        @Html.DropDownListFor(x => x.CityLegalStatus.CityLegalStatusTypeId, Model.CityLegalStatusTypes, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h3>УПП</h3>
+                        <div class="form-row">
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість гніздечок пташат")
+                                @Html.TextBoxFor(x => x.AnnualReport.NumberOfSeatsPtashat, new { @type = "number", @min = "0", @class = "form-control", @pattern = "3", @title = "warning"  })
+                            </div>
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість пташат")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfPtashata, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h3>УПН</h3>
+                        <div class="form-row">
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість самостійних роїв")
+                                @Html.TextBoxFor(x => x.AnnualReport.NumberOfIndependentRiy, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість новацтва")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfNovatstva, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group p-3 m-2 border shadow-sm">
+            <h3>УПЮ</h3>
+            <div class="form-row">
+                <div class="col align-self-end">
+                    @Html.Label("Кількість куренів у станиці/паланці (окрузі/регіоні)")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfClubs, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість самостійних гуртків")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfIndependentGroups, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість неіменованих разом")
+                    @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfUnatstvaNoname, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col align-self-end">
+                    @Html.Label("Кількість прихильників/ць")
+                    @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfUnatstvaSupporters, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість учасників/ць")
+                    @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfUnatstvaMembers, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість розвідувачів")
+                    @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfUnatstvaProspectors, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість скобів/вірлиць")
+                    @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfUnatstvaSkobVirlyts, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h3>УСП</h3>
+                        <div class="form-row">
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість старших пластунів прихильників")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfSeniorPlastynSupporters, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість старших пластунів")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfSeniorPlastynMembers, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group p-3 m-2 border shadow-sm">
+                        <h3>УПС</h3>
+                        <div class="form-row">
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість сеньйорів пластунів прихильників")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfSeigneurSupporters, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                            <div class="col align-self-end">
+                                @Html.Label("Кількість сеньйорів пластунів")
+                                @Html.TextBoxFor(x => x.AnnualReport.MembersStatistic.NumberOfSeigneurMembers, new { @type = "number", @min = "0", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group p-3 m-2 border shadow-sm">
+            <h3>Адміністрування та виховництво</h3>
+            <div class="form-row">
+                <div class="col align-self-end">
+                    @Html.Label("Кількість діючих виховників (з усіх членів УСП, УПС)")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfTeachers, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість адміністраторів (в проводах будь якого рівня)")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfAdministrators, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість тих, хто поєднує виховництво та адміністрування")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfTeacherAdministrators, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group p-3 m-2 border shadow-sm">
+            <div class="form-row">
+                <div class="col align-self-end">
+                    @Html.Label("Кількість пільговиків")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfBeneficiaries, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість членів Пластприяту")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfPlastpryiatMembers, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Кількість почесних членів")
+                    @Html.TextBoxFor(x => x.AnnualReport.NumberOfHonoraryMembers, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group p-3 m-2 border shadow-sm">
+            <h3>Залучені кошти</h3>
+            <div class="form-row">
+                <div class="col align-self-end">
+                    @Html.Label("Державні кошти")
+                    @Html.TextBoxFor(x => x.AnnualReport.PublicFunds, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Внески")
+                    @Html.TextBoxFor(x => x.AnnualReport.ContributionFunds, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Пластовий заробіток")
+                    @Html.TextBoxFor(x => x.AnnualReport.PlastSalary, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Спонсорські кошти")
+                    @Html.TextBoxFor(x => x.AnnualReport.SponsorshipFunds, new { @type = "number", @min = "0", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row p-3 m-2 border shadow-sm">
+                <div class="col align-self-end">
+                    @Html.Label("Вкажіть, що вам допоможе ефективніше залучати волонтерів та створювати виховні частини (гнізда, курені)")
+                    @Html.TextAreaFor(x => x.AnnualReport.ImprovementNeeds, new { @class = "form-control textarea-fixed" })
+                </div>
+                <div class="col align-self-end">
+                    @Html.Label("Вкажіть перелік майна, що є в станиці")
+                    @Html.TextAreaFor(x => x.AnnualReport.ListProperty, new { @class = "form-control textarea-fixed" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group text-center p-3">
+            <button class="btn btn-lg btn-success">Створити</button>
+        </div>
+    }
+</div>

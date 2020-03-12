@@ -63,9 +63,10 @@ namespace EPlast.Controllers
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
                 FirstOrDefault();
-            if (user != null)
+            var model = new UserViewModel { User = user };
+            if (model != null)
             {
-                return View(new UserViewModel { User = user });
+                return View(model);
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
@@ -177,13 +178,15 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            //!!
             if (!_repoWrapper.Gender.FindAll().Any())
             {
+                _repoWrapper.Gender.Create(new Gender { Name = "" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
             }
+            //!!
+           
             try
             {
                 var user = _repoWrapper.User.
@@ -217,6 +220,7 @@ namespace EPlast.Controllers
                 });
             }
         }
+
         [HttpPost]
         public IActionResult EditConfirmed(UserViewModel userVM)
         {
@@ -225,9 +229,9 @@ namespace EPlast.Controllers
                 if (userVM.User.UserProfile.Nationality.ID == 0)
                 {
                     string name = userVM.User.UserProfile.Nationality.Name;
-                    if (name == "")
+                    if(string.IsNullOrEmpty(name))
                     {
-                        throw new ArgumentException("Field can`t be empty");
+                        userVM.User.UserProfile.Nationality = null;
                     }
                     else
                     {
@@ -238,9 +242,9 @@ namespace EPlast.Controllers
                 if (userVM.User.UserProfile.Religion.ID == 0)
                 {
                     string name = userVM.User.UserProfile.Religion.Name;
-                    if (name == "")
+                    if(string.IsNullOrEmpty(name))
                     {
-                        throw new ArgumentException("Field can`t be empty");
+                        userVM.User.UserProfile.Religion = null;
                     }
                     else
                     {
@@ -252,9 +256,9 @@ namespace EPlast.Controllers
                 if (userVM.User.UserProfile.Education.Degree.ID == 0)
                 {
                     string name = userVM.User.UserProfile.Education.Degree.Name;
-                    if (name == "")
+                    if (string.IsNullOrEmpty(name))
                     {
-                        throw new ArgumentException("Field can`t be empty");
+                        userVM.User.UserProfile.Education.Degree = null;
                     }
                     else
                     {
@@ -266,13 +270,12 @@ namespace EPlast.Controllers
                 {
                     string placeOfStudy = userVM.User.UserProfile.Education.PlaceOfStudy;
                     string speciality = userVM.User.UserProfile.Education.Speciality;
-                    if (placeOfStudy == "" || speciality == "")
+                    if (string.IsNullOrEmpty(placeOfStudy) || string.IsNullOrEmpty(speciality))
                     {
-                        throw new ArgumentException("Field can`t be empty");
+                        userVM.User.UserProfile.Education = null;
                     }
                     else
                     {
-
                         userVM.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
                     }
                 }
@@ -281,19 +284,14 @@ namespace EPlast.Controllers
                 {
                     string placeOfWork = userVM.User.UserProfile.Work.PlaceOfwork;
                     string position = userVM.User.UserProfile.Work.Position;
-                    if (placeOfWork == "" || position == "")
+                    if (string.IsNullOrEmpty(placeOfWork) || string.IsNullOrEmpty(position))
                     {
-                        throw new ArgumentException("Field can`t be empty");
+                        userVM.User.UserProfile.Work = null;
                     }
                     else
                     {
                         userVM.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
                     }
-                }
-
-                if (userVM.User.UserProfile.PhoneNumber == "" | userVM.User.UserProfile.Address == "" | userVM.User.FatherName == "")
-                {
-                    throw new ArgumentException("Field can`t be empty");
                 }
 
                 //!!
@@ -312,8 +310,5 @@ namespace EPlast.Controllers
                 });
             }
         }
-
-        
-
     }
 }

@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200311181538_ChangeAnotation")]
+    partial class ChangeAnotation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,7 +82,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("SponsorshipFunds");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -173,21 +176,21 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AdminTypeId");
+                    b.Property<int?>("AdminTypeID");
 
-                    b.Property<int>("CityId");
+                    b.Property<int?>("CityID");
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime>("StartDate");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AdminTypeId");
+                    b.HasIndex("AdminTypeID");
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("CityID");
 
                     b.HasIndex("UserId");
 
@@ -244,9 +247,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("CityLegalStatusTypeId");
 
-                    b.Property<DateTime?>("DateFinish");
-
-                    b.Property<DateTime?>("DateStart");
+                    b.Property<DateTime>("DateStart");
 
                     b.HasKey("Id");
 
@@ -1117,7 +1118,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("AnnualReports")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Approver", b =>
@@ -1138,13 +1140,11 @@ namespace EPlast.DataAccess.Migrations
                 {
                     b.HasOne("EPlast.DataAccess.Entities.AdminType", "AdminType")
                         .WithMany("CityAdministration")
-                        .HasForeignKey("AdminTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AdminTypeID");
 
                     b.HasOne("EPlast.DataAccess.Entities.City", "City")
                         .WithMany("CityAdministration")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CityID");
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("CityAdministrations")

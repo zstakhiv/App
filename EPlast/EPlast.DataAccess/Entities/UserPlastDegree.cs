@@ -16,6 +16,6 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public DateTime DateStart { get; set; }
 
-        public DateTime DateFinish { get; set; }
+        public DateTime? DateFinish { get; set; }
     }
 }

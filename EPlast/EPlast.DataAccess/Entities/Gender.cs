@@ -6,7 +6,8 @@ namespace EPlast.DataAccess.Entities
     public class Gender
     {
         public int ID { get; set; }
-        [MaxLength(10, ErrorMessage = "Gender name cannot exceed 10 characters")]
+        [Display(Name = "Стать")]
+        [StringLength(10, MinimumLength = 2, ErrorMessage = "Стать повинна складати від 2 до 10 символів")]
         public string Name { get; set; }
         public ICollection<UserProfile> UserProfiles { get; set; }
     }
