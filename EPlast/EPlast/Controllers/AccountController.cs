@@ -54,7 +54,7 @@ namespace EPlast.Controllers
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
-                    ThenInclude(g => g.Gender).
+                ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
                         ThenInclude(q => q.Degree).

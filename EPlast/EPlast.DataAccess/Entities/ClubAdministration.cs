@@ -12,5 +12,6 @@ namespace EPlast.DataAccess.Entities
         public DateTime? EndDate { get; set; }
         public Club Club { get; set; } //Mb we don`t need this, because this info is in ClubMembers
         public ClubMembers ClubMembers { get; set; }
+        public int ClubMembersID { get; set; }
     }
 }
