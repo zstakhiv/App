@@ -12,7 +12,8 @@ namespace EPlast.Controllers
     {
         public IActionResult Index()
         {
-             return View();
+            return View();
+            //return StatusCode(500);
         }
 
         public IActionResult Privacy()
