@@ -1,15 +1,17 @@
-﻿@{
+﻿@using EPlast.DataAccess.Repositories;
+@{
     ViewData["Title"] = "Event User Page";
 }
-
+@model EPlast.ViewModels.Events.EventUserViewModel;
+@inject IRepositoryWrapper  _repository;
 <div class="eventUserPage d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center align-items-xl-end container">
         <div class="d-sm-flex justify-content-sm-center row">
             <div class="d-flex justify-content-center col-sm">
                 <div class="d-lg-flex align-items-center justify-content-lg-center border shadow events" id="eventPersonalInfo">
                     <div class="text-center justify-content-center box">
                         <img class="img-fluid border rounded-circle" src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" style="margin-top: 10px; width: 200px;height :200px;">
-                        <h4 style="margin-top: 32px;">Наталя Іванюк</h4>
-                        <p>Пластунка</p>
+                        <h4 style="margin-top: 32px;">@Model.User.FirstName @Model.User.LastName</h4>
+                        <p>@_repository.UserPlastDegrees.FindByCondition(i=>i.UserId==Model.User.Id)</p>
                         <div class="d-lg-flex spliter" id="infoSplit" style="width: 256px;margin-top: 0px;"></div>
                         <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 3px;">5</h3>
                         <p>Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
@@ -17,14 +19,14 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4>Не підтверджені події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <h4>Усі події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
                                     <div class="modal-body">
                                         <ul class="text-left">
-                                            <li>Item 1</li>
-                                            <li>Item 2</li>
-                                            <li>Item 3</li>
-                                            <li>Item 4</li>
+                                            @foreach (var item in Model.Events)
+                                            {
+                                                <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                            }
                                         </ul>
                                     </div>
                                     <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
@@ -47,14 +49,14 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4>Не підтверджені події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                <h4>Відвідані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                             </div>
                                             <div class="modal-body">
                                                 <ul class="text-left">
-                                                    <li>Item 1</li>
-                                                    <li>Item 2</li>
-                                                    <li>Item 3</li>
-                                                    <li>Item 4</li>
+                                                    @foreach (var item in Model.Events)
+                                                    {
+                                                        <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                                    }
                                                 </ul>
                                             </div>
                                             <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
@@ -79,10 +81,10 @@
                                             </div>
                                             <div class="modal-body">
                                                 <ul class="text-left">
-                                                    <li>Item 1</li>
-                                                    <li>Item 2</li>
-                                                    <li>Item 3</li>
-                                                    <li>Item 4</li>
+                                                    @foreach (var item in Model.Events)
+                                                    {
+                                                        <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                                    }
                                                 </ul>
                                             </div>
                                             <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
@@ -104,14 +106,14 @@
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4>Не підтверджені події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <h4>Заплановані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <ul class="text-left">
-                                                <li>Item 1</li>
-                                                <li>Item 2</li>
-                                                <li>Item 3</li>
-                                                <li>Item 4</li>
+                                                @foreach (var item in Model.Events)
+                                                {
+                                                    <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                                }
                                             </ul>
                                         </div>
                                         <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
