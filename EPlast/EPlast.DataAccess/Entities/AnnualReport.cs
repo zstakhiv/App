@@ -61,7 +61,6 @@ namespace EPlast.DataAccess.Entities
 
         public MembersStatistic MembersStatistic { get; set; }
 
-        [Required]
         public string UserId { get; set; }
         public User User { get; set; }
 
