@@ -20,7 +20,7 @@ namespace EPlast.Controllers
         }
         public IActionResult GetAction()
         {
-            #region Old version
+            #region Hardcoded data
             List<EventCategoryViewModel> evc = new List<EventCategoryViewModel>()
             {
                 new EventCategoryViewModel(){EventCategory=new EventCategory{ID=1,EventCategoryName="Інструкторський Вишкіл (УСП)" } },
@@ -54,18 +54,32 @@ namespace EPlast.Controllers
 
         public IActionResult GetSubAction(int? ID)
         {
-            if(ID==null)
+            if (ID == null)
             {
                 return Content("Не вибрано жодної акції!");
             }
-            List<SubEventCategoryViewModel> subCat = new List<SubEventCategoryViewModel>()
+            #region Hardcoded data
+            // List<SubEventCategoryViewModel> subCat = new List<SubEventCategoryViewModel>()
+            //{
+            //    new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія А" },},
+            //    new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Б" },},
+            //    new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія В" },},
+            //    new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Г" },},
+            //};
+            #endregion
+
+            string eventCategory = _repoWrapper.EventCategory.FindByCondition(e => e.ID == ID)
+                .FirstOrDefault().EventCategoryName;
+            List<SubEventCategoryViewModel> _subCat = _repoWrapper.SubEventCategory
+                .FindByCondition(x => x.EventCategoryID == ID)
+                .Select(subcat => new SubEventCategoryViewModel() { SubEventCategory = subcat })
+                .ToList();
+
+            if (_subCat.Count==0)
             {
-                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія А" },},
-                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Б" },},
-                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія В" },},
-                new SubEventCategoryViewModel(){SubEventCategory=new SubEventCategory(){ID=1,SubEventCategoryName="Підкатегорія Г" },},
-            };
-               return View(subCat);
+                return Content($"Акція '{eventCategory}' не містить жодних підкатегорій .");
+            }
+            return View(_subCat);
         }
 
         }
