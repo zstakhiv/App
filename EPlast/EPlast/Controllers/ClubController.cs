@@ -28,10 +28,6 @@ namespace EPlast.Controllers
         }
         public IActionResult Club(int index)
         {
-            /*
-            _repoWrapper.ClubMembers.Create(new ClubMembers { User = _repoWrapper.User.FindAll().First() });
-            _repoWrapper.Save();
-            */
             var club = _repoWrapper.Club
                 .FindByCondition(q => q.ID == index)
                 .Include(c => c.ClubAdministration)

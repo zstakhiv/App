@@ -8,6 +8,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20200312112558_ClubMembers.cs" />
+    <Compile Remove="Migrations\20200312112558_ClubMembers.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.5.1" />

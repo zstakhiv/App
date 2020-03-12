@@ -12,31 +12,25 @@
                 <img src="@Model.Club.Logo" alt="" class="curin-img">
               </div>
   
-              <div class="bottom-info-content"> 
+              <div class="bottom-info-content">
                   @foreach (var item in Model.Club.ClubAdministration)
                   {
-                  <div class="line-pair">
-                      <p class="line-upper">@item.AdminType.AdminTypeName</p>
-                      <p class="line-lower">Анна Гілета</p>
-                      <!--
-    <p class="line-lower">item.ClubMembers.User.FirstName + " " + item.ClubMembers.User.LastName</p>
-                          
-                      -->
-
-
-
-                  </div>
+                      <div class="line-pair">
+                          <p class="line-upper">@item.AdminType.AdminTypeName</p>
+                          <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
+                      </div>
                   }
-  
-                <button class="buttons">Більше</button>
-              </div>
+                  <button class="buttons">Більше</button>
+                  </div>
             </div>
   
             <div class="secondary-info vertical-grid">
               <div class="about-info grid-block">
                 <h1 class="grid-header">Про нас</h1>
                 
-                <p class="info">@Model.Club.Description</p>
+                <p class="info">
+                        @Model.Club.Description
+                </p>
                 
                 <button class="buttons" id="more-info-club" onclick="moreinfo()">Більше</button>
               </div>
@@ -51,11 +45,8 @@
                      {
                         <div class="member-block">
                           <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
-                          <p class="member-name">Fyyf Hileta</p>
-    <!--
-                               
-                          <p class="member-name">item.User.FirstName + " " + item.User.LastName</p>
-                           -->
+                          <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
                         </div>
                      }
                    }
@@ -79,12 +70,8 @@
                                   https://www.youtube.com/watch?v=axySrE0Kg6k&list=RDaxySrE0Kg6k&start_radio=1
                               </div>
                           </div>
+                            <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
 
-                          <p class="member-name">Fyyf Hileta</p>
-                          <!--
-
-                            <p class="member-name">item.User.FirstName + " " + item.User.LastName</p>
-                          -->
                       </div>
                            }
                        }
