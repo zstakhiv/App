@@ -1,6 +1,85 @@
 ﻿@using EPlast.ViewModels
-@model int
+@model ClubViewModel
 @{
     ViewData["Title"] = "Club";
 }
-<p>@Model</p>
+<div class="content-wrapper">
+          <div class="club-page-wrapper">
+            <div class="main-info grid-block">
+              <h1 class="grid-header">@Model.Club.ClubName</h1>
+  
+              <div class="top-info">
+                <img src="@Model.Club.Logo" alt="" class="curin-img">
+              </div>
+  
+              <div class="bottom-info-content">
+                  @foreach (var item in Model.Club.ClubAdministration)
+                  {
+                      <div class="line-pair">
+                          <p class="line-upper">@item.AdminType.AdminTypeName</p>
+                          <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
+                      </div>
+                  }
+                  <button class="buttons">Більше</button>
+                  </div>
+            </div>
+  
+            <div class="secondary-info vertical-grid">
+              <div class="about-info grid-block">
+                <h1 class="grid-header">Про нас</h1>
+                
+                <p class="info">
+                        @Model.Club.Description
+                </p>
+                
+                <button class="buttons" id="more-info-club" onclick="moreinfo()">Більше</button>
+              </div>
+  
+              <div class="people-info horizontal-grid">
+                <div class="members-info grid-block">
+                  <h1 class="grid-header">Провід куреня</h1>
+                  <div class="members-list">
+                   @foreach(var item in Model.Club.ClubMembers) 
+                   {
+                     @if (@item.IsApproved)
+                     {
+                        <div class="member-block">
+                          <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                          <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
+                        </div>
+                     }
+                   }
+                </div>
+                  <button class="buttons">Показати всіх</button>
+                </div>
+                <div class="followers-info grid-block">
+                  <h1 class="grid-header">Зацікавлені</h1>
+    
+                  <div class="members-list">
+                      @foreach (var item in Model.Club.ClubMembers)
+                      {
+                          @if (!@item.IsApproved)
+                          {
+                      <div class="member-block">
+                          <div class="member-wrapper">
+                              <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+
+                              <div class="plus">
+                                  +
+                                  https://www.youtube.com/watch?v=axySrE0Kg6k&list=RDaxySrE0Kg6k&start_radio=1
+                              </div>
+                          </div>
+                            <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
+                      </div>
+                           }
+                       }
+                      </div>
+    
+                  <button class="buttons">Більше</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>

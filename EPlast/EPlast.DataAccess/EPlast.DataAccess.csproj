@@ -8,7 +8,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
-
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
