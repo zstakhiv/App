@@ -7,7 +7,8 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
 
-        [MaxLength(50, ErrorMessage = "Nationality name cannot exceed 50 characters")]
+        [Display(Name = "Національність")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Національність повинна складати від 3 до 20 символів")]
         public string Name { get; set; }
         public ICollection<UserProfile> UserProfiles { get; set; }
     }

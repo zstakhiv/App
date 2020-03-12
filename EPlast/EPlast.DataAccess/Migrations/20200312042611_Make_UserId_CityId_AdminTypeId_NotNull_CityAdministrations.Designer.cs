@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200312042611_Make_UserId_CityId_AdminTypeId_NotNull_CityAdministrations")]
+    partial class Make_UserId_CityId_AdminTypeId_NotNull_CityAdministrations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +246,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("CityLegalStatusTypeId");
 
-                    b.Property<DateTime?>("DateFinish");
-
-                    b.Property<DateTime?>("DateStart");
+                    b.Property<DateTime>("DateStart");
 
                     b.HasKey("Id");
 

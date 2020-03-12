@@ -10,49 +10,49 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public DateTime Date { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of seats in city must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeatsInCity { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of seats for Ptashat must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeatsPtashat { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of independent riy must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfIndependentRiy { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of clubs must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfClubs { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of independent groups must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfIndependentGroups { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of teachers must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfTeachers { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of administrators must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfAdministrators { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of people combining education and administration must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfTeacherAdministrators { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of beneficiaries must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfBeneficiaries { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of Plastpryiat members must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfPlastpryiatMembers { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Number of honorary members must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfHonoraryMembers { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Public funds must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int PublicFunds { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Contribution funds must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int ContributionFunds { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Plast salary must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int PlastSalary { get; set; }
 
-        [Range(0, Int32.MaxValue, ErrorMessage = "Sponsorship funds must not be less than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int SponsorshipFunds { get; set; }
 
         public string ListProperty { get; set; }
