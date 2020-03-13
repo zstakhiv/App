@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EPlast.DataAccess.Entities;
@@ -37,7 +36,7 @@ namespace EPlast.ViewModels.Initialization
             return cityLegalStatusTypesSLI;
         }
 
-        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers)
+        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers, IEnumerable<UserPlastDegreeType> userPlastDegreeTypes)
         {
             return new AnnualReport
             {
@@ -45,19 +44,23 @@ namespace EPlast.ViewModels.Initialization
                 {
                     NumberOfSeniorPlastynSupporters = cityMembers
                         .ToList()
-                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null && upd.UserPlastDegreeTypeId == 1))
+                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null 
+                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "старший пластун прихильник").Id))
                         .Count(),
                     NumberOfSeniorPlastynMembers = cityMembers
                         .ToList()
-                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null && upd.UserPlastDegreeTypeId == 2))
+                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
+                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "старший пластун").Id))
                         .Count(),
                     NumberOfSeigneurSupporters = cityMembers
                         .ToList()
-                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null && upd.UserPlastDegreeTypeId == 3))
+                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
+                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "сеньйор пластун прихильник").Id))
                         .Count(),
                     NumberOfSeigneurMembers = cityMembers
                         .ToList()
-                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null && upd.UserPlastDegreeTypeId == 4))
+                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
+                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "сеньйор пластун").Id))
                         .Count(),
                 }
             };
