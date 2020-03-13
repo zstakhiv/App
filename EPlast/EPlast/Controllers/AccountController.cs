@@ -175,6 +175,7 @@ namespace EPlast.Controllers
             return RedirectToAction("LoginAndRegister", "Account");
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -215,13 +216,12 @@ namespace EPlast.Controllers
             }
             catch (Exception e)
             {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                });
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult EditConfirmed(UserViewModel userVM)
         {
@@ -301,14 +301,13 @@ namespace EPlast.Controllers
                 _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
                 _repoWrapper.User.Update(userVM.User);
                 _repoWrapper.Save();
-                return RedirectToAction("Index");
+                _logger.LogInformation("User {0} {1} was edited profile and saved in the database", userVM.User.FirstName, userVM.User.LastName);
+                return RedirectToAction("UserProfile");
             }
             catch (Exception e)
             {
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Request.HttpContext.TraceIdentifier,
-                });
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
     }
