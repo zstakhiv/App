@@ -2,7 +2,7 @@ let profileListing = [
     ['<a href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
         'Діловодства',
-        'Вишколи',
+        '<a href="/EventUser/EventUser">Вишколи</a>',
         'З`їзд',
         'Бланки'],
     [],
