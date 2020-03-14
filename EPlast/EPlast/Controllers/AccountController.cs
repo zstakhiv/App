@@ -95,7 +95,7 @@ namespace EPlast.Controllers
             var user = new User()
             {
                 Email = registerVM.Email,
-                UserName = registerVM.Name,
+                UserName = registerVM.Email,
                 LastName = registerVM.SurName,
                 FirstName = registerVM.Name,
                 UserProfile = new UserProfile()
