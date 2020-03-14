@@ -35,17 +35,17 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-        {
-                <tr class="raport-click-row">
-                    <td>@item.Decesion.ID</td>
-                    <td>@item.Decesion.Organization.OrganizationName</td>
-                    <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
-                    <td>@item.Decesion.DecesionTarget.TargetName</td>
-                    <td>@item.Decesion.Description</td>
-                    <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
-                    <td>must be desision file</td>
-                </tr>
-        }
+                {
+                    <tr class="raport-click-row">
+                        <td>@item.Decesion.ID</td>
+                        <td>@item.Decesion.Organization.OrganizationName</td>
+                        <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
+                        <td>@item.Decesion.DecesionTarget.TargetName</td>
+                        <td>@item.Decesion.Description</td>
+                        <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
+                        <td></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

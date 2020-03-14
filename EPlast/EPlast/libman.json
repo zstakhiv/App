@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "provider": "unpkg",
+      "provider": "jsdelivr",
       "library": "mdbootstrap@4.14.0",
       "destination": "wwwroot/lib/mdbootstrap/",
       "files": [
