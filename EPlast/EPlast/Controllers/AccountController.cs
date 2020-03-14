@@ -182,7 +182,6 @@ namespace EPlast.Controllers
 
             if (!_repoWrapper.Gender.FindAll().Any())
             {
-                _repoWrapper.Gender.Create(new Gender { Name = "" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
@@ -211,6 +210,7 @@ namespace EPlast.Controllers
                                        Text = item.Name,
                                        Value = item.ID.ToString()
                                    });
+
                 var model = new UserViewModel() { User = user };
                 return View(model);
             }
@@ -294,9 +294,6 @@ namespace EPlast.Controllers
                         userVM.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
                     }
                 }
-
-                //!!
-                userVM.User.UserProfile.Gender = _repoWrapper.Gender.FindByCondition(x => x.ID == userVM.User.UserProfile.Gender.ID).First();
 
                 _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
                 _repoWrapper.User.Update(userVM.User);

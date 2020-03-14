@@ -17,6 +17,7 @@ namespace EPlast.DataAccess.Entities
         public Nationality Nationality { get; set; }
         public Religion Religion { get; set; }
         public Work Work { get; set; }
+        public int? GenderID { get; set; }
         public Gender Gender { get; set; }
         [Display(Name = "Домашня адреса")]
         [MaxLength(50,ErrorMessage = "Адреса не може перевищувати 50 символів")]
