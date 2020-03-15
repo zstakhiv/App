@@ -330,5 +330,73 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View("ForgotPassword");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotpasswordVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    ModelState.AddModelError("", "Користувачча з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action(
+                    nameof(ResetPassword), 
+                    "Account", 
+                    new { userId = user.Id, code = code }, 
+                    protocol: HttpContext.Request.Scheme);
+                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Reset Password",
+                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                return View("ForgotPasswordConfirmation");
+            }
+            return View("ForgotPassword");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetpasswordVM);
+            }
+            var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
+            if (user == null)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, resetpasswordVM.Code, resetpasswordVM.Password);
+            if (result.Succeeded)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(resetpasswordVM);
+        }
+
     }
 }
