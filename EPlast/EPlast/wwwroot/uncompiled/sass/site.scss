@@ -295,13 +295,9 @@ form input {
     margin-left:30px;
 }
 
-/*
-position: absolute;
-background-color: #3c5438;
-width: 50%;
-height: 100%;
-transition: all linear .5s;
-z-index: -1;*/
-
-
-
+.universal-container {
+    max-width: 900px;
+    background-color: #fff;
+    border-radius:10px;
+    margin-left:230px;
+}

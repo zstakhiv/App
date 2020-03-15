@@ -101,7 +101,7 @@ namespace EPlast.Controllers
                         new { code = code, userId = user.Id },
                         protocol: HttpContext.Request.Scheme);
 
-                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
+                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                         $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
 
                     return View("AcceptingEmail");
