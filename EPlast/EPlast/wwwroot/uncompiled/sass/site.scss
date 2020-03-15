@@ -78,6 +78,7 @@ table.dataTable thead {
 
 body {
     font-family: "SourceSansPro";
+    background-color: rgb(245, 245, 245);
 }
 
 form input {
@@ -270,7 +271,7 @@ form input {
 .form-network {
     display: flex;
     justify-content: space-between;
-    margin-top: 80px;
+    margin-top: 40px;
 }
 
 #button-form-network {
@@ -279,3 +280,28 @@ form input {
     font-size: 40px;
     margin: 0 auto;
 }
+
+
+.forgot-password-container {
+    background-color: #3c5438;
+    color: #fff;
+    border-radius:3px;
+    height:50px;
+}
+
+.forgot-password-container p {
+    font-size:20px;
+    margin-top:10px;
+    margin-left:30px;
+}
+
+/*
+position: absolute;
+background-color: #3c5438;
+width: 50%;
+height: 100%;
+transition: all linear .5s;
+z-index: -1;*/
+
+
+

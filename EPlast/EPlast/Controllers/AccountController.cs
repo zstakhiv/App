@@ -385,7 +385,7 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
             {
-                ModelState.AddModelError("", "Користувачча з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
+                ModelState.AddModelError("", "Користувача з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
                 return View("ResetPassword");
             }
             var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
