@@ -350,7 +350,7 @@ namespace EPlast.Controllers
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     ModelState.AddModelError("", "Користувачча з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
-                    return View("ForgotPasswordConfirmation");
+                    return View("ForgotPassword");
                 }
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -360,7 +360,7 @@ namespace EPlast.Controllers
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Reset Password",
-                    $"Для скидування пароля перейдіть по ссилці: <a href='{callbackUrl}'>link</a>");
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
@@ -370,7 +370,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
-            return code == null ? View("Error") : View();
+            return code == null ? View("Error") : View("ResetPassword");
         }
 
         [HttpPost]
@@ -385,20 +385,19 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
             {
-                return View("ResetPasswordConfirmation");
+                ModelState.AddModelError("", "Користувачча з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
+                return View("ResetPassword");
             }
-            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password); //invalid token
+            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
             if (result.Succeeded)
             {
                 return View("ResetPasswordConfirmation");
             }
-            foreach (var error in result.Errors)
+            else
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
+                return View("ResetPassword");
             }
-           
-            return View(resetpasswordVM);
         }
-
     }
 }
