@@ -47,31 +47,6 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserProfile()
-        {
-            var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
-                Include(i => i.UserProfile).
-                    ThenInclude(x => x.Nationality).
-                Include(g => g.UserProfile).
-                ThenInclude(g => g.Gender).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Religion).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Work).
-                FirstOrDefault();
-            var model = new UserViewModel { User = user };
-            if (model != null)
-            {
-                return View(model);
-            }
-            return RedirectToAction("HandleError", "Error", new { code = 505 });
-        }
-
-        [HttpGet]
         public IActionResult LoginAndRegister()
         {
             return View();
@@ -88,36 +63,49 @@ namespace EPlast.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Something went wrong");
+                ModelState.AddModelError("", "Дані введені неправильно");
                 return View("LoginAndRegister");
             }
 
-            var user = new User()
+            var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
+            if (registeredUser != null)
             {
-                Email = registerVM.Email,
-                UserName = registerVM.Name,
-                LastName = registerVM.SurName,
-                FirstName = registerVM.Name,
-                UserProfile = new UserProfile()
-            };
-            var result = await _userManager.CreateAsync(user, registerVM.Password);
-
-            if (result.Succeeded)
-            {
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = Url.Action(
-                    nameof(ConfirmingEmail),
-                    "Account",
-                    new { code = code, userId = user.Id },
-                    protocol: HttpContext.Request.Scheme);
-
-                await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
-                    $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
-
-                return View("AcceptingEmail");
+                ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
+                return View("LoginAndRegister");
             }
+            else
+            {
+                var user = new User()
+                {
+                    Email = registerVM.Email,
+                    UserName = registerVM.Email,
+                    LastName = registerVM.SurName,
+                    FirstName = registerVM.Name,
+                    UserProfile = new UserProfile()
+                };
 
-            return View("LoginAndRegister");
+                var result = await _userManager.CreateAsync(user, registerVM.Password);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та букви");
+                    return View("LoginAndRegister");
+                }
+                else
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action(
+                        nameof(ConfirmingEmail),
+                        "Account",
+                        new { code = code, userId = user.Id },
+                        protocol: HttpContext.Request.Scheme);
+
+                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
+                        $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
+
+                    return View("AcceptingEmail");
+                }
+            }
         }
 
         [HttpGet]
@@ -145,12 +133,17 @@ namespace EPlast.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
-                if (user != null)
+                if(user == null)
+                {
+                    ModelState.AddModelError("", "Ви не зареєструвались, або не підтвердили свою електронну пошту");
+                    return View("LoginAndRegister");
+                }
+                else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError(string.Empty, "Ви не підтвердили свій Email");
-                        return View("AcceptingEmail");
+                        ModelState.AddModelError("", "Ви не підтвердили свою електронну пошту, будь ласка увійдіть та зробіть підтвердження");
+                        return View("LoginAndRegister");
                     }
                 }
 
@@ -161,11 +154,13 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильний логін або пароль");
+                    ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
+                    return View("LoginAndRegister");
                 }
             }
             return View("LoginAndRegister");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -173,6 +168,31 @@ namespace EPlast.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("LoginAndRegister", "Account");
+        }
+
+        [HttpGet]
+        public IActionResult UserProfile()
+        {
+            var user = _repoWrapper.User.
+            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                    ThenInclude(x => x.Nationality).
+                Include(g => g.UserProfile).
+                ThenInclude(g => g.Gender).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Education).
+                        ThenInclude(q => q.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Religion).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Work).
+                FirstOrDefault();
+            var model = new UserViewModel { User = user };
+            if (model != null)
+            {
+                return View(model);
+            }
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
         [Authorize]

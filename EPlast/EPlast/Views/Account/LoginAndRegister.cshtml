@@ -1,15 +1,6 @@
 ﻿@using EPlast.ViewModels;
 @model Tuple<LoginViewModel, RegisterViewModel>
 
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>LoginRegisterPage</title>
-</head>
-
 <body style="background-color: rgb(245, 245, 245);">
     <div class="login-clean" style="background-color: rgb(245, 245, 245);">
         <div class="form">
@@ -28,21 +19,22 @@
                 </div>
             </div>
             <form method="post" class="login-form" asp-action="Logging" asp-controller="Account">
-                <div class="validation" asp-validation-summary="All"></div>
+                <div class="validation" asp-validation-summary="All" style="font-size:20px;"></div>
                 <h2 class="sr-only">Login Form</h2>
                 <div class="illustration"><i class="icon ion-ios-navigate" style="color: #3c5438;"></i></div>
                 <div class="form-group">
                     <input asp-for="Item1.Email" class="form-control" type="email" name="Email"
-                           placeholder="Електронна пошта"/>
-                    <span asp-validation-for="Item1.Email"/>
+                           placeholder="Електронна пошта" />
+                    <span asp-validation-for="Item1.Email" />
                 </div>
                 <div class="form-group">
                     <input asp-for="Item1.Password" class="form-control" type="password" name="Password"
                            placeholder="Пароль" />
                     <span asp-validation-for="Item1.Password" />
                 </div>
-                <div class="form-group">
-                    <input asp-for="Item1.RememberMe" type="checkbox" class="form-control" name="RememberMe" />
+                <div class="form-group d-flex">
+                    <input asp-for="Item1.RememberMe" type="checkbox" class="form-control" name="RememberMe" style="width:25px; height:25px;" />
+                    <label style="margin-left:15px;">Запамятати мене</label>
                     <span asp-validation-for="Item1.RememberMe" />
                 </div>
                 <div class="form-group">
@@ -51,7 +43,7 @@
                         Увійти
                     </button>
                 </div>
-                <a class="forgot" href="#">Забули електронну пошту або пароль?</a>
+                <a class="forgot" href="#">Забули пароль?</a>
 
                 <div class="form-network">
                     <button type="button" class="btn btn-fb"><i class="fab fa-facebook-f pr-1"></i> Facebook</button>
@@ -60,7 +52,7 @@
             </form>
 
             <form method="post" class="register-form d-none" asp-action="Registration" asp-controller="Account">
-                <div class="validation" asp-validation-summary="All"></div>
+                <div class="validation" asp-validation-summary="All" style="font-size:20px;"></div>
                 <h2 class="sr-only">Registration Form</h2>
                 <div class="form-group">
                     <input asp-for="Item2.Email" class="form-control" type="email" name="Email"
@@ -90,16 +82,12 @@
                         Зареєструватись
                     </button>
                 </div>
-                <a class="forgot" href="#">Забули електронну пошту або пароль?</a>
+                <a class="forgot" href="#">Забули пароль?</a>
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-    <script src="~/js/site.js"></script>
 </body>
-</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
