@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using EPlast.BussinessLayer.Interfaces;
+using System.Web;
 
 namespace EPlast.Controllers
 {
@@ -356,10 +357,10 @@ namespace EPlast.Controllers
                 var callbackUrl = Url.Action(
                     nameof(ResetPassword), 
                     "Account", 
-                    new { userId = user.Id, code = code }, 
+                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Reset Password",
-                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    $"Для скидування пароля перейдіть по ссилці: <a href='{callbackUrl}'>link</a>");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
@@ -386,7 +387,7 @@ namespace EPlast.Controllers
             {
                 return View("ResetPasswordConfirmation");
             }
-            var result = await _userManager.ResetPasswordAsync(user, resetpasswordVM.Code, resetpasswordVM.Password);
+            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password); //invalid token
             if (result.Succeeded)
             {
                 return View("ResetPasswordConfirmation");
@@ -395,6 +396,7 @@ namespace EPlast.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+           
             return View(resetpasswordVM);
         }
 
