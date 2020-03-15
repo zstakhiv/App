@@ -8,7 +8,7 @@ namespace EPlast.ViewModels
 {
     public class ResetPasswordViewModel
     {
-        [Required(ErrorMessage = "Поле електронна пошта має бути введеним")]
+        [Required(ErrorMessage = "Поле Електронна пошта має бути введеним")]
         [EmailAddress]
         public string Email { get; set; }
 

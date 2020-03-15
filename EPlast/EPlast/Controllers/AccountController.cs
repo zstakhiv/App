@@ -89,7 +89,7 @@ namespace EPlast.Controllers
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та букви");
+                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
                     return View("LoginAndRegister");
                 }
                 else
@@ -102,7 +102,7 @@ namespace EPlast.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
-                        $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
 
                     return View("AcceptingEmail");
                 }
@@ -136,14 +136,14 @@ namespace EPlast.Controllers
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
                 if(user == null)
                 {
-                    ModelState.AddModelError("", "Ви не зареєструвались, або не підтвердили свою електронну пошту");
+                    ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
                     return View("LoginAndRegister");
                 }
                 else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError("", "Ви не підтвердили свою електронну пошту, будь ласка увійдіть та зробіть підтвердження");
+                        ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
                         return View("LoginAndRegister");
                     }
                 }
@@ -349,7 +349,7 @@ namespace EPlast.Controllers
                 var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    ModelState.AddModelError("", "Користувачча з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
+                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію"); 
                     return View("ForgotPassword");
                 }
 
@@ -359,7 +359,7 @@ namespace EPlast.Controllers
                     "Account", 
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
                     protocol: HttpContext.Request.Scheme);
-                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Reset Password",
+                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
                     $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
                 return View("ForgotPasswordConfirmation");
             }
@@ -385,7 +385,7 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
             {
-                ModelState.AddModelError("", "Користувача з таким імейлом немає в системі, або користувач не підтвердив свою реєстрацію");
+                ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
                 return View("ResetPassword");
             }
             var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
