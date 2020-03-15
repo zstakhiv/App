@@ -70,12 +70,11 @@ namespace EPlast.Controllers
             var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
             if (registeredUser != null)
             {
-                ModelState.AddModelError("", "Користувач з такою електронною поштою вже зареєстрований в системі");
+                ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
                 return View("LoginAndRegister");
             }
             else
             {
-
                 var user = new User()
                 {
                     Email = registerVM.Email,
@@ -89,9 +88,8 @@ namespace EPlast.Controllers
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("", "");
+                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та букви");
                     return View("LoginAndRegister");
-
                 }
                 else
                 {
@@ -107,7 +105,6 @@ namespace EPlast.Controllers
 
                     return View("AcceptingEmail");
                 }
-                return View("LoginAndRegister");
             }
         }
 
