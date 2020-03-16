@@ -10,9 +10,11 @@ namespace EPlast.DataAccess.Entities
         [Display(Name = "Ім'я")]
         [Required, MaxLength(50, ErrorMessage = "Ім'я не може перевищувати 50 символів")]
         public string FirstName { get; set; }
+
         [Display(Name = "Прізвище")]
         [Required, MaxLength(50, ErrorMessage = "Прізвище не може перевищувати 50 символів")]
         public string LastName { get; set; }
+
         [Display(Name = "По-батькові")]
         [Required, MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }

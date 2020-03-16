@@ -56,31 +56,6 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserProfile()
-        {
-            var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
-                Include(i => i.UserProfile).
-                    ThenInclude(x => x.Nationality).
-                Include(g => g.UserProfile).
-                ThenInclude(g => g.Gender).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Religion).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Work).
-                FirstOrDefault();
-            var model = new UserViewModel { User = user };
-            if (model != null)
-            {
-                return View(model);
-            }
-            return RedirectToAction("HandleError", "Error", new { code = 505 });
-        }
-
-        [HttpGet]
         public IActionResult LoginAndRegister()
         {
             return View();
@@ -97,37 +72,50 @@ namespace EPlast.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Something went wrong");
+                ModelState.AddModelError("", "Дані введені неправильно");
                 return View("LoginAndRegister");
             }
 
-            var user = new User()
+            var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
+            if (registeredUser != null)
             {
-                Email = registerVM.Email,
-                UserName = registerVM.Name,
-                LastName = registerVM.SurName,
-                FirstName = registerVM.Name,
-                ImagePath = "default.png",
-                UserProfile = new UserProfile()
-            };
-            var result = await _userManager.CreateAsync(user, registerVM.Password);
-
-            if (result.Succeeded)
-            {
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var confirmationLink = Url.Action(
-                    nameof(ConfirmingEmail),
-                    "Account",
-                    new { code = code, userId = user.Id },
-                    protocol: HttpContext.Request.Scheme);
-
-                await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
-                    $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
-
-                return View("AcceptingEmail");
+                ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
+                return View("LoginAndRegister");
             }
+            else
+            {
+                var user = new User()
+                {
+                    Email = registerVM.Email,
+                    UserName = registerVM.Email,
+                    LastName = registerVM.SurName,
+                    FirstName = registerVM.Name,
+                    ImagePath = "default.png",
+                    UserProfile = new UserProfile()
+                };
 
-            return View("LoginAndRegister");
+                var result = await _userManager.CreateAsync(user, registerVM.Password);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                    return View("LoginAndRegister");
+                }
+                else
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action(
+                        nameof(ConfirmingEmail),
+                        "Account",
+                        new { code = code, userId = user.Id },
+                        protocol: HttpContext.Request.Scheme);
+
+                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
+
+                    return View("AcceptingEmail");
+                }
+            }
         }
 
         [HttpGet]
@@ -155,12 +143,17 @@ namespace EPlast.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
-                if (user != null)
+                if(user == null)
+                {
+                    ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
+                    return View("LoginAndRegister");
+                }
+                else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError(string.Empty, "Ви не підтвердили свій Email");
-                        return View("AcceptingEmail");
+                        ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
+                        return View("LoginAndRegister");
                     }
                 }
 
@@ -171,11 +164,13 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильний логін або пароль");
+                    ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
+                    return View("LoginAndRegister");
                 }
             }
             return View("LoginAndRegister");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -183,6 +178,31 @@ namespace EPlast.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("LoginAndRegister", "Account");
+        }
+
+        [HttpGet]
+        public IActionResult UserProfile()
+        {
+            var user = _repoWrapper.User.
+            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+                Include(i => i.UserProfile).
+                    ThenInclude(x => x.Nationality).
+                Include(g => g.UserProfile).
+                ThenInclude(g => g.Gender).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Education).
+                        ThenInclude(q => q.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Religion).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Work).
+                FirstOrDefault();
+            var model = new UserViewModel { User = user };
+            if (model != null)
+            {
+                return View(model);
+            }
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
         [Authorize]
@@ -340,6 +360,74 @@ namespace EPlast.Controllers
             {
                 _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View("ForgotPassword");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotpasswordVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію"); 
+                    return View("ForgotPassword");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action(
+                    nameof(ResetPassword), 
+                    "Account", 
+                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
+                    protocol: HttpContext.Request.Scheme);
+                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                return View("ForgotPasswordConfirmation");
+            }
+            return View("ForgotPassword");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View("ResetPassword");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetpasswordVM);
+            }
+            var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
+                return View("ResetPassword");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
+            if (result.Succeeded)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
+                return View("ResetPassword");
             }
         }
     }

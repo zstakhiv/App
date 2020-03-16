@@ -62,9 +62,9 @@ namespace EPlast
                 options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = true;
-
+                options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;

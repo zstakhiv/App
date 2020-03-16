@@ -8,11 +8,11 @@ namespace EPlast.ViewModels
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Поле Імейл є обов'язковим")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле Пароль є обов'язковим")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

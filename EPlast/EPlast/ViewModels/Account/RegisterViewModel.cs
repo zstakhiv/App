@@ -8,25 +8,24 @@ namespace EPlast.ViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Поле Імейл є обов'язковим")]
         [EmailAddress]
-        //тут добавляти патерни
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле Пароль є обов'язковим")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле Повторення Пароля є обов'язковим")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        [Compare("Password", ErrorMessage = "Паролі не співпадають")]
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле Імя є обов'язковим")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле Прізвище є обов'язковим")]
         public string SurName { get; set; }
     }
 }
