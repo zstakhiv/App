@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using EPlast.BussinessLayer.Interfaces;
+using System.Web;
 
 namespace EPlast.Controllers
 {
@@ -88,7 +89,7 @@ namespace EPlast.Controllers
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та букви");
+                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
                     return View("LoginAndRegister");
                 }
                 else
@@ -100,8 +101,8 @@ namespace EPlast.Controllers
                         new { code = code, userId = user.Id },
                         protocol: HttpContext.Request.Scheme);
 
-                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердьте вашу реєстрацію",
-                        $"Підтвердіть реєстрацію, перейшовши по силці :  <a href='{confirmationLink}'>тут</a> ");
+                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
 
                     return View("AcceptingEmail");
                 }
@@ -135,14 +136,14 @@ namespace EPlast.Controllers
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
                 if(user == null)
                 {
-                    ModelState.AddModelError("", "Ви не зареєструвались, або не підтвердили свою електронну пошту");
+                    ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
                     return View("LoginAndRegister");
                 }
                 else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
-                        ModelState.AddModelError("", "Ви не підтвердили свою електронну пошту, будь ласка увійдіть та зробіть підтвердження");
+                        ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
                         return View("LoginAndRegister");
                     }
                 }
@@ -328,6 +329,74 @@ namespace EPlast.Controllers
             {
                 _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View("ForgotPassword");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotpasswordVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію"); 
+                    return View("ForgotPassword");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action(
+                    nameof(ResetPassword), 
+                    "Account", 
+                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
+                    protocol: HttpContext.Request.Scheme);
+                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                return View("ForgotPasswordConfirmation");
+            }
+            return View("ForgotPassword");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View("ResetPassword");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetpasswordVM);
+            }
+            var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
+                return View("ResetPassword");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
+            if (result.Succeeded)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
+                return View("ResetPassword");
             }
         }
     }
