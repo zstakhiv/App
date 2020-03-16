@@ -89,7 +89,6 @@ namespace EPlast
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStatusCodePages();
             app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
             app.UseStaticFiles();
             app.UseDefaultFiles();
