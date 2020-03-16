@@ -17,6 +17,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using EPlast.BussinessLayer.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Drawing;
 
 namespace EPlast.Controllers
 {
@@ -28,16 +32,21 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly ILogger _logger;
         private readonly IEmailConfirmation _emailConfirmation;
+        private readonly IHostingEnvironment _env;
+        
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IRepositoryWrapper repoWrapper,
-            ILogger<AccountController> logger, IEmailConfirmation emailConfirmation)
+            ILogger<AccountController> logger,
+            IEmailConfirmation emailConfirmation,
+            IHostingEnvironment env)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _repoWrapper = repoWrapper;
             _emailConfirmation = emailConfirmation;
+            _env = env;
         }
 
         [HttpGet]
@@ -98,6 +107,7 @@ namespace EPlast.Controllers
                 UserName = registerVM.Name,
                 LastName = registerVM.SurName,
                 FirstName = registerVM.Name,
+                ImagePath = "default.png",
                 UserProfile = new UserProfile()
             };
             var result = await _userManager.CreateAsync(user, registerVM.Password);
@@ -191,7 +201,7 @@ namespace EPlast.Controllers
             try
             {
                 var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == id).
+                FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
@@ -223,82 +233,107 @@ namespace EPlast.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult EditConfirmed(UserViewModel userVM)
+        public IActionResult Edit(UserViewModel model, IFormFile file)
         {
             try
             {
-                if (userVM.User.UserProfile.Nationality.ID == 0)
+                var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
+                if (file != null && file.Length > 0)
                 {
-                    string name = userVM.User.UserProfile.Nationality.Name;
+
+                    var img = Image.FromStream(file.OpenReadStream());
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Users");
+                    if (!string.IsNullOrEmpty(oldImageName) && !string.Equals(oldImageName,"default.png"))
+                    {
+                        var oldPath = Path.Combine(uploads, oldImageName);
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            System.IO.File.Delete(oldPath);
+                        }
+                    }
+
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    img.Save(filePath);
+                    model.User.ImagePath = fileName;
+                }
+                else
+                {
+                    model.User.ImagePath = oldImageName;
+                }
+
+                if (model.User.UserProfile.Nationality.ID == 0)
+                {
+                    string name = model.User.UserProfile.Nationality.Name;
                     if(string.IsNullOrEmpty(name))
                     {
-                        userVM.User.UserProfile.Nationality = null;
+                        model.User.UserProfile.Nationality = null;
                     }
                     else
                     {
-                        userVM.User.UserProfile.Nationality = new Nationality() { Name = name };
+                        model.User.UserProfile.Nationality = new Nationality() { Name = name };
                     }
                 }
 
-                if (userVM.User.UserProfile.Religion.ID == 0)
+                if (model.User.UserProfile.Religion.ID == 0)
                 {
-                    string name = userVM.User.UserProfile.Religion.Name;
+                    string name = model.User.UserProfile.Religion.Name;
                     if(string.IsNullOrEmpty(name))
                     {
-                        userVM.User.UserProfile.Religion = null;
+                        model.User.UserProfile.Religion = null;
                     }
                     else
                     {
-                        userVM.User.UserProfile.Religion = new Religion() { Name = name };
+                        model.User.UserProfile.Religion = new Religion() { Name = name };
                     }
                 }
 
-                Degree degree = userVM.User.UserProfile.Education.Degree;
-                if (userVM.User.UserProfile.Education.Degree.ID == 0)
+                Degree degree = model.User.UserProfile.Education.Degree;
+                if (model.User.UserProfile.Education.Degree.ID == 0)
                 {
-                    string name = userVM.User.UserProfile.Education.Degree.Name;
+                    string name = model.User.UserProfile.Education.Degree.Name;
                     if (string.IsNullOrEmpty(name))
                     {
-                        userVM.User.UserProfile.Education.Degree = null;
+                        model.User.UserProfile.Education.Degree = null;
                     }
                     else
                     {
-                        userVM.User.UserProfile.Education.Degree = new Degree() { Name = name };
+                        model.User.UserProfile.Education.Degree = new Degree() { Name = name };
                     }
                 }
 
-                if (userVM.User.UserProfile.Education.ID == 0)
+                if (model.User.UserProfile.Education.ID == 0)
                 {
-                    string placeOfStudy = userVM.User.UserProfile.Education.PlaceOfStudy;
-                    string speciality = userVM.User.UserProfile.Education.Speciality;
+                    string placeOfStudy = model.User.UserProfile.Education.PlaceOfStudy;
+                    string speciality = model.User.UserProfile.Education.Speciality;
                     if (string.IsNullOrEmpty(placeOfStudy) || string.IsNullOrEmpty(speciality))
                     {
-                        userVM.User.UserProfile.Education = null;
+                        model.User.UserProfile.Education = null;
                     }
                     else
                     {
-                        userVM.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
+                        model.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
                     }
                 }
 
-                if (userVM.User.UserProfile.Work.ID == 0)
+                if (model.User.UserProfile.Work.ID == 0)
                 {
-                    string placeOfWork = userVM.User.UserProfile.Work.PlaceOfwork;
-                    string position = userVM.User.UserProfile.Work.Position;
+                    string placeOfWork = model.User.UserProfile.Work.PlaceOfwork;
+                    string position = model.User.UserProfile.Work.Position;
                     if (string.IsNullOrEmpty(placeOfWork) || string.IsNullOrEmpty(position))
                     {
-                        userVM.User.UserProfile.Work = null;
+                        model.User.UserProfile.Work = null;
                     }
                     else
                     {
-                        userVM.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
+                        model.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
                     }
                 }
 
-                _repoWrapper.UserProfile.Update(userVM.User.UserProfile);
-                _repoWrapper.User.Update(userVM.User);
+                _repoWrapper.UserProfile.Update(model.User.UserProfile);
+                _repoWrapper.User.Update(model.User);
                 _repoWrapper.Save();
-                _logger.LogInformation("User {0} {1} was edited profile and saved in the database", userVM.User.FirstName, userVM.User.LastName);
+                _logger.LogInformation("User {0} {1} was edited profile and saved in the database", model.User.FirstName, model.User.LastName);
                 return RedirectToAction("UserProfile");
             }
             catch (Exception e)

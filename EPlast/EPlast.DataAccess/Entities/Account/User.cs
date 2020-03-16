@@ -17,6 +17,7 @@ namespace EPlast.DataAccess.Entities
         [Required, MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
+        public string ImagePath { get; set; }
         public UserProfile UserProfile { get; set; }
         public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
         public ICollection<Approver> Approvers { get; set; }

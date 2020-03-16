@@ -44,7 +44,16 @@
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
                         </ul>
                         <div class="profile">
-                            <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
+                                This "If" will be deleted in the future*@
+                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            {
+                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            }
+                            else
+                            {
+                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            }
 
                             @Html.Partial("_LoginPartial")
                         </div>
@@ -56,7 +65,16 @@
                 <div class="sidebar">
                     <div class="back-pic">
                         <div class="back-pic-inner">
-                            <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
+                                This "If" will be deleted in the future*@
+                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            {
+                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            }
+                            else
+                            {
+                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            }
                         </div>
                     </div>
 
