@@ -16,7 +16,7 @@ namespace EPlast.DataAccess.Entities
         public string LastName { get; set; }
 
         [Display(Name = "По-батькові")]
-        [Required, MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
+        [MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
         public string ImagePath { get; set; }
