@@ -8,7 +8,7 @@
     {
         <div class="d-flex">
             <div class="btn navbar-btn text-light">
-                Привіт @UserManager.GetUserName(User)
+                <a class="text-light" asp-action="UserProfile" asp-controller="Account">Привіт @UserManager.GetUserName(User)</a>
             </div>
             <div>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link text-light">Вийти з акаунта</button>
