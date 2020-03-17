@@ -73,7 +73,6 @@ namespace EPlast.DataAccess
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }
         public DbSet<MembersStatistic> MembersStatistics { get; set; }
-        public DbSet<AnnualReportStatus> AnnualReportStatuses { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<CityAdministration> CityAdministrations { get; set; }
         public DbSet<CityDocuments> CityDocuments { get; set; }

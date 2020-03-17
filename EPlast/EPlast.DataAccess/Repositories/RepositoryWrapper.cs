@@ -42,7 +42,6 @@ namespace EPlast.DataAccess.Repositories
         private IRegionRepository _region;
         private IRegionAdministrationRepository _regionAdministration;
         private IAnnualReportsRepository _annualReports;
-        private IAnnualReportStatusesRepository _annualReportStatuses;
         private IMembersStatisticsRepository _membersStatistics;
         private ICityLegalStatusesRepository _cityLegalStatuses;
         private ICityLegalStatusTypesRepository _cityLegalStatusTypes;
@@ -518,18 +517,6 @@ namespace EPlast.DataAccess.Repositories
                     _annualReports = new AnnualReportsRepository(_dbContext);
                 }
                 return _annualReports;
-            }
-        }
-
-        public IAnnualReportStatusesRepository AnnualReportStatuses
-        {
-            get
-            {
-                if (_annualReportStatuses == null)
-                {
-                    _annualReportStatuses = new AnnualReportStatusesRepository(_dbContext);
-                }
-                return _annualReportStatuses;
             }
         }
 
