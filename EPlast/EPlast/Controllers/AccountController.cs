@@ -129,6 +129,31 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string returnUrl)
+        {
+            LoginViewModel model = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            return View(model);
+        } 
+
+
+
+
+
+
+
+
+
+
+
+
+
         public async Task<IActionResult> Logging(LoginViewModel loginVM)
         {
             if (ModelState.IsValid)
