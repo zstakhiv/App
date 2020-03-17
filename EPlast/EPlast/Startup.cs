@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using EPlast.ViewModels.Initialization;
 using EPlast.ViewModels.Initialization.Interfaces;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace EPlast
 {
@@ -36,6 +38,8 @@ namespace EPlast
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
+
+           
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -75,11 +79,52 @@ namespace EPlast
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/LoginAndRegister";
             });
+             
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var roles = new[] { "Admin" ,"UnApprovedUser","ApprovedUser"};
+            foreach (var role in roles)
+            {
+                if (!(await roleManager.RoleExistsAsync(role)))
+                {
+                    var idRole = new IdentityRole
+                    {
+                        Name = role
+                    };
+                    var res = await roleManager.CreateAsync(idRole);
+                }
+            }
+
+            var profile = new User
+            {
+                Email = "volodymyr33929@gmail.com",
+                UserName = "volodymyr33929@gmail.com",
+                FirstName = "EPlast",
+                LastName = "Admin",
+                EmailConfirmed = true,
+                ImagePath = "default.png",
+                UserProfile =new UserProfile()
+            };
+            if (await userManager.FindByEmailAsync("volodymyr33929@gmail.com") == null)
+            {
+                var res = await userManager.CreateAsync(profile, "Aa12345.");
+                if (res.Succeeded)
+                    await userManager.AddToRoleAsync(profile, "Admin");
+            }
+            else
+            {
+                var user = userManager.Users.First(item => item.Email == profile.Email);
+                await userManager.AddToRoleAsync(user, "Admin");
+            }
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
         {
             if (env.IsDevelopment())
             {
@@ -101,6 +146,7 @@ namespace EPlast
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            CreateRoles(services).Wait();
         }
     }
 }

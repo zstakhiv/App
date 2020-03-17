@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<IdentityUser>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser, IdentityRole,string>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {

@@ -133,8 +133,15 @@ namespace EPlast.Controllers
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
+
             if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "UnApprovedUser");
+                await _userManager.AddToRoleAsync(user, "ApprovedUser");
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("ConfirmedEmail", "Account");
+            }
+                
             else
                 return View("Error");
         }
