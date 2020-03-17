@@ -69,6 +69,17 @@ namespace EPlast
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
             });
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "484153862512-aru7mov0pns1oa46bmhi7kb6vs5734l4.apps.googleusercontent.com";
+                    options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
+                });
+
+
+
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
