@@ -129,7 +129,6 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
@@ -142,17 +141,15 @@ namespace EPlast.Controllers
             return View(model);
         } 
 
-
-
-
-
-
-
-
-
-
-
-
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
 
         public async Task<IActionResult> Logging(LoginViewModel loginVM)
         {

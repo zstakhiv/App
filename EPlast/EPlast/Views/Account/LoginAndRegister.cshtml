@@ -53,21 +53,18 @@
                     {
                         <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.Item1.ReturnUrl">
                             <div>
-                                @foreach(var provider in Model.Item1.ExternalLogins)
+                                @foreach (var provider in Model.Item1.ExternalLogins)
                                 {
                                     <button type="submit" class="btn btn-primary"
                                             name="provider" value="@provider.Name"
                                             title="Login using your @provider.DisplayName account">
-                                        @provider.DisplayName
+                                        @provider.
                                     </button>
                                 }
                             </div>
                         </form>
+                        }
                     }
-
-
-
-                }
                 <!--<button type="button" class="btn btn-fb"><i class="fab fa-facebook-f pr-1"></i> Facebook</button>
     <button type="button" class="btn btn-gplus"><i class="fab fa-google-plus-g pr-1"></i> Google +</button>-->
             </div>
