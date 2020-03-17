@@ -1,0 +1,59 @@
+﻿@using EPlast.DataAccess.Repositories;
+@inject IRepositoryWrapper _repoWrapper
+@{
+    ViewData["Title"] = "Таблиця корустувачів";
+}
+<div class="container">
+    <div class="data-table-wrapper">
+        <table id="dtReadRaport" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th class="th-sm">
+                        Прізвище
+                    </th>
+                    <th class="th-sm">
+                        Ім'я
+                    </th>
+                    <th class="th-sm">
+                        Стать
+                    </th>
+                    <th class="th-sm">
+                        Ступінь
+                    </th>
+                    <th class="th-sm">
+                        Email
+                    </th>
+                    <th class="th-sm">
+                        Округа
+                    </th>
+                    <th class="th-sm">
+                        Станиця
+                    </th>
+                    <th class="th-sm">
+                        Куріть
+                    </th>
+                    <th class="th-sm">
+                        Права доступу EPlast
+                    </th>
+                    <th class="th-sm">
+                        Тип членства
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @*@foreach (var item in Model)
+                    {
+                        <tr class="raport-click-row">
+                            <td>@item.Decesion.ID</td>
+                            <td>@item.Decesion.Organization.OrganizationName</td>
+                            <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
+                            <td>@item.Decesion.DecesionTarget.TargetName</td>
+                            <td>@item.Decesion.Description</td>
+                            <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
+                            <td></td>
+                        </tr>
+                    }*@
+            </tbody>
+        </table>
+    </div>
+</div>

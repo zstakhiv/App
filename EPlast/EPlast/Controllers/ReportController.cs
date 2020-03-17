@@ -62,6 +62,11 @@ namespace EPlast.Controllers
             return View(decesions);
         }
 
+        public IActionResult UsersTable()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
