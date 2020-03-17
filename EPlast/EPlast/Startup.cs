@@ -56,7 +56,7 @@ namespace EPlast
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
-
+            services.AddScoped<IPDFService, PDFService>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
@@ -75,7 +75,6 @@ namespace EPlast
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/LoginAndRegister";
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

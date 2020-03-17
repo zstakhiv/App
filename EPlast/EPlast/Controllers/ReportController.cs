@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using EPlast.BussinessLayer.Interfaces;
 
 namespace EPlast.Controllers
 {
@@ -17,12 +18,16 @@ namespace EPlast.Controllers
         private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
         private readonly UserManager<User> _userManager;
+        private readonly IPDFService _PDFService;
 
-        public ReportController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator)
+        public ReportController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
+            IPDFService PDFService)
+
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
             _userManager = userManager;
+            _PDFService = PDFService;
         }
 
         public IActionResult Index()
@@ -60,8 +65,7 @@ namespace EPlast.Controllers
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            BussinessLayer.PDFService PDFService = new BussinessLayer.PDFService();
-            byte[] arr = await PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
+            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
                                                                                        x => x.DecesionTarget,
                                                                                        x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
             return File(arr, "application/pdf");
