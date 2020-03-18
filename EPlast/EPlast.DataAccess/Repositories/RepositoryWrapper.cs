@@ -45,7 +45,6 @@ namespace EPlast.DataAccess.Repositories
         private IMembersStatisticsRepository _membersStatistics;
         private ICityLegalStatusesRepository _cityLegalStatuses;
         private IUserPlastDegreesRepository _userPlastDegrees;
-        private IUserPlastDegreeTypesRepository _userPlastDegreeTypes;
 
         public IDecesionRepository Decesion
         {
@@ -552,18 +551,6 @@ namespace EPlast.DataAccess.Repositories
                     _userPlastDegrees = new UserPlastDegreesRepository(_dbContext);
                 }
                 return _userPlastDegrees;
-            }
-        }
-
-        public IUserPlastDegreeTypesRepository UserPlastDegreeTypes
-        {
-            get
-            {
-                if (_userPlastDegreeTypes == null)
-                {
-                    _userPlastDegreeTypes = new UserPlastDegreeTypesRepository(_dbContext);
-                }
-                return _userPlastDegreeTypes;
             }
         }
 

@@ -87,6 +87,5 @@ namespace EPlast.DataAccess
         public DbSet<RegionAdministration> RegionAdministrations { get; set; }
         public DbSet<CityLegalStatus> CityLegalStatuses { get; set; }
         public DbSet<UserPlastDegree> UserPlastDegrees { get; set; }
-        public DbSet<UserPlastDegreeType> UserPlastDegreeTypes { get; set; }
     }
 }

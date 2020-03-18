@@ -38,7 +38,7 @@ namespace EPlast.ViewModels.Initialization
             return cityLegalStatusTypesSLI;
         }
 
-        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers, IEnumerable<UserPlastDegreeType> userPlastDegreeTypes)
+        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers)
         {
             return new AnnualReport
             {
@@ -47,22 +47,22 @@ namespace EPlast.ViewModels.Initialization
                     NumberOfSeniorPlastynSupporters = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null 
-                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "старший пластун прихильник").Id))
+                            && upd.UserPlastDegreeType == UserPlastDegreeType.SeniorPlastynSupporter))
                         .Count(),
                     NumberOfSeniorPlastynMembers = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
-                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "старший пластун").Id))
+                            && upd.UserPlastDegreeType == UserPlastDegreeType.SeniorPlastynMember))
                         .Count(),
                     NumberOfSeigneurSupporters = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
-                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "сеньйор пластун прихильник").Id))
+                            && upd.UserPlastDegreeType == UserPlastDegreeType.SeigneurSupporter))
                         .Count(),
                     NumberOfSeigneurMembers = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
-                            && upd.UserPlastDegreeTypeId == userPlastDegreeTypes.FirstOrDefault(updt => updt.Name == "сеньйор пластун").Id))
+                            && upd.UserPlastDegreeType == UserPlastDegreeType.SeigneurMember))
                         .Count(),
                 }
             };
