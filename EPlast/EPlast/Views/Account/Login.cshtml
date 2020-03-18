@@ -18,15 +18,16 @@
             </div>
         </div>
         <form method="post" class="login-form" asp-action="Login" asp-controller="Account">
+            <div class="validation" asp-validation-summary="ModelOnly" style="color:#db0b3c;"></div>
             <div class="form-group">
                 <input asp-for="@Model.Email" class="form-control" type="email" name="Email"
                        placeholder="Електронна пошта" />
-                <span asp-validation-for="@Model.Email" />
+                <span asp-validation-for="@Model.Email" style="color:#db0b3c;" />
             </div>
             <div class="form-group">
                 <input asp-for="@Model.Password" class="form-control" type="password" name="Password"
                        placeholder="Пароль" />
-                <span asp-validation-for="@Model.Password" />
+                <span asp-validation-for="@Model.Password" style="color:#db0b3c;" />
             </div>
             <div class="form-group d-flex">
                 <input asp-for="@Model.RememberMe" type="checkbox" class="form-control" name="RememberMe" style="width:25px; height:25px;" />
