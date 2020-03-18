@@ -145,74 +145,6 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult ExternalLogin(string provider, string returnUrl)
-        {
-            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
-                new { ReturnUrl = returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return new ChallengeResult(provider, properties);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            LoginViewModel loginViewModel = new LoginViewModel
-            {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
-
-            if(remoteError != null)
-            {
-                ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
-                return View("Login");
-            }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                ModelState.AddModelError(string.Empty, "Error loading external login information");
-                return View("Login", loginViewModel);
-            }
-
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            if (signInResult.Succeeded)
-            {
-                return LocalRedirect("/Account/UserProfile");
-            }
-            else
-            {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if(email != null)
-                {
-                    var user = await _userManager.FindByEmailAsync(email);
-
-                    if(user == null)
-                    {
-                        user = new User
-                        {
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            ImagePath = "default.png",
-                            UserProfile = new UserProfile()
-                        };
-                        await _userManager.CreateAsync(user);
-                    }
-                    await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    return LocalRedirect("/Account/UserProfile");
-                }
-                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
-                return View("Error");
-            }
-        }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
@@ -229,7 +161,7 @@ namespace EPlast.Controllers
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
-                        return View("Login");
+                        return View("Login", loginVM);
                     }
                 }
 
@@ -504,6 +436,74 @@ namespace EPlast.Controllers
             {
                 ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
                 return View("ResetPassword");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
+                return View("Login");
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information");
+                return View("Login", loginViewModel);
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect("/Account/UserProfile");
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            ImagePath = "default.png",
+                            UserProfile = new UserProfile()
+                        };
+                        await _userManager.CreateAsync(user);
+                    }
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect("/Account/UserProfile");
+                }
+                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
+                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
+
+                return View("Error");
             }
         }
     }
