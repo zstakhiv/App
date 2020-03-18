@@ -17,13 +17,13 @@
                 </div>
             </div>
         </div>
-        <form method="post" class="register-form" asp-action="Registration" asp-controller="Account">
-            <div class="validation" asp-validation-summary="All" style="font-size:15px; color:red;"></div>
+        <form method="post" class="register-form" asp-action="Register" asp-controller="Account">
+            <!--<div class="validation" asp-validation-summary="All" style="font-size:15px; color:red;"></div>-->
             <h2 class="sr-only">Registration Form</h2>
             <div class="form-group">
                 <input asp-for="@Model.Email" class="form-control" type="email" name="Email"
                        placeholder="Електронна пошта">
-                <span asp-validation-for="@Model.Email" />
+                <span asp-validation-for="@Model.Email"/>
             </div>
             <div class="form-group">
                 <input asp-for="@Model.Password" class="form-control" type="password" name="Password"
