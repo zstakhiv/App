@@ -52,9 +52,14 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View();
+            LoginViewModel model = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            return View(model);
         }
 
         [HttpGet]
@@ -140,18 +145,6 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl)
-        {
-            LoginViewModel model = new LoginViewModel
-            {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
-            return View(model);
-        } 
-
         [AllowAnonymous]
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
@@ -165,7 +158,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~");
+            returnUrl = returnUrl ?? Url.Content("~/");
             LoginViewModel loginViewModel = new LoginViewModel
             {
                 ReturnUrl = returnUrl,
@@ -175,19 +168,20 @@ namespace EPlast.Controllers
             if(remoteError != null)
             {
                 ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
-                return View("LoginAndRegister");
+                return View("Login");
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            if(info == null)
+            if (info == null)
             {
                 ModelState.AddModelError(string.Empty, "Error loading external login information");
-                return View("LoginAndRegister", loginViewModel);
+                return View("Login", loginViewModel);
             }
+
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
                 info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (signInResult.Succeeded)
             {
-                return LocalRedirect(returnUrl);
+                return LocalRedirect("/Account/UserProfile");
             }
             else
             {
@@ -201,16 +195,16 @@ namespace EPlast.Controllers
                         user = new User
                         {
                             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            ImagePath = "default.png",
+                            UserProfile = new UserProfile()
                         };
                         await _userManager.CreateAsync(user);
                     }
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect("/Account/UserProfile");
                 }
                 ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
                 ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
@@ -219,24 +213,8 @@ namespace EPlast.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public async Task<IActionResult> Logging(LoginViewModel loginVM)
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
             if (ModelState.IsValid)
             {

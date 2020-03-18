@@ -77,9 +77,6 @@ namespace EPlast
                     options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
                 });
 
-
-
-
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;

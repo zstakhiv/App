@@ -41,11 +41,32 @@
                 </button>
             </div>
             <a class="forgot" asp-action="ForgotPassword" asp-controller="Account" style="font-size:16px;">Забули пароль?</a>
-            <div class="form-network">
-                <button type="button" class="btn btn-fb"><i class="fab fa-facebook-f pr-1"></i> Facebook</button>
-                <button type="button" class="btn btn-gplus"><i class="fab fa-google-plus-g pr-1"></i> Google +</button>
-            </div>
         </form>
+        <div class="col-md-5">
+            <h3>Hello lala lala</h3>
+            @{
+                if (Model.ExternalLogins.Count == 0)
+                {
+                    <div>No external logins</div>
+                }
+                else
+                {
+                    <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
+                        <!--<div class="form-network">
+                        <button type="submit" class="btn btn-gplus"><i class="fab fa-google-plus-g pr-1"></i> Google +</button>
+                                           </div>-->
+                        <div>
+                            @foreach(var provider in Model.ExternalLogins)
+                            {
+                                <button style="width:100px;height:30px;" type="submit" class="btn btn-primary"
+                                        name="provider" value="@provider.Name"
+                                        title="Login using your @provider.DisplayName">Google</button>
+                            }
+                        </div>
+                    </form>
+                }
+            }
+        </div>
     </div>
 </div>
 
