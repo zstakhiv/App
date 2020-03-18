@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Account\LoginAndRegister.cshtml" />
     <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
     <Content Remove="wwwroot\uncompiled\ts\raport.ts" />
