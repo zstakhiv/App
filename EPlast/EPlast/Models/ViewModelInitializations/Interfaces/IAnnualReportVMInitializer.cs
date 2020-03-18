@@ -2,7 +2,7 @@
 using EPlast.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace EPlast.ViewModels.Initialization.Interfaces
+namespace EPlast.Models.ViewModelInitializations.Interfaces
 {
     public interface IAnnualReportVMInitializer
     {

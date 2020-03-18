@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EPlast.DataAccess.Entities;
 using EPlast.BussinessLayer.ExtensionMethods;
-using EPlast.ViewModels.Initialization.Interfaces;
+using EPlast.Models.ViewModelInitializations.Interfaces;
 
-namespace EPlast.ViewModels.Initialization
+namespace EPlast.Models.ViewModelInitializations
 {
     public class AnnualReportVMInitializer : IAnnualReportVMInitializer
     {
