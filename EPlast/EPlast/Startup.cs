@@ -75,6 +75,11 @@ namespace EPlast
                 {
                     options.ClientId = "484153862512-aru7mov0pns1oa46bmhi7kb6vs5734l4.apps.googleusercontent.com";
                     options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = "841088023074581";
+                    options.AppSecret = "f030e810406f6052f6770c66a25c82d3";
                 });
 
             services.ConfigureApplicationCookie(options =>

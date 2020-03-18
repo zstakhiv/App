@@ -42,29 +42,17 @@
             </div>
             <a class="forgot" asp-action="ForgotPassword" asp-controller="Account" style="font-size:16px;">Забули пароль?</a>
         </form>
-        <div class="col-md-6">
-            @{
-                if (Model.ExternalLogins.Count == 0)
-                {
-                    <div></div>
-                }
-                else
-                {
-                    <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
-                        <div class="d-flex">
-                            @foreach (var provider in Model.ExternalLogins)
-                            {
-                                <button type="submit" class="loginBtn loginBtn--google" value="@provider.Name" name="provider">
-                                    Google
-                                </button>
-                                <button type="submit" class="loginBtn loginBtn--facebook" value="@provider.Name" name="provider">
-                                    Facebook
-                                </button>
-                            }
-                        </div>
-                    </form>
-                }
-            }
+        <div class="login-buttons">
+            <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div class="d-flex loginBtn-container">
+                        <button type="submit" class="loginBtn loginBtn--google" value="@Model.ExternalLogins[0].Name" name="provider">
+                            Google
+                        </button>
+                        <button type="submit" class="loginBtn loginBtn--facebook" value="@Model.ExternalLogins[1].Name" name="provider">
+                            Facebook
+                        </button>
+                    </div>
+            </form>
         </div>
     </div>
 </div>
