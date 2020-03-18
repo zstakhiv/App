@@ -40,32 +40,34 @@ namespace EPlast.Models.ViewModelInitializations
 
         public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers)
         {
-            return new AnnualReport
+            var membersStatistic = new MembersStatistic
             {
-                MembersStatistic = new MembersStatistic
-                {
-                    NumberOfSeniorPlastynSupporters = cityMembers
+                NumberOfSeniorPlastynSupporters = cityMembers
                         .ToList()
-                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null 
+                        .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
                             && upd.UserPlastDegreeType == UserPlastDegreeType.SeniorPlastynSupporter))
                         .Count(),
-                    NumberOfSeniorPlastynMembers = cityMembers
+                NumberOfSeniorPlastynMembers = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
                             && upd.UserPlastDegreeType == UserPlastDegreeType.SeniorPlastynMember))
                         .Count(),
-                    NumberOfSeigneurSupporters = cityMembers
+                NumberOfSeigneurSupporters = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
                             && upd.UserPlastDegreeType == UserPlastDegreeType.SeigneurSupporter))
                         .Count(),
-                    NumberOfSeigneurMembers = cityMembers
+                NumberOfSeigneurMembers = cityMembers
                         .ToList()
                         .Where(cm => cm.UserPlastDegrees.Any(upd => upd.DateFinish == null
                             && upd.UserPlastDegreeType == UserPlastDegreeType.SeigneurMember))
                         .Count(),
-                }
             };
+            var annualReport = new AnnualReport
+            {
+                MembersStatistic = membersStatistic
+            };
+            return annualReport;
         }
     }
 }

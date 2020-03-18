@@ -1,24 +1,25 @@
-﻿using EPlast.DataAccess.Entities;
-using EPlast.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EPlast.Models.ViewModelInitializations.Interfaces;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using EPlast.ViewModels;
+using EPlast.DataAccess.Entities;
+using EPlast.DataAccess.Repositories;
+using EPlast.Models.ViewModelInitializations.Interfaces;
 
 namespace EPlast.Controllers
 {
     public class ReportController : Controller
     {
-        private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
+        private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
         private readonly UserManager<User> _userManager;
 
-        public ReportController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator)
+        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator)
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
@@ -85,13 +86,14 @@ namespace EPlast.Controllers
                 var cityMembers = _repoWrapper.User
                     .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                     .Include(u => u.UserPlastDegrees);
-                return View(new AnnualReportViewModel
+                var annualReportViewModel = new AnnualReportViewModel
                 {
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
                     CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                     AnnualReport = _annualReportVMCreator.GetAnnualReport(cityMembers)
-                });
+                };
+                return View(annualReportViewModel);
             }
             catch
             {
@@ -133,16 +135,17 @@ namespace EPlast.Controllers
                     var cityMembers = _repoWrapper.User
                         .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                         .Include(u => u.UserPlastDegrees);
-                    return View(new AnnualReportViewModel
+                    var annualReportViewModel = new AnnualReportViewModel
                     {
                         CityName = city.Name,
                         CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
                         CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                         AnnualReport = annualReport
-                    });
+                    };
+                    return View(annualReportViewModel);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return RedirectToAction("HandleError", "Error");
             }
