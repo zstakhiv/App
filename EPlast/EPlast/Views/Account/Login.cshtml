@@ -1,0 +1,56 @@
+﻿@using EPlast.ViewModels;
+@model LoginViewModel
+
+<div class="login-clean" style="background-color: rgb(245, 245, 245);">
+    <div class="form">
+        <div class="login-register-switcher">
+            <div class="login-rectangle">
+                <div class="switcher-text login-active">
+                    <a class="login-text">Увійти</a>
+                    <a class="register-text" asp-action="Register" asp-controller="Account">Зареєструватись</a>
+                    <div class="active-rectangle"></div>
+                </div>
+            </div>
+            <div class="circle-wrapper">
+                <div class="login-circle">
+                    <p>АБО</p>
+                </div>
+            </div>
+        </div>
+        <form method="post" class="login-form" asp-action="Logging" asp-controller="Account">
+            <div class="validation" asp-validation-summary="All" style="font-size:15px; color:red;"></div>
+            <h2 class="sr-only">Login Form</h2>
+            <div class="illustration"><i class="icon ion-ios-navigate" style="color: #3c5438;"></i></div>
+            <div class="form-group">
+                <input asp-for="@Model.Email" class="form-control" type="email" name="Email"
+                       placeholder="Електронна пошта" />
+                <span asp-validation-for="@Model.Email" />
+            </div>
+            <div class="form-group">
+                <input asp-for="@Model.RememberMe" class="form-control" type="password" name="Password"
+                       placeholder="Пароль" />
+                <span asp-validation-for="@Model.RememberMe" />
+            </div>
+            <div class="form-group d-flex">
+                <input asp-for="@Model.RememberMe" type="checkbox" class="form-control" name="RememberMe" style="width:25px; height:25px;" />
+                <label style="margin-left:15px;">Запамятати мене</label>
+                <span asp-validation-for="@Model.RememberMe" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-block text-light" type="submit"
+                        style="background-color: #3c5438">
+                    Увійти
+                </button>
+            </div>
+            <a class="forgot" href="/Account/ForgotPassword" style="font-size:16px;">Забули пароль?</a>
+            <div class="form-network">
+                <button type="button" class="btn btn-fb"><i class="fab fa-facebook-f pr-1"></i> Facebook</button>
+                <button type="button" class="btn btn-gplus"><i class="fab fa-google-plus-g pr-1"></i> Google +</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

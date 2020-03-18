@@ -57,7 +57,13 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoginAndRegister()
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
         {
             return View();
         }
@@ -69,7 +75,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Registration(RegisterViewModel registerVM)
+        public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid)
             {
@@ -139,7 +145,7 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-        public async Task<IActionResult> Logging(LoginViewModel loginVM)
+        public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
             if (ModelState.IsValid)
             {
