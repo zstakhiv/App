@@ -18,7 +18,7 @@
                 <div class="col">
                     <div class="form-group p-3 m-2 border shadow-sm">
                         <h4>Правовий статус осередку</h4>
-                        @Html.DropDownListFor(x => x.CityLegalStatus.CityLegalStatusTypeId, Model.CityLegalStatusTypes, new { @class = "form-control" })
+                        @Html.DropDownListFor(x => x.CityLegalStatus.LegalStatusType, Model.CityLegalStatusTypes, new { @class = "form-control" })
                     </div>
                 </div>
             </div>

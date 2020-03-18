@@ -7,7 +7,7 @@ namespace EPlast.ViewModels.Initialization.Interfaces
     public interface IAnnualReportVMInitializer
     {
         IEnumerable<SelectListItem> GetCityMembers(IEnumerable<User> cityMembers);
-        IEnumerable<SelectListItem> GetCityLegalStatusTypes(IEnumerable<CityLegalStatusType> cityLegalStatusTypes);
+        IEnumerable<SelectListItem> GetCityLegalStatusTypes();
         AnnualReport GetAnnualReport(IEnumerable<User> cityMember, IEnumerable<UserPlastDegreeType> userPlastDegreeTypes);
     }
 }

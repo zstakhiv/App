@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using EPlast.DataAccess.Entities;
+using EPlast.BussinessLayer.ExtensionMethods;
 using EPlast.ViewModels.Initialization.Interfaces;
 
 namespace EPlast.ViewModels.Initialization
@@ -22,16 +24,16 @@ namespace EPlast.ViewModels.Initialization
             return users;
         }
 
-        public IEnumerable<SelectListItem> GetCityLegalStatusTypes(IEnumerable<CityLegalStatusType> cityLegalStatusTypes)
+        public IEnumerable<SelectListItem> GetCityLegalStatusTypes()
         {
             var cityLegalStatusTypesSLI = new List<SelectListItem>();
-            foreach (var cityLegalStatusType in cityLegalStatusTypes)
+            foreach (Enum cityLegalStausType in Enum.GetValues(typeof(CityLegalStatusType)))
             {
                 cityLegalStatusTypesSLI.Add(new SelectListItem
-                    {
-                        Value = cityLegalStatusType.Id.ToString(),
-                        Text = cityLegalStatusType.Name
-                    });
+                {
+                    Value = cityLegalStausType.ToString(),
+                    Text = cityLegalStausType.GetDescription()
+                });
             }
             return cityLegalStatusTypesSLI;
         }

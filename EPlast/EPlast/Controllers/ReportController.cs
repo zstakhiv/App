@@ -85,14 +85,12 @@ namespace EPlast.Controllers
                 var cityMembers = _repoWrapper.User
                     .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                     .Include(u => u.UserPlastDegrees);
-                var cityLegalStatusTypes = _repoWrapper.CityLegalStatusTypes
-                    .FindAll();
                 var userPlastDegreeTypes = _repoWrapper.UserPlastDegreeTypes.FindAll();
                 return View(new AnnualReportViewModel
                 {
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(cityLegalStatusTypes),
+                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                     AnnualReport = _annualReportVMCreator.GetAnnualReport(cityMembers, userPlastDegreeTypes)
                 });
             }
@@ -136,13 +134,11 @@ namespace EPlast.Controllers
                     var cityMembers = _repoWrapper.User
                         .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                         .Include(u => u.UserPlastDegrees);
-                    var cityLegalStatusTypes = _repoWrapper.CityLegalStatusTypes
-                        .FindAll();
                     return View(new AnnualReportViewModel
                     {
                         CityName = city.Name,
                         CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(cityLegalStatusTypes),
+                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                         AnnualReport = annualReport
                     });
                 }
