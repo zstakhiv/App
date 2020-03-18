@@ -81,7 +81,8 @@ namespace EPlast
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
-                options.LoginPath = "/Account/LoginAndRegister";
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
             });
 
         }

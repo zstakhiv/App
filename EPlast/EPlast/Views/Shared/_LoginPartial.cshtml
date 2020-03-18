@@ -4,7 +4,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+    @using (Html.BeginForm("Logout", "Account", FormMethod.Post))
     {
         <div class="d-flex">
             <div style="margin-top:11px;">
