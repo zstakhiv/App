@@ -452,7 +452,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
             LoginViewModel loginViewModel = new LoginViewModel
             {
                 ReturnUrl = returnUrl,
@@ -475,7 +475,7 @@ namespace EPlast.Controllers
                 info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (signInResult.Succeeded)
             {
-                return LocalRedirect("/Account/UserProfile");
+                return LocalRedirect(returnUrl);
             }
             else
             {
@@ -498,7 +498,7 @@ namespace EPlast.Controllers
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    return LocalRedirect("/Account/UserProfile");
+                    return LocalRedirect(returnUrl);
                 }
                 ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
                 ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
