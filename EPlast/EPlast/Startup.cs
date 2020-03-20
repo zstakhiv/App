@@ -39,7 +39,17 @@ namespace EPlast
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
 
-           
+            services.AddAuthorization(options =>
+            {
+
+                options.AddPolicy("Admin",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Admin");
+                    });
+
+            });
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -79,7 +89,6 @@ namespace EPlast
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/LoginAndRegister";
             });
-             
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)

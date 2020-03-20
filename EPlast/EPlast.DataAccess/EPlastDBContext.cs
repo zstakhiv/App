@@ -12,6 +12,7 @@ namespace EPlast.DataAccess
         {
         }
 
+
         public DbSet<User> Users { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Nationality> Nationalities { get; set; }
@@ -30,7 +31,6 @@ namespace EPlast.DataAccess
         public DbSet<EventCategory> EventCategories { get; set; }
         public DbSet<SubEventCategory> SubEventCategories { get; set; }
         public DbSet<EventStatus> EventStatuses { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -64,6 +64,11 @@ namespace EPlast.DataAccess
                 .HasOne(x => x.User)
                 .WithMany(e => e.Events)
                 .HasForeignKey(x => x.UserID);
+
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.UserProfile)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }

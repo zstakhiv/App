@@ -14,6 +14,7 @@
         <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
         <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
         <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.css" rel="stylesheet" />
         <link href="~/bundles/css/bundle.css" rel="stylesheet" />
     </environment>
 
@@ -129,16 +130,18 @@
         @RenderBody()
     }
 
-    <environment include="Development">
+<environment include="Development">
 
-        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
-        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-        <script src="~/bundles/js/bundle-min.js"></script>
-    </environment>
+    <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+    <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
+    <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
+    <script src="~/bundles/js/bundle-min.js"></script>
+</environment>
 
     @RenderSection("Scripts", required: false)
 </body>
