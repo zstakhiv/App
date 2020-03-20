@@ -100,51 +100,52 @@
                         </div>
                     </div>
 
-                        @RenderBody()
+                    @RenderBody()
                 </div>
             </div>
         </main>
+        <main class="footter">
+            <div class="footer-dark footer-main">
+                <footer>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 item">
+                                <h3>Навігація</h3>
+                                <ul>
+                                    <li><a asp-action="Index" id="menu_admin" asp-controller="Home">Головна</a></li>
+                                    <li><a href="#">Профіль</a></li>
+                                    <li><a href="#">Календар подій</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6 col-md-3 item">
+                                <h3>Деталі</h3>
+                                <ul>
+                                    <li><a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home">Про ПЛАСТ</a></li>
+                                    <li><a asp-action="FAQ" id="menu_admin" asp-controller="Home">Часті запитання</a></li>
+                                    <li><a asp-action="Contacts" id="menu_admin" asp-controller="Home">Контакти</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 item text">
+                                <h3>ПЛАСТ</h3>
+                                <p>Це національна скаутська організація України. Метою Пласту є сприяти всебічному патріотичному вихованню і самовихованню української молоді на засадах християнської моралі.</p>
+                            </div>
 
-        <div class="footer-dark footer-main">
-            <footer>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-3 item">
-                            <h3>Навігація</h3>
-                            <ul>
-                                <li><a asp-action="Index" id="menu_admin" asp-controller="Home">Головна</a></li>
-                                <li><a href="#">Профіль</a></li>
-                                <li><a href="#">Календар подій</a></li>
-                            </ul>
+                            <div class="col item social">
+                                <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
+                                <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
+                                <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-3 item">
-                            <h3>Деталі</h3>
-                            <ul>
-                                <li><a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home">Про ПЛАСТ</a></li>
-                                <li><a asp-action="FAQ" id="menu_admin" asp-controller="Home">Часті запитання</a></li>
-                                <li><a asp-action="Contacts" id="menu_admin" asp-controller="Home">Контакти</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6 item text">
-                            <h3>ПЛАСТ</h3>
-                            <p>Це національна скаутська організація України. Метою Пласту є сприяти всебічному патріотичному вихованню і самовихованню української молоді на засадах християнської моралі.</p>
-                        </div>
-
-                        <div class="col item social">
-                            <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
-                            <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
-                            <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
-                        </div>
-                    </div>
                         <p class="copyright">ePlast © 2020</p>
-                    
-                    </div>
-            </footer>
-        </div>
 
+                    </div>
+                </footer>
+            </div>
+        </main>
     }
     else
     {
+        <main class="home-wrapper">
         <div class="homelayout">
             <nav class=" navbar homepage-navbar navbar-light navbar-expand-xl fixed-top sticky-top " style=" background-color:#3c5438; padding-top:0;padding-bottom:0;">
                 <div class="container">
@@ -164,35 +165,38 @@
                 </div>
             </nav>
         </div>
-        @RenderBody()
 
-        <div class="footer-dark footer-home">
-            <footer>
-                <div class="container">
-                    <div class="row">
-                        <div class="col item social light">
+        </main>
+        @RenderBody()
+<main class="footer">
+    <div class="footer-dark footer-home">
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col item social light">
                         <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
                         <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
-                        <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a></div>
+                        <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
                     </div>
-                    <p class="copyright">ePlast © 2020</p>
                 </div>
-            </footer>
-        </div>
-
+                <p class="copyright">ePlast © 2020</p>
+            </div>
+        </footer>
+    </div>
+</main>
     }
 
     <environment include="Development">
 
-    <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
-    <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
-    <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
-    <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
-    <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
-    <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-    <script src="~/bundles/js/bundle-min.js"></script>
-    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
-</environment>
+        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+        <script src="~/bundles/js/bundle-min.js"></script>
+        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    </environment>
 
     @RenderSection("Scripts", required: false)
 </body>
