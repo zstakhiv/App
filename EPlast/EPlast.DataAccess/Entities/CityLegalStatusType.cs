@@ -1,15 +1,22 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class CityLegalStatusType
+    public enum CityLegalStatusType
     {
-        public int Id { get; set; }
+        [Description("Зареєстрована юридична особа")]
+        RegisteredLegalEntity,
 
-        [Required]
-        public string Name { get; set; }
+        [Description("Легалізована шляхом повідомлення")]
+        LegalizedByMessage,
 
-        public ICollection<CityLegalStatus> CityLegalStatuses { get; set; }
+        [Description("Нелегалізована у місцевих органах влади")]
+        NotLegalizedInByLocalAuthorities,
+
+        [Description("В процесі легалізації/реєстрації")]
+        InTheProcessOfLegalization,
+
+        [Description("Зареєстрований відокремлений підрозділ")]
+        RegisteredSeparatedSubdivision
     }
 }

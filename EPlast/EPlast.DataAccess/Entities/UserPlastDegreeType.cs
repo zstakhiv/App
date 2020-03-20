@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class UserPlastDegreeType
+    public enum UserPlastDegreeType
     {
-        public int Id { get; set; }
+        [Description("старший пластун прихильник")]
+        SeniorPlastynSupporter,
 
-        [Required]
-        public string Name { get; set; }
+        [Description("старший пластун")]
+        SeniorPlastynMember,
 
-        public ICollection<UserPlastDegree> UserPlastDegrees { get; set; }
+        [Description("сеньйор пластун прихильник")]
+        SeigneurSupporter,
+
+        [Description("сеньйор пластун")]
+        SeigneurMember
     }
 }
