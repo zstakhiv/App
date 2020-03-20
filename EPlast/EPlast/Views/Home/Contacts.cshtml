@@ -2,51 +2,52 @@
 @{
     ViewData["Title"] = "Contacts";
 }
+    <div class="main-wrapper">
+        <section id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
+            <!-- Start: Contact FormModal Contact Form with Google Map -->
+            <div class="container">
+                <!-- Start: Contact Form -->
+                <form id="contactForm" style="padding:15px;" action="javascript:void();" method="post">
+                    <div class="form-row" style="margin-left:0px;margin-right:0px;padding:10px;">
+                        <div class="col-md-6" style="padding-left:20px;padding-right:20px;">
+                            <fieldset></fieldset>
+                            <legend><i class="fa fa-info"></i>&nbsp;Контакти</legend>
+                            <p></p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa fa-map-marker"></i></td>
+                                            <td>Україна</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-phone"></i></td>
+                                            <td>+38(099)-99-99-99-9 </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-envelope"></i></td>
+                                            <td>info@plast.ua</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6" id="message" style="padding-right:20px;padding-left:20px;">
+                            <fieldset>
+                                <legend><i class="fa fa-envelope"></i>&nbsp;Напиши нам</legend>
+                            </fieldset>
+                            <div class="form-group has-feedback"><label for="from_name">Вкажіть своє ім'я</label><input class="form-control" type="text" id="from_name" tabindex="-1" name="from_name" required="" placeholder="Прізвище Ім'я"></div>
+                            <div class="form-group has-feedback"><label for="from_email">Email</label><input class="form-control" type="email" id="from_email" name="from_email" required="" placeholder="Ваша email адреса"></div>
+                            <div class="form-group has-feedback"><label for="from_phone">Вкажіть ваш номер телефону</label><input class="form-control" type="text" id="from_phone" name="subject" placeholder="+38(066)-66-6666"></div>
 
-    <section id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
-        <!-- Start: Contact FormModal Contact Form with Google Map -->
-        <div class="container">
-            <!-- Start: Contact Form -->
-            <form id="contactForm" style="padding:15px;" action="javascript:void();" method="post">
-                <div class="form-row" style="margin-left:0px;margin-right:0px;padding:10px;">
-                    <div class="col-md-6" style="padding-left:20px;padding-right:20px;">
-                        <fieldset></fieldset>
-                        <legend><i class="fa fa-info"></i>&nbsp;Контакти</legend>
-                        <p></p>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td><i class="fa fa-map-marker"></i></td>
-                                        <td>Україна</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fa fa-phone"></i></td>
-                                        <td>+38(099)-99-99-99-9 </td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="fa fa-envelope"></i></td>
-                                        <td>info@plast.ua</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="form-group"><label for="comments">Опиши своє звернення</label><textarea class="form-control" id="comments" name="Comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea></div>
+                            <div class="form-group"><button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">Відправити <i class="fa fa-chevron-circle-right"></i></button></div>
+                            <hr>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6" id="message" style="padding-right:20px;padding-left:20px;">
-                        <fieldset>
-                            <legend><i class="fa fa-envelope"></i>&nbsp;Напиши нам</legend>
-                        </fieldset>
-                        <div class="form-group has-feedback"><label for="from_name">Вкажіть своє ім'я</label><input class="form-control" type="text" id="from_name" tabindex="-1" name="from_name" required="" placeholder="Прізвище Ім'я"></div>
-                        <div class="form-group has-feedback"><label for="from_email">Email</label><input class="form-control" type="email" id="from_email" name="from_email" required="" placeholder="Ваша email адреса"></div>
-                        <div class="form-group has-feedback"><label for="from_phone">Вкажіть ваш номер телефону</label><input class="form-control" type="text" id="from_phone" name="subject" placeholder="+38(066)-66-6666"></div>
-                         
-                        <div class="form-group"><label for="comments">Опиши своє звернення</label><textarea class="form-control" id="comments" name="Comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea></div>
-                        <div class="form-group"><button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">Відправити <i class="fa fa-chevron-circle-right"></i></button></div>
-                        <hr>
-                    </div>
-                </div>
-            </form>
-            <!-- End: Contact Form -->
-        </div>
-        <!-- End: Contact FormModal Contact Form with Google Map -->
-    </section>
+                </form>
+                <!-- End: Contact Form -->
+            </div>
+            <!-- End: Contact FormModal Contact Form with Google Map -->
+        </section>
+    </div>
