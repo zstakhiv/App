@@ -23,9 +23,11 @@ namespace EPlast.ViewModels
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Поле ім'я є обов'язковим")]
+        [RegularExpression(@"^[a-zA-Z]{1,20}", ErrorMessage = "Ім'я має містити тільки літери")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Поле прізвище є обов'язковим")]
+        [RegularExpression(@"[a-zA-Z]{1,20}", ErrorMessage = "Прізвище має містити тільки літери")]
         public string SurName { get; set; }
     }
 }

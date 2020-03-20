@@ -44,14 +44,14 @@
         </form>
         <div class="login-buttons mt-2">
             <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
-                    <div class="d-flex loginBtn-container">
-                        <button type="submit" class="loginBtn loginBtn--google" value="@Model.ExternalLogins[0].Name" name="provider">
-                            Google
-                        </button>
-                        <button type="submit" class="loginBtn loginBtn--facebook" value="@Model.ExternalLogins[1].Name" name="provider">
-                            Facebook
-                        </button>
-                    </div>
+                <div class="d-flex loginBtn-container">
+                    <button type="submit" class="loginBtn loginBtn--google" value="@Model.ExternalLogins[0].Name" name="provider">
+                        Google
+                    </button>
+                    <button type="submit" class="loginBtn loginBtn--facebook" value="@Model.ExternalLogins[1].Name" name="provider">
+                        Facebook
+                    </button>
+                </div>
             </form>
         </div>
     </div>

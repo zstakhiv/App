@@ -148,20 +148,23 @@ namespace EPlast.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
+            loginVM.ReturnUrl = null;
+            loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
                 if(user == null)
                 {
                     ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
-                    return View("Login");
+                    return View(loginVM);
                 }
                 else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
-                        return View("Login", loginVM);
+                        return View(loginVM);
                     }
                 }
 
@@ -173,7 +176,7 @@ namespace EPlast.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
-                    return View("Login");
+                    return View(loginVM);
                 }
             }
             return View("Login");
