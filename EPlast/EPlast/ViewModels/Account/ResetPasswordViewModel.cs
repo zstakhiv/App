@@ -8,11 +8,11 @@ namespace EPlast.ViewModels
 {
     public class ResetPasswordViewModel
     {
-        [Required(ErrorMessage = "Поле Електронна пошта має бути введеним")]
+        [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Пароль має вміщати мінімум 8 символів")]
         [StringLength(100, ErrorMessage = "Пароль має вміщати мінімум 8 символів", MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
