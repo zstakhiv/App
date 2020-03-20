@@ -22,28 +22,27 @@
   .club-page-wrapper .horizontal-grid {
     display: flex;
     align-items: stretch; }
-  .club-page-wrapper .main-info .grid-header {
+  .club-page-wrapper .grid-header {
     text-align: center; }
   .club-page-wrapper .main-info .top-info {
     display: flex;
     align-items: flex-start; }
     .club-page-wrapper .main-info .top-info .curin-img {
-      width: 150px; }
-    .club-page-wrapper .main-info .top-info .line-pair {
-      font-size: 12px; }
-      .club-page-wrapper .main-info .top-info .line-pair .line-upper {
-        font-size: 1em;
-        color: #888;
-        margin: 0; }
-      .club-page-wrapper .main-info .top-info .line-pair .line-lower {
-        font-size: 1.5em; }
-    .club-page-wrapper .main-info .top-info .top-info-content {
-      padding: 10px; }
+      width: 40vh;
+      height: 40vh; }
+  .club-page-wrapper .main-info .line-pair {
+    font-size: 12px; }
+    .club-page-wrapper .main-info .line-pair .line-upper {
+      font-size: 1em;
+      color: #888;
+      margin: 0; }
+    .club-page-wrapper .main-info .line-pair .line-lower {
+      font-size: 1.5em; }
   .club-page-wrapper .secondary-info .about-info .info {
     text-align: justify; }
   .club-page-wrapper .secondary-info .people-info, .club-page-wrapper .secondary-info .members-info, .club-page-wrapper .secondary-info .followers-info {
-    flex-grow: 1; }
-  .club-page-wrapper .secondary-info .members-info .members-list {
+    flex-basis: 50%; }
+  .club-page-wrapper .secondary-info .members-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center; }

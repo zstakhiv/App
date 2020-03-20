@@ -31,35 +31,32 @@
         align-items: stretch;
     }
 
+    .grid-header {
+        text-align: center;
+    }
+
     .main-info {
-        .grid-header {
-            text-align: center;
-        }
 
         .top-info {
             display: flex;
             align-items: flex-start;
 
             .curin-img {
-                width: 150px;
+                width: 40vh;
+                height: 40vh;
+            }
+        }
+        .line-pair {
+            font-size: 12px;
+
+            .line-upper {
+                font-size: 1em;
+                color: #888;
+                margin: 0;
             }
 
-            .line-pair {
-                font-size: 12px;
-
-                .line-upper {
-                    font-size: 1em;
-                    color: #888;
-                    margin: 0;
-                }
-
-                .line-lower {
-                    font-size: 1.5em;
-                }
-            }
-
-            .top-info-content {
-                padding: 10px;
+            .line-lower {
+                font-size: 1.5em;
             }
         }
     }
@@ -72,15 +69,16 @@
         }
 
         .people-info, .members-info, .followers-info {
-            flex-grow: 1;
+            flex-basis: 50%;
         }
 
         .members-info {
-            .members-list {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
+        }
+
+        .members-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .followers-info {

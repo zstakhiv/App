@@ -1,4 +1,6 @@
-﻿using EPlast.DataAccess;
+﻿using EPlast.BussinessLayer;
+using EPlast.BussinessLayer.Interfaces;
+using EPlast.DataAccess;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.DataAccess.Repositories.Contracts;
@@ -11,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using EPlast.ViewModels.Initialization;
+using EPlast.ViewModels.Initialization.Interfaces;
 
 namespace EPlast
 {
@@ -50,15 +54,17 @@ namespace EPlast
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
+            services.AddScoped<IEmailConfirmation, EmailConfirmation>();
+            services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
 
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = true;
-
+                options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
@@ -83,7 +89,6 @@ namespace EPlast
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseStatusCodePages();
             app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
             app.UseStaticFiles();
             app.UseDefaultFiles();

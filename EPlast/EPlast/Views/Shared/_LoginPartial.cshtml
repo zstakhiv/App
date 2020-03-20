@@ -7,8 +7,8 @@
     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
     {
         <div class="d-flex">
-            <div class="btn navbar-btn text-light">
-                Hello @UserManager.GetUserName(User)
+            <div style="margin-top:11px;">
+                <a class="navbar-link text-light" href="/Account/UserProfile" style="margin-top:15px;">Привіт @UserManager.GetUserName(User)</a>
             </div>
             <div>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link text-light">Вийти з акаунта</button>

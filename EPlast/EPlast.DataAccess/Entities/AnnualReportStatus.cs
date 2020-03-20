@@ -7,7 +7,7 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
 
-        [Required, MaxLength(50, ErrorMessage = "Name status cannot exceed 50 characters")]
+        [Required]
         public string Name { get; set; }
 
         public ICollection<AnnualReport> AnnualReports { get; set; }

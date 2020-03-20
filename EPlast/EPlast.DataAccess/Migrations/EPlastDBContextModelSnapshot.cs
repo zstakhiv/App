@@ -46,6 +46,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("ContributionFunds");
 
+                    b.Property<DateTime>("Date");
+
                     b.Property<string>("ImprovementNeeds");
 
                     b.Property<string>("ListProperty");
@@ -78,11 +80,15 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("SponsorshipFunds");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("ID");
 
                     b.HasIndex("AnnualReportStatusId");
 
                     b.HasIndex("CityId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AnnualReports");
                 });
@@ -94,8 +100,7 @@ namespace EPlast.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -168,21 +173,21 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdminTypeID");
+                    b.Property<int>("AdminTypeId");
 
-                    b.Property<int?>("CityID");
+                    b.Property<int>("CityId");
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime?>("StartDate");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AdminTypeID");
+                    b.HasIndex("AdminTypeId");
 
-                    b.HasIndex("CityID");
+                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
@@ -239,7 +244,9 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("CityLegalStatusTypeId");
 
-                    b.Property<DateTime>("DateStart");
+                    b.Property<DateTime?>("DateFinish");
+
+                    b.Property<DateTime?>("DateStart");
 
                     b.HasKey("Id");
 
@@ -302,6 +309,8 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(1024);
 
+                    b.Property<string>("Logo");
+
                     b.HasKey("ID");
 
                     b.ToTable("Clubs");
@@ -317,7 +326,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int?>("ClubID");
 
-                    b.Property<int?>("ClubMembersID");
+                    b.Property<int>("ClubMembersID");
 
                     b.Property<DateTime?>("EndDate");
 
@@ -447,7 +456,7 @@ namespace EPlast.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -482,10 +491,10 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<int?>("DegreeID");
 
                     b.Property<string>("PlaceOfStudy")
-                        .HasMaxLength(50);
+                        .HasMaxLength(30);
 
                     b.Property<string>("Speciality")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -653,7 +662,7 @@ namespace EPlast.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -764,7 +773,7 @@ namespace EPlast.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -808,13 +817,51 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("UnconfirmedCityMember");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserPlastDegree", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("DateFinish");
+
+                    b.Property<DateTime>("DateStart");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("UserPlastDegreeTypeId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserPlastDegreeTypeId");
+
+                    b.ToTable("UserPlastDegrees");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserPlastDegreeType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserPlastDegreeTypes");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("DateTime");
 
@@ -824,7 +871,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int?>("NationalityID");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(10);
 
                     b.Property<int?>("ReligionID");
 
@@ -858,10 +906,10 @@ namespace EPlast.DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("PlaceOfwork")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.Property<string>("Position")
-                        .HasMaxLength(50);
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -1046,6 +1094,8 @@ namespace EPlast.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<string>("ImagePath");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -1066,6 +1116,10 @@ namespace EPlast.DataAccess.Migrations
                         .WithMany("AnnualReports")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("AnnualReports")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Approver", b =>
@@ -1086,11 +1140,13 @@ namespace EPlast.DataAccess.Migrations
                 {
                     b.HasOne("EPlast.DataAccess.Entities.AdminType", "AdminType")
                         .WithMany("CityAdministration")
-                        .HasForeignKey("AdminTypeID");
+                        .HasForeignKey("AdminTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.City", "City")
                         .WithMany("CityAdministration")
-                        .HasForeignKey("CityID");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("CityAdministrations")
@@ -1144,7 +1200,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.ClubMembers", "ClubMembers")
                         .WithMany("ClubAdministration")
-                        .HasForeignKey("ClubMembersID");
+                        .HasForeignKey("ClubMembersID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ClubMembers", b =>
@@ -1292,6 +1349,18 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("UnconfirmedCityMembers")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.UserPlastDegree", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany("UserPlastDegrees")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("EPlast.DataAccess.Entities.UserPlastDegreeType", "UserPlastDegreeType")
+                        .WithMany("UserPlastDegrees")
+                        .HasForeignKey("UserPlastDegreeTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>

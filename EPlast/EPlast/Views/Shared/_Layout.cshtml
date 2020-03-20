@@ -5,12 +5,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EPlast</title>
-
+    <meta charset="UTF-8" />
     <environment include="Development">
-        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/lib/mdbootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="~/lib/mdbootstrap/css/mdb.min.css" />
         <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
         <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
@@ -31,7 +30,7 @@
 
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User))
+    @if (!SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
@@ -48,11 +47,19 @@
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
                         </ul>
-
                         <div class="profile">
-                            <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
+                                This "If" will be deleted in the future*@
+                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            {
+                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            }
+                            else
+                            {
+                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                            }
 
-                            <p class="header-name" style="margin: 0px; margin-left: 5px;">Наталя Іванюк</p>
+                            @Html.Partial("_LoginPartial")
                         </div>
                     </div>
                 </div>
@@ -62,13 +69,22 @@
                 <div class="sidebar">
                     <div class="back-pic">
                         <div class="back-pic-inner">
-                            <img src="https://www.plastnewark.org/wp-content/uploads/2018/04/IMG_2856.jpg" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
+                                This "If" will be deleted in the future*@
+                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            {
+                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            }
+                            else
+                            {
+                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle" alt="Cinque Terre">
+                            }
                         </div>
                     </div>
 
                     <ul class="sidebar-ul">
                         <li class="sidebar-li"><a><div class="sidebar-logo profile-icon" onclick='onMenuHover(0)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
+                        <li class="sidebar-li"><a href="/Report/ReadRaport"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo cabinet-icon" onclick='onMenuHover(4)'></div></a></li>
@@ -84,9 +100,7 @@
                         </div>
                     </div>
 
-                    <div class="content-wrapper">
                         @RenderBody()
-                    </div>
                 </div>
             </div>
         </main>
@@ -119,7 +133,7 @@
                         <div class="col item social">
                             <a href="#"><i class="icon ion-social-facebook"></i></a>
                             <a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a>
-                            <a href="#"><i class="icon ion-social-instagram"></i></a>
+                            <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
                         </div>
                     </div>
                         <p class="copyright">ePlast © 2020</p>
@@ -156,8 +170,10 @@
             <footer>
                 <div class="container">
                     <div class="row">
-                        
-                        <div class="col item social light"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
+                        <div class="col item social light">
+                        <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
+                        <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
+                        <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a></div>
                     </div>
                     <p class="copyright">ePlast © 2020</p>
                 </div>
@@ -166,9 +182,7 @@
 
     }
 
-
-
-<environment include="Development">
+    <environment include="Development">
 
     <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
     <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>

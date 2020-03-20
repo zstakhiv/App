@@ -1,5 +1,5 @@
 let profileListing = [
-    ['Персональні дані',
+    ['<a class="text-light" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
         'Діловодства',
         'Вишколи',
@@ -9,8 +9,8 @@ let profileListing = [
     ['Користувачі',
         'Станиці',
         'Округи',
-        'Курені',
-        'Акції',
+        '<a class="text-light" href="/Action/GetAction">Акції</a>',
+        '<a class="text-light" href="/Club">Курені</a>',
         'Відзначення',
         'Кадра Виховників'],
     ['Користувачі',
@@ -19,18 +19,17 @@ let profileListing = [
         'Кваліфікаційні Вишколи',
         'Акції/Табори',
         'Відзначення'],
-    ['Подати річний звіт станиці',
+    ['<a class="text-light" href="/Report/CreateAnnualReport">Подати річний звіт станиці</a>',
         'Таблиця користувачів',
         'Зголосити вишкіл',
-        'Річні звіти',
+        '<a class="text-light" href="/Report/ViewAnnualReports">Річні звіти</a>',
         'Осередки та адміни',
         'Зголошення вишколів',
         'Геостатистика',
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        'Додати рішення КПР',
-        'Додати рішення КРК',
+        '<a class="text-light" href="/Report/CreateRaport">Додати рішення керівних органів</a>',
         'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
@@ -92,26 +91,29 @@ function closeMenu() {
 }
 //# sourceMappingURL=mainMenu.js.map
 $(document).ready(function () {
-    $("#sbmt").click(function () {
-        alert("Рапорт додано!");
-    });
     $(function () {
         $("#datepicker").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", "0");
     });
-    $('#dtBasicExample').DataTable();
+    $('#dtReadRaport').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
+        }
+    });
+    $("tr.raport-click-row").dblclick(function () {
+        let content = $(this).children().first().text();
+        window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
+    });
+});
+//# sourceMappingURL=raport.js.map
+$(document).ready(function () {
     $('.dataTables_length').addClass('bs-select');
 });
 /*js from LoginAndRegister*/
 function registerClick() {
     $(".switcher-text").addClass("register-active").removeClass("login-active");
-    $(".register-form").removeClass("d-none");
-    $(".login-form").addClass("d-none");
-    // $(".login-form").hide(500);
 }
 function loginClick() {
     $(".switcher-text").addClass("login-active").removeClass("register-active");
-    $(".register-form").addClass("d-none");
-    $(".login-form").removeClass("d-none");
 }
 $(".register-text").click(registerClick);
 $(".login-text").click(loginClick);
@@ -119,12 +121,6 @@ $("input#autocomplete_input").each(function (index) {
     $(this).change(function () {
         $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
     });
-});
-$("tr.read_row").dblclick(function () {
-    var content = $(this).find('td').map(function () {
-        return $(this).text();
-    })[0];
-    window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
 });
 $("#datepickerBirthday").datepicker({
     dateFormat: 'yy/mm/dd',
