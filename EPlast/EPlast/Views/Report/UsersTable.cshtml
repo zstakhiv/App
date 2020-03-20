@@ -1,5 +1,5 @@
-﻿@using EPlast.DataAccess.Repositories;
-@inject IRepositoryWrapper _repoWrapper
+﻿@using EPlast.ViewModels
+@model List<UserTableViewModel>
 @{
     ViewData["Title"] = "Таблиця корустувачів";
 }
@@ -30,30 +30,28 @@
                         Станиця
                     </th>
                     <th class="th-sm">
-                        Куріть
-                    </th>
-                    <th class="th-sm">
-                        Права доступу EPlast
+                        Курінь
                     </th>
                     <th class="th-sm">
                         Тип членства
                     </th>
+                    <th class="th-sm">
+                        Права доступу EPlast
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                @*@foreach (var item in Model)
-                    {
-                        <tr class="raport-click-row">
-                            <td>@item.Decesion.ID</td>
-                            <td>@item.Decesion.Organization.OrganizationName</td>
-                            <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
-                            <td>@item.Decesion.DecesionTarget.TargetName</td>
-                            <td>@item.Decesion.Description</td>
-                            <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
-                            <td></td>
-                        </tr>
-                    }*@
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.User.LastName</td>
+                        <td>@item.User.FirstName</td>
+                        <td>@if (item.User.UserProfile.GenderID == 1) {<span>Чоловік</span>}else{<Span>Жінка</Span>}</td>
+                        <td>@item.UserPlastDegreeName</td>
+                        <td>@item.User.Email</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
-</div>
+</div>   

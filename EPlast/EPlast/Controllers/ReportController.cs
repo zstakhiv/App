@@ -1,15 +1,15 @@
-﻿using EPlast.DataAccess.Entities;
+﻿using EPlast.BussinessLayer.Interfaces;
+using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
+using EPlast.ViewModels.Initialization.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EPlast.ViewModels.Initialization.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using System;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using EPlast.BussinessLayer.Interfaces;
 
 namespace EPlast.Controllers
 {
@@ -64,7 +64,41 @@ namespace EPlast.Controllers
 
         public IActionResult UsersTable()
         {
-            return View();
+            var users = _repoWrapper.User
+                .Include(x => x.UserProfile, x => x.UserPlastDegrees)
+                .ToList();
+
+            var regions = _repoWrapper.Region
+                .Include(x => x.Cities)
+                .ToList();
+            var clubMembers = _repoWrapper.ClubMembers.Include(x => x.Club)
+                                                                    .ToList();
+            var cityMembers = _repoWrapper.CityMembers.Include(x => x.City)
+                                                                    .ToList();
+            var userPlastDegreesType = _repoWrapper.UserPlastDegreeTypes
+                .Include(x => x.UserPlastDegrees)
+                .ToList();
+            List<UserTableViewModel> userTableViewModels = new List<UserTableViewModel>();
+            foreach (var user in users)
+            {
+                var cityName = cityMembers.Where(x => x.User.Id.Equals(user.Id) && x.EndDate == null).Select(x => x.City.Name).LastOrDefault() ?? "";
+                userTableViewModels.Add(new UserTableViewModel
+                {
+                    User = user,
+                    ClubName = clubMembers.Where(x => x.UserId.Equals(user.Id) && x.IsApproved == true).Select(x => x.Club.ClubName).LastOrDefault() ?? "",
+                    CityName = cityName,
+                    RegionName = regions.Where(x => x.Cities.Select(y => y.Name).Equals(cityName)).Select(x => x.RegionName).FirstOrDefault() ?? "",
+                    UserPlastDegreeName = userPlastDegreesType
+                            .Where(type => type.Id == user.UserPlastDegrees
+                                .Where(x => x.UserId == user.Id && x.DateFinish == null)
+                                .Select(x => x.UserPlastDegreeTypeId)
+                                .FirstOrDefault()
+                                )
+                            .Select(type => type.Name).FirstOrDefault() ?? ""
+                });
+            }
+
+            return View(userTableViewModels);
         }
 
         [HttpGet]
