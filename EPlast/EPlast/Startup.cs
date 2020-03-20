@@ -95,7 +95,7 @@ namespace EPlast
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var roles = new[] { "Admin" ,"UnApprovedUser","ApprovedUser"};
+            var roles = new[] { "Admin" ,"Користувач","Учасник Пласту"};
             foreach (var role in roles)
             {
                 if (!(await roleManager.RoleExistsAsync(role)))
@@ -110,15 +110,15 @@ namespace EPlast
 
             var profile = new User
             {
-                Email = "volodymyr33929@gmail.com",
-                UserName = "volodymyr33929@gmail.com",
-                FirstName = "EPlast",
+                Email = "admin@eplast.com",
+                UserName = "admin@eplast.com",
+                FirstName = "Admin",
                 LastName = "Admin",
                 EmailConfirmed = true,
                 ImagePath = "default.png",
                 UserProfile =new UserProfile()
             };
-            if (await userManager.FindByEmailAsync("volodymyr33929@gmail.com") == null)
+            if (await userManager.FindByEmailAsync("admin@eplast.com") == null)
             {
                 var res = await userManager.CreateAsync(profile, "Aa12345.");
                 if (res.Succeeded)

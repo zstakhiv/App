@@ -96,6 +96,7 @@ namespace EPlast.Controllers
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
+                await _userManager.AddToRoleAsync(user, "Користувач");
 
                 if (!result.Succeeded)
                 {
@@ -136,9 +137,8 @@ namespace EPlast.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "UnApprovedUser");
-                await _userManager.AddToRoleAsync(user, "ApprovedUser");
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                //Цей код повинен знаходитись тут(замість 99 рядка) при релізі проекту
+                //await _userManager.AddToRoleAsync(user, "Користувач");
                 return RedirectToAction("ConfirmedEmail", "Account");
             }
                 

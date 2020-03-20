@@ -35,7 +35,8 @@ namespace EPlast.Controllers
             if (user != null)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                var allRoles = _roleManager.Roles.ToList();
+                var admin = _roleManager.Roles.Where(i => i.Name == "Admin");
+                var allRoles = _roleManager.Roles.Except(admin).ToList();
                 RoleViewModel model = new RoleViewModel
                 {
                     UserID = user.Id,
