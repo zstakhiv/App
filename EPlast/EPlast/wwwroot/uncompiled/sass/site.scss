@@ -296,9 +296,8 @@ form input {
 }
 
 .universal-container {
-    max-width: 900px;
     background-color: #fff;
-    border-radius:10px;
+    border-radius:4px;
     margin-left:230px;
 }
 
@@ -372,3 +371,8 @@ form input {
 .login-buttons{
     width:440px;
 }
+
+.user-profile {
+    border-radius: 10px;
+}
+

@@ -74,6 +74,13 @@ namespace EPlast.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult AccountLocked()
+        {
+            return View();
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
@@ -146,10 +153,9 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel loginVM)
+        public async Task<IActionResult> Login(LoginViewModel loginVM, string returnUrl)
         {
-            loginVM.ReturnUrl = null;
-            //отут в контроллер передавати параметрами url
+            loginVM.ReturnUrl = returnUrl;
             loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
@@ -172,7 +178,7 @@ namespace EPlast.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, true);
                 if (result.IsLockedOut)
                 {
-                    return View("Views/Account/AccountLocked");
+                    return RedirectToAction("AccountLocked", "Account");
                 }
 
                 if (result.Succeeded)
@@ -447,7 +453,7 @@ namespace EPlast.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
+                ModelState.AddModelError("", "Проблеми зі скидуванням пароля або введений новий пароль повинен вміщати 8символів, включаючи літери та цифри");
                 return View("ResetPassword");
             }
         }
