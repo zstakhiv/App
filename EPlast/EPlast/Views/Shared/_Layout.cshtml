@@ -31,7 +31,7 @@
 
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User))
+    @if (!SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
@@ -84,9 +84,7 @@
                         </div>
                     </div>
 
-                    <div class="content-wrapper">
                         @RenderBody()
-                    </div>
                 </div>
             </div>
         </main>
@@ -119,7 +117,7 @@
                         <div class="col item social">
                             <a href="#"><i class="icon ion-social-facebook"></i></a>
                             <a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a>
-                            <a href="#"><i class="icon ion-social-instagram"></i></a>
+                            <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
                         </div>
                     </div>
                         <p class="copyright">ePlast © 2020</p>
@@ -156,8 +154,10 @@
             <footer>
                 <div class="container">
                     <div class="row">
-                        
-                        <div class="col item social light"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
+                        <div class="col item social light">
+                        <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
+                        <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
+                        <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a></div>
                     </div>
                     <p class="copyright">ePlast © 2020</p>
                 </div>
