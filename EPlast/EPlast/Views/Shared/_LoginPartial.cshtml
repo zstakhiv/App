@@ -8,7 +8,7 @@
     {
         <div class="d-flex">
             <div style="margin-top:11px;">
-                <a class="navbar-link text-light" href="/Account/UserProfile" style="margin-top:15px;">Привіт @UserManager.GetUserName(User)</a>
+                <a class="navbar-link text-light" href="/Account/UserProfile" style="margin-top:15px;">Привіт @UserManager.GetUserName(User) </a>
             </div>
             <div>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link text-light">Вийти з акаунта</button>
@@ -19,6 +19,6 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" style="margin-top:15px;" class="text-light" asp-controller="Account" asp-action="LoginAndRegister">УвійтиАбоЗареєструватись</a></li>
+        <li><a asp-area="" style="margin-top:15px;" class="text-light" asp-controller="Account" asp-action="Login">УвійтиАбоЗареєструватись</a></li>
     </ul>
 }

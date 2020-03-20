@@ -66,8 +66,8 @@ namespace EPlast
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
 
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             });
 
             services.AddAuthentication()

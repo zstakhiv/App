@@ -149,6 +149,7 @@ namespace EPlast.Controllers
         public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
             loginVM.ReturnUrl = null;
+            //отут в контроллер передавати параметрами url
             loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
@@ -168,7 +169,12 @@ namespace EPlast.Controllers
                     }
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, true);
+                if (result.IsLockedOut)
+                {
+                    return View("Views/Account/AccountLocked");
+                }
+
                 if (result.Succeeded)
                 {
                     return RedirectToAction("UserProfile", "Account");
@@ -433,6 +439,10 @@ namespace EPlast.Controllers
             var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
             if (result.Succeeded)
             {
+                if(await _userManager.IsLockedOutAsync(user))
+                {
+                    await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                }
                 return View("ResetPasswordConfirmation");
             }
             else
