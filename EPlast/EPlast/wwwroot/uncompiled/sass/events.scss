@@ -1,0 +1,45 @@
+.events-page-wrapper .event-link {
+  color: #3c5438;
+  font-size: 25px;
+}
+
+.events-page-wrapper .event-remove {
+  color: #8B0000;
+  font-size: 25px;
+}
+
+.events-page-wrapper button:hover {
+  color: #73bd79;
+}
+
+.events-page-wrapper button.event-remove:hover {
+  color: #FF0000;
+}
+
+.events-page-wrapper .event-fabutton {
+  background: none;
+  padding: 0px;
+  border: none;
+}
+
+.events-page-wrapper .event-logo {
+  color: #3c5438;
+  font-size: 75px;
+}
+
+.events-page-wrapper .event-invisible {
+  display: none;
+}
+
+.events-page-wrapper .event-part {
+  color: #73bd79;
+}
+
+.participant-status {
+  color: #FF8C00;
+  font-size: 25px;
+}
+
+a.participant-status:hover {
+  color: #FFA500;
+}
