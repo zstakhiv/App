@@ -13,10 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using EPlast.ViewModels.Initialization;
-using EPlast.ViewModels.Initialization.Interfaces;
 using System.Threading.Tasks;
 using System.Linq;
+using EPlast.Models.ViewModelInitializations.Interfaces;
+using EPlast.Models.ViewModelInitializations;
 
 namespace EPlast
 {
@@ -107,20 +107,20 @@ namespace EPlast
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
-
+            var admin = Configuration.GetSection("Admin");
             var profile = new User
             {
-                Email = "admin@eplast.com",
-                UserName = "admin@eplast.com",
+                Email = admin["Email"],
+                UserName = admin["Email"],
                 FirstName = "Admin",
                 LastName = "Admin",
                 EmailConfirmed = true,
                 ImagePath = "default.png",
                 UserProfile =new UserProfile()
             };
-            if (await userManager.FindByEmailAsync("admin@eplast.com") == null)
+            if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
-                var res = await userManager.CreateAsync(profile, "Aa12345.");
+                var res = await userManager.CreateAsync(profile, admin["Password"]);
                 if (res.Succeeded)
                     await userManager.AddToRoleAsync(profile, "Admin");
             }
