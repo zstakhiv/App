@@ -41,5 +41,18 @@ namespace EPlast.Controllers
               
             return View(new ClubViewModel { Club = club});
         }
+        public IActionResult ClubAdmins(int index)
+        {
+            var club = _repoWrapper.Club
+                .FindByCondition(q => q.ID == index)
+                .Include(c => c.ClubAdministration)
+                .ThenInclude(t => t.AdminType)
+                .Include(n => n.ClubAdministration)
+                .ThenInclude(t => t.ClubMembers)
+                .ThenInclude(us => us.User)
+                .FirstOrDefault();
+
+            return View(new ClubViewModel { Club = club });
+        }
     }
 }
