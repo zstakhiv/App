@@ -69,6 +69,17 @@ namespace EPlast.DataAccess
                 .HasOne(x => x.UserProfile)
                 .WithOne(x => x.User)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CityMembers>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.CityMembers)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ClubMembers>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.ClubMembers)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
