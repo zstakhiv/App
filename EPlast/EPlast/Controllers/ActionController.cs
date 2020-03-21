@@ -47,7 +47,7 @@ namespace EPlast.Controllers
             return View(_subCat);
         }
 
-        public IActionResult Events()
+        public IActionResult Events(int? ID)
         {
             return View();
         }
