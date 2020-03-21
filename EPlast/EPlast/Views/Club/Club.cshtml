@@ -20,8 +20,8 @@
                           <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
                       </div>
                   }
-                  <button class="buttons" action='~/Club/ClubAdmins'>Більше</button>
-                  </div>
+                  <a asp-controller="Club" asp-action="ClubAdmins" asp-route-index="@Model.Club.ID" class="buttons">Більше</a>
+              </div>
             </div>
   
             <div class="secondary-info vertical-grid">

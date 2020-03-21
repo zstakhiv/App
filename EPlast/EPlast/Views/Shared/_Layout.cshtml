@@ -26,7 +26,7 @@
           rel="stylesheet">
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User))
+    @if (!SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">

@@ -1,4 +1,12 @@
-﻿.club-page-wrapper {
+﻿.data-table-wrapper-club {
+    margin: 20px 0;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 4px;
+    color: #505e6c;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+}
+.club-page-wrapper {
     display: flex;
     align-items: stretch;
     justify-content: center;
@@ -12,6 +20,8 @@
     .buttons {
         border: 0;
         color: white;
+        text-decoration: none;
+        text-align: center;
         background-color: #3c5438;
         padding: 10px 20px;
         cursor: pointer;
