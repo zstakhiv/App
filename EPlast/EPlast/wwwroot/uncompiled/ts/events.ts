@@ -3,9 +3,9 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     $("div.single-card").mouseleave(function () {
-        if ($(this).find("div.event-unsubscribe").is(":visible")) {
-            $(this).find("div.event-unsubscribe").hide();
-            $(this).find("div.event-part").show();
+        if ($(this).find("div.events-unsubscribe").is(":visible")) {
+            $(this).find("div.events-unsubscribe").hide();
+            $(this).find("div.events-part").show();
         }
     });
 
@@ -13,39 +13,39 @@
         $(this).parents("div.single-card").remove();
     });
 
-    $("div.event-unsubscribe").click(function () {
+    $("div.events-unsubscribe").click(function () {
 
         $(this).hide();
-        $(this).parents("div").first().children("div.event-part").hide();
-        $(this).parents("div").first().children("div.event-participants").hide();
-        $(this).parents("div").first().children("div.event-pen").show();
+        $(this).parents("div").first().children("div.events-part").hide();
+        $(this).parents("div").first().children("div.events-participants").hide();
+        $(this).parents("div").first().children("div.events-pen").show();
     });
 
-    $("div.event-pen").click(function () {
+    $("div.events-pen").click(function () {
         $(this).hide();
-        $(this).parents("div").first().children("div.event-participants").show();
+        $(this).parents("div").first().children("div.events-participants").show();
     });
 
-    $("div.event-part").mouseenter(function () {
+    $("div.events-part").mouseenter(function () {
         status = 1;
         $(this).hide();
-        $(this).parents("div").first().children("div.event-unsubscribe").show();
+        $(this).parents("div").first().children("div.events-unsubscribe").show();
     });
 
-    $("div.event-participants").mouseenter(function () {
+    $("div.events-participants").mouseenter(function () {
         status = 0;
         $(this).hide();
-        $(this).parents("div").first().children("div.event-unsubscribe").show();
+        $(this).parents("div").first().children("div.events-unsubscribe").show();
     });
 
-    $("div.event-unsubscribe").mouseleave(function () {
+    $("div.events-unsubscribe").mouseleave(function () {
         $(this).hide();
-        if (!$(this).parents("div").first().children("div.event-pen").is(":visible")) {
+        if (!$(this).parents("div").first().children("div.events-pen").is(":visible")) {
             if (status === 0) {
-                $(this).parents("div").first().children("div.event-participants").show();
+                $(this).parents("div").first().children("div.events-participants").show();
             }
             else {
-                $(this).parents("div").first().children("div.event-part").show();
+                $(this).parents("div").first().children("div.events-part").show();
             }
         }
     });

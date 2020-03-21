@@ -52,6 +52,11 @@ namespace EPlast.Controllers
             return View();
         }
 
+        public IActionResult EventInfo()
+        {
+            return View();
+        }
+
     }
 
     
