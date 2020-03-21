@@ -1,0 +1,72 @@
+﻿<div class="container my-4 events-page-wrapper">
+    <div class="row ">
+        @for (int i = 0; i < 10; ++i)
+        {
+        <div class=" col-lg-2 col-md-3 col-sm-4  mb-4 mx-0 single-card">
+            <div class="card shadow text-center">
+                <div class="card-header">
+                    <div class="row justify-content-between">
+                        <div>
+                            <button type="button" class="event-remove delete-card event-fabutton " data-toggle="tooltip" data-placement="top" title="Видалити">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <div>
+                                <div class="event-invisible events-pen">
+                                    <button type="submit" class="event-link event-fabutton" data-toggle="tooltip" data-placement="right" title="Зголоситись">
+                                        <i class="fas fa-pen-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="events-part  mt-2 event-fix-width">
+                                    <h5><strong>Учасник</strong></h5>
+                                </div>
+                                <div class="events-participants event-invisible ">
+                                    <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
+                                        <i class="fas fa-user-clock"></i>
+                                    </a>
+                                </div>
+                                <div class="event-invisible events-unsubscribe ">
+                                    <button type="submit" class="event-remove event-fabutton" data-toggle="tooltip" data-placement="right" title="Зняти участь">
+                                        <i class="fas fa-user-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h1 class="event-logo"><i class="far fa-handshake"></i></h1>
+
+                    <a asp-controller="Action" asp-action="EventInfo" class="title-link">
+                        <h4 class="card-title">Назва акції</h4>
+                    </a>
+                </div>
+                <div class="card-footer ">
+                    <div class="row justify-content-between">
+                        <div>
+                            <button type="submit" class="event-link event-fabutton " data-toggle="tooltip" data-placement="bottom" title="Редагувати">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <div>
+                            @if (!(i % 3 == 0))
+                            {
+                            <button type="submit" class="event-link event-fabutton " data-toggle="tooltip" data-placement="bottom" title="Завершений(-на)">
+                                <i class="fas fa-flag"></i>
+                            </button>
+                            }
+                            else
+                            {
+                            <button type="submit" class="event-link event-fabutton pr-3" data-toggle="tooltip" data-placement="bottom" title="Не затверджені">
+                                <i class="fas fa-tools"></i>
+                            </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
