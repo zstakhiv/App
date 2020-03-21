@@ -4,14 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
-using MimeKit;
-using MailKit.Net.Smtp;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Microsoft.AspNetCore.Authorization;
-using EPlast.DataAccess.Repositories.Contracts;
 using EPlast.DataAccess.Repositories;
-using EPlast.Models;
-using EPlast.BussinessLayer;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -57,7 +51,13 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoginAndRegister()
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
         {
             return View();
         }
@@ -69,19 +69,19 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Registration(RegisterViewModel registerVM)
+        public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Дані введені неправильно");
-                return View("LoginAndRegister");
+                return View("Register");
             }
 
             var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
             if (registeredUser != null)
             {
                 ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
-                return View("LoginAndRegister");
+                return View("Register");
             }
             else
             {
@@ -101,7 +101,7 @@ namespace EPlast.Controllers
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
-                    return View("LoginAndRegister");
+                    return View("Register");
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-        public async Task<IActionResult> Logging(LoginViewModel loginVM)
+        public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
             if (ModelState.IsValid)
             {
@@ -154,14 +154,14 @@ namespace EPlast.Controllers
                 if(user == null)
                 {
                     ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
-                    return View("LoginAndRegister");
+                    return View("Login");
                 }
                 else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
-                        return View("LoginAndRegister");
+                        return View("Login");
                     }
                 }
 
@@ -173,10 +173,10 @@ namespace EPlast.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
-                    return View("LoginAndRegister");
+                    return View("Login");
                 }
             }
-            return View("LoginAndRegister");
+            return View("Login");
         }
 
 
@@ -185,7 +185,7 @@ namespace EPlast.Controllers
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("LoginAndRegister", "Account");
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpGet]

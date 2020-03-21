@@ -10,6 +10,9 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public DateTime Date { get; set; }
 
+        [Required]
+        public AnnualReportStatus Status { get; set; }
+
         [Range(0, Int32.MaxValue, ErrorMessage = "Кількість не може бути від'ємною")]
         public int NumberOfSeatsInCity { get; set; }
 
@@ -66,8 +69,5 @@ namespace EPlast.DataAccess.Entities
 
         public int CityId { get; set; }
         public City City { get; set; }
-
-        public int AnnualReportStatusId { get; set; }
-        public AnnualReportStatus AnnualReportStatus { get; set; }
     }
 }
