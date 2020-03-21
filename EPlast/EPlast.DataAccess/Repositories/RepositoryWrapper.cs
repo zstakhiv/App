@@ -42,12 +42,9 @@ namespace EPlast.DataAccess.Repositories
         private IRegionRepository _region;
         private IRegionAdministrationRepository _regionAdministration;
         private IAnnualReportsRepository _annualReports;
-        private IAnnualReportStatusesRepository _annualReportStatuses;
         private IMembersStatisticsRepository _membersStatistics;
         private ICityLegalStatusesRepository _cityLegalStatuses;
-        private ICityLegalStatusTypesRepository _cityLegalStatusTypes;
         private IUserPlastDegreesRepository _userPlastDegrees;
-        private IUserPlastDegreeTypesRepository _userPlastDegreeTypes;
 
         public IDecesionRepository Decesion
         {
@@ -521,18 +518,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IAnnualReportStatusesRepository AnnualReportStatuses
-        {
-            get
-            {
-                if (_annualReportStatuses == null)
-                {
-                    _annualReportStatuses = new AnnualReportStatusesRepository(_dbContext);
-                }
-                return _annualReportStatuses;
-            }
-        }
-
         public IMembersStatisticsRepository MembersStatistics
         {
             get
@@ -557,18 +542,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public ICityLegalStatusTypesRepository CityLegalStatusTypes
-        {
-            get
-            {
-                if (_cityLegalStatusTypes == null)
-                {
-                    _cityLegalStatusTypes = new CityLegalStatusTypeRepository(_dbContext);
-                }
-                return _cityLegalStatusTypes;
-            }
-        }
-
         public IUserPlastDegreesRepository UserPlastDegrees
         {
             get
@@ -578,18 +551,6 @@ namespace EPlast.DataAccess.Repositories
                     _userPlastDegrees = new UserPlastDegreesRepository(_dbContext);
                 }
                 return _userPlastDegrees;
-            }
-        }
-
-        public IUserPlastDegreeTypesRepository UserPlastDegreeTypes
-        {
-            get
-            {
-                if (_userPlastDegreeTypes == null)
-                {
-                    _userPlastDegreeTypes = new UserPlastDegreeTypesRepository(_dbContext);
-                }
-                return _userPlastDegreeTypes;
             }
         }
 
