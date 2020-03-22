@@ -84,12 +84,14 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid)
@@ -161,6 +163,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel loginVM, string returnUrl)
         {
             loginVM.ReturnUrl = returnUrl;
@@ -205,6 +208,7 @@ namespace EPlast.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -466,8 +470,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -535,6 +539,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
