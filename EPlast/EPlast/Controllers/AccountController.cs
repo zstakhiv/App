@@ -52,6 +52,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
             LoginViewModel model = new LoginViewModel
@@ -63,6 +64,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -75,6 +77,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccountLocked()
         {
             return View();
