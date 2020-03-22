@@ -1,58 +1,66 @@
-﻿.all-clubs-view {
-    .all-clubs-title {
-        text-align: center;
-    }
+﻿.content-wrapper {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    height: 100%;
 
-    .club-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
+    .all-clubs-view {
+        .all-clubs-title {
+            text-align: center;
+        }
 
-        .club-block-wrapper {
-            padding: 10px;
-            flex-basis: 25%;
+        .club-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
 
-            .club-block {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+            .club-block-wrapper {
                 padding: 10px;
-                background-color: white;
+                flex-basis: 25%;
 
-                .club-block-submit {
-                    color: inherit;
-                    border: none;
-                    font: inherit;
-                    cursor: pointer;
-                    outline: inherit;
-                    width: 100%;
-                    display: contents;
+                .club-block {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 10px;
+                    background-color: white;
 
-                    .club-img-wrapper {
+                    .club-block-submit {
+                        color: inherit;
+                        border: none;
+                        font: inherit;
+                        cursor: pointer;
+                        outline: inherit;
                         width: 100%;
-                        position: relative;
-                        padding-top: 100%;
+                        display: contents;
 
-                        .club-img {
-                            background-size: cover;
-                            background-position: center center;
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            bottom: 0;
-                            right: 0;
+                        .club-img-wrapper {
+                            width: 100%;
+                            position: relative;
+                            padding-top: 100%;
+
+                            .club-img {
+                                background-size: cover;
+                                background-position: center center;
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                bottom: 0;
+                                right: 0;
+                            }
                         }
-                    }
 
-                    .club-name {
-                        margin-bottom: 0;
-                        font-size: 17px;
+                        .club-name {
+                            margin-bottom: 0;
+                            font-size: 17px;
+                        }
                     }
                 }
             }
         }
     }
 }
+
 @media (max-width: 767px),(orientation: portrait) {
     .all-clubs-view {
         .club-list {
