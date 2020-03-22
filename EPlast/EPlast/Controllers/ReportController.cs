@@ -47,7 +47,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                decesionViewModel.Decesion.DecesionStatus = new DecesionStatus { ID = 1, DecesionStatusName = "У розгляді" };
+                decesionViewModel.Decesion.DecesionStatus = 0;
                 _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
                 _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
                 _repoWrapper.Save();
@@ -65,7 +65,7 @@ namespace EPlast.Controllers
             {
                 List<DecesionViewModel> decesions = new List<DecesionViewModel>(
                     _repoWrapper.Decesion
-                    .Include(x => x.DecesionStatus, x => x.DecesionTarget, x => x.Organization)
+                    .Include(x => x.DecesionTarget, x => x.Organization)
                     .Take(200)
                     .Select(decesion => new DecesionViewModel { Decesion = decesion })
                     .ToList());
@@ -81,9 +81,9 @@ namespace EPlast.Controllers
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
-                                                                                       x => x.DecesionTarget,
-                                                                                       x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
+            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
+                                                                                                x => x.Organization).Where(x => x.ID == objId)
+                                                                                                                    .FirstOrDefault());
             return File(arr, "application/pdf");
         }
 

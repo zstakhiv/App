@@ -1,4 +1,5 @@
 ﻿@using EPlast.ViewModels
+@using EPlast.BussinessLayer.ExtensionMethods
 @model List<DecesionViewModel>
 @{
     ViewData["Title"] = "Читання рішень";
@@ -39,7 +40,7 @@
                     <tr class="raport-click-row">
                         <td>@item.Decesion.ID</td>
                         <td>@item.Decesion.Organization.OrganizationName</td>
-                        <td>@item.Decesion.DecesionStatus.DecesionStatusName</td>
+                        <td>@item.Decesion.DecesionStatus.GetDescription()</td>
                         <td>@item.Decesion.DecesionTarget.TargetName</td>
                         <td>@item.Decesion.Description</td>
                         <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>

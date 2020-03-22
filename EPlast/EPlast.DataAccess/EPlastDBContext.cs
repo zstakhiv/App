@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<IdentityUser, IdentityRole,string>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
         }
-
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
@@ -31,6 +30,7 @@ namespace EPlast.DataAccess
         public DbSet<EventCategory> EventCategories { get; set; }
         public DbSet<SubEventCategory> SubEventCategories { get; set; }
         public DbSet<EventStatus> EventStatuses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -79,15 +79,10 @@ namespace EPlast.DataAccess
                .HasMany(x => x.ClubMembers)
                .WithOne(x => x.User)
                .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
         public DbSet<Organization> Organization { get; set; }
-        public DbSet<DecesionStatus> DecesionStatuses { get; set; }
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }
