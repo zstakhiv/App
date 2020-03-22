@@ -79,7 +79,6 @@ namespace EPlast.Controllers
         }
 
         public async Task<IActionResult> UsersTable()
-
         {
             try
             {

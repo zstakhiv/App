@@ -12,17 +12,19 @@ namespace EPlast.Controllers
 {
     [Route("[controller]/[action]")]
     [Authorize("Admin")]
-    public class AdminController:Controller
+    public class AdminController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
-        RoleManager<IdentityRole> _roleManager;
-        UserManager<User> _userManager;
-        public AdminController(RoleManager<IdentityRole> roleManager,UserManager<User> userManager, IRepositoryWrapper repoWrapper) 
+        private RoleManager<IdentityRole> _roleManager;
+        private UserManager<User> _userManager;
+
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _repoWrapper = repoWrapper;
         }
+
         public IActionResult Index()
         {
             var users = _userManager.Users.ToList();
@@ -78,14 +80,12 @@ namespace EPlast.Controllers
 
         public async Task<IActionResult> Delete(string userId)
         {
-            
             if (userId != null)
             {
-                User user =_repoWrapper.User.FindByCondition(i => i.Id == userId).FirstOrDefault();
+                User user = _repoWrapper.User.FindByCondition(i => i.Id == userId).FirstOrDefault();
                 var roles = await _userManager.GetRolesAsync(user);
                 if (user != null && !roles.Contains("Admin"))
                 {
-
                     _repoWrapper.User.Delete(user);
                     _repoWrapper.Save();
                     return RedirectToAction("Index");
