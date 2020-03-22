@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class AnnualReportStatus
+    public enum AnnualReportStatus
     {
-        public int ID { get; set; }
+        [Description("Непідтверджений")]
+        Unconfirmed,
 
-        [Required]
-        public string Name { get; set; }
+        [Description("Підтверджений")]
+        Confirmed,
 
-        public ICollection<AnnualReport> AnnualReports { get; set; }
+        [Description("Скасований")]
+        Canceled
     }
 }

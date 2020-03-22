@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using EPlast.ViewModels.Initialization;
-using EPlast.ViewModels.Initialization.Interfaces;
+using EPlast.Models.ViewModelInitializations;
+using EPlast.Models.ViewModelInitializations.Interfaces;
 
 namespace EPlast
 {

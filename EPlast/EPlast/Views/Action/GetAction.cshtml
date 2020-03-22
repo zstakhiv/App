@@ -9,7 +9,7 @@
                 @foreach(EventCategoryViewModel evc in Model)
                 {
                 <div class="col-md-4 cust_blogteaser">
-                    <form method="post" action="~/Action/GetSubAction">
+                    <form method="post" action="~/Action/Events">
                         <input type="hidden" value=@evc.EventCategory.ID name="ID" id="something" />
                         <a href="#"><img class="rounded img-fluid" src="~/images/events/ActionLogo.png"></a>
                         <h3>@evc.EventCategory.EventCategoryName</h3>
