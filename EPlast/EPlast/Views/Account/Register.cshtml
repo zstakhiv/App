@@ -1,4 +1,8 @@
-﻿@using EPlast.ViewModels;
+﻿@{
+    Layout = "~/Views/Shared/_LayoutWithoutFooter.cshtml";
+}
+
+@using EPlast.ViewModels;
 @model RegisterViewModel
 <div class="main-wrapper" style="background-color: rgb(245,245,245);">
 
@@ -51,8 +55,8 @@
             </form>
         </div>
     </div>
- </div>
+</div>
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
