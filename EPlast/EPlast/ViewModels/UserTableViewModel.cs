@@ -13,5 +13,6 @@ namespace EPlast.ViewModels
         public string CityName { get; set; }
         public string ClubName { get; set; }
         public string UserPlastDegreeName { get; set; }
+        public string UserRoles { get; set; }
     }
 }

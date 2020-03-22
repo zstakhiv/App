@@ -33,9 +33,6 @@
                         Курінь
                     </th>
                     <th class="th-sm">
-                        Тип членства
-                    </th>
-                    <th class="th-sm">
                         Права доступу EPlast
                     </th>
                 </tr>
@@ -43,13 +40,20 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.User.LastName</td>
-                        <td>@item.User.FirstName</td>
-                        <td>@if (item.User.UserProfile.GenderID == 1) {<span>Чоловік</span>}else{<Span>Жінка</Span>}</td>
-                        <td>@item.UserPlastDegreeName</td>
-                        <td>@item.User.Email</td>
-                    </tr>
+                <tr>
+                    <td>@item.User.LastName</td>
+                    <td>@item.User.FirstName</td>
+                    <td>@if (item.User.UserProfile.GenderID == 1)
+                    {<span>Чоловік</span>}
+                    else
+                    {<Span>Жінка</Span>}</td>
+                    <td>@item.UserPlastDegreeName</td>
+                    <td>@item.User.Email</td>
+                    <td>@item.RegionName</td>
+                    <td>@item.CityName</td>
+                    <td>@item.ClubName</td>
+                    <td>@item.UserRoles</td>
+                </tr>
                 }
             </tbody>
         </table>
