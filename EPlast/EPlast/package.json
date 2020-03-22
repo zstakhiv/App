@@ -26,6 +26,8 @@
     "gulp-minify": "3.1.0",
     "jquery-ui-dist": "^1.12.1",
     "mdbootstrap": "4.14.0",
-    "rimraf": "3.0.2"
+    "rimraf": "3.0.2",
+    "@types/jquery.contextmenu": "1.7.34",
+    "jquery-contextmenu": "2.9.0"
   }
 }
