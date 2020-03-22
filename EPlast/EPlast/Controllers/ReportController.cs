@@ -1,5 +1,4 @@
-﻿using EPlast.BussinessLayer.ExtensionMethods;
-using EPlast.BussinessLayer.Interfaces;
+﻿using EPlast.BussinessLayer.Interfaces;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
@@ -73,62 +72,6 @@ namespace EPlast.Controllers
                 return View(decesions);
             }
             catch
-            {
-                return RedirectToAction("HandleError", "Error");
-            }
-        }
-
-        public async Task<IActionResult> UsersTable()
-        {
-            try
-            {
-                var users = _repoWrapper.User
-                    .Include(x => x.UserProfile, x => x.UserPlastDegrees)
-                    .ToList();
-
-                var cities = _repoWrapper.City
-                    .Include(x => x.Region)
-                    .ToList();
-                var clubMembers = _repoWrapper.ClubMembers.Include(x => x.Club)
-                                                          .ToList();
-                var cityMembers = _repoWrapper.CityMembers.Include(x => x.City)
-                                                          .ToList();
-                List<UserTableViewModel> userTableViewModels = new List<UserTableViewModel>();
-                foreach (var user in users)
-                {
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var cityName = cityMembers.Where(x => x.User.Id.Equals(user.Id) && x.EndDate == null)
-                                              .Select(x => x.City.Name)
-                                              .LastOrDefault() ?? string.Empty;
-
-                    #region Delete when all users will have UserPlastDegrees automatically
-
-                    if (user.UserPlastDegrees.Count == 0 || cityName.Equals(string.Empty))
-                        continue;
-
-                    #endregion Delete when all users will have UserPlastDegrees automatically
-
-                    userTableViewModels.Add(new UserTableViewModel
-                    {
-                        User = user,
-                        ClubName = clubMembers.Where(x => x.UserId.Equals(user.Id) && x.IsApproved == true)
-                                              .Select(x => x.Club.ClubName).LastOrDefault() ?? string.Empty,
-                        CityName = cityName,
-                        RegionName = cities.Where(x => x.Name.Equals(cityName))
-                                           .FirstOrDefault()
-                                           .Region
-                                           .RegionName ?? string.Empty,
-                        UserPlastDegreeName = user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
-                                                                   .FirstOrDefault()
-                                                                   .UserPlastDegreeType
-                                                                   .GetDescription() ?? string.Empty,
-                        UserRoles = string.Join(", ", roles)
-                    });
-                }
-
-                return View(userTableViewModels);
-            }
-            catch (Exception e)
             {
                 return RedirectToAction("HandleError", "Error");
             }
