@@ -52,6 +52,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
             LoginViewModel model = new LoginViewModel
@@ -63,6 +64,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -75,12 +77,14 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccountLocked()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid)
@@ -158,6 +162,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel loginVM, string returnUrl)
         {
             loginVM.ReturnUrl = returnUrl;
@@ -201,6 +206,7 @@ namespace EPlast.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -468,8 +474,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -534,6 +540,33 @@ namespace EPlast.Controllers
 
                 return View("Error");
             }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if(user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
+                    model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View();
+                }
+                await _signInManager.RefreshSignInAsync(user);
+                return View("ChangePasswordConfirmation");
+            }
+            return View(model);
         }
     }
 }
