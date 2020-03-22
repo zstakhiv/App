@@ -1,6 +1,4 @@
-﻿using EPlast.BussinessLayer.Interfaces;
-using EPlast.DataAccess.Entities;
-using System;
+﻿using EPlast.DataAccess.Entities;
 using System.Threading.Tasks;
 
 namespace EPlast.BussinessLayer
@@ -9,15 +7,12 @@ namespace EPlast.BussinessLayer
     {
         public async Task<byte[]> DecesionCreatePDFAsync(Decesion pdfData)
         {
-            try
+            IPDFSettings pdfSettings = new PDFSettings()
             {
-                DecesionPDFCreator creator = new DecesionPDFCreator(pdfData);
-                return await Task.Run(() => creator.GetBytes());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                Title = string.Format("Рішення {0}", pdfData.Organization.OrganizationName)
+            };
+            IPDFCreator creator = new PDFCreator(new DecisionDocument(pdfData, pdfSettings));
+            return await Task.Run(() => creator.GetPDFBytes());
         }
     }
 }
