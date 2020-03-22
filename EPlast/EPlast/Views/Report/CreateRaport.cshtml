@@ -31,7 +31,6 @@
             </label>
             @Html.TextBoxFor(x => x.Decesion.DecesionTarget.TargetName,
             new { @id = "autocomplete_input", @placeholder = "Тематика рішення", @list = "DecisionType-value", @class = "form-control", @Value = "" })
-            <span asp-validation-for="@Model.Decesion.DecesionTarget.TargetName" style="color:#db0b3c;" />
             <datalist id="DecisionType-value">
                 @foreach (var item in Model.DecesionTargets)
                 {
