@@ -80,6 +80,11 @@ namespace EPlast.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
@@ -524,6 +529,12 @@ namespace EPlast.Controllers
 
                 return View("Error");
             }
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword()
+        {
+            return View();
         }
     }
 }
