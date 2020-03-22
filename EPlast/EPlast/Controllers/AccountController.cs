@@ -109,6 +109,7 @@ namespace EPlast.Controllers
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
+                await _userManager.AddToRoleAsync(user, "Користувач");
 
                 if (!result.Succeeded)
                 {
@@ -146,8 +147,14 @@ namespace EPlast.Controllers
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
+
             if (result.Succeeded)
+            {
+                //Цей код повинен знаходитись тут(замість 99 рядка) при релізі проекту
+                //await _userManager.AddToRoleAsync(user, "Користувач");
                 return RedirectToAction("ConfirmedEmail", "Account");
+            }
+                
             else
                 return View("Error");
         }

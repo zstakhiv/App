@@ -13,8 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using EPlast.Models.ViewModelInitializations;
+using System.Threading.Tasks;
+using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
+using EPlast.Models.ViewModelInitializations;
 
 namespace EPlast
 {
@@ -36,6 +38,18 @@ namespace EPlast
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+
+                options.AddPolicy("Admin",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Admin");
+                    });
+
+            });
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -89,11 +103,51 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var roles = new[] { "Admin" ,"Користувач","Учасник Пласту"};
+            foreach (var role in roles)
+            {
+                if (!(await roleManager.RoleExistsAsync(role)))
+                {
+                    var idRole = new IdentityRole
+                    {
+                        Name = role
+                    };
+                    var res = await roleManager.CreateAsync(idRole);
+                }
+            }
+            var admin = Configuration.GetSection("Admin");
+            var profile = new User
+            {
+                Email = admin["Email"],
+                UserName = admin["Email"],
+                FirstName = "Admin",
+                LastName = "Admin",
+                EmailConfirmed = true,
+                ImagePath = "default.png",
+                UserProfile =new UserProfile()
+            };
+            if (await userManager.FindByEmailAsync(admin["Email"]) == null)
+            {
+                var res = await userManager.CreateAsync(profile, admin["Password"]);
+                if (res.Succeeded)
+                    await userManager.AddToRoleAsync(profile, "Admin");
+            }
+            else
+            {
+                var user = userManager.Users.First(item => item.Email == profile.Email);
+                await userManager.AddToRoleAsync(user, "Admin");
+            }
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +168,7 @@ namespace EPlast
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            CreateRoles(services).Wait();
         }
     }
 }

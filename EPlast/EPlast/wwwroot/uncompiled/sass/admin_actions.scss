@@ -1,0 +1,35 @@
+﻿.admin-edit {
+    .context-menu-icon.context-menu-icon--fa5 i, .context-menu-icon.context-menu-icon--fa5 svg {
+        position: absolute;
+        top: .4em;
+        left: .5em;
+        color: #3c5438;
+    }
+
+    i.fas.fa-trash-alt.delete {
+        color: red;
+    }
+
+    .context-menu-icon.context-menu-hover {
+        color: #000000;
+        cursor: pointer;
+        background-color: #CDCDCD;
+    }
+
+    .modal-content {
+        border-radius: 15px;
+    }
+}
+
+ul.context-menu-list.admin-edit.context-menu-root {
+    padding: 0;
+}
+
+.checkboxEPlast {
+    .custom-control-input:checked ~ .custom-control-label::before {
+        color: #fff;
+        border-color: #009c24;
+        background-color: #009c24;
+    }
+}
+
