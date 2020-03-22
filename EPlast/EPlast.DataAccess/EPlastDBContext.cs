@@ -75,10 +75,13 @@ namespace EPlast.DataAccess
                 .WithMany(x => x.CityMembers)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ClubMembers>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.ClubMembers)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.ClubMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+
+
 
         }
 
