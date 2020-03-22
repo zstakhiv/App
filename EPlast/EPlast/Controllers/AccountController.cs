@@ -1,22 +1,22 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using EPlast.BussinessLayer.Interfaces;
 using EPlast.DataAccess.Entities;
+using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using EPlast.DataAccess.Repositories;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using EPlast.BussinessLayer.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Drawing;
-using System.Web;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace EPlast.Controllers
 {
@@ -29,7 +29,7 @@ namespace EPlast.Controllers
         private readonly ILogger _logger;
         private readonly IEmailConfirmation _emailConfirmation;
         private readonly IHostingEnvironment _env;
-        
+
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IRepositoryWrapper repoWrapper,
@@ -79,13 +79,6 @@ namespace EPlast.Controllers
         [HttpGet]
         [AllowAnonymous]
         public IActionResult AccountLocked()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult ChangePassword()
         {
             return View();
         }
@@ -164,7 +157,6 @@ namespace EPlast.Controllers
                 //await _userManager.AddToRoleAsync(user, "Користувач");
                 return RedirectToAction("ConfirmedEmail", "Account");
             }
-                
             else
                 return View("Error");
         }
@@ -179,7 +171,7 @@ namespace EPlast.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
-                if(user == null)
+                if (user == null)
                 {
                     ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
                     return View(loginVM);
@@ -211,7 +203,6 @@ namespace EPlast.Controllers
             }
             return View("Login");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -251,7 +242,6 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-
             if (!_repoWrapper.Gender.FindAll().Any())
             {
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
@@ -259,7 +249,7 @@ namespace EPlast.Controllers
                 _repoWrapper.Save();
             }
             //!!
-           
+
             try
             {
                 var user = _repoWrapper.User.
@@ -284,14 +274,14 @@ namespace EPlast.Controllers
                                    });
                 var model = new EditUserViewModel()
                 {
-                    User=user,
+                    User = user,
                     Nationalities = _repoWrapper.Nationality.FindAll(),
                     Religions = _repoWrapper.Religion.FindAll(),
                     Educations = _repoWrapper.Education.FindAll(),
                     Works = _repoWrapper.Work.FindAll(),
-                    Degrees=_repoWrapper.Degree.FindAll()
+                    Degrees = _repoWrapper.Degree.FindAll()
                 };
-                
+
                 return View(model);
             }
             catch (Exception e)
@@ -310,10 +300,9 @@ namespace EPlast.Controllers
                 var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
                 if (file != null && file.Length > 0)
                 {
-
                     var img = Image.FromStream(file.OpenReadStream());
                     var uploads = Path.Combine(_env.WebRootPath, "images\\Users");
-                    if (!string.IsNullOrEmpty(oldImageName) && !string.Equals(oldImageName,"default.png"))
+                    if (!string.IsNullOrEmpty(oldImageName) && !string.Equals(oldImageName, "default.png"))
                     {
                         var oldPath = Path.Combine(uploads, oldImageName);
                         if (System.IO.File.Exists(oldPath))
@@ -335,7 +324,7 @@ namespace EPlast.Controllers
                 if (model.User.UserProfile.Nationality.ID == 0)
                 {
                     string name = model.User.UserProfile.Nationality.Name;
-                    if(string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(name))
                     {
                         model.User.UserProfile.Nationality = null;
                     }
@@ -348,7 +337,7 @@ namespace EPlast.Controllers
                 if (model.User.UserProfile.Religion.ID == 0)
                 {
                     string name = model.User.UserProfile.Religion.Name;
-                    if(string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(name))
                     {
                         model.User.UserProfile.Religion = null;
                     }
@@ -430,15 +419,15 @@ namespace EPlast.Controllers
                 var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію"); 
+                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
                     return View("ForgotPassword");
                 }
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action(
-                    nameof(ResetPassword), 
-                    "Account", 
-                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, 
+                    nameof(ResetPassword),
+                    "Account",
+                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
                     $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
@@ -472,7 +461,7 @@ namespace EPlast.Controllers
             var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
             if (result.Succeeded)
             {
-                if(await _userManager.IsLockedOutAsync(user))
+                if (await _userManager.IsLockedOutAsync(user))
                 {
                     await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
                 }

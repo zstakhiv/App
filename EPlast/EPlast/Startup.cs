@@ -41,15 +41,12 @@ namespace EPlast
 
             services.AddAuthorization(options =>
             {
-
                 options.AddPolicy("Admin",
                     authBuilder =>
                     {
                         authBuilder.RequireRole("Admin");
                     });
-
             });
-
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -70,7 +67,7 @@ namespace EPlast
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
-
+            services.AddScoped<IPDFService, PDFService>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
@@ -143,7 +140,6 @@ namespace EPlast
                 var user = userManager.Users.First(item => item.Email == profile.Email);
                 await userManager.AddToRoleAsync(user, "Admin");
             }
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
