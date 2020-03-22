@@ -16,6 +16,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Drawing;
 using System.Web;
+using System.Security.Claims;
 
 namespace EPlast.Controllers
 {
@@ -51,9 +52,14 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View();
+            LoginViewModel model = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            return View(model);
         }
 
         [HttpGet]
@@ -67,6 +73,13 @@ namespace EPlast.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult AccountLocked()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
@@ -139,26 +152,35 @@ namespace EPlast.Controllers
                 return View("Error");
         }
 
-        public async Task<IActionResult> Login(LoginViewModel loginVM)
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginVM, string returnUrl)
         {
+            loginVM.ReturnUrl = returnUrl;
+            loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(loginVM.Email);
                 if(user == null)
                 {
                     ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
-                    return View("Login");
+                    return View(loginVM);
                 }
                 else
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
-                        return View("Login");
+                        return View(loginVM);
                     }
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, true);
+                if (result.IsLockedOut)
+                {
+                    return RedirectToAction("AccountLocked", "Account");
+                }
+
                 if (result.Succeeded)
                 {
                     return RedirectToAction("UserProfile", "Account");
@@ -166,7 +188,7 @@ namespace EPlast.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
-                    return View("Login");
+                    return View(loginVM);
                 }
             }
             return View("Login");
@@ -175,7 +197,7 @@ namespace EPlast.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOff()
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
@@ -431,12 +453,84 @@ namespace EPlast.Controllers
             var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
             if (result.Succeeded)
             {
+                if(await _userManager.IsLockedOutAsync(user))
+                {
+                    await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                }
                 return View("ResetPasswordConfirmation");
             }
             else
             {
-                ModelState.AddModelError("", "Проблеми зі скидуванням пароля");
+                ModelState.AddModelError("", "Проблеми зі скидуванням пароля або введений новий пароль повинен вміщати 8символів, включаючи літери та цифри");
                 return View("ResetPassword");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
+                return View("Login");
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information");
+                return View("Login", loginViewModel);
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            ImagePath = "default.png",
+                            UserProfile = new UserProfile()
+                        };
+                        await _userManager.CreateAsync(user);
+                    }
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
+                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
+
+                return View("Error");
             }
         }
     }
