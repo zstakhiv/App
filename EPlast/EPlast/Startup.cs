@@ -61,7 +61,6 @@ namespace EPlast
             services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
 
             services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
-            services.AddScoped<IDecesionStatusRepository, DecesionStatusRepository>();
             services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IDecesionRepository, DecesionRepository>();
@@ -106,7 +105,7 @@ namespace EPlast
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var roles = new[] { "Admin" ,"Користувач","Учасник Пласту"};
+            var roles = new[] { "Admin", "Користувач", "Учасник Пласту" };
             foreach (var role in roles)
             {
                 if (!(await roleManager.RoleExistsAsync(role)))
@@ -127,7 +126,7 @@ namespace EPlast
                 LastName = "Admin",
                 EmailConfirmed = true,
                 ImagePath = "default.png",
-                UserProfile =new UserProfile()
+                UserProfile = new UserProfile()
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {

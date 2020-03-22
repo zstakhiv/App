@@ -9,7 +9,6 @@ namespace EPlast.DataAccess.Repositories
         INationalityRepository Nationality { get; }
         IOrganizationRepository Organization { get; }
         IDecesionTargetRepository DecesionTarget { get; }
-        IDecesionStatusRepository DecesionStatus { get; }
         IDocumentTemplateRepository DocumentTemplate { get; }
         IDecesionRepository Decesion { get; }
 

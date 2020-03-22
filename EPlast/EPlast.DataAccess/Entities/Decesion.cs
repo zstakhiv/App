@@ -7,22 +7,22 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Назва рішення не заповнена.")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Назва рішення не заповнена.")]
         public DecesionStatus DecesionStatus { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Організація не вибрана.")]
         public Organization Organization { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Тематика рішення не заповнена.")]
         public DecesionTarget DecesionTarget { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Опис рішення не заповнено.")]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Дата рішення не заповнена.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date")]
