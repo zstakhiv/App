@@ -14,6 +14,7 @@
   <ItemGroup>
     <Content Remove="Views\Account\LoginAndRegister.cshtml" />
     <Content Remove="Views\Account\_UserLayout.cshtml" />
+    <Content Remove="wwwroot\uncompiled\ts\clubAdmins.ts" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
     <Content Remove="wwwroot\uncompiled\ts\raport.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
@@ -43,7 +44,6 @@
     <Folder Include="wwwroot\compiled\css\" />
     <Folder Include="wwwroot\compiled\js\" />
     <Folder Include="wwwroot\uncompiled\less\" />
-    <Folder Include="wwwroot\uncompiled\sass\" />
     <Folder Include="wwwroot\lib\*" />
   </ItemGroup>
 

@@ -54,5 +54,33 @@ namespace EPlast.Controllers
 
             return View(new ClubViewModel { Club = club });
         }
+        public IActionResult ClubMembers(int index)
+        {
+            var club = _repoWrapper.Club
+                .FindByCondition(q => q.ID == index)
+                .Include(m => m.ClubMembers)
+                .ThenInclude(u => u.User)
+                .FirstOrDefault();
+
+            return View(new ClubViewModel { Club = club });
+        }
+        public IActionResult ClubFollowers(int index)
+        {
+            var club = _repoWrapper.Club
+                .FindByCondition(q => q.ID == index)
+                .Include(m => m.ClubMembers)
+                .ThenInclude(u => u.User)
+                .FirstOrDefault();
+
+            return View(new ClubViewModel { Club = club });
+        }
+        public IActionResult ClubDescription(int index)
+        {
+            var club = _repoWrapper.Club
+                .FindByCondition(q => q.ID == index)
+                .FirstOrDefault();
+
+            return View(new ClubViewModel { Club = club });
+        }
     }
 }
