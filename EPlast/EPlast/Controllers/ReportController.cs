@@ -77,7 +77,7 @@ namespace EPlast.Controllers
                 .FindByCondition(u => u.Id == _userManager.GetUserId(User))
                 .First();
                 var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "admin")
+                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
                     .First();
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.CityAdministration
@@ -102,7 +102,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAnnualReport(CityAdministration cityAdministration, CityLegalStatus cityLegalStatus, AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(AnnualReport annualReport)
         {
             try
             {
@@ -110,22 +110,17 @@ namespace EPlast.Controllers
                     .FindByCondition(u => u.Id == _userManager.GetUserId(User))
                     .First();
                 var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "admin")
+                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
                     .First();
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.CityAdministration.Any(ca => ca.UserId == user.Id && ca.AdminTypeId == adminType.ID && ca.EndDate == null))
                     .First();
-                cityAdministration.CityId = city.ID;
-                cityAdministration.AdminTypeId = adminType.ID;
-                cityLegalStatus.CityId = city.ID;
                 annualReport.UserId = user.Id;
                 annualReport.CityId = city.ID;
                 annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
                 if (ModelState.IsValid)
                 {
-                    _repoWrapper.CityAdministration.Create(cityAdministration);
-                    _repoWrapper.CityLegalStatuses.Create(cityLegalStatus);
                     _repoWrapper.AnnualReports.Create(annualReport);
                     _repoWrapper.Save();
                     return RedirectToAction("ViewAnnualReports", "Report");
