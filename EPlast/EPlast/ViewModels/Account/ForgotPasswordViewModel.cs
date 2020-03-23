@@ -8,7 +8,7 @@ namespace EPlast.ViewModels
 {
     public class ForgotPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
         [EmailAddress]
         public string Email { get; set; }
     }

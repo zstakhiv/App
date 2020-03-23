@@ -10,7 +10,6 @@ namespace EPlast.DataAccess.Repositories
         private INationalityRepository _nationality;
         private IOrganizationRepository _organization;
         private IDecesionTargetRepository _decesionTarget;
-        private IDecesionStatusRepository _decesionStatus;
         private IDocumentTemplateRepository _documentTemplate;
         private IDecesionRepository _decesion;
         private IEventRepository _event;
@@ -67,18 +66,6 @@ namespace EPlast.DataAccess.Repositories
                     _documentTemplate = new DocumentTemplateRepository(_dbContext);
                 }
                 return _documentTemplate;
-            }
-        }
-
-        public IDecesionStatusRepository DecesionStatus
-        {
-            get
-            {
-                if (_decesionStatus == null)
-                {
-                    _decesionStatus = new DecesionStatusRepository(_dbContext);
-                }
-                return _decesionStatus;
             }
         }
 

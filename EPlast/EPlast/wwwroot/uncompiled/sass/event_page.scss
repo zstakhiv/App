@@ -1,0 +1,115 @@
+.event-page-wrapper .event-header {
+  color: #3c5438;
+  font-size: 19px;
+}
+
+.event-page-wrapper .admin-link {
+  color: #73bd79;
+  font-size: 18px;
+}
+
+.event-page-wrapper .event-value {
+  font-size: 18px;
+}
+
+.event-page-wrapper .event-description {
+  font-size: 16px;
+}
+
+.event-page-wrapper .logo {
+  color: #3c5438;
+  font-size: 200px;
+}
+
+.event-page-wrapper .event-detail {
+  color: #3c5438;
+  font-size: 20px;
+}
+
+.event-page-wrapper .event-detail:hover {
+  color: #73bd79;
+}
+
+.event-page-wrapper .event-fabutton {
+  background: none;
+  padding: 0px;
+  border: none;
+}
+
+.event-page-wrapper .event-remove {
+  color: #8B0000;
+  font-size: 25px;
+}
+
+button.event-page-wrapper.event-remove:hover {
+  color: #FF0000;
+}
+
+.event-page-wrapper .event-link {
+  color: #3c5438;
+  font-size: 25px;
+}
+
+button.event-page-wrapper.event-link:hover {
+  color: #73bd79;
+}
+
+.event-page-wrapper .event-invisible {
+  display: none;
+}
+
+.event-page-wrapper .participant-status {
+  color: #FF8C00;
+  font-size: 25px;
+}
+
+button.event-page-wrapper.participant-status:hover {
+  color: #FFA500;
+}
+
+.event-page-wrapper .carousel-inner img {
+  width: 100%;
+  height: 100%;
+}
+
+.event-page-wrapper .carousel-item {
+  text-align: center;
+}
+
+a.event-page-wrapper :hover {
+  color: #73bd79;
+}
+
+.event-page-wrapper .plast-color {
+  color: #3c5438;
+}
+
+.event-page-wrapper .carousel-inner img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+@media (max-width: 480px) {
+  .event-page-wrapper .carousel-inner img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+}
+
+.event-page-wrapper .btn-collapse {
+  background-color: #3c5438;
+  color: #ffff;
+  font-size: 20px;
+}
+
+input.event-page-wrapper.btn-collapse:hover {
+  background-color: #73bd79;
+  color: #ffff;
+}
+
+.event-page-wrapper .part-check {
+  width: 20px;
+  height: 20px;
+}
