@@ -11,13 +11,13 @@
                 <div class="col">
                     <div class="form-group p-3 m-2 border shadow-sm">
                         <h4>Голова новообраної Старшини</h4>
-                        <select asp-for="CityAdministration.UserId" asp-items="Model.CityMembers" , class="form-control" />
+                        <select asp-for="AnnualReport.CityManagement.UserId" asp-items="Model.CityMembers" class="form-control"></select>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group p-3 m-2 border shadow-sm">
                         <h4>Правовий статус осередку</h4>
-                        <select asp-for="CityLegalStatus.LegalStatusType" asp-items="Model.CityLegalStatusTypes" class="form-control" />
+                        <select asp-for="AnnualReport.CityManagement.CityLegalStatus" asp-items="Model.CityLegalStatusTypes" class="form-control"></select>
                     </div>
                 </div>
             </div>
@@ -183,11 +183,11 @@
             <div class="form-row p-3 m-2 border shadow-sm">
                 <div class="col align-self-end">
                     <label>Вкажіть, що вам допоможе ефективніше залучати волонтерів та створювати виховні частини (гнізда, курені)</label>
-                    <textarea asp-for="AnnualReport.ImprovementNeeds" class="form-control textarea-fixed" />
+                    <textarea asp-for="AnnualReport.ImprovementNeeds" class="form-control textarea-fixed"></textarea>
                 </div>
                 <div class="col align-self-end">
                     <label>Вкажіть перелік майна, що є в станиці</label>
-                    <textarea asp-for="AnnualReport.ListProperty" class="form-control textarea-fixed" />
+                    <textarea asp-for="AnnualReport.ListProperty" class="form-control textarea-fixed"></textarea>
                 </div>
             </div>
         </div>
