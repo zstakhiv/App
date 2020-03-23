@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EPlast</title>
     <meta charset="UTF-8" />
-    <environment include="Development">
-        <link href="~/lib/mdbootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="~/lib/mdbootstrap/css/mdb.min.css" />
-        <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
-        <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/bundles/css/bundle.css" rel="stylesheet" />
-    </environment>
+    @*<environment include="Development">*@
+    <link href="~/lib/mdbootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/mdbootstrap/css/mdb.min.css" />
+    <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
+    <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/bundles/css/bundle.css" rel="stylesheet" />
+    @*</environment>*@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -27,7 +27,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User))
@@ -127,22 +126,21 @@
                     </div>
                 </nav>
             </div>
-
         </main>
         @RenderBody()
     }
 
-    <environment include="Development">
+    @*<environment include="Development">*@
 
-        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
-        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-        <script src="~/bundles/js/bundle-min.js"></script>
-        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
-    </environment>
+    <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+    <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="~/bundles/js/bundle-min.js"></script>
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    @*</environment>*@
 
     @RenderSection("Scripts", required: false)
 </body>

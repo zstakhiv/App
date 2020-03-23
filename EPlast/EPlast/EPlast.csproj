@@ -5,6 +5,7 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.7</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <UserSecretsId>e369feca-c583-4fdf-aaac-532e319201da</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
