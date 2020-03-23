@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<IdentityUser>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
@@ -64,11 +64,25 @@ namespace EPlast.DataAccess
                 .HasOne(x => x.User)
                 .WithMany(e => e.Events)
                 .HasForeignKey(x => x.UserID);
+
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.UserProfile)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CityMembers>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.CityMembers)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.ClubMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
         public DbSet<Organization> Organization { get; set; }
-        public DbSet<DecesionStatus> DecesionStatuses { get; set; }
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }

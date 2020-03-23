@@ -1,0 +1,66 @@
+﻿@using EPlast.ViewModels
+@model List<UserTableViewModel>
+@{
+    ViewData["Title"] = "Таблиця корустувачів";
+}
+<div class="container">
+    <div class="data-table-wrapper admin-edit">
+        <table id="dtReadRaport" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th class="th-sm">
+                        Прізвище
+                    </th>
+                    <th class="th-sm">
+                        Ім'я
+                    </th>
+                    <th class="th-sm">
+                        Стать
+                    </th>
+                    <th class="th-sm">
+                        Ступінь
+                    </th>
+                    <th class="th-sm">
+                        Email
+                    </th>
+                    <th class="th-sm">
+                        Округа
+                    </th>
+                    <th class="th-sm">
+                        Станиця
+                    </th>
+                    <th class="th-sm">
+                        Курінь
+                    </th>
+                    <th class="th-sm">
+                        Права доступу EPlast
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="context-menu-one" data-id="@item.User.Id">
+                        <td>@item.User.LastName</td>
+                        <td>@item.User.FirstName</td>
+                        <td>
+                            @if (item.User.UserProfile.GenderID == 1)
+                            {<span>Чоловік</span>}
+                            else
+                            {<Span>Жінка</Span>}
+                        </td>
+                        <td>@item.UserPlastDegreeName</td>
+                        <td>@item.User.Email</td>
+                        <td>@item.RegionName</td>
+                        <td>@item.CityName</td>
+                        <td>@item.ClubName</td>
+                        <td>@item.UserRoles</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="modDialog" class="modal fade">
+            <div id="dialogContent" class="modal-dialog"></div>
+        </div>
+    </div>
+</div>   

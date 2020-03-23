@@ -1,15 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using EPlast.ViewModels;
+﻿using EPlast.BussinessLayer;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
+using EPlast.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
@@ -18,12 +20,16 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
         private readonly UserManager<User> _userManager;
+        private readonly IPDFService _PDFService;
 
-        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator)
+        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
+            IPDFService PDFService)
+
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
             _userManager = userManager;
+            _PDFService = PDFService;
         }
 
         public IActionResult Index()
@@ -31,40 +37,74 @@ namespace EPlast.Controllers
             return View();
         }
 
+        [Authorize("Admin")]
         public IActionResult CreateRaport()
         {
-            return View(new DecesionViewModel());
+            DecesionViewModel decesionViewModel = new DecesionViewModel
+            {
+                Decesion = new Decesion(),
+                SelectListItems = (from item in _repoWrapper.Organization.FindAll()
+                                   select new SelectListItem
+                                   {
+                                       Text = item.OrganizationName,
+                                       Value = item.ID.ToString()
+                                   }),
+                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList()
+            };
+
+            return View(decesionViewModel);
         }
 
+        [Authorize("Admin")]
         [HttpPost]
         public IActionResult SaveReport(DecesionViewModel decesionViewModel)
         {
-            decesionViewModel.Decesion.DecesionStatus = new DecesionStatus { ID = 1, DecesionStatusName = "У розгляді" };
-            _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
-            _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
-            _repoWrapper.Save();
-            return RedirectToAction("CreateRaport");
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Дані введені неправильно");
+                    return View("CreateRaport");
+                }
+                decesionViewModel.Decesion.DecesionStatus = 0;
+                _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
+                _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
+                _repoWrapper.Save();
+                return View("CreateRaport");
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
+        [Authorize("Admin")]
         public IActionResult ReadRaport()
         {
-            List<DecesionViewModel> decesions = new List<DecesionViewModel>(
-                _repoWrapper.Decesion
-                .Include(x => x.DecesionStatus, x => x.DecesionTarget, x => x.Organization)
-                .Take(200)
-                .Select(decesion => new DecesionViewModel { Decesion = decesion })
-                .ToList());
+            try
+            {
+                List<DecesionViewModel> decesions = new List<DecesionViewModel>(
+                    _repoWrapper.Decesion
+                    .Include(x => x.DecesionTarget, x => x.Organization)
+                    .Take(200)
+                    .Select(decesion => new DecesionViewModel { Decesion = decesion })
+                    .ToList());
 
-            return View(decesions);
+                return View(decesions);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
+        [Authorize("Admin")]
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            BussinessLayer.PDFService PDFService = new BussinessLayer.PDFService();
-            byte[] arr = await PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
-                                                                                       x => x.DecesionTarget,
-                                                                                       x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
+            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
+                                                                                                x => x.Organization).Where(x => x.ID == objId)
+                                                                                                                    .FirstOrDefault());
             return File(arr, "application/pdf");
         }
 

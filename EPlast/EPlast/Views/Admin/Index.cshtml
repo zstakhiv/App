@@ -1,0 +1,16 @@
+﻿@model IEnumerable<EPlast.DataAccess.Entities.User>
+
+<div class="admin-edit">
+    <h2>Список користувачів</h2>
+    <table class="table">
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    <a class="context-menu-one btn btn-neutral " data-id="@user.Id">@user.Email</a>
+                </td>
+            </tr>
+
+        }
+    </table>
+</div>
