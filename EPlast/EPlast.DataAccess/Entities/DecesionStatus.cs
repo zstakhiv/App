@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class DecesionStatus
+    public enum DecesionStatus
     {
-        public int ID { get; set; }
+        [Description("У розгляді")]
+        InReview,
 
-        [DisplayName("Decesion Status Name")]
-        [Required, MaxLength(50, ErrorMessage = "Decesion Status Name cannot exceed 50 characters")]
-        public string DecesionStatusName { get; set; }
+        [Description("Підтверджено")]
+        Confirmed,
+
+        [Description("Скасовано")]
+        Canceled
     }
 }

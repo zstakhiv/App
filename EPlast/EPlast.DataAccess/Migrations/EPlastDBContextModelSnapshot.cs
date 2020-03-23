@@ -364,7 +364,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("DecesionStatusID");
+                    b.Property<int>("DecesionStatus");
 
                     b.Property<int>("DecesionTargetID");
 
@@ -378,28 +378,11 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DecesionStatusID");
-
                     b.HasIndex("DecesionTargetID");
 
                     b.HasIndex("OrganizationID");
 
                     b.ToTable("Decesions");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("DecesionStatusName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DecesionStatuses");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionTarget", b =>
@@ -1126,7 +1109,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("CityMembers")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ClubAdministration", b =>
@@ -1153,7 +1137,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("ClubMembers")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
@@ -1170,11 +1155,6 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Decesion", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.DecesionStatus", "DecesionStatus")
-                        .WithMany()
-                        .HasForeignKey("DecesionStatusID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("EPlast.DataAccess.Entities.DecesionTarget", "DecesionTarget")
                         .WithMany()
                         .HasForeignKey("DecesionTargetID")
@@ -1319,7 +1299,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("EPlast.DataAccess.Entities.UserProfile", "UserID");
+                        .HasForeignKey("EPlast.DataAccess.Entities.UserProfile", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.Work", "Work")
                         .WithMany("UserProfiles")

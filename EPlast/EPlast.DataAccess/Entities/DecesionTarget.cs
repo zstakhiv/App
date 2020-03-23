@@ -8,8 +8,8 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
 
-        [DisplayName("Target Name")]
-        [Required, MaxLength(50, ErrorMessage = "Target Name cannot exceed 50 characters")]
+        [DisplayName("Тематика рішення не заповнена.")]
+        [Required, MaxLength(50, ErrorMessage = "Тематика рішення має бути не довшою ніж 50 символів")]
         public string TargetName { get; set; }
     }
 }

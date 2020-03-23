@@ -1,6 +1,10 @@
+@{
+    Layout="~/Views/Shared/_LayoutWithoutFooter.cshtml";
+}
+
 @using EPlast.ViewModels;
 @model LoginViewModel
-
+<div class="main-wrapper" style="background-color: rgb(245,245,245);">
 <div class="login-clean" style="background-color: rgb(245, 245, 245);">
     <div class="form">
         <div class="login-register-switcher">
@@ -56,7 +60,7 @@
         </div>
     </div>
 </div>
-
+    </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

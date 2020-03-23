@@ -7,8 +7,12 @@ namespace EPlast.BussinessLayer
     {
         public async Task<byte[]> DecesionCreatePDFAsync(Decesion pdfData)
         {
-            DecesionPDFCreator creator = new DecesionPDFCreator(pdfData);
-            return await Task.Run(() => creator.GetBytes());
+            IPDFSettings pdfSettings = new PDFSettings()
+            {
+                Title = string.Format("Рішення {0}", pdfData.Organization.OrganizationName)
+            };
+            IPDFCreator creator = new PDFCreator(new DecisionDocument(pdfData, pdfSettings));
+            return await Task.Run(() => creator.GetPDFBytes());
         }
     }
 }
