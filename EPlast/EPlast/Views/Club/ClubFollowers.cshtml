@@ -9,22 +9,19 @@
             <div class="club-list">
                 @foreach (var item in Model.Club.ClubMembers)
                 {
-                    @if (!@item.IsApproved)
+                    @if (@item.IsApproved)
                     {
-                        <a class="club-block-wrapper" asp-controller="Account" asp-action="UserProfile" asp-route-index="@item.User.Id">
+                        <div class="club-block-wrapper">
                             <div class="club-block">
-                                <div class="club-img-wrapper">
+                                <a class="club-img-wrapper blocking" asp-controller="Account" asp-action="UserProfile" asp-route-index="@item.User.Id">
                                     <div class="club-img" style="background-image:url('https://i.pravatar.cc/')"></div>
-                                </div>
-                                <p class="club-name">
-                                    <span>
-                                        @item.User.FirstName @item.User.LastName
-                                    </span>
-                                    <i class="material-icons white-icon" style="width: 10px; font-size: 15px;">add-box</i>
-                                </p> 
-                                
+                                </a>
+                                <a class="club-name" asp-controller="Account" asp-action="UserProfile" asp-route-index="@item.User.Id">
+                                    @item.User.FirstName @item.User.LastName
+                                </a>
+                                <a class="buttons" style="display: block; color: white;">Додати в курінь</a>
                             </div>
-                        </a>
+                        </div>
                     }
                 }
 

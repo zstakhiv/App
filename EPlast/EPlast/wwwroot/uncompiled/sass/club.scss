@@ -18,6 +18,11 @@
     font-size: 18px;
     display: block;
     align-self: stretch;
+
+    &:hover {
+        text-decoration: none;
+        color: white;
+    }
 }
 
 .club-page-wrapper {
