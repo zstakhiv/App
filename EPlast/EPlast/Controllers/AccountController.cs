@@ -114,6 +114,7 @@ namespace EPlast.Controllers
                     UserName = registerVM.Email,
                     LastName = registerVM.SurName,
                     FirstName = registerVM.Name,
+                    RegistredOn=DateTime.Now,
                     ImagePath = "default.png",
                     UserProfile = new UserProfile()
                 };
