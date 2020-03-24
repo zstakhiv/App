@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 </head>
 <body>
-    @if (!SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
