@@ -20,6 +20,7 @@
                           <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
                       </div>
                   }
+                  <a asp-controller="Club" asp-action="EditClub" asp-route-index="@Model.Club.ID" class="buttons">Редагувати</a>
                   <a asp-controller="Club" asp-action="ClubAdmins" asp-route-index="@Model.Club.ID" class="buttons">Більше</a>
               </div>
             </div>

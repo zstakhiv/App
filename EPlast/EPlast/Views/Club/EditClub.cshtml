@@ -1,0 +1,45 @@
+﻿@using EPlast.DataAccess.Repositories
+@using EPlast.DataAccess.Entities
+@model EPlast.ViewModels.ClubViewModel
+<form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-action="EditConfirmed" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-7">
+            <h1>Редагування профілю</h1>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Назва куреня:</label>
+                <input asp-for="Club.ClubName" class="form-control">
+                <span asp-validation-for="Club.ClubName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Web-сторінка:</label>
+                <input asp-for="Club.ClubURL" class="form-control">
+                <span asp-validation-for="Club.ClubURL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Web-сторінка:</label>
+                <input asp-for="Club.Description" class="form-control">
+                <span asp-validation-for="Club.Description" class="text-danger"></span>
+            </div>
+            <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
+        </div>
+        <div class="col ">
+            <div class="form-group row">
+                <div class="col">
+                    <img src="@Model.Club.Logo" class="img-thumbnail rounded mx-auto d-block" id="img" alt="your image" />
+
+                    <div class="custom-file" id="customFile">
+                        <input type="file" class="custom-file-input" id="file" name="file" onchange="document.getElementById('img').src = window.URL.createObjectURL(this.files[0])">
+                        <label class="custom-file-label" for="file">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
