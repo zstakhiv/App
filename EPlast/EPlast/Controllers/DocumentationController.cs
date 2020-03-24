@@ -52,7 +52,7 @@ namespace EPlast.Controllers
                                              Value = item.ID.ToString()
                                          }),
                 DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
-                DecesionStatusListItems = _decisionVMCreator.GetDecesionStatusTypes()
+                DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
             };
 
             return View(decesionViewModel);

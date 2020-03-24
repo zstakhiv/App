@@ -14,7 +14,7 @@ namespace EPlast.Models.ViewModelInitializations
         public IEnumerable<SelectListItem> GetDecesionStatusTypes()
         {
             var decisionStatusTypesSLI = new List<SelectListItem>();
-            foreach (Enum decisionStatusType in Enum.GetValues(typeof(DecesionStatus)))
+            foreach (Enum decisionStatusType in Enum.GetValues(typeof(DecesionStatusType)))
             {
                 decisionStatusTypesSLI.Add(new SelectListItem
                 {

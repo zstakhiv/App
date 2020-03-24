@@ -11,7 +11,7 @@ namespace EPlast.DataAccess.Entities
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Назва рішення не заповнена.")]
-        public DecesionStatus DecesionStatus { get; set; }
+        public DecesionStatusType DecesionStatusType { get; set; }
 
         [Required(ErrorMessage = "Організація не вибрана.")]
         public Organization Organization { get; set; }
@@ -27,5 +27,8 @@ namespace EPlast.DataAccess.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date")]
         public DateTime Date { get; set; }
+
+        [Required]
+        public bool HaveFile { get; set; }
     }
 }

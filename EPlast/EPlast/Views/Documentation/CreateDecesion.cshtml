@@ -61,9 +61,9 @@
                 <strong>Статус рішення</strong>
                 <br>
             </label>
-            @Html.DropDownListFor(x => x.Decesion.DecesionStatus, Model.DecesionStatusListItems, "Виберіть статус рішення"
+            @Html.DropDownListFor(x => x.Decesion.DecesionStatusType, Model.DecesionStatusTypeListItems, "Виберіть статус рішення"
             , new { @class = "form-control" })
-            <span asp-validation-for="@Model.Decesion.DecesionStatus" style="color:#db0b3c;" />
+            <span asp-validation-for="@Model.Decesion.DecesionStatusType" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
             <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
