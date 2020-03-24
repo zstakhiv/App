@@ -9,7 +9,7 @@
         }
     });
 
-    $("button.delete-card").click(function () {
+    $("a.delete-card").click(function () {
         $(this).parents("div.single-card").remove();
     });
 

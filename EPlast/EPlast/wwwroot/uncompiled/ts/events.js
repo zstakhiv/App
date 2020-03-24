@@ -7,7 +7,7 @@ $(document).ready(function () {
             $(this).find("div.events-part").show();
         }
     });
-    $("button.delete-card").click(function () {
+    $("a.delete-card").click(function () {
         $(this).parents("div.single-card").remove();
     });
     $("div.events-unsubscribe").click(function () {

@@ -12,7 +12,15 @@
     color: #73bd79;
 }
 
+.events-page-wrapper a.event-link:hover {
+    color: #73bd79;
+}
+
 .events-page-wrapper button.event-remove:hover {
+    color: #FF0000;
+}
+
+.events-page-wrapper a.event-remove:hover {
     color: #FF0000;
 }
 
