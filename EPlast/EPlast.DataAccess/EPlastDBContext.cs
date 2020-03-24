@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EPlast.DataAccess
 {
-    public class EPlastDBContext : IdentityDbContext<IdentityUser>
+    public class EPlastDBContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public EPlastDBContext(DbContextOptions<EPlastDBContext> options) : base(options)
         {
@@ -64,16 +64,30 @@ namespace EPlast.DataAccess
                 .HasOne(x => x.User)
                 .WithMany(e => e.Events)
                 .HasForeignKey(x => x.UserID);
+
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.UserProfile)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CityMembers>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.CityMembers)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.ClubMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<DocumentTemplate> DocumentTemplates { get; set; }
         public DbSet<Organization> Organization { get; set; }
-        public DbSet<DecesionStatus> DecesionStatuses { get; set; }
         public DbSet<DecesionTarget> DecesionTargets { get; set; }
         public DbSet<Decesion> Decesions { get; set; }
         public DbSet<AnnualReport> AnnualReports { get; set; }
         public DbSet<MembersStatistic> MembersStatistics { get; set; }
-        public DbSet<AnnualReportStatus> AnnualReportStatuses { get; set; }
+        public DbSet<CityManagement> CityManagements { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<CityAdministration> CityAdministrations { get; set; }
         public DbSet<CityDocuments> CityDocuments { get; set; }
@@ -87,8 +101,6 @@ namespace EPlast.DataAccess
         public DbSet<Region> Regions { get; set; }
         public DbSet<RegionAdministration> RegionAdministrations { get; set; }
         public DbSet<CityLegalStatus> CityLegalStatuses { get; set; }
-        public DbSet<CityLegalStatusType> CityLegalStatusTypes { get; set; }
         public DbSet<UserPlastDegree> UserPlastDegrees { get; set; }
-        public DbSet<UserPlastDegreeType> UserPlastDegreeTypes { get; set; }
     }
 }

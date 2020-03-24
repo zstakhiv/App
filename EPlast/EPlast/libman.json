@@ -34,6 +34,32 @@
         "jquery-ui.min.css",
         "jquery-ui.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-contextmenu@2.9.0",
+      "destination": "wwwroot/lib/jquery-contextmenu/",
+      "files": [
+        "dist/jquery.contextMenu.min.css",
+        "dist/jquery.ui.position.min.js",
+        "dist/jquery.contextMenu.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-validation@1.19.1",
+      "destination": "wwwroot/lib/jquery-validation/",
+      "files": [
+        "dist/jquery.validate.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-validation-unobtrusive@3.2.11",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
+      "files": [
+        "dist/jquery.validate.unobtrusive.min.js"
+      ]
     }
   ]
 }

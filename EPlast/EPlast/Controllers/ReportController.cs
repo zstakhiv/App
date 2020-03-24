@@ -1,28 +1,35 @@
-﻿using EPlast.DataAccess.Entities;
+﻿using EPlast.BussinessLayer;
+using EPlast.DataAccess.Entities;
+using EPlast.DataAccess.Repositories;
+using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EPlast.ViewModels.Initialization.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using System;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EPlast.Controllers
 {
     public class ReportController : Controller
     {
-        private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
+        private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
         private readonly UserManager<User> _userManager;
+        private readonly IPDFService _PDFService;
 
-        public ReportController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator)
+        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
+            IPDFService PDFService)
+
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
             _userManager = userManager;
+            _PDFService = PDFService;
         }
 
         public IActionResult Index()
@@ -30,40 +37,74 @@ namespace EPlast.Controllers
             return View();
         }
 
+        [Authorize("Admin")]
         public IActionResult CreateRaport()
         {
-            return View(new DecesionViewModel());
+            DecesionViewModel decesionViewModel = new DecesionViewModel
+            {
+                Decesion = new Decesion(),
+                SelectListItems = (from item in _repoWrapper.Organization.FindAll()
+                                   select new SelectListItem
+                                   {
+                                       Text = item.OrganizationName,
+                                       Value = item.ID.ToString()
+                                   }),
+                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList()
+            };
+
+            return View(decesionViewModel);
         }
 
+        [Authorize("Admin")]
         [HttpPost]
         public IActionResult SaveReport(DecesionViewModel decesionViewModel)
         {
-            decesionViewModel.Decesion.DecesionStatus = new DecesionStatus { ID = 1, DecesionStatusName = "У розгляді" };
-            _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
-            _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
-            _repoWrapper.Save();
-            return RedirectToAction("CreateRaport");
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Дані введені неправильно");
+                    return View("CreateRaport");
+                }
+                decesionViewModel.Decesion.DecesionStatus = 0;
+                _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
+                _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
+                _repoWrapper.Save();
+                return View("CreateRaport");
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
+        [Authorize("Admin")]
         public IActionResult ReadRaport()
         {
-            List<DecesionViewModel> decesions = new List<DecesionViewModel>(
-                _repoWrapper.Decesion
-                .Include(x => x.DecesionStatus, x => x.DecesionTarget, x => x.Organization)
-                .Take(200)
-                .Select(decesion => new DecesionViewModel { Decesion = decesion })
-                .ToList());
+            try
+            {
+                List<DecesionViewModel> decesions = new List<DecesionViewModel>(
+                    _repoWrapper.Decesion
+                    .Include(x => x.DecesionTarget, x => x.Organization)
+                    .Take(200)
+                    .Select(decesion => new DecesionViewModel { Decesion = decesion })
+                    .ToList());
 
-            return View(decesions);
+                return View(decesions);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
+        [Authorize("Admin")]
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            BussinessLayer.PDFService PDFService = new BussinessLayer.PDFService();
-            byte[] arr = await PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionStatus,
-                                                                                       x => x.DecesionTarget,
-                                                                                       x => x.Organization).Where(x => x.ID == objId).FirstOrDefault());
+            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
+                                                                                                x => x.Organization).Where(x => x.ID == objId)
+                                                                                                                    .FirstOrDefault());
             return File(arr, "application/pdf");
         }
 
@@ -76,7 +117,7 @@ namespace EPlast.Controllers
                 .FindByCondition(u => u.Id == _userManager.GetUserId(User))
                 .First();
                 var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "admin")
+                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
                     .First();
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.CityAdministration
@@ -85,16 +126,14 @@ namespace EPlast.Controllers
                 var cityMembers = _repoWrapper.User
                     .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                     .Include(u => u.UserPlastDegrees);
-                var cityLegalStatusTypes = _repoWrapper.CityLegalStatusTypes
-                    .FindAll();
-                var userPlastDegreeTypes = _repoWrapper.UserPlastDegreeTypes.FindAll();
-                return View(new AnnualReportViewModel
+                var annualReportViewModel = new AnnualReportViewModel
                 {
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(cityLegalStatusTypes),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(cityMembers, userPlastDegreeTypes)
-                });
+                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
+                    AnnualReport = _annualReportVMCreator.GetAnnualReport(cityMembers)
+                };
+                return View(annualReportViewModel);
             }
             catch
             {
@@ -103,7 +142,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAnnualReport(CityAdministration cityAdministration, CityLegalStatus cityLegalStatus, AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(AnnualReport annualReport)
         {
             try
             {
@@ -111,25 +150,17 @@ namespace EPlast.Controllers
                     .FindByCondition(u => u.Id == _userManager.GetUserId(User))
                     .First();
                 var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "admin")
+                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
                     .First();
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.CityAdministration.Any(ca => ca.UserId == user.Id && ca.AdminTypeId == adminType.ID && ca.EndDate == null))
                     .First();
-                var annualReportStatus = _repoWrapper.AnnualReportStatuses
-                    .FindByCondition(ars => ars.Name == "Непідтверджений")
-                    .First();
-                cityAdministration.CityId = city.ID;
-                cityAdministration.AdminTypeId = adminType.ID;
-                cityLegalStatus.CityId = city.ID;
                 annualReport.UserId = user.Id;
                 annualReport.CityId = city.ID;
-                annualReport.AnnualReportStatusId = annualReportStatus.ID;
+                annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
                 if (ModelState.IsValid)
                 {
-                    _repoWrapper.CityAdministration.Create(cityAdministration);
-                    _repoWrapper.CityLegalStatuses.Create(cityLegalStatus);
                     _repoWrapper.AnnualReports.Create(annualReport);
                     _repoWrapper.Save();
                     return RedirectToAction("ViewAnnualReports", "Report");
@@ -139,18 +170,17 @@ namespace EPlast.Controllers
                     var cityMembers = _repoWrapper.User
                         .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                         .Include(u => u.UserPlastDegrees);
-                    var cityLegalStatusTypes = _repoWrapper.CityLegalStatusTypes
-                        .FindAll();
-                    return View(new AnnualReportViewModel
+                    var annualReportViewModel = new AnnualReportViewModel
                     {
                         CityName = city.Name,
                         CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(cityLegalStatusTypes),
+                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                         AnnualReport = annualReport
-                    });
+                    };
+                    return View(annualReportViewModel);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return RedirectToAction("HandleError", "Error");
             }
@@ -184,26 +214,22 @@ namespace EPlast.Controllers
                         Text = i.ToString()
                     });
                 }
-                var annualReportStatuses = _repoWrapper.AnnualReportStatuses.FindAll();
+                var annualReports = _repoWrapper.AnnualReports
+                    .FindAll()
+                    .Include(ar => ar.City)
+                    .Include(ar => ar.User)
+                    .Include(ar => ar.MembersStatistic)
+                    .ToList();
                 return View(new ViewAnnualReportsViewModel
                 {
                     Regions = regions,
                     Years = years,
-                    UnconfirmedAnnualReports = _repoWrapper.AnnualReports
-                        .FindByCondition(ar => ar.AnnualReportStatusId == annualReportStatuses.First(ars => ars.Name == "Непідтверджений").ID)
-                        .Include(ar => ar.City)
-                        .Include(ar => ar.User)
-                        .Include(ar => ar.MembersStatistic),
-                    ConfirmedAnnualReports = _repoWrapper.AnnualReports
-                        .FindByCondition(ar => ar.AnnualReportStatusId == annualReportStatuses.First(ars => ars.Name == "Підтверджений").ID)
-                        .Include(ar => ar.City)
-                        .Include(ar => ar.User)
-                        .Include(ar => ar.MembersStatistic),
-                    CanceledAnnualReports = _repoWrapper.AnnualReports
-                        .FindByCondition(ar => ar.AnnualReportStatusId == annualReportStatuses.First(ars => ars.Name == "Скасований").ID)
-                        .Include(ar => ar.City)
-                        .Include(ar => ar.User)
-                        .Include(ar => ar.MembersStatistic),
+                    UnconfirmedAnnualReports = annualReports
+                        .FindAll(ar => ar.Status == AnnualReportStatus.Unconfirmed),
+                    ConfirmedAnnualReports = annualReports
+                        .FindAll(ar => ar.Status == AnnualReportStatus.Confirmed),
+                    CanceledAnnualReports = annualReports
+                        .FindAll(ar => ar.Status == AnnualReportStatus.Canceled)
                 });
             }
             catch

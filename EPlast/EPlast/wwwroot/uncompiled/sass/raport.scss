@@ -70,7 +70,7 @@
         }
 
         .btn-primary {
-            background-color: #055ada !important;
+            background-color: #3c5438 !important;
             margin-top: 15px;
             color: #fff;
         }
@@ -126,5 +126,16 @@
                 bottom: .5em;
             }
         }
+    }
+
+    .page-item.disabled .page-link {
+        background-color: #3c5438;
+        color: #ffffff;
+    }
+
+    .page-item.active .page-link {
+        color: #000;
+        background-color: #ffffff;
+        border-color: none;
     }
 }

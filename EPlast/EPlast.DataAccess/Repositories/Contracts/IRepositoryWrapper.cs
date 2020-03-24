@@ -9,7 +9,6 @@ namespace EPlast.DataAccess.Repositories
         INationalityRepository Nationality { get; }
         IOrganizationRepository Organization { get; }
         IDecesionTargetRepository DecesionTarget { get; }
-        IDecesionStatusRepository DecesionStatus { get; }
         IDocumentTemplateRepository DocumentTemplate { get; }
         IDecesionRepository Decesion { get; }
 
@@ -44,12 +43,10 @@ namespace EPlast.DataAccess.Repositories
         IRegionAdministrationRepository RegionAdministration { get; }
 
         IAnnualReportsRepository AnnualReports { get; }
-        IAnnualReportStatusesRepository AnnualReportStatuses { get; }
         IMembersStatisticsRepository MembersStatistics { get; }
         ICityLegalStatusesRepository CityLegalStatuses { get; }
-        ICityLegalStatusTypesRepository CityLegalStatusTypes { get; }
         IUserPlastDegreesRepository UserPlastDegrees { get; }
-        IUserPlastDegreeTypesRepository UserPlastDegreeTypes { get; }
+        ICityManagementsRepository CityManagements { get; }
 
         void Save();
     }

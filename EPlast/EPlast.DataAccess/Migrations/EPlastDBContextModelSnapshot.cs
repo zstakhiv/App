@@ -40,8 +40,6 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AnnualReportStatusId");
-
                     b.Property<int>("CityId");
 
                     b.Property<int>("ContributionFunds");
@@ -80,31 +78,17 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("SponsorshipFunds");
 
+                    b.Property<int>("Status");
+
                     b.Property<string>("UserId");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AnnualReportStatusId");
 
                     b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("AnnualReports");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.AnnualReportStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.ToTable("AnnualReportStatuses");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Approver", b =>
@@ -179,9 +163,10 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -242,33 +227,39 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("CityId");
 
-                    b.Property<int>("CityLegalStatusTypeId");
-
                     b.Property<DateTime?>("DateFinish");
 
-                    b.Property<DateTime?>("DateStart");
+                    b.Property<DateTime>("DateStart");
+
+                    b.Property<int>("LegalStatusType");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("CityLegalStatusTypeId");
-
                     b.ToTable("CityLegalStatuses");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.CityLegalStatusType", b =>
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityManagement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<int>("AnnualReportId");
 
-                    b.HasKey("Id");
+                    b.Property<int>("CityLegalStatus");
 
-                    b.ToTable("CityLegalStatusTypes");
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AnnualReportId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CityManagements");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>
@@ -277,17 +268,18 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CityID");
+                    b.Property<int>("CityId");
 
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CityID");
+                    b.HasIndex("CityId");
 
                     b.HasIndex("UserId");
 
@@ -396,7 +388,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("DecesionStatusID");
+                    b.Property<int>("DecesionStatus");
 
                     b.Property<int>("DecesionTargetID");
 
@@ -410,28 +402,11 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DecesionStatusID");
-
                     b.HasIndex("DecesionTargetID");
 
                     b.HasIndex("OrganizationID");
 
                     b.ToTable("Decesions");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionStatus", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("DecesionStatusName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("DecesionStatuses");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.DecesionTarget", b =>
@@ -827,31 +802,16 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("DateStart");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
-                    b.Property<int>("UserPlastDegreeTypeId");
+                    b.Property<int>("UserPlastDegreeType");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserPlastDegreeTypeId");
-
                     b.ToTable("UserPlastDegrees");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.UserPlastDegreeType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserPlastDegreeTypes");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
@@ -1087,7 +1047,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("FatherName")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
@@ -1107,11 +1066,6 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.AnnualReport", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.AnnualReportStatus", "AnnualReportStatus")
-                        .WithMany("AnnualReports")
-                        .HasForeignKey("AnnualReportStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("EPlast.DataAccess.Entities.City", "City")
                         .WithMany("AnnualReports")
                         .HasForeignKey("CityId")
@@ -1150,7 +1104,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("CityAdministrations")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.CityDocuments", b =>
@@ -1170,22 +1125,31 @@ namespace EPlast.DataAccess.Migrations
                         .WithMany("CityLegalStatuses")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.HasOne("EPlast.DataAccess.Entities.CityLegalStatusType", "LegalStatus")
-                        .WithMany("CityLegalStatuses")
-                        .HasForeignKey("CityLegalStatusTypeId")
+            modelBuilder.Entity("EPlast.DataAccess.Entities.CityManagement", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.AnnualReport", "AnnualReport")
+                        .WithOne("CityManagement")
+                        .HasForeignKey("EPlast.DataAccess.Entities.CityManagement", "AnnualReportId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.CityMembers", b =>
                 {
                     b.HasOne("EPlast.DataAccess.Entities.City", "City")
                         .WithMany("CityMembers")
-                        .HasForeignKey("CityID");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("CityMembers")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ClubAdministration", b =>
@@ -1212,7 +1176,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("ClubMembers")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.ConfirmedUser", b =>
@@ -1229,11 +1194,6 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.Decesion", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.DecesionStatus", "DecesionStatus")
-                        .WithMany()
-                        .HasForeignKey("DecesionStatusID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("EPlast.DataAccess.Entities.DecesionTarget", "DecesionTarget")
                         .WithMany()
                         .HasForeignKey("DecesionTargetID")
@@ -1355,11 +1315,7 @@ namespace EPlast.DataAccess.Migrations
                 {
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("UserPlastDegrees")
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("EPlast.DataAccess.Entities.UserPlastDegreeType", "UserPlastDegreeType")
-                        .WithMany("UserPlastDegrees")
-                        .HasForeignKey("UserPlastDegreeTypeId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1383,7 +1339,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithOne("UserProfile")
-                        .HasForeignKey("EPlast.DataAccess.Entities.UserProfile", "UserID");
+                        .HasForeignKey("EPlast.DataAccess.Entities.UserProfile", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.Work", "Work")
                         .WithMany("UserProfiles")

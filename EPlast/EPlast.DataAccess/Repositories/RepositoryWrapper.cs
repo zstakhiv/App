@@ -10,7 +10,6 @@ namespace EPlast.DataAccess.Repositories
         private INationalityRepository _nationality;
         private IOrganizationRepository _organization;
         private IDecesionTargetRepository _decesionTarget;
-        private IDecesionStatusRepository _decesionStatus;
         private IDocumentTemplateRepository _documentTemplate;
         private IDecesionRepository _decesion;
         private IEventRepository _event;
@@ -42,12 +41,10 @@ namespace EPlast.DataAccess.Repositories
         private IRegionRepository _region;
         private IRegionAdministrationRepository _regionAdministration;
         private IAnnualReportsRepository _annualReports;
-        private IAnnualReportStatusesRepository _annualReportStatuses;
         private IMembersStatisticsRepository _membersStatistics;
         private ICityLegalStatusesRepository _cityLegalStatuses;
-        private ICityLegalStatusTypesRepository _cityLegalStatusTypes;
         private IUserPlastDegreesRepository _userPlastDegrees;
-        private IUserPlastDegreeTypesRepository _userPlastDegreeTypes;
+        private ICityManagementsRepository _cityManagements;
 
         public IDecesionRepository Decesion
         {
@@ -70,18 +67,6 @@ namespace EPlast.DataAccess.Repositories
                     _documentTemplate = new DocumentTemplateRepository(_dbContext);
                 }
                 return _documentTemplate;
-            }
-        }
-
-        public IDecesionStatusRepository DecesionStatus
-        {
-            get
-            {
-                if (_decesionStatus == null)
-                {
-                    _decesionStatus = new DecesionStatusRepository(_dbContext);
-                }
-                return _decesionStatus;
             }
         }
 
@@ -521,18 +506,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IAnnualReportStatusesRepository AnnualReportStatuses
-        {
-            get
-            {
-                if (_annualReportStatuses == null)
-                {
-                    _annualReportStatuses = new AnnualReportStatusesRepository(_dbContext);
-                }
-                return _annualReportStatuses;
-            }
-        }
-
         public IMembersStatisticsRepository MembersStatistics
         {
             get
@@ -557,18 +530,6 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public ICityLegalStatusTypesRepository CityLegalStatusTypes
-        {
-            get
-            {
-                if (_cityLegalStatusTypes == null)
-                {
-                    _cityLegalStatusTypes = new CityLegalStatusTypeRepository(_dbContext);
-                }
-                return _cityLegalStatusTypes;
-            }
-        }
-
         public IUserPlastDegreesRepository UserPlastDegrees
         {
             get
@@ -581,15 +542,15 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public IUserPlastDegreeTypesRepository UserPlastDegreeTypes
+        public ICityManagementsRepository CityManagements
         {
             get
             {
-                if (_userPlastDegreeTypes == null)
+                if (_cityManagements == null)
                 {
-                    _userPlastDegreeTypes = new UserPlastDegreeTypesRepository(_dbContext);
+                    _cityManagements = new CityManagementsRepository(_dbContext);
                 }
-                return _userPlastDegreeTypes;
+                return _cityManagements;
             }
         }
 

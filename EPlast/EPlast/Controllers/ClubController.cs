@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EPlast.DataAccess.Entities;
-using EPlast.ViewModels;
+﻿using EPlast.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace EPlast.Controllers
 {
     public class ClubController : Controller
@@ -16,6 +14,7 @@ namespace EPlast.Controllers
         {
             _repoWrapper = repoWrapper;
         }
+
         public IActionResult Index()
         {
             List<ClubViewModel> clubs = new List<ClubViewModel>(
@@ -26,6 +25,7 @@ namespace EPlast.Controllers
 
             return View(clubs);
         }
+
         public IActionResult Club(int index)
         {
             var club = _repoWrapper.Club
@@ -38,8 +38,8 @@ namespace EPlast.Controllers
                 .Include(m => m.ClubMembers)
                 .ThenInclude(u => u.User)
                 .FirstOrDefault();
-              
-            return View(new ClubViewModel { Club = club});
+
+            return View(new ClubViewModel { Club = club });
         }
         public IActionResult ClubAdmins(int index)
         {
