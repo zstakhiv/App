@@ -16,10 +16,10 @@
     <Content Remove="Views\Account\LoginAndRegister.cshtml" />
     <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\adminUser.ts" />
+    <Content Remove="wwwroot\uncompiled\ts\decesion.ts" />
     <Content Remove="wwwroot\uncompiled\ts\eventPage.ts" />
     <Content Remove="wwwroot\uncompiled\ts\events.ts" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
-    <Content Remove="wwwroot\uncompiled\ts\raport.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
   </ItemGroup>
 

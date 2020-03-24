@@ -19,17 +19,19 @@ namespace EPlast.Controllers
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
-        private readonly UserManager<User> _userManager;
+        private readonly IDecisionVMIitializer _decisionVMCreator;
         private readonly IPDFService _PDFService;
+        private readonly UserManager<User> _userManager;
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IPDFService PDFService)
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService)
 
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
             _userManager = userManager;
             _PDFService = PDFService;
+            _decisionVMCreator = decisionVMCreator;
         }
 
         public IActionResult Index()
@@ -43,13 +45,14 @@ namespace EPlast.Controllers
             DecesionViewModel decesionViewModel = new DecesionViewModel
             {
                 Decesion = new Decesion(),
-                SelectListItems = (from item in _repoWrapper.Organization.FindAll()
-                                   select new SelectListItem
-                                   {
-                                       Text = item.OrganizationName,
-                                       Value = item.ID.ToString()
-                                   }),
-                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList()
+                OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
+                                         select new SelectListItem
+                                         {
+                                             Text = item.OrganizationName,
+                                             Value = item.ID.ToString()
+                                         }),
+                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
+                DecesionStatusListItems = _decisionVMCreator.GetDecesionStatusTypes()
             };
 
             return View(decesionViewModel);

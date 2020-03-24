@@ -19,7 +19,7 @@
                 <strong>Рішення органу</strong>
                 <br>
             </label>
-            @Html.DropDownListFor(x => x.Decesion.Organization.ID, Model.SelectListItems, "Виберіть орган влади рішення"
+            @Html.DropDownListFor(x => x.Decesion.Organization.ID, Model.OrganizationListItems, "Виберіть орган влади рішення"
             , new { @class = "form-control" })
             <span asp-validation-for="@Model.Decesion.Organization.OrganizationName" style="color:#db0b3c;" />
         </div>
@@ -55,6 +55,15 @@
         <div class="form-group">
             @Html.TextAreaFor(x => x.Decesion.Description, new { @placeholder = "Опис", @rows = "14", @class = "form-control" })
             <span asp-validation-for="@Model.Decesion.Description" style="color:#db0b3c;" />
+        </div>
+        <div class="form-group">
+            <label>
+                <strong>Статус рішення</strong>
+                <br>
+            </label>
+            @Html.DropDownListFor(x => x.Decesion.DecesionStatus, Model.DecesionStatusListItems, "Виберіть статус рішення"
+            , new { @class = "form-control" })
+            <span asp-validation-for="@Model.Decesion.DecesionStatus" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
             <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
