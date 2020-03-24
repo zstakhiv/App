@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EPlast.ViewModels
 {
-    public class FeedBackViewModel
+    public class ContactsViewModel
     {
         [Required(ErrorMessage = "Поле ім'я є обов'язковим")]
         [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20})*$",
@@ -21,6 +21,5 @@ namespace EPlast.ViewModels
 
         [Required(ErrorMessage = "Поле текст є обов'язковим")]
         public string FeedBackDescription { get; set; }
-
     }
 }

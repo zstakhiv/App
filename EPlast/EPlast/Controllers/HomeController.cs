@@ -59,7 +59,7 @@ namespace EPlast.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> SendFeedBack(FeedBackViewModel feedBackViewModel)
+        public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace EPlast.Controllers
             await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com", 
                 "Питання користувачів",
                 "Питання",
-                feedBackViewModel.Email);
+                contactsViewModel.Email);
 
             return View("Contacts");
         }

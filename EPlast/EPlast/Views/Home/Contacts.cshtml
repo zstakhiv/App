@@ -3,7 +3,7 @@
 }
 
 @using EPlast.ViewModels;
-@model FeedBackViewModel
+@model ContactsViewModel 
 
 <div class="main-wrapper" style="background-color: rgb(245,245,245); width:100%">
     <section id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6" id="message" style="padding-right:20px;padding-left:20px;">
-                    <form method="post" asp-action="SendFeedBack" asp-controller="Home" style="padding:15px;" id="contactForm">
+                    <form method="post" asp-action="SendContacts" asp-controller="Home" style="padding:15px;" id="contactForm">
                         <div class="validation" asp-validation-summary="ModelOnly" style="color:#db0b3c;"></div>
                         <div class="form-group has-feedback">
                             <label for="from_name">Вкажіть своє ім'я</label>
