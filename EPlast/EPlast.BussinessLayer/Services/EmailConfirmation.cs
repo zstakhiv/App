@@ -8,11 +8,11 @@ namespace EPlast.BussinessLayer
 {
     public class EmailConfirmation:IEmailConfirmation
     {
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message, string title)
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Адміністрація сайту EPlast", "andriishainoha2001@gmail.com"));
+            emailMessage.From.Add(new MailboxAddress(title, "andriishainoha2001@gmail.com"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)

@@ -136,7 +136,7 @@ namespace EPlast.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
                     return View("AcceptingEmail");
                 }
@@ -437,7 +437,7 @@ namespace EPlast.Controllers
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
-                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
