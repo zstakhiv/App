@@ -1,7 +1,11 @@
-﻿
+﻿@using EPlast.ViewModels;
+@model FeedBackViewModel
+
 @{
     ViewData["Title"] = "Contacts";
 }
+
+
 <div class="main-wrapper" style="background-color: rgb(245,245,245); width:100%">
 
     <section id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
@@ -37,11 +41,26 @@
                         <fieldset>
                             <legend><i class="fa fa-envelope"></i>&nbsp;Напиши нам</legend>
                         </fieldset>
-                        <div class="form-group has-feedback"><label for="from_name">Вкажіть своє ім'я</label><input class="form-control" type="text" id="from_name" tabindex="-1" name="from_name" required="" placeholder="Прізвище Ім'я"></div>
-                        <div class="form-group has-feedback"><label for="from_email">Email</label><input class="form-control" type="email" id="from_email" name="from_email" required="" placeholder="Ваша email адреса"></div>
-                        <div class="form-group has-feedback"><label for="from_phone">Вкажіть ваш номер телефону</label><input class="form-control" type="text" id="from_phone" name="subject" placeholder="+38(066)-66-6666"></div>
-
-                        <div class="form-group"><label for="comments">Опиши своє звернення</label><textarea class="form-control" id="comments" name="Comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea></div>
+                        <div class="form-group has-feedback">
+                            <label for="from_name">Вкажіть своє ім'я</label>
+                            <input class="form-control" asp-for="@Model.Name" type="text" name="from_name" required="" id="from_name" tabindex="-1" placeholder="Прізвище Ім'я">
+                            <span asp-validation-for="@Model.Name" style="color:#db0b3c;" />
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="from_email">Вкажіть свій email</label>
+                            <input class="form-control" asp-for="@Model.Email" type="email" id="from_email" name="from_email" required="" placeholder="Ваша email адреса">
+                            <span asp-validation-for="@Model.Email" style="color:#db0b3c;" />
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="from_phone">Вкажіть ваш номер телефону</label>
+                            <input class="form-control" asp-for="@Model.PhoneNumber" type="text" id="from_phone" name="subject" placeholder="+38(066)-66-6666">
+                            <span asp-validation-for="@Model.PhoneNumber" style="color:#db0b3c;" />
+                        </div>
+                        <div class="form-group">
+                            <label for="comments">Опиши своє звернення</label>
+                            <textarea asp-for="@Model.FeedBackDescription" class="form-control" id="comments" name="Comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea>
+                            <span asp-validation-for="@Model.FeedBackDescription" style="color:#db0b3c;" />
+                        </div>
                         <div class="form-group"><button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">Відправити <i class="fa fa-chevron-circle-right"></i></button></div>
                         <hr>
                     </div>
