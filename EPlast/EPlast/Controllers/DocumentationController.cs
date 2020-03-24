@@ -15,14 +15,14 @@ using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
-    public class ReportController : Controller
+    public class DocumentationController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
         private readonly UserManager<User> _userManager;
         private readonly IPDFService _PDFService;
 
-        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
+        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IPDFService PDFService)
 
         {
@@ -37,7 +37,7 @@ namespace EPlast.Controllers
             return View();
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateRaport()
         {
             DecesionViewModel decesionViewModel = new DecesionViewModel
@@ -55,7 +55,7 @@ namespace EPlast.Controllers
             return View(decesionViewModel);
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult SaveReport(DecesionViewModel decesionViewModel)
         {
@@ -66,7 +66,7 @@ namespace EPlast.Controllers
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return View("CreateRaport");
                 }
-                decesionViewModel.Decesion.DecesionStatus = 0;
+                //decesionViewModel.Decesion.DecesionStatus = DecesionStatus.InReview;
                 _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
                 _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
                 _repoWrapper.Save();
@@ -78,7 +78,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult ReadRaport()
         {
             try
@@ -98,14 +98,26 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
-                                                                                                x => x.Organization).Where(x => x.ID == objId)
-                                                                                                                    .FirstOrDefault());
-            return File(arr, "application/pdf");
+            try
+            {
+                if (objId <= 0)
+                {
+                    throw new ArgumentException();
+                }
+
+                byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
+                                                                                                    x => x.Organization).Where(x => x.ID == objId)
+                                                                                                                        .FirstOrDefault());
+                return File(arr, "application/pdf");
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         [HttpGet]
