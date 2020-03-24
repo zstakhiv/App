@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 namespace EPlast.Controllers
 {
     [Route("[controller]/[action]")]
-    [Authorize("Admin")]
     public class AdminController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
@@ -88,6 +87,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string userId)
         {
             User user = await _userManager.FindByIdAsync(userId);
@@ -95,7 +95,7 @@ namespace EPlast.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var admin = _roleManager.Roles.Where(i => i.Name == "Admin");
-                var allRoles = _roleManager.Roles.Except(admin).ToList();
+                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i=>i.Name).ToList();
                 RoleViewModel model = new RoleViewModel
                 {
                     UserID = user.Id,
@@ -109,6 +109,7 @@ namespace EPlast.Controllers
             return RedirectToAction("HandleError", "Error", new { code = 404 });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
@@ -128,6 +129,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string userId)
         {
@@ -135,6 +137,7 @@ namespace EPlast.Controllers
             return PartialView();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string userId)
         {
             if (userId != null)
