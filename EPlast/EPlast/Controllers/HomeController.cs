@@ -53,7 +53,7 @@ namespace EPlast.Controllers
         [HttpGet("User/GetPage")]
         public IActionResult GetInformation()
         {
-            return View("Views/Account/LoginAndRegister.cshtml");
+            return View("Views/Account/Login.cshtml");
         }
 
 
@@ -65,13 +65,14 @@ namespace EPlast.Controllers
                 ModelState.AddModelError("", "Дані введені неправильно");
                 return View("Contacts");
             }
-
-            await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com", 
+            else {
+                await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com",
                 "Питання користувачів",
-                "Питання",
-                contactsViewModel.Email);
-
-            return View("Contacts");
+                 $"Контактні дані користувача : Електронна пошта {contactsViewModel.Email}, Ім'я {contactsViewModel.Name}, Телефон {contactsViewModel.PhoneNumber}" +
+                 $"  Опис питання : {contactsViewModel.FeedBackDescription}",
+                 contactsViewModel.Email);
+            }
+            return RedirectToAction("Contacts", "Home");
         }
 
 
