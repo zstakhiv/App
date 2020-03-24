@@ -20,65 +20,78 @@
                           <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
                       </div>
                   }
-                  <button class="buttons">Більше</button>
-                  </div>
+                  <a asp-controller="Club" asp-action="ClubAdmins" asp-route-index="@Model.Club.ID" class="buttons">Більше</a>
+              </div>
             </div>
   
             <div class="secondary-info vertical-grid">
-              <div class="about-info grid-block">
-                <h1 class="grid-header">Про нас</h1>
-                
-                <p class="info">
-                        @Model.Club.Description
-                </p>
-                
-                <button class="buttons" id="more-info-club" onclick="moreinfo()">Більше</button>
-              </div>
-  
-              <div class="people-info horizontal-grid">
-                <div class="members-info grid-block">
-                  <h1 class="grid-header">Провід куреня</h1>
-                  <div class="members-list">
-                   @foreach(var item in Model.Club.ClubMembers) 
-                   {
-                     @if (@item.IsApproved)
-                     {
-                        <div class="member-block">
-                          <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
-                          <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+                @if (Model.Club.Description != null)
+                {
+                <div class="about-info grid-block">
+                    <h1 class="grid-header">Про нас</h1>
 
+                    <p class="info">
+                        @if (Model.Club.Description.Length < 100)
+                        {
+                            @Model.Club.Description
+                        }
+                        else
+                        {
+                            @(Model.Club.Description.Substring(0, 97) + "...")
+                        }
+                    </p>
+                    @if (Model.Club.Description.Length > 100)
+                    {
+                        <a asp-controller="Club" asp-action="ClubDescription" asp-route-index="@Model.Club.ID" class="buttons">Читати повністю</a>
+                    }
+                </div>
+                }
+
+
+                <div class="people-info horizontal-grid">
+                    <div class="members-info grid-block">
+                        <h1 class="grid-header">Провід куреня</h1>
+                        <div class="members-list">
+                            @foreach (var item in Model.Club.ClubMembers)
+                            {
+                                @if (@item.IsApproved)
+                                {
+                                    <div class="member-block">
+                                        <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                                        <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
+                                    </div>
+                                }
+                            }
                         </div>
-                     }
-                   }
-                </div>
-                  <button class="buttons">Показати всіх</button>
-                </div>
-                <div class="followers-info grid-block">
-                  <h1 class="grid-header">Зацікавлені</h1>
-    
-                  <div class="members-list">
-                      @foreach (var item in Model.Club.ClubMembers)
-                      {
-                          @if (!@item.IsApproved)
-                          {
-                      <div class="member-block">
-                          <div class="member-wrapper">
-                              <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                        <a asp-controller="Club" asp-action="ClubMembers" asp-route-index="@Model.Club.ID" class="buttons">Переглянути всіх</a>
+                    </div>
+                    <div class="followers-info grid-block">
+                        <h1 class="grid-header">Зацікавлені</h1>
 
-                              <div class="plus">
-                                  +
-                              </div>
-                          </div>
-                            <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+                        <div class="members-list">
+                            @foreach (var item in Model.Club.ClubMembers)
+                            {
+                                @if (!@item.IsApproved)
+                                {
+                                    <div class="member-block">
+                                        <div class="member-wrapper">
+                                            <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
 
-                      </div>
-                           }
-                       }
-                      </div>
-    
-                  <button class="buttons">Більше</button>
+                                            <div class="plus">
+                                                +
+                                            </div>
+                                        </div>
+                                        <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <a asp-controller="Club" asp-action="ClubFollowers" asp-route-index="@Model.Club.ID" class="buttons">Переглянути всіх</a>
+                    </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
