@@ -5,11 +5,11 @@
 }
 <div class="content-wrapper">
     <div class="all-clubs-view">
-        <h1 class="all-clubs-title">Курені</h1>
+        <h1 class="all-clubs-title">Члени куреня</h1>
         <div class="club-list">
             @foreach (var item in Model.Club.ClubMembers)
             {
-                @if (!@item.IsApproved)
+                @if (@item.IsApproved)
                 {
                     <a class="club-block-wrapper" asp-controller="Account" asp-action="UserProfile" asp-route-index="@item.User.Id">
                         <div class="club-block">
