@@ -36,7 +36,7 @@ namespace EPlast.Controllers
 
         public IActionResult Contacts()
         {
-            return View();
+            return View("Views/Home/Contacts.cshtml");
         }
 
         public IActionResult FAQ()
@@ -58,7 +58,6 @@ namespace EPlast.Controllers
 
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
         {
             if (!ModelState.IsValid)
