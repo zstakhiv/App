@@ -12,7 +12,7 @@
         <!-- Start: Contact FormModal Contact Form with Google Map -->
         <div class="container">
             <!-- Start: Contact Form -->
-            <form id="contactForm" style="padding:15px;" action="javascript:void();" method="post">
+            <form id="contactForm" asp-action="" asp-controller="Home" style="padding:15px;" method="post">
                 <div class="form-row" style="margin-left:0px;margin-right:0px;padding:10px;">
                     <div class="col-md-6" style="padding-left:20px;padding-right:20px;">
                         <fieldset></fieldset>
@@ -61,7 +61,12 @@
                             <textarea asp-for="@Model.FeedBackDescription" class="form-control" id="comments" name="Comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea>
                             <span asp-validation-for="@Model.FeedBackDescription" style="color:#db0b3c;" />
                         </div>
-                        <div class="form-group"><button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">Відправити <i class="fa fa-chevron-circle-right"></i></button></div>
+                        <div class="form-group">
+                            <button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">
+                                Відправити
+                                <i class="fa fa-chevron-circle-right"></i>
+                            </button>
+                        </div>
                         <hr>
                     </div>
                 </div>
@@ -71,3 +76,7 @@
         <!-- End: Contact FormModal Contact Form with Google Map -->
     </section>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

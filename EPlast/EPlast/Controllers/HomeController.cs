@@ -1,11 +1,45 @@
-﻿using EPlast.Models;
+﻿using EPlast.BussinessLayer.Interfaces;
+using EPlast.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace EPlast.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger _logger;
+        private readonly IEmailConfirmation _emailConfirmation;
+
+        public HomeController(ILogger logger, IEmailConfirmation emailConfirmation)
+        {
+            _logger = logger;
+            _emailConfirmation = emailConfirmation;
+        }
+
+        /*private SignInManager<User> _signInManager;
+        private UserManager<User> _userManager;
+        private readonly IRepositoryWrapper _repoWrapper;
+        private readonly ILogger _logger;
+        private readonly IEmailConfirmation _emailConfirmation;
+        private readonly IHostingEnvironment _env;
+
+        public AccountController(UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IRepositoryWrapper repoWrapper,
+            ILogger<AccountController> logger,
+            IEmailConfirmation emailConfirmation,
+            IHostingEnvironment env)
+        {
+            _logger = logger;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _repoWrapper = repoWrapper;
+            _emailConfirmation = emailConfirmation;
+            _env = env;
+        }
+*/
+
         public IActionResult Index()
         {
             return View();
@@ -43,5 +77,7 @@ namespace EPlast.Controllers
         {
             return View("Views/Account/LoginAndRegister.cshtml");
         }
+
+
     }
 }
