@@ -42,11 +42,38 @@
                     </div>
 
                     <div class="nav-content">
-                        <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center">
-                            <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">search</i></a></li>
-                            <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
-                            <li><a href="/Account/ChangePassword"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
-                        </ul>
+                        <div class="menu-container">
+
+                            <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center " style="padding-left:700px;">
+                                <li class="menu-search"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">search</i></a></li>
+                                <li class="menu-notification"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
+                                <li class="menu-settings"><a href="/Account/ChangePassword"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
+                            </ul>
+                            <div class="menu-search-container">
+                                <div class="menu-search-input">
+                                    <form action="">
+                                        <a href="#">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                        <input class="menu-search-input" type="text" aria-label="Search ePlast" placeholder="Шукай на ePlast" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false">
+                                    </form>
+                                </div>
+                                <a class="menu-search-close" href="#">
+                                    <i class="fa fa-close" aria-hidden="true"></i>
+                                </a>
+                                <div class="search-sub-menu">
+                                    <h3>Швидкий доступ</h3>
+                                    <ul>
+                                        <li><a href="#">Профіль</a></li>
+                                        <li><a href="#">Акції</a></li>
+                                        <li><a href="#">Станиці</a></li>
+                                        <li><a href="#">Округи</a></li>
+                                        <li><a href="#">Календар Подій</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="profile">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
