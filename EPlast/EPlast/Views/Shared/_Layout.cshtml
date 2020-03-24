@@ -8,15 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EPlast</title>
     <meta charset="UTF-8" />
-    <environment include="Development">
-        <link href="~/lib/mdbootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="~/lib/mdbootstrap/css/mdb.min.css" />
-        <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
-        <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.css" rel="stylesheet" />
-        <link href="~/bundles/css/bundle.css" rel="stylesheet" />
-    </environment>
+    @*<environment include="Development">*@
+    <link href="~/lib/mdbootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/mdbootstrap/css/mdb.min.css" />
+    <link href="~/lib/mdbootstrap/css/addons/datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/mdbootstrap/css/style.css" rel="stylesheet" />
+    <link href="~/lib/jquery-ui-dist/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.css" rel="stylesheet" />
+    <link href="~/bundles/css/bundle.css" rel="stylesheet" />
+    @*</environment>*@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User))
@@ -138,7 +137,6 @@
                             </div>
                         </div>
                         <p class="copyright">ePlast © 2020</p>
-
                     </div>
                 </footer>
             </div>
@@ -147,59 +145,58 @@
     else
     {
         <main class="home-wrapper">
-        <div class="homelayout">
-            <nav class=" navbar homepage-navbar navbar-light navbar-expand-xl fixed-top sticky-top " style=" background-color:#3c5438; padding-top:0;padding-bottom:0;">
-                <div class="container">
-                    <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
-                    <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
-                    </button>
-                    <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
-                        <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
-                        <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
-                        <a class="nav-link text-light ml-auto">Календар Подій</a>
-                        <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
-                        <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
-                        <a asp-action="Login" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
+            <div class="homelayout">
+                <nav class=" navbar homepage-navbar navbar-light navbar-expand-xl fixed-top sticky-top " style=" background-color:#3c5438; padding-top:0;padding-bottom:0;">
+                    <div class="container">
+                        <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
+                        <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
+                        </button>
+                        <div class="collapse navbar-collapse d-xl-flex" id="navcol-1" style="font-size: 20px;">
+                            <a asp-action="Index" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Головна</a>
+                            <a asp-action="AboutPLAST" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Про Пласт</a>
+                            <a class="nav-link text-light ml-auto">Календар Подій</a>
+                            <a asp-action="FAQ" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Часті запитання</a>
+                            <a asp-action="Contacts" id="menu_admin" asp-controller="Home" class="nav-link text-light m-lg-auto">Контакти</a>
+                            <a asp-action="Login" id="menu_admin" asp-controller="Account" class="nav-link text-light ml-auto">Увійти</a>
+                        </div>
                     </div>
-                </div>
-            </nav>
-        </div>
-
+                </nav>
+            </div>
         </main>
         @RenderBody()
         <main class="footer">
-        <div class="footer-dark footer-home">
-            <footer>
-                <div class="container">
-                    <div class="row">
-                        <div class="col item social light">
-                            <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
-                            <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
-                            <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
+            <div class="footer-dark footer-home">
+                <footer>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col item social light">
+                                <a href="https://www.facebook.com/PlastUA/"><i class="icon ion-social-facebook"></i></a>
+                                <a href="https://twitter.com/plast"><i class="icon ion-social-twitter"></i></a>
+                                <a href="https://www.instagram.com/plastua/"><i class="icon ion-social-instagram"></i></a>
+                            </div>
                         </div>
+                        <p class="copyright">ePlast © 2020</p>
                     </div>
-                    <p class="copyright">ePlast © 2020</p>
-                </div>
-            </footer>
-        </div>
-    </main>
+                </footer>
+            </div>
+        </main>
     }
 
-<environment include="Development">
+    @*<environment include="Development">*@
 
-        <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
-        <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
-        <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
-        <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
-        <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
-        <script src="~/bundles/js/bundle-min.js"></script>
-        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
-    </environment>
+    <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/mdb.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/addons/datatables.min.js"></script>
+    <script src="~/lib/mdbootstrap/js/popper.min.js"></script>
+    <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
+    <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
+    <script src="~/bundles/js/bundle-min.js"></script>
+    <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    @*</environment>*@
 
     @RenderSection("Scripts", required: false)
 </body>
