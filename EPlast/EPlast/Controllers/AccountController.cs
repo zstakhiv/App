@@ -85,9 +85,19 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Незареєстрований користувач не може змінити пароль");
+                return RedirectToAction("UserProfile", "Account");
+            }
         }
 
         [HttpPost]

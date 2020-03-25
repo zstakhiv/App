@@ -13,6 +13,7 @@ namespace EPlast.ViewModels
             ErrorMessage = "Ім'я має містити тільки літери")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
         [EmailAddress]
         public string Email { get; set; }
 

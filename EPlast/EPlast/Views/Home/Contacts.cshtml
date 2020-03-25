@@ -2,7 +2,7 @@
 @model ContactsViewModel 
 
 <div class="main-wrapper" style="background-color: rgb(245,245,245); width:100%">
-    <section id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
+    <div id="contact" style="padding:40px;padding-right:5px;padding-left:4px;">
         <!-- Start: Contact FormModal Contact Form with Google Map -->
         <div class="container">
             <!-- Start: Contact Form -->
@@ -36,22 +36,22 @@
                         <div class="form-group has-feedback">
                             <label for="from_name">Вкажіть своє ім'я</label>
                             <input class="form-control" asp-for="@Model.Name" type="text" id="from_name" tabindex="-1" placeholder="Ім'я">
-                            <span asp-validation-for="@Model.Name" style="color:#db0b3c;" />
+                            <span asp-validation-for="@Model.Name" style="color:#db0b3c;"></span>
                         </div>
                         <div class="form-group has-feedback">
                             <label for="from_email">Вкажіть свій email</label>
                             <input class="form-control" asp-for="@Model.Email" type="email" id="from_email" placeholder="Ваша email адреса">
-                            <span asp-validation-for="@Model.Email" style="color:#db0b3c;" />
+                            <span asp-validation-for="@Model.Email" style="color:#db0b3c;"></span>
                         </div>
                         <div class="form-group has-feedback">
-                            <label for="subject">Вкажіть ваш номер телефону</label>
+                            <label for="from_phone">Вкажіть ваш номер телефону</label>
                             <input class="form-control" asp-for="@Model.PhoneNumber" type="text" id="from_phone" placeholder="+38(066)-66-6666">
-                            <span asp-validation-for="@Model.PhoneNumber" style="color:#db0b3c;" />
+                            <span asp-validation-for="@Model.PhoneNumber" style="color:#db0b3c;"></span>
                         </div>
                         <div class="form-group">
                             <label for="comments">Опиши своє звернення</label>
-                            <textarea asp-for="@Model.FeedBackDescription" class="form-control" id="comments" placeholder="Введи тест повідомлення тут.." rows="5"></textarea>
-                            <span asp-validation-for="@Model.FeedBackDescription" style="color:#db0b3c;" />
+                            <textarea asp-for="@Model.FeedBackDescription" class="form-control" id="comments" placeholder="Введи текст повідомлення тут.." rows="5"></textarea>
+                            <span asp-validation-for="@Model.FeedBackDescription" style="color:#db0b3c;"></span>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary active btn-block" style="background-color:#3c5438;" type="submit">
@@ -67,7 +67,7 @@
             <!-- End: Contact Form -->
         </div>
         <!-- End: Contact FormModal Contact Form with Google Map -->
-    </section>
+    </div>
 </div>
 
 @section Scripts {
