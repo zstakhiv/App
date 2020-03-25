@@ -40,11 +40,11 @@
                     <tr class="raport-click-row">
                         <td>@item.Decesion.ID</td>
                         <td>@item.Decesion.Organization.OrganizationName</td>
-                        <td>@item.Decesion.DecesionStatus.GetDescription()</td>
+                        <td>@item.Decesion.DecesionStatusType.GetDescription()</td>
                         <td>@item.Decesion.DecesionTarget.TargetName</td>
                         <td>@item.Decesion.Description</td>
                         <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
-                        <td></td>
+                        <td><a href="/Documentation/Download?id=@item.Decesion.ID&filename=@item.Filename">@item.Filename</a></td>
                     </tr>
                 }
             </tbody>

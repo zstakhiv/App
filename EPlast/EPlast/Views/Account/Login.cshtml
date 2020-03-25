@@ -1,9 +1,10 @@
 @{
-    Layout="~/Views/Shared/_LayoutWithoutFooter.cshtml";
+    Layout = "~/Views/Shared/_LayoutWithoutFooter.cshtml";
 }
 
 @using EPlast.ViewModels;
 @model LoginViewModel
+
 <div class="main-wrapper" style="background-color: rgb(245,245,245);">
 <div class="login-clean" style="background-color: rgb(245, 245, 245);">
     <div class="form">
@@ -47,16 +48,25 @@
             <a class="forgot" asp-action="ForgotPassword" asp-controller="Account" style="font-size:16px;">Забули пароль?</a>
         </form>
         <div class="login-buttons mt-2">
-            <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
-                <div class="d-flex loginBtn-container">
-                    <button type="submit" class="loginBtn loginBtn--google" value="@Model.ExternalLogins[0].Name" name="provider">
-                        Google
-                    </button>
-                    <button type="submit" class="loginBtn loginBtn--facebook" value="@Model.ExternalLogins[1].Name" name="provider">
-                        Facebook
-                    </button>
-                </div>
-            </form>
+            @{
+                if (Model.ExternalLogins.Count != 0)
+                {
+                    <form method="post" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
+                        <div class="d-flex loginBtn-container">
+                            <button type="submit" class="loginBtn loginBtn--google" value="@Model.ExternalLogins[0].Name" name="provider">
+                                Google
+                            </button>
+                            <button type="submit" class="loginBtn loginBtn--facebook" value="@Model.ExternalLogins[1].Name" name="provider">
+                                Facebook
+                            </button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div>No external login providers</div>
+                }
+            }
         </div>
     </div>
 </div>

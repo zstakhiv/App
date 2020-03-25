@@ -363,3 +363,6 @@ EPlast/EPlast/wwwroot/bundles/js/*
 
 # Ignore bundles files css
 EPlast/EPlast/wwwroot/bundles/css/*
+
+# Ignore documents
+EPlast/EPlast/wwwroot/documents/*
