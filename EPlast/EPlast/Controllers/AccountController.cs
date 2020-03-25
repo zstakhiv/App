@@ -490,8 +490,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [HttpPost]
         [AllowAnonymous]
+        [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -530,34 +530,71 @@ namespace EPlast.Controllers
             }
             else
             {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != null)
+                switch (info.LoginProvider.ToString())
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
+                    case "Google":
+                        CreateGoogleUserIfNotExist(info);
+                        break;
+                    case "Facebook":
+                        CreateFacebookUserIfNotExist(info);
+                        break;
+                }
+                return LocalRedirect(returnUrl);
+            }
+        }
+        
 
-                    if (user == null)
+        private async Task<IActionResult> CreateGoogleUserIfNotExist(ExternalLoginInfo info)
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (email != null)
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    user = new User
                     {
-                        user = new User
-                        {
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                            ImagePath = "default.png",
-                            UserProfile = new UserProfile(),
-                        };
-                        await _userManager.CreateAsync(user);
-                    }
+                        UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                        LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                        ImagePath = "default.png",
+                        UserProfile = new UserProfile()
+                    };
+                    await _userManager.CreateAsync(user);
+                }
+                await _userManager.AddLoginAsync(user, info);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                //return LocalRedirect(returnUrl);
+            }
+            return View("Error");
+        }
+
+        private async Task<IActionResult> CreateFacebookUserIfNotExist(ExternalLoginInfo info)
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var phone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
+            var user = await _userManager.FindByNameAsync(email ?? phone);
+            if (email != null || phone != null)
+            {
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        UserName = email ?? phone,
+                        Email = email,
+                        PhoneNumber = phone,
+                        FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                        LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                        ImagePath = "default.png",
+                        UserProfile = new UserProfile(),
+                    };
+                    await _userManager.CreateAsync(user);
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    return LocalRedirect(returnUrl);
                 }
-                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
-                return View("Error");
             }
+            return View("Error");
         }
 
         [HttpPost]
