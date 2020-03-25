@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
+using EPlast.BussinessLayer.Settings;
 
 namespace EPlast
 {
@@ -32,9 +33,9 @@ namespace EPlast
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
-
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
@@ -67,6 +68,8 @@ namespace EPlast
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
             services.AddScoped<IPDFService, PDFService>();
+
+            services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
