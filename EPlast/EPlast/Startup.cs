@@ -86,13 +86,13 @@ namespace EPlast
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "484153862512-aru7mov0pns1oa46bmhi7kb6vs5734l4.apps.googleusercontent.com";
-                    options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
+                    options.ClientId = Configuration.GetSection("GoogleAuthentication:GoogleClientId").Value;
+                    options.ClientSecret = Configuration.GetSection("GoogleAuthentication:GoogleClientSecret").Value;
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "714480595752044";
-                    options.AppSecret = "28698ad0d5d8294b1e9b6ccd340a038e";
+                    options.AppId = Configuration.GetSection("FacebookAuthentication:FacebookAppId").Value;
+                    options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
             services.ConfigureApplicationCookie(options =>
