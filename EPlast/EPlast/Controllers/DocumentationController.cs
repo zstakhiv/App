@@ -125,7 +125,7 @@ namespace EPlast.Controllers
                 }
                 return View(decesions);
             }
-            catch (Exception e)
+            catch
             {
                 return RedirectToAction("HandleError", "Error");
             }

@@ -5,7 +5,6 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,7 +74,7 @@ namespace EPlast.Controllers
 
                 return View(userTableViewModels);
             }
-            catch (Exception e)
+            catch
             {
                 return RedirectToAction("HandleError", "Error");
             }
@@ -89,7 +88,7 @@ namespace EPlast.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var admin = _roleManager.Roles.Where(i => i.Name == "Admin");
-                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i=>i.Name).ToList();
+                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i => i.Name).ToList();
                 RoleViewModel model = new RoleViewModel
                 {
                     UserID = user.Id,
