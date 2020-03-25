@@ -1,4 +1,31 @@
-﻿.club-page-wrapper {
+﻿.data-table-wrapper-club {
+    margin: 20px 0;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 4px;
+    color: #505e6c;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.1);
+    text-align: center;
+}
+.buttons {
+    border: 0;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    background-color: #3c5438;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    display: block;
+    align-self: stretch;
+
+    &:hover {
+        text-decoration: none;
+        color: white;
+    }
+}
+
+.club-page-wrapper {
     display: flex;
     align-items: stretch;
     justify-content: center;
@@ -7,17 +34,6 @@
         padding: 10px;
         margin: 10px;
         background-color: white;
-    }
-
-    .buttons {
-        border: 0;
-        color: white;
-        background-color: #3c5438;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 18px;
-        display: block;
-        margin: 0 auto;
     }
 
     .vertical-grid {
@@ -46,6 +62,14 @@
                 height: 40vh;
             }
         }
+
+        .bottom-info-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            align-self: stretch;
+        }
+
         .line-pair {
             font-size: 12px;
 
@@ -62,6 +86,9 @@
     }
 
     .secondary-info {
+        flex-direction: column;
+        justify-content: center;
+
         .about-info {
             .info {
                 text-align: justify;

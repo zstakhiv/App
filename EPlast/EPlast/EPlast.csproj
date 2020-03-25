@@ -19,6 +19,7 @@
     <Content Remove="wwwroot\uncompiled\ts\decesion.ts" />
     <Content Remove="wwwroot\uncompiled\ts\eventPage.ts" />
     <Content Remove="wwwroot\uncompiled\ts\events.ts" />
+    <Content Remove="wwwroot\uncompiled\ts\clubAdmins.ts" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
   </ItemGroup>

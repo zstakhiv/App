@@ -46,6 +46,7 @@ namespace EPlast.DataAccess.Repositories
         IMembersStatisticsRepository MembersStatistics { get; }
         ICityLegalStatusesRepository CityLegalStatuses { get; }
         IUserPlastDegreesRepository UserPlastDegrees { get; }
+        ICityManagementsRepository CityManagements { get; }
 
         void Save();
     }

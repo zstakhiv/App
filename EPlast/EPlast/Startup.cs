@@ -106,7 +106,8 @@ namespace EPlast
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var roles = new[] { "Admin", "Користувач", "Учасник Пласту" };
+            var roles = new[] { "Admin", "Прихильник", "Пластун", "Голова Пласту","Адміністратор подій", "Голова Куреня","Діловод Куреня",
+            "Голова Округу","Діловод Округу","Голова Станиці","Діловод станиці"};
             foreach (var role in roles)
             {
                 if (!(await roleManager.RoleExistsAsync(role)))
@@ -115,6 +116,7 @@ namespace EPlast
                     {
                         Name = role
                     };
+                    
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
