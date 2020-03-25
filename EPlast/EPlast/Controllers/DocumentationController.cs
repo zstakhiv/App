@@ -4,32 +4,40 @@ using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
-    public class ReportController : Controller
+    public class DocumentationController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly IAnnualReportVMInitializer _annualReportVMCreator;
-        private readonly UserManager<User> _userManager;
+        private readonly IDecisionVMIitializer _decisionVMCreator;
         private readonly IPDFService _PDFService;
+        private readonly UserManager<User> _userManager;
+        private readonly IHostingEnvironment _appEnvironment;
 
-        public ReportController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IPDFService PDFService)
+        private const string _decesionsDocumentFolder = @"\documents\";
+
+        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment)
 
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
             _userManager = userManager;
             _PDFService = PDFService;
+            _decisionVMCreator = decisionVMCreator;
+            _appEnvironment = appEnvironment;
         }
 
         public IActionResult Index()
@@ -37,40 +45,59 @@ namespace EPlast.Controllers
             return View();
         }
 
-        [Authorize("Admin")]
-        public IActionResult CreateRaport()
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateDecesion()
         {
             DecesionViewModel decesionViewModel = new DecesionViewModel
             {
                 Decesion = new Decesion(),
-                SelectListItems = (from item in _repoWrapper.Organization.FindAll()
-                                   select new SelectListItem
-                                   {
-                                       Text = item.OrganizationName,
-                                       Value = item.ID.ToString()
-                                   }),
-                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList()
+                OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
+                                         select new SelectListItem
+                                         {
+                                             Text = item.OrganizationName,
+                                             Value = item.ID.ToString()
+                                         }),
+                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
+                DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
             };
 
             return View(decesionViewModel);
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult SaveReport(DecesionViewModel decesionViewModel)
+        public async Task<IActionResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return View("CreateRaport");
+                    return View("CreateDecesion");
                 }
-                decesionViewModel.Decesion.DecesionStatus = 0;
+                else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
+                {
+                    ModelState.AddModelError("", "файл за великий (більше 10 мб)");
+                    return View("CreateDecesion");
+                }
+
+                decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
+
                 _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
                 _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
                 _repoWrapper.Save();
-                return View("CreateRaport");
+
+                if (decesionViewModel.Decesion.HaveFile)
+                {
+                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                    Directory.CreateDirectory(path);
+                    using (var fileStream = new FileStream(Path.Combine(path, decesionViewModel.File.FileName), FileMode.Create))
+                    {
+                        await decesionViewModel.File.CopyToAsync(fileStream);
+                    }
+                }
+
+                return RedirectToAction("CreateDecesion");
             }
             catch
             {
@@ -78,8 +105,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize("Admin")]
-        public IActionResult ReadRaport()
+        [Authorize(Roles = "Admin")]
+        public IActionResult ReadDecesion()
         {
             try
             {
@@ -87,9 +114,15 @@ namespace EPlast.Controllers
                     _repoWrapper.Decesion
                     .Include(x => x.DecesionTarget, x => x.Organization)
                     .Take(200)
-                    .Select(decesion => new DecesionViewModel { Decesion = decesion })
+                    .Select(decesion => new DecesionViewModel
+                    {
+                        Decesion = decesion
+                    })
                     .ToList());
-
+                foreach (var decesion in decesions)
+                {
+                    decesion.Filename = decesion.Decesion.HaveFile ? Path.GetFileName(Directory.GetFiles($"{_appEnvironment.WebRootPath}{_decesionsDocumentFolder}{decesion.Decesion.ID}").First()) : string.Empty;
+                }
                 return View(decesions);
             }
             catch
@@ -98,14 +131,68 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize("Admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Download(string id, string filename)
+        {
+            if (filename == null)
+                return Content("filename not present");
+
+            var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult> CreatePDFAsync(int objId)
         {
-            byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
-                                                                                                x => x.Organization).Where(x => x.ID == objId)
-                                                                                                                    .FirstOrDefault());
-            return File(arr, "application/pdf");
+            try
+            {
+                if (objId <= 0)
+                {
+                    throw new ArgumentException();
+                }
+
+                byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
+                                                                                                    x => x.Organization).Where(x => x.ID == objId)
+                                                                                                                        .FirstOrDefault());
+                return File(arr, "application/pdf");
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         [HttpGet]

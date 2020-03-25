@@ -1,11 +1,23 @@
-﻿using EPlast.Models;
+﻿using EPlast.BussinessLayer.Interfaces;
+using EPlast.Models;
+using EPlast.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IEmailConfirmation _emailConfirmation;
+
+        public HomeController(IEmailConfirmation emailConfirmation)
+        {
+            _emailConfirmation = emailConfirmation;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -24,7 +36,7 @@ namespace EPlast.Controllers
 
         public IActionResult Contacts()
         {
-            return View();
+            return View("Views/Home/Contacts.cshtml");
         }
 
         public IActionResult FAQ()
@@ -41,7 +53,25 @@ namespace EPlast.Controllers
         [HttpGet("User/GetPage")]
         public IActionResult GetInformation()
         {
-            return View("Views/Account/LoginAndRegister.cshtml");
+            return View("Views/Account/Login.cshtml");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Дані введені неправильно");
+                return View("Contacts");
+            }
+            else {
+                await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com",
+                "Питання користувачів",
+                 $"Контактні дані користувача : Електронна пошта {contactsViewModel.Email}, Ім'я {contactsViewModel.Name}, Телефон {contactsViewModel.PhoneNumber}" +
+                 $"  Опис питання : {contactsViewModel.FeedBackDescription}",
+                 contactsViewModel.Email);
+            }
+            return RedirectToAction("Contacts", "Home");
         }
     }
 }
