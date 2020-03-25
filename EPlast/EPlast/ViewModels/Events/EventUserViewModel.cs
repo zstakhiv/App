@@ -12,8 +12,5 @@ namespace EPlast.ViewModels.Events
         public User User { get; set; }
         public ICollection<Event> Events { get; set; }
         public ICollection<Participant> Participants { get; set; }
-        public Event Event { get; set; }
-        public IEnumerable<EventCategory> EventCategory { get; set; }
-
     }
 }
