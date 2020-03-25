@@ -1,6 +1,9 @@
-﻿using EPlast.DataAccess.Repositories;
+﻿using EPlast.DataAccess.Entities;
+using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,18 +12,28 @@ namespace EPlast.Controllers
     public class ActionController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
+        private readonly UserManager<User> _userManager;
 
-        public ActionController(IRepositoryWrapper repoWrapper)
+
+        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper)
         {
+            _userManager = userManager;
             _repoWrapper = repoWrapper;
         }
 
         public IActionResult GetAction()
         {
-            List<EventCategoryViewModel> _evc = _repoWrapper.EventCategory.FindAll()
-            .Select(eventCategory => new EventCategoryViewModel() { EventCategory = eventCategory })
-            .ToList();
-            return View(_evc);
+            try
+            {
+                List<EventCategoryViewModel> _evc = _repoWrapper.EventCategory.FindAll()
+                .Select(eventCategory => new EventCategoryViewModel() { EventCategory = eventCategory })
+                .ToList();
+                return View(_evc);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         public IActionResult GetSubAction(int? ID)
@@ -46,8 +59,22 @@ namespace EPlast.Controllers
 
         public IActionResult Events(int? ID)
         {
-            return View();
-        }
+            try
+            {
+                List<EventViewModel> _event = _repoWrapper.Event
+                .FindByCondition(e => e.EventCategoryID == ID)
+                .Include(e => e.EventAdmins)
+                .Include(e =>e.Participants)
+                .Select(ev => new EventViewModel() { Event = ev })
+                .ToList();
+                return View(_event);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
+        
+         }
 
         public IActionResult EventInfo()
         {

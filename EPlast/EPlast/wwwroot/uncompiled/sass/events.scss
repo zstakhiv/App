@@ -24,6 +24,11 @@
     color: #FF0000;
 }
 
+.events-page-wrapper .disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 .events-page-wrapper .event-fabutton {
     background: none;
     padding: 0px;
