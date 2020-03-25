@@ -87,7 +87,7 @@ namespace EPlast.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User); //тут трішки глибшу логіку зробити але поки що так норм
             var result = await _userManager.IsEmailConfirmedAsync(user);
             if (result)
             {
@@ -95,7 +95,6 @@ namespace EPlast.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Незареєстрований користувач не може змінити пароль");
                 return RedirectToAction("UserProfile", "Account");
             }
         }
