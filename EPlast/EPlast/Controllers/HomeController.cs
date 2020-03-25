@@ -56,7 +56,6 @@ namespace EPlast.Controllers
             return View("Views/Account/Login.cshtml");
         }
 
-
         [HttpPost]
         public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
         {
@@ -74,65 +73,5 @@ namespace EPlast.Controllers
             }
             return RedirectToAction("Contacts", "Home");
         }
-
-
-
-
-
-        /*[HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel registerVM)
-        {
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Дані введені неправильно");
-                return View("Register");
-            }
-
-            var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
-            if (registeredUser != null)
-            {
-                ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
-                return View("Register");
-            }
-            else
-            {
-                var user = new User()
-                {
-                    Email = registerVM.Email,
-                    UserName = registerVM.Email,
-                    LastName = registerVM.SurName,
-                    FirstName = registerVM.Name,
-                    ImagePath = "default.png",
-                    UserProfile = new UserProfile()
-                };
-
-                var result = await _userManager.CreateAsync(user, registerVM.Password);
-                await _userManager.AddToRoleAsync(user, "Користувач");
-
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
-                    return View("Register");
-                }
-                else
-                {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action(
-                        nameof(ConfirmingEmail),
-                        "Account",
-                        new { code = code, userId = user.Id },
-                        protocol: HttpContext.Request.Scheme);
-
-                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
-
-                    return View("AcceptingEmail");
-                }
-            }
-        }
-*/
-
-
     }
 }
