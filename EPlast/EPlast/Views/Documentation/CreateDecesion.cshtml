@@ -19,9 +19,8 @@
                 <strong>Рішення органу</strong>
                 <br>
             </label>
-            @Html.DropDownListFor(x => x.Decesion.Organization.OrganizationName, Model.OrganizationListItems, "Виберіть орган влади рішення"
+            @Html.DropDownListFor(x => x.Decesion.Organization.ID, Model.OrganizationListItems, "Виберіть орган влади рішення"
             , new { @class = "form-control" })
-            <span asp-validation-for="@Model.Decesion.Organization.OrganizationName" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
             <label>

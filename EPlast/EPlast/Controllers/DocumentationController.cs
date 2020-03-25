@@ -25,7 +25,8 @@ namespace EPlast.Controllers
         private readonly IPDFService _PDFService;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
-        private const string _decesionsDocumentFolder = "/documents/";
+
+        private const string _decesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment)
@@ -90,13 +91,13 @@ namespace EPlast.Controllers
                 {
                     string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
                     Directory.CreateDirectory(path);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine(path, decesionViewModel.File.FileName), FileMode.Create))
                     {
                         await decesionViewModel.File.CopyToAsync(fileStream);
                     }
                 }
 
-                return View("CreateDecesion");
+                return RedirectToAction("CreateDecesion");
             }
             catch
             {
