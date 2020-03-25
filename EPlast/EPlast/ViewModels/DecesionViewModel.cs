@@ -1,4 +1,5 @@
 ﻿using EPlast.DataAccess.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
@@ -10,5 +11,6 @@ namespace EPlast.ViewModels
         public IEnumerable<SelectListItem> OrganizationListItems { get; set; }
         public IEnumerable<DecesionTarget> DecesionTargets { get; set; }
         public IEnumerable<SelectListItem> DecesionStatusTypeListItems { get; set; }
+        public IFormFile File { get; set; }
     }
 }

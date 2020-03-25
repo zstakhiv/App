@@ -4,12 +4,14 @@ using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,9 +24,11 @@ namespace EPlast.Controllers
         private readonly IDecisionVMIitializer _decisionVMCreator;
         private readonly IPDFService _PDFService;
         private readonly UserManager<User> _userManager;
+        private readonly IHostingEnvironment _appEnvironment;
+        private const string _decesionsDocumentFolder = "/documents/";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService)
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment)
 
         {
             _repoWrapper = repoWrapper;
@@ -32,6 +36,7 @@ namespace EPlast.Controllers
             _userManager = userManager;
             _PDFService = PDFService;
             _decisionVMCreator = decisionVMCreator;
+            _appEnvironment = appEnvironment;
         }
 
         public IActionResult Index()
@@ -40,7 +45,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult CreateRaport()
+        public IActionResult CreateDecesion()
         {
             DecesionViewModel decesionViewModel = new DecesionViewModel
             {
@@ -60,20 +65,38 @@ namespace EPlast.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult SaveReport(DecesionViewModel decesionViewModel)
+        public async Task<IActionResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return View("CreateRaport");
+                    return View("CreateDecesion");
                 }
-                //decesionViewModel.Decesion.DecesionStatus = DecesionStatus.InReview;
+                else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
+                {
+                    ModelState.AddModelError("", "файл за великий (більше 10 мб)");
+                    return View("CreateDecesion");
+                }
+
+                decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
+
                 _repoWrapper.Decesion.Attach(decesionViewModel.Decesion);
                 _repoWrapper.Decesion.Create(decesionViewModel.Decesion);
                 _repoWrapper.Save();
-                return View("CreateRaport");
+
+                if (decesionViewModel.Decesion.HaveFile)
+                {
+                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                    Directory.CreateDirectory(path);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await decesionViewModel.File.CopyToAsync(fileStream);
+                    }
+                }
+
+                return View("CreateDecesion");
             }
             catch
             {
@@ -82,7 +105,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult ReadRaport()
+        public IActionResult ReadDecesion()
         {
             try
             {
