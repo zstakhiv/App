@@ -6,14 +6,16 @@
 <div class="content-wrapper">
           <div class="club-page-wrapper">
             <div class="main-info grid-block">
-              <h1 class="grid-header">@Model.Club.ClubName</h1>
+              <h1 class="grid-header">@Model.Club.ClubName
+                <a asp-controller="Club" asp-action="EditClub" asp-route-index="@Model.Club.ID" style="color: #3c5438;"><i class="material-icons">settings</i></a>
+                </h1>
   
               <div class="top-info">
-                <img src="@Model.Club.Logo" alt="" class="curin-img">
+                <img src="/images/Club/@Model.Club.Logo" alt="" class="curin-img">
               </div>
   
               <div class="bottom-info-content">
-                  @foreach (var item in Model.Club.ClubAdministration)
+                  @foreach (var item in Model.Club.ClubAdministration.Take(4))
                   {
                       <div class="line-pair">
                           <p class="line-upper">@item.AdminType.AdminTypeName</p>
@@ -52,12 +54,12 @@
                     <div class="members-info grid-block">
                         <h1 class="grid-header">Провід куреня</h1>
                         <div class="members-list">
-                            @foreach (var item in Model.Club.ClubMembers)
+                            @foreach (var item in Model.Club.ClubMembers.Take(6))
                             {
                                 @if (@item.IsApproved)
                                 {
                                     <div class="member-block">
-                                        <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                                        <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
                                         <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
 
                                     </div>
@@ -70,13 +72,13 @@
                         <h1 class="grid-header">Зацікавлені</h1>
 
                         <div class="members-list">
-                            @foreach (var item in Model.Club.ClubMembers)
+                            @foreach (var item in Model.Club.ClubMembers.Take(6))
                             {
                                 @if (!@item.IsApproved)
                                 {
                                     <div class="member-block">
                                         <div class="member-wrapper">
-                                            <img src="https://i.pravatar.cc/300" alt="" class="member-img rounded-circle">
+                                            <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
 
                                             <div class="plus">
                                                 +
