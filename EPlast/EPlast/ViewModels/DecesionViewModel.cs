@@ -12,5 +12,6 @@ namespace EPlast.ViewModels
         public IEnumerable<DecesionTarget> DecesionTargets { get; set; }
         public IEnumerable<SelectListItem> DecesionStatusTypeListItems { get; set; }
         public IFormFile File { get; set; }
+        public string Filename { get; set; }
     }
 }
