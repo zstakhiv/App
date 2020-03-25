@@ -5,6 +5,7 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,34 +56,27 @@ namespace EPlast.Controllers
                                               .Select(x => x.City.Name)
                                               .LastOrDefault() ?? string.Empty;
 
-                    #region Delete when all users will have UserPlastDegrees automatically
-
-                    if (user.UserPlastDegrees.Count == 0 || cityName.Equals(string.Empty))
-                        continue;
-
-                    #endregion Delete when all users will have UserPlastDegrees automatically
-
                     userTableViewModels.Add(new UserTableViewModel
                     {
                         User = user,
                         ClubName = clubMembers.Where(x => x.UserId.Equals(user.Id) && x.IsApproved == true)
                                               .Select(x => x.Club.ClubName).LastOrDefault() ?? string.Empty,
                         CityName = cityName,
-                        RegionName = cities.Where(x => x.Name.Equals(cityName))
+                        RegionName = !cityName.Equals(string.Empty) ? cities.Where(x => x.Name.Equals(cityName))
                                            .FirstOrDefault()
                                            .Region
-                                           .RegionName ?? string.Empty,
-                        UserPlastDegreeName = user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
+                                           .RegionName : string.Empty,
+                        UserPlastDegreeName = user.UserPlastDegrees.Count != 0 ? user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
                                                                    .FirstOrDefault()
                                                                    .UserPlastDegreeType
-                                                                   .GetDescription() ?? string.Empty,
+                                                                   .GetDescription() : string.Empty,
                         UserRoles = string.Join(", ", roles)
                     });
                 }
 
                 return View(userTableViewModels);
             }
-            catch
+            catch (Exception e)
             {
                 return RedirectToAction("HandleError", "Error");
             }
