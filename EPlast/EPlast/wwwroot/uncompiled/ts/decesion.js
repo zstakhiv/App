@@ -9,7 +9,7 @@ $(document).ready(function () {
     });
     $("tr.raport-click-row").dblclick(function () {
         let content = $(this).children().first().text();
-        window.open("/Report/CreatePDFAsync?objId=" + content, '_blank');
+        window.open("/Documentation/CreatePDFAsync?objId=" + content, '_blank');
     });
 });
 //# sourceMappingURL=raport.js.map

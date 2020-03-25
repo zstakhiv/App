@@ -66,6 +66,7 @@ namespace EPlast
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
+            services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
             services.Configure<IdentityOptions>(options =>
             {

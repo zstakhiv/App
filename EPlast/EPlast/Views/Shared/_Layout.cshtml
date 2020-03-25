@@ -45,8 +45,17 @@
                         <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center">
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">search</i></a></li>
                             <li><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
-                            <li><a href="/Account/ChangePassword"><i class="material-icons nav-logo" style="margin: 5px;">settings</i></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons nav-logo" style="margin: 5px;">settings</i>
+                                </a>
+                                <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Змінити пароль</a>
+                                    <a class="dropdown-item" href="/Account/Edit?id=@UserManager.GetUserId(User)">Редагувати профіль</a>
+                                </div>
+                            </li>
                         </ul>
+
                         <div class="profile">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
@@ -84,7 +93,7 @@
 
                     <ul class="sidebar-ul">
                         <li class="sidebar-li"><a><div class="sidebar-logo profile-icon" onclick='onMenuHover(0)'></div></a></li>
-                        <li class="sidebar-li"><a href="/Report/ReadRaport"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
+                        <li class="sidebar-li"><a href="/Documentation/ReadDecesion"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo cabinet-icon" onclick='onMenuHover(4)'></div></a></li>
@@ -185,6 +194,14 @@
     }
 
     @*<environment include="Development">*@
+
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Separated link</a>
+    </div>
 
     <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
     <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>

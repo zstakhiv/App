@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public enum DecesionStatus
+    public enum DecesionStatusType
     {
         [Description("У розгляді")]
         InReview,
