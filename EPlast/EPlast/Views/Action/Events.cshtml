@@ -1,97 +1,91 @@
-﻿@inject Microsoft.AspNetCore.Identity.UserManager<EPlast.DataAccess.Entities.User> userManager
-
-
-
-@model List<EventViewModel>
+﻿
+@model EventViewModel
 
 <div class="container my-4 events-page-wrapper">
     <div class="row  ">
-        @foreach (EventViewModel _event in Model)
+        @foreach (var _event in Model.Events)
         {
             <div class=" col-lg-2 col-md-3 col-sm-4  mb-4 mx-0 single-card">
                 <div class="card shadow text-center">
                     <div class="card-header">
                         <div class="row justify-content-between">
-                            @if (_event.Event.EventAdmins.Any(e => e.UserID == userManager.GetUserId(User)))
-                            {
-                                <div>
-                                    <a class="event-remove delete-card " data-toggle="tooltip" data-placement="top" title="Видалити">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="disabledbutton">
-                                    <a class="event-remove delete-card " data-toggle="tooltip" data-placement="top" title="Видалити">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            }
                             <div>
+                                @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
+                                {
+                                    <a class="event-remove delete-card " data-toggle="tooltip" data-placement="top" title="Видалити">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="event-remove delete-card event-invisible " data-toggle="tooltip" data-placement="top" title="Видалити">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                }
+                            </div>
                                 <div>
-                                    <div class="event-invisible events-pen">
-                                        <a class="event-link" data-toggle="tooltip" data-placement="right" title="Зголоситись">
-                                            <i class="fas fa-pen-alt"></i>
-                                        </a>
-                                    </div>
-                                    <div class="events-part  mt-2 event-fix-width">
-                                        <h5><strong>Учасник</strong></h5>
-                                    </div>
-                                    <div class="events-participants event-invisible ">
-                                        <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
-                                            <i class="fas fa-user-clock"></i>
-                                        </a>
-                                    </div>
-                                    <div class="event-invisible events-unsubscribe ">
-                                        <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Зняти участь">
-                                            <i class="fas fa-user-minus"></i>
-                                        </a>
+                                    <div>
+                                        <div class="event-invisible events-pen">
+                                            <a class="event-link" data-toggle="tooltip" data-placement="right" title="Зголоситись">
+                                                <i class="fas fa-pen-alt"></i>
+                                            </a>
+                                        </div>
+                                        <div class="events-part  mt-2 event-fix-width">
+                                            <h5><strong>Учасник</strong></h5>
+                                        </div>
+                                        <div class="events-participants event-invisible ">
+                                            <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
+                                                <i class="fas fa-user-clock"></i>
+                                            </a>
+                                        </div>
+                                        <div class="event-invisible events-unsubscribe ">
+                                            <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Зняти участь">
+                                                <i class="fas fa-user-minus"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <div class="card-body">
                         <h1 class="event-logo"><i class="far fa-handshake"></i></h1>
 
                         <a asp-controller="Action" asp-action="EventInfo" class="title-link">
-                            <h5 class="card-title">@_event.Event.EventName</h5>
+                            <h5 class="card-title">@_event.EventName</h5>
                         </a>
                     </div>
                     <div class="card-footer ">
                         <div class="row justify-content-between">
-                            @if (_event.Event.EventAdmins.Any(e => e.UserID == userManager.GetUserId(User)))
-                            {
-                                <div>
-                                    <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="disabledbutton">
-                                    <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </div>
-                            }
                             <div>
-                                @if (_event.Event.EventStatusID == 1)
+                                @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
                                 {
-                                    <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Завершений(-на)">
-                                        <i class="fas fa-flag"></i>
+                                    <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
+                                        <i class="fas fa-edit"></i>
                                     </a>
                                 }
-                                @if (_event.Event.EventStatusID == 2)
+                                else
                                 {
-                                    <a class="event-link pr-3" data-toggle="tooltip" data-placement="bottom" title="Не затверджені">
-                                        <i class="fas fa-tools"></i>
-                                    </a>
+
+                                <a class="event-link event-invisible" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                                 }
                             </div>
-                        </div>
+                                <div>
+                                    @if (_event.EventStatusID == 1)
+                                    {
+                                        <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Завершений(-на)">
+                                            <i class="fas fa-flag"></i>
+                                        </a>
+                                    }
+                                    @if (_event.EventStatusID == 2)
+                                    {
+                                        <a class="event-link pr-3" data-toggle="tooltip" data-placement="bottom" title="Не затверджені">
+                                            <i class="fas fa-tools"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>

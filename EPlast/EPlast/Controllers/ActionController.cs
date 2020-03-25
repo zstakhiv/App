@@ -61,12 +61,12 @@ namespace EPlast.Controllers
         {
             try
             {
-                List<EventViewModel> _event = _repoWrapper.Event
+                List<Event> events = _repoWrapper.Event
                 .FindByCondition(e => e.EventCategoryID == ID)
                 .Include(e => e.EventAdmins)
                 .Include(e =>e.Participants)
-                .Select(ev => new EventViewModel() { Event = ev })
                 .ToList();
+                EventViewModel _event = new EventViewModel() { Events = events, user = _userManager };
                 return View(_event);
             }
             catch
