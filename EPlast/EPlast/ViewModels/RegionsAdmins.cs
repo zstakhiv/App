@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EPlast.ViewModels
 {
-    public class RegionsAndAdmins
+    public class RegionsAdmins
     {
         public IEnumerable<City> Cities { get; set; }
         public string City { get; set; }

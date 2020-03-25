@@ -154,11 +154,11 @@ namespace EPlast.Controllers
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
-
-        public IActionResult RegionsAndAdmins()
+        [HttpGet]
+        public IActionResult RegionsAdmins()
         {
             var cities = _repoWrapper.City.FindAll();
-            var model = new RegionsAndAdmins();
+            var model = new RegionsAdmins();
             model.Cities = cities;
             return View(model);
         }
@@ -166,9 +166,7 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult GetAdmins(int cityId)
         {
-            var city = _repoWrapper.City.FindByCondition(x => x.ID == cityId).FirstOrDefault();
-            var res=_repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i=>i.User);
-            
+            var res=_repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i=>i.User).Include(i=>i.AdminType);
             return PartialView(res);
         }
     }

@@ -23,7 +23,7 @@ let profileListing = [
         'Таблиця користувачів',
         'Зголосити вишкіл',
         '<a class="text-light" href="/Report/ViewAnnualReports">Річні звіти</a>',
-        'Осередки та адміни',
+        '<a class="text-light" href="/Admin/RegionsAdmins">Осередки та адміни</a>',
         'Зголошення вишколів',
         'Геостатистика',
         'Статистика по роках',

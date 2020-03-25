@@ -2,11 +2,10 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1>Шось та й мусить бути</h1>
             @foreach(var item in Model)
             {
                 <div class="form-group">
-                    <a>@item.User.FirstName @item.User.LastName</a>
+                    <a asp-action="UserProfile" asp-controller="Account">@item.User.FirstName @item.User.LastName @item.AdminType.AdminTypeName</a>
                 </div>
             }
         </div>
