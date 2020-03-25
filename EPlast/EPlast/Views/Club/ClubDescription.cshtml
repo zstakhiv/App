@@ -1,0 +1,23 @@
+﻿@using EPlast.ViewModels
+@model ClubViewModel
+@{
+    ViewData["Title"] = "ClubFollowers";
+}
+    <div class="content-wrapper">
+        <div class="club-page-wrapper-description club-page-wrapper">
+            <div class="main-info-description main-info grid-block" style="background-image: url('@Model.Club.Logo')">
+            </div>
+            <div class="secondary-info-description secondary-info vertical-grid">
+                <div class="about-info-description about-info grid-block">
+                    <h1 class="grid-header">Про нас</h1>
+
+                    <p class="info-description">@Model.Club.Description</p>
+                    @if(Model.Club.ClubURL != null)
+                    {
+                        <p class="info-description"><b><a href="@Model.Club.ClubURL" >Дізнайтеся більше про наш курінь за посиланням...</a></b></p>
+                    }
+                    <a asp-controller="Club" asp-action="Club" asp-route-index="@Model.Club.ID" class="buttons">Назад</a>
+                </div>
+            </div>
+    </div>
+                

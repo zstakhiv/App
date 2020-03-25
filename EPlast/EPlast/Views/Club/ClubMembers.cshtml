@@ -1,0 +1,29 @@
+﻿@using EPlast.ViewModels
+@model ClubViewModel
+@{
+    ViewData["Title"] = "ClubMembers";
+}
+<div class="content-wrapper">
+    <div class="all-clubs-view">
+        <h1 class="all-clubs-title">Члени куреня</h1>
+        <div class="club-list">
+            @foreach (var item in Model.Club.ClubMembers)
+            {
+                @if (@item.IsApproved)
+                {
+                    <a class="club-block-wrapper" asp-controller="Account" asp-action="UserProfile" asp-route-index="@item.User.Id">
+                        <div class="club-block">
+                            <div class="club-img-wrapper">
+                                <div class="club-img" style="background-image:url('https://i.pravatar.cc/')"></div>
+                            </div>
+                            <p class="club-name">@item.User.FirstName @item.User.LastName</p>
+
+                        </div>
+                    </a>
+                }
+            }
+
+        </div>
+        <a asp-controller="Club" asp-action="Club" asp-route-index="@Model.Club.ID" class="buttons">Назад</a>
+    </div>
+</div>
