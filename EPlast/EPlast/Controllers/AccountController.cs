@@ -123,12 +123,13 @@ namespace EPlast.Controllers
                     UserName = registerVM.Email,
                     LastName = registerVM.SurName,
                     FirstName = registerVM.Name,
+                    RegistredOn=DateTime.Now,
                     ImagePath = "default.png",
                     UserProfile = new UserProfile()
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
-                await _userManager.AddToRoleAsync(user, "Користувач");
+                await _userManager.AddToRoleAsync(user, "Прихильник");
 
                 if (!result.Succeeded)
                 {
@@ -169,8 +170,6 @@ namespace EPlast.Controllers
 
             if (result.Succeeded)
             {
-                //Цей код повинен знаходитись тут(замість 99 рядка) при релізі проекту
-                //await _userManager.AddToRoleAsync(user, "Користувач");
                 return RedirectToAction("ConfirmedEmail", "Account");
             }
             else

@@ -1,0 +1,48 @@
+﻿@using EPlast.ViewModels
+@model ClubViewModel
+@{
+    ViewData["Title"] = "ClubAdmins";
+}
+    <div class="container">
+        <div class="data-table-wrapper-club">
+            <h1 class="grid-header">Адміністрація куреня - "@Model.Club.ClubName"</h1>
+            <table id="dtClubAdmins" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="th-sm">
+                            Посада
+                        </th>
+                        <th class="th-sm">
+                            ПІБ
+                        </th>
+
+                        <th class="th-sm">
+                            Час вступу на посаду
+                        </th>
+                        <th class="th-sm">
+                            Час завершення терміну
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Club.ClubAdministration)
+                    {
+                        <tr class="raport-click-row">
+                            <td>@item.AdminType.AdminTypeName</td>
+                            <td>@item.ClubMembers.User.LastName @item.ClubMembers.User.FirstName @item.ClubMembers.User.FatherName</td>
+                            <td>@item.StartDate.ToString("dd-MM-yyyy")</td>
+                            @if (@item.EndDate.HasValue)
+                            {
+                                <td>@item.EndDate.Value.ToString("dd-MM-yyyy")</td>
+                            }
+                            else
+                            {
+                                <td>-</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a asp-controller="Club" asp-action="Club" asp-route-index="@Model.Club.ID" class="buttons">Назад</a>
+        </div>
+    </div>
