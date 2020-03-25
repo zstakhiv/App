@@ -5,6 +5,7 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -152,6 +153,23 @@ namespace EPlast.Controllers
                 }
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        public IActionResult RegionsAndAdmins()
+        {
+            var cities = _repoWrapper.City.FindAll();
+            var model = new RegionsAndAdmins();
+            model.Cities = cities;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetAdmins(int cityId)
+        {
+            var city = _repoWrapper.City.FindByCondition(x => x.ID == cityId).FirstOrDefault();
+            var res=_repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i=>i.User);
+            
+            return PartialView(res);
         }
     }
 }
