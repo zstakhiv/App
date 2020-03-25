@@ -88,8 +88,8 @@ namespace EPlast
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "841088023074581";
-                    options.AppSecret = "f030e810406f6052f6770c66a25c82d3";
+                    options.AppId = "714480595752044";
+                    options.AppSecret = "28698ad0d5d8294b1e9b6ccd340a038e";
                 });
 
             services.ConfigureApplicationCookie(options =>

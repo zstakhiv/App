@@ -20,8 +20,7 @@ namespace EPlast.ViewModels
 
         [Required(ErrorMessage = "Поле введіть новий пароль ще раз є обов'язковим")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = 
-            "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessage = "Новий пароль не співпадає")]
         [StringLength(100, ErrorMessage = "Пароль має вміщати мінімум 8 символів", MinimumLength = 8)]
         public string ConfirmPassword { get; set; }
     }
