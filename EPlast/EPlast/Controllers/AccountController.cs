@@ -545,7 +545,9 @@ namespace EPlast.Controllers
                                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
-                                UserProfile = new UserProfile()
+                                UserProfile = new UserProfile
+                                {
+                                }
                             };
                             await _userManager.CreateAsync(user);
                         }
