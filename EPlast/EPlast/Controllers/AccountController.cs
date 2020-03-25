@@ -530,71 +530,57 @@ namespace EPlast.Controllers
             }
             else
             {
-                switch (info.LoginProvider.ToString())
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                var phone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
+                if (info.LoginProvider.ToString() == "Google")
                 {
-                    case "Google":
-                        CreateGoogleUserIfNotExist(info);
-                        break;
-                    case "Facebook":
-                        CreateFacebookUserIfNotExist(info);
-                        break;
-                }
-                return LocalRedirect(returnUrl);
-            }
-        }
-        
-
-        private async Task<IActionResult> CreateGoogleUserIfNotExist(ExternalLoginInfo info)
-        {
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            if (email != null)
-            {
-                var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
-                {
-                    user = new User
+                    if (email != null)
                     {
-                        UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                        LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                        ImagePath = "default.png",
-                        UserProfile = new UserProfile()
-                    };
-                    await _userManager.CreateAsync(user);
+                        var user = await _userManager.FindByEmailAsync(email);
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile()
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
                 }
-                await _userManager.AddLoginAsync(user, info);
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                //return LocalRedirect(returnUrl);
-            }
-            return View("Error");
-        }
-
-        private async Task<IActionResult> CreateFacebookUserIfNotExist(ExternalLoginInfo info)
-        {
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var phone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
-            var user = await _userManager.FindByNameAsync(email ?? phone);
-            if (email != null || phone != null)
-            {
-                if (user == null)
+                else if(info.LoginProvider.ToString() == "Facebook")
                 {
-                    user = new User
+                    var user = await _userManager.FindByNameAsync(email ?? phone);
+                    if (email != null || phone != null)
                     {
-                        UserName = email ?? phone,
-                        Email = email,
-                        PhoneNumber = phone,
-                        FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                        LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                        ImagePath = "default.png",
-                        UserProfile = new UserProfile(),
-                    };
-                    await _userManager.CreateAsync(user);
-                    await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = email ?? phone,
+                                Email = email,
+                                PhoneNumber = phone,
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile(),
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
                 }
+                return View("Error");
             }
-            return View("Error");
         }
 
         [HttpPost]

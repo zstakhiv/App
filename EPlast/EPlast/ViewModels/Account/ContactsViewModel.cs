@@ -15,9 +15,11 @@ namespace EPlast.ViewModels
 
         [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
         [EmailAddress]
+        
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле номер телефону є обов'язковим")]
+        [Phone]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Поле текст є обов'язковим")]
