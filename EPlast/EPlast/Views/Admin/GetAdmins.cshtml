@@ -1,33 +1,16 @@
 ﻿@model IEnumerable<EPlast.DataAccess.Entities.CityAdministration>
-@for (int i = 0; i < Model.Count(); i++)
+
+@foreach (var item in Model)
 {
     <div class="card-group">
         <div class="card">
-            <img class="card-img-top" src="/images/Users/@Model.ElementAt(i).User.ImagePath" alt="Card image cap">
+            <img class="card-img-top" src="/images/Users/@item.User.ImagePath" alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title"> @Model.ElementAt(i).User.FirstName @Model.ElementAt(i).User.LastName</h5>
-                <p class="card-text"> @Model.ElementAt(i).AdminType.AdminTypeName<br /> @Model.ElementAt(i).User.Email</p>
+                <h5 class="card-title"> @item.User.FirstName @item.User.LastName</h5>
+                <p class="card-text"> @item.AdminType.AdminTypeName<br /> @item.User.Email</p>
             </div>
-            <a class="stretched-link" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@Model.ElementAt(i).User.Id"></a>
-        </div>
-        @{ i++;}
-        <div class="card">
-            <img class="card-img-top" src="/images/Users/@Model.ElementAt(i).User.ImagePath" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title"> @Model.ElementAt(i).User.FirstName @Model.ElementAt(i).User.LastName</h5>
-                <p class="card-text"> @Model.ElementAt(i).AdminType.AdminTypeName<br /> @Model.ElementAt(i).User.Email</p>
-            </div>
-            <a class="stretched-link" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@Model.ElementAt(i).User.Id"></a>
-        </div>
-        @{ i++;}
-        <div class="card">
-            <img class="card-img-top" src="/images/Users/@Model.ElementAt(i).User.ImagePath" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title"> @Model.ElementAt(i).User.FirstName @Model.ElementAt(i).User.LastName</h5>
-                <p class="card-text"> @Model.ElementAt(i).AdminType.AdminTypeName<br /> @Model.ElementAt(i).User.Email</p>
-            </div>
-            <a class="stretched-link" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@Model.ElementAt(i).User.Id"></a>
+            <a class="stretched-link" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id"></a>
         </div>
     </div>
-
 }
+    

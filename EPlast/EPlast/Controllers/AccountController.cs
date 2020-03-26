@@ -218,10 +218,14 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
+        
 
-        [HttpGet]
         public IActionResult UserProfile(string userId)
         {
+            if(string.IsNullOrEmpty(userId))
+            {
+                userId = _userManager.GetUserId(User);
+            }
             var user = _repoWrapper.User.
             FindByCondition(q => q.Id == userId).
                 Include(i => i.UserProfile).
@@ -243,6 +247,7 @@ namespace EPlast.Controllers
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
+
         [Authorize]
         [HttpGet]
         public IActionResult Edit(string id)
@@ -257,6 +262,10 @@ namespace EPlast.Controllers
 
             try
             {
+                if(!string.Equals(id, _userManager.GetUserId(User)))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
