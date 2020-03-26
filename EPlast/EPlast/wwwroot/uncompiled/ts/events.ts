@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
     let status = 0;
+    let value: string | number | string[];
+    let elementTodelete: HTMLElement;
     $('[data-toggle="tooltip"]').tooltip();
 
     $("div.single-card").mouseleave(function () {
@@ -9,9 +11,36 @@
         }
     });
 
-    $("a.delete-card").click(function () {
-        $(this).parents("div.single-card").remove();
+    $('a.delete-card').click(function () {
+        value = $(this).parents("div.single-card").children('input[type="hidden"]').val();
+        elementTodelete = this;
+        $("#myModal").modal('show');
     });
+
+    $("#delete").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Action/DeleteEvent",
+            data: { ID: value },
+            success: function () {
+                $("#myModal").modal('hide');
+                $("#fail").hide();
+                $("#success").show();
+                $("#deleteResult").modal('show');
+                $(elementTodelete).parents("div.single-card").remove();
+            },
+            error: function () {
+                $("#myModal").modal('hide');
+                $("#success").hide();
+                $("#fail").show();
+                $("#deleteResult").modal('show');
+            },
+        });
+    });
+
+    //$("a.delete-card").click(function () {
+    //    $(this).parents("div.single-card").remove();
+    //});
 
     $("div.events-unsubscribe").click(function () {
 

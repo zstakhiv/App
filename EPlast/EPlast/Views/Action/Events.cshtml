@@ -1,28 +1,80 @@
 ﻿
 @model EventViewModel
 
-<div class="container my-4 events-page-wrapper">
-    <div class="row  ">
-        @foreach (var _event in Model.Events)
-        {
-            <div class=" col-lg-2 col-md-3 col-sm-4  mb-4 mx-0 single-card">
-                <div class="card shadow text-center">
-                    <div class="card-header">
-                        <div class="row justify-content-between">
-                            <div>
-                                @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
-                                {
-                                    <a class="event-remove delete-card " data-toggle="tooltip" data-placement="top" title="Видалити">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                }
-                                else
-                                {
-                                    <a class="event-remove delete-card event-invisible " data-toggle="tooltip" data-placement="top" title="Видалити">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                }
-                            </div>
+    <div class="container my-4 events-page-wrapper">
+        @*Модальне вікно*@
+
+        <div id="myModal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Підтвердження</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Ви впевнені, що хочете видалити подію?</p>
+                        <p class="text-secondary"><small>При видаленні події вся іформація пов'язана з нею буде також видалена.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Скасувати</button>
+                        <button type="button" id="delete" class="btn btn-success">Так, видалити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="deleteResult" class="modal fade" tabindex="-1">
+            <div id="" class="modal-dialog">
+                <div id="success" class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Вітаємо!</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Подія успішно видалена.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+                <div id="fail" class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Упсс</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Щось пішло не так при видаленні події. Спробуйте пізніше або напишіть у техпідтримку.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="evId" name="evId" value="456">
+        <div class="row">
+            @foreach (var _event in Model.Events)
+            {
+                <div class=" col-lg-2 col-md-3 col-sm-4  mb-4 mx-0 single-card">
+                    <input type="hidden" value=@_event.ID>
+                    <div class="card shadow text-center">
+                        <div class="card-header">
+                            <div class="row justify-content-between">
+                                <div>
+                                    @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
+                                    {
+                                        <a class="event-remove delete-card" data-toggle="tooltip" data-placement="top" title="Видалити">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="event-remove delete-card event-invisible " data-toggle="tooltip" data-placement="top" title="Видалити">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>
+                                    }
+                                </div>
                                 <div>
                                     <div>
                                         <div class="event-invisible events-pen">
@@ -47,30 +99,30 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="card-body">
-                        <h1 class="event-logo"><i class="far fa-handshake"></i></h1>
+                        <div class="card-body">
+                            <h1 class="event-logo"><i class="far fa-handshake"></i></h1>
 
-                        <a asp-controller="Action" asp-action="EventInfo" class="title-link">
-                            <h5 class="card-title">@_event.EventName</h5>
-                        </a>
-                    </div>
-                    <div class="card-footer ">
-                        <div class="row justify-content-between">
-                            <div>
-                                @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
-                                {
-                                    <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                }
-                                else
-                                {
+                            <a asp-controller="Action" asp-action="EventInfo" class="title-link">
+                                <h5 class="card-title">@_event.EventName</h5>
+                            </a>
+                        </div>
+                        <div class="card-footer ">
+                            <div class="row justify-content-between">
+                                <div>
+                                    @if (_event.EventAdmins.Any(e => e.UserID == Model.user.GetUserId(User)))
+                                    {
+                                        <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
 
-                                <a class="event-link event-invisible" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                }
-                            </div>
+                                        <a class="event-link event-invisible" data-toggle="tooltip" data-placement="bottom" title="Редагувати">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    }
+                                </div>
                                 <div>
                                     @if (_event.EventStatusID == 1)
                                     {
@@ -86,9 +138,9 @@
                                     }
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>

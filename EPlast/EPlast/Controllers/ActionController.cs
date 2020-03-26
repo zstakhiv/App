@@ -64,7 +64,7 @@ namespace EPlast.Controllers
                 List<Event> events = _repoWrapper.Event
                 .FindByCondition(e => e.EventCategoryID == ID)
                 .Include(e => e.EventAdmins)
-                .Include(e =>e.Participants)
+                .Include(e => e.Participants)
                 .ToList();
                 EventViewModel _event = new EventViewModel() { Events = events, user = _userManager };
                 return View(_event);
@@ -73,8 +73,15 @@ namespace EPlast.Controllers
             {
                 return RedirectToAction("HandleError", "Error");
             }
-        
-         }
+
+        }
+
+        [HttpPost]
+        public void DeleteEvent(int? ID)
+        {          
+           _repoWrapper.Event.Delete(_repoWrapper.Event.FindByCondition(e => e.ID == ID).FirstOrDefault());
+           _repoWrapper.Save();
+        }
 
         public IActionResult EventInfo()
         {
