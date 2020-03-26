@@ -32,7 +32,7 @@ namespace EPlast.BussinessLayer
             paragraph.Format.Font.Size = 12;
             paragraph.Format.SpaceAfter = "1cm";
 
-            paragraph = section.AddParagraph($"Поточний статус: {decesion.DecesionStatus.GetDescription()}");
+            paragraph = section.AddParagraph($"Поточний статус: {decesion.DecesionStatusType.GetDescription()}");
             paragraph.Format.Font.Size = 14;
             paragraph.Format.SpaceBefore = "5cm";
             paragraph.Format.Alignment = ParagraphAlignment.Right;

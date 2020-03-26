@@ -1,0 +1,73 @@
+﻿@using EPlast.DataAccess.Repositories
+@using EPlast.DataAccess.Entities
+@model EPlast.ViewModels.Events.EventCreateViewModel
+<form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-action="EditConfirmed" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-7">
+            <h1>Створити подію</h1>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Тип Події</label>
+                @Html.TextBoxFor(x => x.Event.EventCategory.EventCategoryName,
+                new { @list = "CategoryType-value", @id = "autocomplete_input", @class = "form-control", @Value = "" })
+                <datalist id="CategoryType-value">
+                    @foreach (EventCategory item in Model.EventCategory)
+                    {
+                        <option data-value="@item.ID" value="@item.EventCategoryName"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.Event.EventCategory.ID, new { @id = "autocomplete_input_id_0" })
+                <span asp-validation-for="Event.EventCategory.EventCategoryName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @if (Model.Event.EventCategory.EventCategoryName == "Вишкіл")
+                {
+                    <label class="control-label">Тип Вишколу</label>
+                }
+                else if (Model.Event.EventCategory.EventCategoryName == "Табір")
+                {
+                    <label class="control-label">Тип Табору</label>
+                }
+                else if ((Model.Event.EventCategory.EventCategoryName == "Акція"))
+                {
+                    <label class="control-label">Тип Акції</label>
+                }
+                else
+                {
+                    <label class="control-label">Перевірти тип події!</label>
+                }
+                @Html.TextBoxFor(x => x.SubEventCategory.SubEventCategoryName,
+                    new { @list = " SubCategoryType-value", @id = "autocomplete_input", @class = "form-control", @Value = "" })
+                <datalist id="SubCategoryType-value">
+                    @foreach (SubEventCategory item in Model.SubEventCategories)
+                    {
+                        <option data-value="@item.ID" value="@item.SubEventCategoryName"></option>
+                    }
+                </datalist>
+                @Html.HiddenFor(i => i.Event.EventCategory.SubEventCategories, new { @id = "autocomplete_input_id_0" })
+                <span asp-validation-for="SubEventCategory.ID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @if (Model.Event.EventCategory.EventCategoryName == "Вишкіл")
+                {
+                    <label class="control-label">Назва Вишколу</label>
+                }
+                else if (Model.Event.EventCategory.EventCategoryName == "Табір")
+                {
+                    <label class="control-label">Назва Табору</label>
+                }
+                else if (Model.Event.EventCategory.EventCategoryName == "Акція")
+                {
+                    <label class="control-label">Назва Акції</label>
+                }
+                <input asp-for="Event.EventName" class="form-control">
+                <span asp-validation-for="Event.EventName" class="text-danger"></span>
+            </div>
+            
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
