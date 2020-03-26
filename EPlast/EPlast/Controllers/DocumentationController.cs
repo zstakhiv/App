@@ -218,7 +218,36 @@ namespace EPlast.Controllers
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
                     CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(cityMembers)
+                    AnnualReport = _annualReportVMCreator.GetAnnualReport(user.Id, city.ID, cityMembers)
+                };
+                return View(annualReportViewModel);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult CreateAnnualReportAsAdmin(int cityId)
+        {
+            try
+            {
+                var user = _repoWrapper.User
+                    .FindByCondition(u => u.Id == _userManager.GetUserId(User))
+                    .First();
+                var city = _repoWrapper.City
+                    .FindByCondition(c => c.ID == cityId)
+                    .First();
+                var cityMembers = _repoWrapper.User
+                    .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == cityId && cm.EndDate == null))
+                    .Include(u => u.UserPlastDegrees);
+                var annualReportViewModel = new AnnualReportViewModel
+                {
+                    CityName = city.Name,
+                    CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
+                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
+                    AnnualReport = _annualReportVMCreator.GetAnnualReport(user.Id, city.ID, cityMembers)
                 };
                 return View(annualReportViewModel);
             }
@@ -229,21 +258,12 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAnnualReport(AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(string userId, int cityId, AnnualReport annualReport)
         {
             try
             {
-                var user = _repoWrapper.User
-                    .FindByCondition(u => u.Id == _userManager.GetUserId(User))
-                    .First();
-                var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
-                    .First();
-                var city = _repoWrapper.City
-                    .FindByCondition(c => c.CityAdministration.Any(ca => ca.UserId == user.Id && ca.AdminTypeId == adminType.ID && ca.EndDate == null))
-                    .First();
-                annualReport.UserId = user.Id;
-                annualReport.CityId = city.ID;
+                annualReport.UserId = userId;
+                annualReport.CityId = cityId;
                 annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
                 if (ModelState.IsValid)
@@ -254,8 +274,11 @@ namespace EPlast.Controllers
                 }
                 else
                 {
+                    var city = _repoWrapper.City
+                        .FindByCondition(c => c.ID == cityId)
+                        .First();
                     var cityMembers = _repoWrapper.User
-                        .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
+                        .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == cityId && cm.EndDate == null))
                         .Include(u => u.UserPlastDegrees);
                     var annualReportViewModel = new AnnualReportViewModel
                     {
@@ -277,52 +300,81 @@ namespace EPlast.Controllers
         {
             try
             {
-                var regions = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "all", Text = "Всі регіони" }
-                };
-                foreach (var region in _repoWrapper.Region.FindAll())
-                {
-                    regions.Add(new SelectListItem
-                    {
-                        Value = region.ID.ToString(),
-                        Text = region.RegionName
-                    });
-                }
-                var years = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "all", Text = "Всі роки" }
-                };
-                for (int i = 2020; i < DateTime.Today.Year + 1; i++)
-                {
-                    years.Add(new SelectListItem
-                    {
-                        Value = i.ToString(),
-                        Text = i.ToString()
-                    });
-                }
                 var annualReports = _repoWrapper.AnnualReports
                     .FindAll()
                     .Include(ar => ar.City)
+                        .ThenInclude(c => c.Region)
                     .Include(ar => ar.User)
-                    .Include(ar => ar.MembersStatistic)
                     .ToList();
-                return View(new ViewAnnualReportsViewModel
-                {
-                    Regions = regions,
-                    Years = years,
-                    UnconfirmedAnnualReports = annualReports
-                        .FindAll(ar => ar.Status == AnnualReportStatus.Unconfirmed),
-                    ConfirmedAnnualReports = annualReports
-                        .FindAll(ar => ar.Status == AnnualReportStatus.Confirmed),
-                    CanceledAnnualReports = annualReports
-                        .FindAll(ar => ar.Status == AnnualReportStatus.Canceled)
-                });
+                return View(annualReports);
             }
             catch
             {
                 return RedirectToAction("HandleError", "Error");
             }
+        }
+
+        [HttpGet]
+        public IActionResult GetAnnualReport(int id)
+        {
+            var annualReport = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.ID == id)
+                    .Include(ar => ar.City)
+                    .Include(ar => ar.MembersStatistic)
+                    .Include(ar => ar.CityManagement)
+                        .ThenInclude(cm => cm.User)
+                    .First();
+            return PartialView("_GetAnnualReport", annualReport);
+        }
+
+        [HttpGet]
+        public string ConfirmAnnualReport(int id)
+        {
+            var annualReport = _repoWrapper.AnnualReports
+                .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
+                .Include(ar => ar.City)
+                .Include(ar => ar.CityManagement)
+                .First();
+            var cityAdminOld = _repoWrapper.CityAdministration
+                .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.EndDate == null)
+                .First();
+            annualReport.Status = AnnualReportStatus.Confirmed;
+            cityAdminOld.EndDate = DateTime.Today;
+            var adminType = _repoWrapper.AdminType
+                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                    .First();
+            var cityAdminNew = new CityAdministration
+            {
+                UserId = annualReport.CityManagement.UserId,
+                CityId = annualReport.CityId,
+                StartDate = DateTime.Today,
+                AdminTypeId = adminType.ID
+            };
+            var cityLegalStatusNew = new CityLegalStatus
+            {
+                CityId = annualReport.CityId,
+                LegalStatusType = annualReport.CityManagement.CityLegalStatus,
+                DateStart = DateTime.Today,
+            };
+            _repoWrapper.AnnualReports.Update(annualReport);
+            _repoWrapper.CityAdministration.Update(cityAdminOld);
+            _repoWrapper.CityAdministration.Create(cityAdminNew);
+            _repoWrapper.CityLegalStatuses.Create(cityLegalStatusNew);
+            _repoWrapper.Save();
+            return $"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік підтверджено!";
+        }
+
+        [HttpGet]
+        public string CancelAnnualReport(int id)
+        {
+            var annualReport = _repoWrapper.AnnualReports
+                .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
+                .Include(ar => ar.City)
+                .First();
+            annualReport.Status = AnnualReportStatus.Canceled;
+            _repoWrapper.AnnualReports.Update(annualReport);
+            _repoWrapper.Save();
+            return $"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік скасовано!";
         }
     }
 }

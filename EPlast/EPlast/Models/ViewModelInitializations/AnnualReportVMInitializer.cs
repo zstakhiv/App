@@ -38,7 +38,7 @@ namespace EPlast.Models.ViewModelInitializations
             return cityLegalStatusTypesSLI;
         }
 
-        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers)
+        public AnnualReport GetAnnualReport(string userId, int cityId, IEnumerable<User> cityMembers)
         {
             var membersStatistic = new MembersStatistic
             {
@@ -65,6 +65,8 @@ namespace EPlast.Models.ViewModelInitializations
             };
             var annualReport = new AnnualReport
             {
+                UserId = userId,
+                CityId = cityId,
                 MembersStatistic = membersStatistic
             };
             return annualReport;
