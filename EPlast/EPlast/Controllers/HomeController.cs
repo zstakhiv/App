@@ -56,6 +56,12 @@ namespace EPlast.Controllers
             return View("Views/Account/Login.cshtml");
         }
 
+        [HttpGet]
+        public IActionResult FeedBackSended()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
         {
@@ -71,7 +77,7 @@ namespace EPlast.Controllers
                  $"  Опис питання : {contactsViewModel.FeedBackDescription}",
                  contactsViewModel.Email);
             }
-            return RedirectToAction("Contacts", "Home");
+            return RedirectToAction("FeedBackSended", "Home");
         }
     }
 }
