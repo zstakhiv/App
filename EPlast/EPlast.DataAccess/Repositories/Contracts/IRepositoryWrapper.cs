@@ -41,13 +41,12 @@ namespace EPlast.DataAccess.Repositories
         IClubAdministrationRepository GetClubAdministration { get; }
         IRegionRepository Region { get; }
         IRegionAdministrationRepository RegionAdministration { get; }
-
         IAnnualReportsRepository AnnualReports { get; }
         IMembersStatisticsRepository MembersStatistics { get; }
         ICityLegalStatusesRepository CityLegalStatuses { get; }
         IUserPlastDegreesRepository UserPlastDegrees { get; }
         ICityManagementsRepository CityManagements { get; }
-
+        IEventAdministrationRepository EventAdministration { get; }
         void Save();
     }
 }
