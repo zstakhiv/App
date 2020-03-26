@@ -85,9 +85,18 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User); //тут трішки глибшу логіку зробити але поки що так норм
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                return RedirectToAction("UserProfile", "Account");
+            }
         }
 
         [HttpPost]
@@ -137,7 +146,7 @@ namespace EPlast.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
                     return View("AcceptingEmail");
                 }
@@ -444,7 +453,7 @@ namespace EPlast.Controllers
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
-                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
@@ -488,8 +497,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [HttpPost]
         [AllowAnonymous]
+        [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -529,29 +538,54 @@ namespace EPlast.Controllers
             else
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != null)
+                var phone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
+                if (info.LoginProvider.ToString() == "Google")
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
-
-                    if (user == null)
+                    if (email != null)
                     {
-                        user = new User
+                        var user = await _userManager.FindByEmailAsync(email);
+                        if (user == null)
                         {
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            ImagePath = "default.png",
-                            UserProfile = new UserProfile()
-                        };
-                        await _userManager.CreateAsync(user);
+                            user = new User
+                            {
+                                UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile()
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
                     }
-                    await _userManager.AddLoginAsync(user, info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
-                    return LocalRedirect(returnUrl);
                 }
-                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
+                else if(info.LoginProvider.ToString() == "Facebook")
+                {
+                    var user = await _userManager.FindByNameAsync(email ?? phone);
+                    if (email != null || phone != null)
+                    {
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = email ?? phone,
+                                Email = email,
+                                PhoneNumber = phone,
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile(),
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
                 return View("Error");
             }
         }

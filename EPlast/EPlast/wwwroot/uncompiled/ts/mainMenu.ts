@@ -19,7 +19,7 @@ let profileListing = [
         'Кваліфікаційні Вишколи',
         'Акції/Табори',
         'Відзначення'],
-    ['<a class="text-light" href="/Report/CreateAnnualReport">Подати річний звіт станиці</a>',
+    ['<a class="text-light" href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>',
         'Таблиця користувачів',
         'Зголосити вишкіл',
         '<a class="text-light" href="/Report/ViewAnnualReports">Річні звіти</a>',
@@ -29,7 +29,7 @@ let profileListing = [
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        '<a class="text-light" href="/Report/CreateRaport">Додати рішення керівних органів</a>',
+        '<a class="text-light" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
         'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
