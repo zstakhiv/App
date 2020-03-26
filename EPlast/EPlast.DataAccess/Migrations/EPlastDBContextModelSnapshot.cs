@@ -388,12 +388,14 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("DecesionStatus");
+                    b.Property<int>("DecesionStatusType");
 
                     b.Property<int>("DecesionTargetID");
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<bool>("HaveFile");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -523,6 +525,23 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("EventAdmin");
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdministration", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdministrationType");
+
+                    b.Property<int?>("EventID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EventID");
+
+                    b.ToTable("EventAdministration");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.EventCategory", b =>
                 {
                     b.Property<int>("ID")
@@ -650,9 +669,7 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("OrganizationName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<string>("OrganizationName");
 
                     b.HasKey("ID");
 
@@ -669,7 +686,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("ParticipantStatusId");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -688,7 +706,7 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserEventStatusName")
+                    b.Property<string>("ParticipantStatusName")
                         .IsRequired();
 
                     b.HasKey("ID");
@@ -1237,6 +1255,13 @@ namespace EPlast.DataAccess.Migrations
                         .WithMany("Events")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EPlast.DataAccess.Entities.EventAdministration", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
+                        .WithMany("EventAdministrations")
+                        .HasForeignKey("EventID");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.EventGallary", b =>

@@ -5,6 +5,7 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,27 +55,20 @@ namespace EPlast.Controllers
                                               .Select(x => x.City.Name)
                                               .LastOrDefault() ?? string.Empty;
 
-                    #region Delete when all users will have UserPlastDegrees automatically
-
-                    if (user.UserPlastDegrees.Count == 0 || cityName.Equals(string.Empty))
-                        continue;
-
-                    #endregion Delete when all users will have UserPlastDegrees automatically
-
                     userTableViewModels.Add(new UserTableViewModel
                     {
                         User = user,
                         ClubName = clubMembers.Where(x => x.UserId.Equals(user.Id) && x.IsApproved == true)
                                               .Select(x => x.Club.ClubName).LastOrDefault() ?? string.Empty,
                         CityName = cityName,
-                        RegionName = cities.Where(x => x.Name.Equals(cityName))
+                        RegionName = !cityName.Equals(string.Empty) ? cities.Where(x => x.Name.Equals(cityName))
                                            .FirstOrDefault()
                                            .Region
-                                           .RegionName ?? string.Empty,
-                        UserPlastDegreeName = user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
+                                           .RegionName : string.Empty,
+                        UserPlastDegreeName = user.UserPlastDegrees.Count != 0 ? user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
                                                                    .FirstOrDefault()
                                                                    .UserPlastDegreeType
-                                                                   .GetDescription() ?? string.Empty,
+                                                                   .GetDescription() : string.Empty,
                         UserRoles = string.Join(", ", roles)
                     });
                 }
@@ -95,7 +89,7 @@ namespace EPlast.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var admin = _roleManager.Roles.Where(i => i.Name == "Admin");
-                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i=>i.Name).ToList();
+                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i => i.Name).ToList();
                 RoleViewModel model = new RoleViewModel
                 {
                     UserID = user.Id,
@@ -152,6 +146,21 @@ namespace EPlast.Controllers
                 }
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+        [HttpGet]
+        public IActionResult RegionsAdmins()
+        {
+            var cities = _repoWrapper.City.FindAll();
+            var model = new RegionsAdmins();
+            model.Cities = cities;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetAdmins(int cityId)
+        {
+            var res=_repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i=>i.User).Include(i=>i.AdminType);
+            return PartialView(res);
         }
     }
 }

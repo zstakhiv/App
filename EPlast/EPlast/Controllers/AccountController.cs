@@ -85,9 +85,18 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                return RedirectToAction("UserProfile", "Account");
+            }
         }
 
         [HttpPost]
@@ -137,7 +146,7 @@ namespace EPlast.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
                     return View("AcceptingEmail");
                 }
@@ -207,7 +216,7 @@ namespace EPlast.Controllers
                     return View(loginVM);
                 }
             }
-            return View("Login");
+            return View("Login",loginVM);
         }
 
         [HttpPost]
@@ -218,12 +227,16 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
+        
 
-        [HttpGet]
-        public IActionResult UserProfile()
+        public IActionResult UserProfile(string userId)
         {
+            if(string.IsNullOrEmpty(userId))
+            {
+                userId = _userManager.GetUserId(User);
+            }
             var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+            FindByCondition(q => q.Id == userId).
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
@@ -258,6 +271,10 @@ namespace EPlast.Controllers
 
             try
             {
+                if(!string.Equals(id, _userManager.GetUserId(User)))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
@@ -436,7 +453,7 @@ namespace EPlast.Controllers
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
-                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
@@ -456,7 +473,7 @@ namespace EPlast.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(resetpasswordVM);
+                return View("ResetPassword");
             }
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
@@ -480,8 +497,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [HttpPost]
         [AllowAnonymous]
+        [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -521,29 +538,51 @@ namespace EPlast.Controllers
             else
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != null)
+                if (info.LoginProvider.ToString() == "Google")
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
-
-                    if (user == null)
+                    if (email != null)
+                    {
+                        var user = await _userManager.FindByEmailAsync(email);
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile()
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                else if(info.LoginProvider.ToString() == "Facebook")
+                {   
+                    var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var identifierForSearching = email ?? nameIdentifier;
+                    var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
+                    if(user == null)
                     {
                         user = new User
                         {
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            UserName = (email ?? nameIdentifier),
+                            FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                            Email = (email ?? "facebookdefaultmail@gmail.com"),
+                            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                             ImagePath = "default.png",
                             UserProfile = new UserProfile()
                         };
                         await _userManager.CreateAsync(user);
                     }
-                    await _userManager.AddLoginAsync(user, info);
+                    await _userManager.AddLoginAsync(user,info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
-
                     return LocalRedirect(returnUrl);
                 }
-                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
                 return View("Error");
             }
         }
