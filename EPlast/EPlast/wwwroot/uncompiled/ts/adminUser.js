@@ -29,4 +29,12 @@ $(function () {
         };
     }
 });
+$("input#regionsAndAdmins").each(function () {
+    $(this).change(function () {
+        $.get("/Admin/GetAdmins/" + "?cityId=" + $('option[value="' + $(this).val() + '"]').data('value'), function (data) {
+            $('#getAdmins').empty();
+            $('#getAdmins').append(data);
+        });
+    });
+});
 //# sourceMappingURL=adminUser.js.map
