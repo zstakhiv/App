@@ -564,7 +564,7 @@ namespace EPlast.Controllers
                         {
                             UserName = (email ?? nameIdentifier),
                             FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                            Email = (email ?? "defaultemail@gmail.com"),
+                            Email = (email ?? "facebookdefaultmail@gmail.com"),
                             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                             ImagePath = "default.png",
                             UserProfile = new UserProfile()
