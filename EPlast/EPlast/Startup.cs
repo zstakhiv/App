@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
+using EPlast.BussinessLayer.Settings;
 
 namespace EPlast
 {
@@ -32,9 +33,9 @@ namespace EPlast
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
-
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
@@ -68,6 +69,8 @@ namespace EPlast
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
             services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
+
+            services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
@@ -84,13 +87,13 @@ namespace EPlast
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "484153862512-aru7mov0pns1oa46bmhi7kb6vs5734l4.apps.googleusercontent.com";
-                    options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
+                    options.ClientId = Configuration.GetSection("GoogleAuthentication:GoogleClientId").Value;
+                    options.ClientSecret = Configuration.GetSection("GoogleAuthentication:GoogleClientSecret").Value;
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "714480595752044";
-                    options.AppSecret = "28698ad0d5d8294b1e9b6ccd340a038e";
+                    options.AppId = Configuration.GetSection("FacebookAuthentication:FacebookAppId").Value;
+                    options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
             services.ConfigureApplicationCookie(options =>
