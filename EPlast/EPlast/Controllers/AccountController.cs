@@ -569,9 +569,9 @@ namespace EPlast.Controllers
                             ImagePath = "default.png",
                             UserProfile = new UserProfile()
                         };
-                        var i = await _userManager.CreateAsync(user);
+                        await _userManager.CreateAsync(user);
                     }
-                    var b = await _userManager.AddLoginAsync(user,info);
+                    await _userManager.AddLoginAsync(user,info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
