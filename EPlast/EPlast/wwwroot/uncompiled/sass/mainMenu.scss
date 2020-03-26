@@ -45,6 +45,16 @@
                 display: flex;
                 align-items: center;
 
+                #layout-gear {
+                    position: absolute;
+                    margin-left: -162px;
+
+                    .dropdown-item:hover {
+                        background-color: #3c5438;
+                        color: #fff !important;
+                    }
+                }
+
                 .nav-logo {
                     padding: 0px;
                     color: white;
@@ -209,6 +219,7 @@
         }
     }
 }
+
 @media (max-width: 767px),(orientation: portrait) {
     .main-wrapper {
         .plast-header {
@@ -253,8 +264,5 @@
     .non-scrollable {
         overflow: hidden;
         height: 100vh;
-    } 
-
+    }
 }
-
-

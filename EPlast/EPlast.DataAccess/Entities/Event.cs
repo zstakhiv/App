@@ -25,6 +25,6 @@ namespace EPlast.DataAccess.Entities
         public ICollection<Participant> Participants { get; set; }
         public ICollection<EventGallary> EventGallarys { get; set; }
         public ICollection<EventAdmin> EventAdmins { get; set; }
-
+        public ICollection<EventAdministration> EventAdministrations { get; set; }
     }
 }

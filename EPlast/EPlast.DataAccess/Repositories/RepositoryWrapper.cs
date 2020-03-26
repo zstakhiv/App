@@ -45,6 +45,7 @@ namespace EPlast.DataAccess.Repositories
         private ICityLegalStatusesRepository _cityLegalStatuses;
         private IUserPlastDegreesRepository _userPlastDegrees;
         private ICityManagementsRepository _cityManagements;
+        private IEventAdministrationRepository _eventAdministration;
 
         public IDecesionRepository Decesion
         {
@@ -142,6 +143,20 @@ namespace EPlast.DataAccess.Repositories
                 }
 
                 return _event;
+            }
+        }
+
+        public IEventAdministrationRepository EventAdministration
+        {
+            get
+            {
+
+                if (_eventAdministration == null)
+                {
+                    _eventAdministration = new EventAdministrationRepository(_dbContext);
+
+                }
+                return _eventAdministration;
             }
         }
 
