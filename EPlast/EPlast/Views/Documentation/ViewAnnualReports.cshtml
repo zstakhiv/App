@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EPlast.DataAccess.Entities.AnnualReport>
 @using EPlast.BussinessLayer.ExtensionMethods
 @{
-    ViewData["Title"] = "Річні звіти станиць";
+    ViewData["Title"] = "Річні звіти";
 }
 
 <div class="view-annual-reports-form m-3">
@@ -45,7 +45,7 @@
         <div id="ModalContent">
 
         </div>
-        <partial name="_SuccessModal" />
-        <partial name="_ErrorModal" />
+        <partial name="_SuccessModal" model='""' />
+        <partial name="_ErrorModal" model='""' />
     </form>
 </div>

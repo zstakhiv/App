@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$('#view-annual-reports-form').ready(function () {
     $('#AnnualReportsTable').DataTable({
         'language': {
             'url': "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
@@ -92,6 +92,18 @@ $(document).ready(function () {
     function setDisabled(elements, disabled) {
         for (let el of elements)
             el.prop('disabled', disabled);
+    }
+});
+$('#annual-report-form').ready(function () {
+    if ($('#ModalSuccess .modal-body:first p:first strong:first').contents().length != 0) {
+        $('#ModalSuccess').modal('show');
+        $('#CreateAnnualReport').prop('disabled', true);
+    }
+    else {
+        if ($('#ModalError .modal-body:first p:first strong:first').contents().length != 0) {
+            $('#ModalError').modal('show');
+            $('#CreateAnnualReport').prop('disabled', true);
+        }
     }
 });
 //# sourceMappingURL=annualReport.js.map

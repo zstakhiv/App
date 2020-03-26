@@ -1,4 +1,6 @@
-﻿<div class="modal modal-success" id="ModalSuccess">
+﻿@model string 
+
+<div class="modal modal-success" id="ModalSuccess">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +9,7 @@
             </div>
             <div class="modal-body text-center">
                 <i class="fas fa-check-circle fa-4x mb-3"></i>
-                <p><strong></strong></p>
+                <p><strong>@Model</strong></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal">Закрити</button>

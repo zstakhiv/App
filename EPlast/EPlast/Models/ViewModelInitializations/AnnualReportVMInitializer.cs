@@ -12,7 +12,10 @@ namespace EPlast.Models.ViewModelInitializations
     {
         public IEnumerable<SelectListItem> GetCityMembers(IEnumerable<User> cityMembers)
         {
-            var users = new List<SelectListItem>();
+            var users = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "" }
+            };
             foreach (var cityMember in cityMembers)
             {
                 users.Add(new SelectListItem
