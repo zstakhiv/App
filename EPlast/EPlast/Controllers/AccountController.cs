@@ -87,7 +87,7 @@ namespace EPlast.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userManager.GetUserAsync(User); //тут трішки глибшу логіку зробити але поки що так норм
+            var user = await _userManager.GetUserAsync(User);
             var result = await _userManager.IsEmailConfirmedAsync(user);
             if (result)
             {
@@ -216,7 +216,7 @@ namespace EPlast.Controllers
                     return View(loginVM);
                 }
             }
-            return View("Login");
+            return View("Login",loginVM);
         }
 
         [HttpPost]
