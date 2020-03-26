@@ -234,6 +234,7 @@ namespace EPlast.Controllers
             if(string.IsNullOrEmpty(userId))
             {
                 userId = _userManager.GetUserId(User);
+                _logger.Log(LogLevel.Information, "UserId is not null");
             }
             var user = _repoWrapper.User.
             FindByCondition(q => q.Id == userId).
@@ -254,6 +255,7 @@ namespace EPlast.Controllers
             {
                 return View(model);
             }
+            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
@@ -273,6 +275,7 @@ namespace EPlast.Controllers
             {
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
+                    _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
                     return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
                 var user = _repoWrapper.User.
