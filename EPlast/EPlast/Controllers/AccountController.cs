@@ -474,7 +474,6 @@ namespace EPlast.Controllers
             if (!ModelState.IsValid)
             {
                 return View("ResetPassword");
-                //return View("ResetPassword");
             }
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
