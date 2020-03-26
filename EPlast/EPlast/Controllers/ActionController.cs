@@ -83,6 +83,19 @@ namespace EPlast.Controllers
            _repoWrapper.Save();
         }
 
+         public void SubscribeOnEvent(int ID)
+        {
+            _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = 3, EventId = ID, UserId=_userManager.GetUserId(User)}) ;
+            _repoWrapper.Save();
+        }
+
+        public void UnSubscribeOnEvent(int? ID)
+        {
+            Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
+            _repoWrapper.Participant.Delete(participantToDelete);
+            _repoWrapper.Save();
+        }
+
         public IActionResult EventInfo()
         {
             return View();
