@@ -220,10 +220,10 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserProfile()
+        public IActionResult UserProfile(string userId)
         {
             var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+            FindByCondition(q => q.Id == userId).
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
@@ -243,7 +243,6 @@ namespace EPlast.Controllers
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
-
         [Authorize]
         [HttpGet]
         public IActionResult Edit(string id)
