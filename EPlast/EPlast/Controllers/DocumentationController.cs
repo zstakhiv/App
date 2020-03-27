@@ -78,7 +78,7 @@ namespace EPlast.Controllers
                 }
                 else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
-                    ModelState.AddModelError("", "файл за великий (більше 10 мб)");
+                    ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
                     return View("CreateDecesion");
                 }
 
@@ -90,11 +90,20 @@ namespace EPlast.Controllers
 
                 if (decesionViewModel.Decesion.HaveFile)
                 {
-                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                    Directory.CreateDirectory(path);
-                    using (var fileStream = new FileStream(Path.Combine(path, decesionViewModel.File.FileName), FileMode.Create))
+                    try
                     {
-                        await decesionViewModel.File.CopyToAsync(fileStream);
+                        string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                        Directory.CreateDirectory(path);
+                        if (!Directory.Exists(path))
+                            throw new ArgumentException();
+                        using (var fileStream = new FileStream(Path.Combine(path, decesionViewModel.File.FileName), FileMode.Create))
+                        {
+                            await decesionViewModel.File.CopyToAsync(fileStream);
+                        }
+                    }
+                    catch
+                    {
+                        return RedirectToAction("HandleError", "Error");
                     }
                 }
 
@@ -135,8 +144,8 @@ namespace EPlast.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Download(string id, string filename)
         {
-            if (filename == null)
-                return Content("filename not present");
+            if (string.IsNullOrEmpty(filename) || string.IsNullOrEmpty(id))
+                return Content("filename or id not present");
 
             var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
 
