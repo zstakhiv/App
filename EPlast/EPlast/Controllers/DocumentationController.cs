@@ -249,7 +249,7 @@ namespace EPlast.Controllers
                     CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
                     AnnualReport = _annualReportVMCreator.GetAnnualReport(user.Id, city.ID, cityMembers)
                 };
-                return View(annualReportViewModel);
+                return View("CreateAnnualReport", annualReportViewModel);
             }
             catch
             {
@@ -318,7 +318,14 @@ namespace EPlast.Controllers
                         .ThenInclude(c => c.Region)
                     .Include(ar => ar.User)
                     .ToList();
-                return View(annualReports);
+                var cities = _repoWrapper.City
+                    .FindAll();
+                var viewAnnualReportsViewModel = new ViewAnnualReportsViewModel
+                {
+                    AnnualReports = annualReports,
+                    Cities = cities
+                };
+                return View(viewAnnualReportsViewModel);
             }
             catch
             {

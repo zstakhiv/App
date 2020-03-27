@@ -24,6 +24,7 @@ $('#view-annual-reports-form').ready(function () {
     $('#addAnnualReport').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+        $('#ModalAddAnnualReport').modal('show');
     });
     $('#reviewAnnualReport').click(function (e) {
         e.preventDefault();
@@ -105,5 +106,19 @@ $('#annual-report-form').ready(function () {
             $('#CreateAnnualReport').prop('disabled', true);
         }
     }
+    $('#CityFilter').keyup(function () {
+        var i;
+        var filter = $('#CityFilter').val().toString().toUpperCase();
+        var a = $('#ModalAddAnnualReport a');
+        for (i = 0; i < a.length; i++) {
+            var txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            }
+            else {
+                a[i].style.display = "none";
+            }
+        }
+    });
 });
 //# sourceMappingURL=annualReport.js.map
