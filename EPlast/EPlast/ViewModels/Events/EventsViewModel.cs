@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EPlast.ViewModels.Events
 {
-    public class EventViewModel
+    public class EventsViewModel
     {
         public UserManager<User> user { get; set; }
         public List<Event> Events { get; set; }

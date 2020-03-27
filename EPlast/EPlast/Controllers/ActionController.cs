@@ -66,7 +66,7 @@ namespace EPlast.Controllers
                 .Include(e => e.EventAdmins)
                 .Include(e => e.Participants)
                 .ToList();
-                EventViewModel _event = new EventViewModel() { Events = events, user = _userManager };
+                EventsViewModel _event = new EventsViewModel() { Events = events, user = _userManager };
                 return View(_event);
             }
             catch
@@ -77,23 +77,50 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public void DeleteEvent(int? ID)
-        {          
-           _repoWrapper.Event.Delete(_repoWrapper.Event.FindByCondition(e => e.ID == ID).FirstOrDefault());
-           _repoWrapper.Save();
+        public IActionResult DeleteEvent(int ID)
+        {
+            try
+            {
+                _repoWrapper.Event.Delete(_repoWrapper.Event.FindByCondition(e => e.ID == ID).First());
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
         }
 
-         public void SubscribeOnEvent(int ID)
+        [HttpPost]
+        public IActionResult SubscribeOnEvent(int ID)
         {
-            _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = 3, EventId = ID, UserId=_userManager.GetUserId(User)}) ;
-            _repoWrapper.Save();
+            try
+            {
+                _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = 3, EventId = ID, UserId = _userManager.GetUserId(User) });
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
-        public void UnSubscribeOnEvent(int? ID)
+        [HttpPost]
+        public IActionResult UnSubscribeOnEvent(int ID)
         {
-            Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
-            _repoWrapper.Participant.Delete(participantToDelete);
-            _repoWrapper.Save();
+            try
+            {
+                Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
+                _repoWrapper.Participant.Delete(participantToDelete);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         public IActionResult EventInfo()

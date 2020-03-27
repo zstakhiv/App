@@ -1,145 +1,10 @@
 ﻿
-@model EventViewModel
+@model EventsViewModel
 
     <div class="container my-4 events-page-wrapper">
-        @*Модальне вікно*@
-
-        <div id="myModal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Підтвердження</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ви впевнені, що хочете видалити подію?</p>
-                        <p class="text-secondary"><small>При видаленні події вся іформація пов'язана з нею буде також видалена.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Скасувати</button>
-                        <button type="button" id="delete" class="btn btn-success">Так, видалити</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalSubscribe" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Підтвердження зголошення</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ви впевнені, що хочете зголоситися на подію?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Скасувати</button>
-                        <button type="button" id="subscribe" class="btn btn-success">Так, зголоситися</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalUnSubscribe" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Підтвердження відписки</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ви впевнені, що хочете відписатися від події?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Скасувати</button>
-                        <button type="button" id="unsubscribe" class="btn btn-success">Так, відписатися</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalSubscribeSuccess" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Вітаємо!</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ви успішно надіслали заявку на участь у події.</p>
-                        <p class="text-secondary"><small>Найближчим часом ваша кандидатура буде розглянута адміністратром події, який прийме остаточне рішення щодо вашої участі у даній події.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalUnSubscribeSuccess" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Вітаємо!</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ви успішно відписалися від події.</p>
-                        <p class="text-secondary"><small>Ви також можете в будь-який момент знову зголоситися на дану подію.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="FAIL" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Упсс</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Щось пішло не так. Спробуйте повторити дану дію пізніше або напишіть у техпідтримку.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="deleteResult" class="modal fade" tabindex="-1">
-            <div id="" class="modal-dialog">
-                <div id="success" class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Вітаємо!</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Подія успішно видалена.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-                <div id="fail" class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Упсс</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Щось пішло не так при видаленні події. Спробуйте пізніше або напишіть у техпідтримку.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+      
+        @*Модальні вікна*@
+        @await Html.PartialAsync("_EventModals")
 
         <input type="hidden" id="evId" name="evId" value="456">
         <div class="row">
@@ -164,58 +29,64 @@
                                         </a>
                                     }
                                 </div>
-                                    <div class="events-operations">
-                                        @if (!_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID))
-                                        {
-                                            <div class="events-pen">
-                                                <a class="event-link subscribe" data-toggle="tooltip" data-placement="right" title="Зголоситись">
-                                                    <i class="fas fa-pen-alt"></i>
-                                                </a>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                             <div class="events-pen event-invisible">
-                                                <a class="event-link subscribe" data-toggle="tooltip" data-placement="right" title="Зголоситись">
+                                <div class="events-operations">
+                                    @if (!_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID))
+                                    {
+                                        <div class="events-pen">
+                                            <a class="event-link subscribe" data-toggle="tooltip" data-placement="right" title="Зголоситись">
                                                 <i class="fas fa-pen-alt"></i>
-                                                </a>
-                                              </div>
-                                        }
-                                            @if (_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID && p.ParticipantStatusId == 1))
-                                            {
-                                                <div class="events-part  mt-2 event-fix-width">
-                                                    <h5><strong>Учасник</strong></h5>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="events-part  mt-2 event-fix-width event-invisible">
-                                                    <h5><strong>Учасник</strong></h5>
-                                                </div>
-                                            }
-                                            @if (_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID && p.ParticipantStatusId == 3))
-                                            {
-                                                <div class="events-participants">
-                                                    <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
-                                                        <i class="fas fa-user-clock"></i>
-                                                    </a>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="events-participants event-invisible">
-                                                    <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
-                                                        <i class="fas fa-user-clock"></i>
-                                                    </a>
-                                                </div>
-                                            }
-
-                                            <div class="event-invisible events-unsubscribe ">
-                                                <a class="event-remove unsubscribe" data-toggle="tooltip" data-placement="right" title="Зняти участь">
-                                                    <i class="fas fa-user-minus"></i>
-                                                </a>
-                                            </div>
+                                            </a>
                                         </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="events-pen event-invisible">
+                                            <a class="event-link subscribe" data-toggle="tooltip" data-placement="right" title="Зголоситись">
+                                                <i class="fas fa-pen-alt"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    @if (_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID && p.ParticipantStatusId == 1))
+                                    {
+                                        <div class="events-part  mt-2 event-fix-width">
+                                            <h5><strong>Учасник</strong></h5>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="events-part  mt-2 event-fix-width event-invisible">
+                                            <h5><strong>Учасник</strong></h5>
+                                        </div>
+                                    }
+                                    @if (_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID && p.ParticipantStatusId == 3))
+                                    {
+                                        <div class="events-participants">
+                                            <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
+                                                <i class="fas fa-user-clock"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="events-participants event-invisible">
+                                            <a class="participant-status" href="#" data-toggle="tooltip" data-placement="right" title="Ваша кандидатура розглядається">
+                                                <i class="fas fa-user-clock"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    @if (_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID && p.ParticipantStatusId == 2))
+                                    {
+                                        <div class="events-participants-ban">
+                                            <a class="event-remove" href="#" data-toggle="tooltip" data-placement="right" title="Вашу заявку на участь у даній події відхилено">
+                                                <i class="fas fa-user-slash"></i>                                            </a>
+                                        </div>
+                                    }
+                                    <div class="event-invisible events-unsubscribe ">
+                                        <a class="event-remove unsubscribe" data-toggle="tooltip" data-placement="right" title="Зняти участь">
+                                            <i class="fas fa-user-minus"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -251,8 +122,14 @@
                                     }
                                     @if (_event.EventStatusID == 2)
                                     {
-                                        <a class="event-link pr-3" data-toggle="tooltip" data-placement="bottom" title="Не затверджені">
+                                        <a class="event-link pr-1" data-toggle="tooltip" data-placement="bottom" title="Не затверджені">
                                             <i class="fas fa-tools"></i>
+                                        </a>
+                                    }
+                                    @if (_event.EventStatusID == 3)
+                                    {
+                                        <a class="event-link pr-1" data-toggle="tooltip" data-placement="bottom" title="Затверджені">
+                                            <i class="fas fa-bullhorn"></i>
                                         </a>
                                     }
                                 </div>
