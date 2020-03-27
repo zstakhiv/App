@@ -8,7 +8,7 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
 
         [Display(Name = "Ступінь")]
-        [StringLength(20, MinimumLength = 3, ErrorMessage = "Ступінь повинна складати від 3 до 20 символів")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "Ступінь повинна складати від 3 до 30 символів")]
         public string Name { get; set; }
         public ICollection<Education> Educations { get; set; }
     }
