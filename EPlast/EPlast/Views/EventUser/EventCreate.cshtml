@@ -1,7 +1,6 @@
 ﻿@using EPlast.DataAccess.Repositories
 @using EPlast.DataAccess.Entities
 @model EPlast.ViewModels.Events.EventCreateViewModel
-<form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-action="EditConfirmed" enctype="multipart/form-data">
     <div class="row">
         <div class="col-7">
             <h1>Створити подію</h1>
@@ -62,7 +61,6 @@
 
         </div>
     </div>
-</form>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
