@@ -9,7 +9,7 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label">Тип Події</label>
-                @Html.DropDownListFor(x => x.Event.EventCategory.ID, 
+                @Html.DropDownListFor(x => x.Event.EventCategory.EventCategoryName, 
                (IEnumerable<SelectListItem>)ViewBag.genders, "-- Виберіть тип події... --",
                new { @placeholder = "Тип події", @class = "form-control" })
                 <span asp-validation-for="Event.EventCategory.EventCategoryName" class="text-danger"></span>

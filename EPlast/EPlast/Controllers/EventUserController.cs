@@ -41,22 +41,17 @@ namespace EPlast.Controllers
         }
         
         [HttpGet]
-        public IActionResult Create(int id)
+        public IActionResult EventCreate(int id)
         {
             if (!_repoWrapper.EventCategory.FindAll().Any())
             {
                 _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Вишкіл" });
                 _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Табір" });
                 _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Акція" });
-
                 _repoWrapper.Save();
             }
             try
             {
-                if(!string.Equals(id, _userManager.GetUserId(User)))
-                {
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
-                }
                 var events = _repoWrapper.Event.
                 FindByCondition(q => q.ID == id).
                 Include(i => i.EventCategory).
@@ -86,7 +81,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(EventCreateViewModel model, IFormFile file)
+        public IActionResult EventCreate(EventCreateViewModel model, IFormFile file)
         {
             try
             {
@@ -121,7 +116,7 @@ namespace EPlast.Controllers
 
                 _repoWrapper.Event.Update(model.Event);
                 _repoWrapper.Save();
-                return RedirectToAction("UserProfile");
+                return RedirectToAction("EventUser");
             }
             catch
             {
