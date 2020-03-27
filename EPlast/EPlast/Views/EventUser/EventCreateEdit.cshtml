@@ -5,18 +5,13 @@
     <div class="row">
         <div class="col-7">
             <h1>Створити подію</h1>
+            @Html.HiddenFor(model => model.Event.ID)
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label">Тип Події</label>
-                @Html.TextBoxFor(x => x.Event.EventCategory.EventCategoryName,
-                new { @list = "CategoryType-value", @id = "autocomplete_input", @class = "form-control", @Value = "" })
-                <datalist id="CategoryType-value">
-                    @foreach (EventCategory item in Model.EventCategory)
-                    {
-                        <option data-value="@item.ID" value="@item.EventCategoryName"></option>
-                    }
-                </datalist>
-                @Html.HiddenFor(i => i.Event.EventCategory.ID, new { @id = "autocomplete_input_id_0" })
+                @Html.DropDownListFor(x => x.Event.EventCategory.ID, 
+               (IEnumerable<SelectListItem>)ViewBag.genders, "-- Виберіть тип події... --",
+               new { @placeholder = "Тип події", @class = "form-control" })
                 <span asp-validation-for="Event.EventCategory.EventCategoryName" class="text-danger"></span>
             </div>
 
@@ -64,7 +59,7 @@
                 <input asp-for="Event.EventName" class="form-control">
                 <span asp-validation-for="Event.EventName" class="text-danger"></span>
             </div>
-            
+
         </div>
     </div>
 </form>

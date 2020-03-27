@@ -11,7 +11,7 @@ namespace EPlast.DataAccess.Entities
         public string SubEventCategoryName { get; set; }
         [Required]
         public int EventCategoryID { get; set; }
-        public EventCategory EventCategory { get; set; }
+        public ICollection<EventCategory> EventCategory { get; set; }
 
     }
 }
