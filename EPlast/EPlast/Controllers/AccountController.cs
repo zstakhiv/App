@@ -129,7 +129,6 @@ namespace EPlast.Controllers
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
-                await _userManager.AddToRoleAsync(user, "Прихильник");
 
                 if (!result.Succeeded)
                 {
@@ -138,6 +137,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
+                    await _userManager.AddToRoleAsync(user, "Прихильник");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action(
                         nameof(ConfirmingEmail),
