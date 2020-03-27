@@ -51,12 +51,10 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <div class="modal-body m-3">
-                        <div class="text-center">
-                            <h5>Оберіть станицю для створення річного звіту</h5>
-                        </div>
-                        <div class="search-content m-3">
-                            <input type="text" placeholder="Знайти станицю.." id="CityFilter">
+                    <div class="modal-body m-3 text-center">
+                        <h5>Оберіть станицю для створення річного звіту</h5>
+                        <input type="text" placeholder="Знайти станицю.." id="CityFilter">
+                        <div class="search-content">
                             @foreach (var city in Model.Cities)
                             {
                                 <a asp-action="CreateAnnualReportAsAdmin" asp-route-cityId="@city.ID">@city.Name</a>

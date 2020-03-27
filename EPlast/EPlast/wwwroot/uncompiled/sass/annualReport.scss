@@ -260,7 +260,9 @@
             font-size: 16px;
             padding: 7px 27px;
             border: none;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #3C5438;
+            margin-top: 10px;
+            margin-bottom: 5px;
         }
 
         .search-content {
@@ -270,8 +272,10 @@
             min-height: 230px;
             max-height: 230px;
             overflow: auto;
-            border: 1px solid #ddd;
+            border: 1px solid #3C5438;
             z-index: 1;
+            text-align: left;
+            display: inline-block;
 
             a {
                 color: black;
