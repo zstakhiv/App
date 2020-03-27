@@ -12,7 +12,10 @@ namespace EPlast.Models.ViewModelInitializations
     {
         public IEnumerable<SelectListItem> GetCityMembers(IEnumerable<User> cityMembers)
         {
-            var users = new List<SelectListItem>();
+            var users = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "" }
+            };
             foreach (var cityMember in cityMembers)
             {
                 users.Add(new SelectListItem
@@ -38,7 +41,7 @@ namespace EPlast.Models.ViewModelInitializations
             return cityLegalStatusTypesSLI;
         }
 
-        public AnnualReport GetAnnualReport(IEnumerable<User> cityMembers)
+        public AnnualReport GetAnnualReport(string userId, int cityId, IEnumerable<User> cityMembers)
         {
             var membersStatistic = new MembersStatistic
             {
@@ -65,6 +68,8 @@ namespace EPlast.Models.ViewModelInitializations
             };
             var annualReport = new AnnualReport
             {
+                UserId = userId,
+                CityId = cityId,
                 MembersStatistic = membersStatistic
             };
             return annualReport;

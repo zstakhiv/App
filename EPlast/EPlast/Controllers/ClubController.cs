@@ -1,6 +1,8 @@
-﻿using EPlast.ViewModels;
+﻿using EPlast.DataAccess.Entities;
+using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,8 +17,10 @@ namespace EPlast.Controllers
     {
         private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
         private readonly IHostingEnvironment _env;
-        public ClubController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, IHostingEnvironment env)
+        private UserManager<User> _userManager;
+        public ClubController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager , IHostingEnvironment env)
         {
+            _userManager = userManager;
             _repoWrapper = repoWrapper;
             _env = env;
         }
@@ -37,17 +41,22 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .Include(c => c.ClubAdministration)
-                .ThenInclude(t => t.AdminType)
-                .Include(n => n.ClubAdministration)
-                .ThenInclude(t => t.ClubMembers)
-                .ThenInclude(us => us.User)
-                .Include(m => m.ClubMembers)
-                .ThenInclude(u => u.User)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .Include(c => c.ClubAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(n => n.ClubAdministration)
+                    .ThenInclude(t => t.ClubMembers)
+                    .ThenInclude(us => us.User)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
 
-                return View(new ClubViewModel { Club = club });
+                var clubAdmin = club.ClubAdministration
+                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
+                    .Select(a => a.ClubMembers.User)
+                    .FirstOrDefault();
+                ViewBag.usermanager = _userManager;
+                return View(new ClubViewModel { Club = club, ClubAdmin =  clubAdmin});
             }
             catch (Exception e)
             {
@@ -59,13 +68,13 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .Include(c => c.ClubAdministration)
-                .ThenInclude(t => t.AdminType)
-                .Include(n => n.ClubAdministration)
-                .ThenInclude(t => t.ClubMembers)
-                .ThenInclude(us => us.User)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .Include(c => c.ClubAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(n => n.ClubAdministration)
+                    .ThenInclude(t => t.ClubMembers)
+                    .ThenInclude(us => us.User)
+                    .FirstOrDefault();
 
                 return View(new ClubViewModel { Club = club });
             }
@@ -79,12 +88,22 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .Include(m => m.ClubMembers)
-                .ThenInclude(u => u.User)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .Include(c => c.ClubAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(n => n.ClubAdministration)
+                    .ThenInclude(t => t.ClubMembers)
+                    .ThenInclude(us => us.User)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
 
-                return View(new ClubViewModel { Club = club });
+                var clubAdmin = club.ClubAdministration
+                   .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
+                   .Select(a => a.ClubMembers.User)
+                   .FirstOrDefault();
+                ViewBag.usermanager = _userManager;
+                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin });
             }
             catch (Exception e)
             {
@@ -96,12 +115,22 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .Include(m => m.ClubMembers)
-                .ThenInclude(u => u.User)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .Include(c => c.ClubAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(n => n.ClubAdministration)
+                    .ThenInclude(t => t.ClubMembers)
+                    .ThenInclude(us => us.User)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
 
-                return View(new ClubViewModel { Club = club });
+                var clubAdmin = club.ClubAdministration
+                   .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
+                   .Select(a => a.ClubMembers.User)
+                   .FirstOrDefault();
+                ViewBag.usermanager = _userManager;
+                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin });
             }
             catch (Exception e)
             {
@@ -113,8 +142,8 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .FirstOrDefault();
 
                 return View(new ClubViewModel { Club = club });
             }
@@ -130,8 +159,8 @@ namespace EPlast.Controllers
             try
             {
                 var club = _repoWrapper.Club
-                .FindByCondition(q => q.ID == index)
-                .FirstOrDefault();
+                    .FindByCondition(q => q.ID == index)
+                    .FirstOrDefault();
 
                 return View(new ClubViewModel { Club = club });
             }
@@ -177,6 +206,85 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        [HttpGet]
+        public IActionResult ChangeIsApprovedStatus(int index, int clubIndex)
+        {
+            try
+            {
+                var club = _repoWrapper.Club
+                    .FindByCondition(q => q.ID == clubIndex)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
+
+                var person = _repoWrapper.ClubMembers
+                    .FindByCondition(u => u.ID == index)
+                    .FirstOrDefault();
+                if (person != null)
+                    person.IsApproved = !person.IsApproved;
+                _repoWrapper.ClubMembers.Update(person);
+                _repoWrapper.Save();
+
+                return RedirectToAction("ClubMembers", new { index = clubIndex });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        [HttpGet]
+        public IActionResult ChangeIsApprovedStatusFollowers(int index, int clubIndex)
+        {
+            try
+            {
+                var club = _repoWrapper.Club
+                    .FindByCondition(q => q.ID == clubIndex)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
+
+                var person = _repoWrapper.ClubMembers
+                    .FindByCondition(u => u.ID == index)
+                    .FirstOrDefault();
+                if (person != null)
+                    person.IsApproved = !person.IsApproved;
+
+                _repoWrapper.ClubMembers.Update(person);
+                _repoWrapper.Save();
+
+                return RedirectToAction("ClubFollowers", new { index = clubIndex });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        [HttpGet]
+        public IActionResult ChangeIsApprovedStatusClub(int index, int clubIndex)
+        {
+            try
+            {
+                var club = _repoWrapper.Club
+                    .FindByCondition(q => q.ID == clubIndex)
+                    .Include(m => m.ClubMembers)
+                    .ThenInclude(u => u.User)
+                    .FirstOrDefault();
+
+                var person = _repoWrapper.ClubMembers
+                    .FindByCondition(u => u.ID == index)
+                    .FirstOrDefault();
+                if (person != null)
+                    person.IsApproved = !person.IsApproved;
+                _repoWrapper.ClubMembers.Update(person);
+                _repoWrapper.Save();
+
+                return RedirectToAction("Club", new { index = clubIndex });
+            }
+            catch (Exception e)
+            {
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }

@@ -6,7 +6,7 @@
         <a class="nav-link active" asp-action="UserProfile" asp-controller="Account">Персональні дані</a>
         <a class="nav-link text-muted" href="#">Дійсне членство</a>
         <a class="nav-link text-muted" href="#">Діловодства</a>
-        <a class="nav-link active" asp-action="EventUser" asp-controller="EventUser">Вишколи</a>
+        <a class="nav-link text-muted" asp-action="EventUser" asp-controller="EventUser">Вишколи</a>
         <a class="nav-link text-muted" href="#">З'їзди</a>
         <a class="nav-link text-muted" href="#">Бланки</a>
         <a class="nav-link text-muted" href="">Поручення</a>
@@ -51,7 +51,10 @@
                         </div>
                         <div class="form-group row">
                             <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
+                            @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                            {
                             <p class="col-6 col-form-label">@Model.User.Email</p>
+                            }
                         </div>
                         <div class="form-group row">
                             <label for="email" class="col-6 col-form-label font-weight-bold">Адреса</label>

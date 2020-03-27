@@ -87,7 +87,7 @@ namespace EPlast.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userManager.GetUserAsync(User); //тут трішки глибшу логіку зробити але поки що так норм
+            var user = await _userManager.GetUserAsync(User);
             var result = await _userManager.IsEmailConfirmedAsync(user);
             if (result)
             {
@@ -129,7 +129,6 @@ namespace EPlast.Controllers
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
-                await _userManager.AddToRoleAsync(user, "Прихильник");
 
                 if (!result.Succeeded)
                 {
@@ -138,6 +137,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
+                    await _userManager.AddToRoleAsync(user, "Прихильник");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action(
                         nameof(ConfirmingEmail),
@@ -216,7 +216,7 @@ namespace EPlast.Controllers
                     return View(loginVM);
                 }
             }
-            return View("Login");
+            return View("Login",loginVM);
         }
 
         [HttpPost]
@@ -234,6 +234,7 @@ namespace EPlast.Controllers
             if(string.IsNullOrEmpty(userId))
             {
                 userId = _userManager.GetUserId(User);
+                _logger.Log(LogLevel.Information, "UserId is not null");
             }
             var user = _repoWrapper.User.
             FindByCondition(q => q.Id == userId).
@@ -254,6 +255,7 @@ namespace EPlast.Controllers
             {
                 return View(model);
             }
+            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
@@ -273,6 +275,7 @@ namespace EPlast.Controllers
             {
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
+                    _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
                     return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
                 var user = _repoWrapper.User.
@@ -473,7 +476,7 @@ namespace EPlast.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(resetpasswordVM);
+                return View("ResetPassword");
             }
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
@@ -538,7 +541,6 @@ namespace EPlast.Controllers
             else
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                var phone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
                 if (info.LoginProvider.ToString() == "Google")
                 {
                     if (email != null)
@@ -563,28 +565,26 @@ namespace EPlast.Controllers
                     }
                 }
                 else if(info.LoginProvider.ToString() == "Facebook")
-                {
-                    var user = await _userManager.FindByNameAsync(email ?? phone);
-                    if (email != null || phone != null)
+                {   
+                    var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var identifierForSearching = email ?? nameIdentifier;
+                    var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
+                    if(user == null)
                     {
-                        if (user == null)
+                        user = new User
                         {
-                            user = new User
-                            {
-                                UserName = email ?? phone,
-                                Email = email,
-                                PhoneNumber = phone,
-                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                                ImagePath = "default.png",
-                                UserProfile = new UserProfile(),
-                            };
-                            await _userManager.CreateAsync(user);
-                        }
-                        await _userManager.AddLoginAsync(user, info);
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                            UserName = (email ?? nameIdentifier),
+                            FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                            Email = (email ?? "facebookdefaultmail@gmail.com"),
+                            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                            ImagePath = "default.png",
+                            UserProfile = new UserProfile()
+                        };
+                        await _userManager.CreateAsync(user);
                     }
+                    await _userManager.AddLoginAsync(user,info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
                 }
                 return View("Error");
             }
