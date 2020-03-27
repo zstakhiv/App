@@ -1,204 +1,73 @@
 ﻿@model EPlast.ViewModels.ViewAnnualReportsViewModel
+@using EPlast.BussinessLayer.ExtensionMethods
 @{
-    ViewData["Title"] = "Річні звіти станиць";
+    ViewData["Title"] = "Річні звіти";
 }
 
-<div class="m-5 shadow-lg">
-    @using (Html.BeginForm(FormMethod.Post))
-    {
-        <h1 class="text-center">Річні звіти станиць</h1>
-        <div class="form-row">
-            <div class="col p-2 m-2 border shadow-lg">
-                <div class="form-group">
-                    <div class="form-row">
-                        <div class="col m-lg-2">
-                            @Html.Label("Виберіть округ")
-                            @Html.DropDownList("regions", Model.Regions, new { @class = "form-control" })
-                        </div>
-                        <div class="col m-lg-2">
-                            @Html.Label("Виберіть рік")
-                            @Html.DropDownList("years", Model.Years, new { @class = "form-control" })
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group m-lg-2">
-                    <div>
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">Непідтверджені</a></li>
-                            <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-2">Підтверджені</a></li>
-                            <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-3">Скасовані</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" role="tabpanel" id="tab-1">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Станиця</th>
-                                                <th>Подавач</th>
-                                                <th>Дата подання</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var annualReport in Model.UnconfirmedAnnualReports)
-                                            {
-                                                <tr>
-                                                    <td>@annualReport.City.Name</td>
-                                                    <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
-                                                    <td>@annualReport.Date.Date.ToShortDateString()</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" role="tabpanel" id="tab-2">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Станиця</th>
-                                                <th>Подавач</th>
-                                                <th>Дата подання</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var annualReport in Model.ConfirmedAnnualReports)
-                                            {
-                                                <tr>
-                                                    <td>@annualReport.City.Name</td>
-                                                    <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
-                                                    <td>@annualReport.Date.Date.ToShortDateString()</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="tab-pane" role="tabpanel" id="tab-3">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Станиця</th>
-                                                <th>Подавач</th>
-                                                <th>Дата подання</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var annualReport in Model.CanceledAnnualReports)
-                                            {
-                                                <tr>
-                                                    <td>@annualReport.City.Name</td>
-                                                    <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
-                                                    <td>@annualReport.Date.Date.ToShortDateString()</td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="view-annual-reports-form m-3">
+    <form data-ajax="true" data-ajax-mode="replace">
+        <h1>Річні звіти станиць</h1>
+        <div class="form-group m-4">
+            <div class="d-flex justify-content-center buttons-wrapper">
+                <button id="addAnnualReport" class="btn btn-sm btn-primary btn-management">Додати</button>
+                <button id="reviewAnnualReport" class="btn btn-sm btn-info btn-management" disabled>Переглянути</button>
+                <button id="confirmAnnualReport" class="btn btn-sm btn-success btn-management" disabled>Підтвердити</button>
+                <button id="cancelAnnualReport" class="btn btn-sm btn-danger btn-management" disabled>Скасувати</button>
             </div>
-            <div class="col p-2 m-2 border shadow-lg">
-                <div class="form-group">
-                    <h4 class="text-center">Річний звіт станиці</h4>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>Голова новообраної старшини</h5>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>Правовий статус осередку</h5>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>УПП</h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість гніздечок пташат:</label></div>
-                        <div class="col"><label class="col-form-label">Кількість пташат:</label></div>
+            <div>
+                <table id="AnnualReportsTable" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Станиця</th>
+                            <th>Регіон</th>
+                            <th>Подавач</th>
+                            <th>Дата подання</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var annualReport in Model.AnnualReports)
+                        {
+                            <tr>
+                                <td>@annualReport.ID</td>
+                                <td>@annualReport.City.Name</td>
+                                <td>@annualReport.City.Region.RegionName</td>
+                                <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
+                                <td>@annualReport.Date.ToShortDateString()</td>
+                                <td>@annualReport.Status.GetDescription()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="ModalContent">
+            
+        </div>
+        <div class="modal modal-success" id="ModalAddAnnualReport">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>УПН</h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість самостійних роїв:<br></label></div>
-                        <div class="col"><label class="col-form-label">Кількість новацтва:<br></label></div>
-                    </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>УПЮ</h5>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>Кількість куренів у станиці/паланці (окрузі/регіоні):<br></label>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Кількість самостійних гуртків:<br></label></div>
-                                <div class="col"><label class="col-form-label">Кількість неіменованих разом:<br></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Кількість прихильників/ць:<br></label></div>
-                                <div class="col"><label class="col-form-label">Кількість учасників/ць:<br></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Кількість розвідувачів:<br></label></div>
-                                <div class="col"><label class="col-form-label">Кількість скобів/вірлиць:<br></label></div>
-                            </div>
+                    <div class="modal-body m-3 text-center">
+                        <h5>Оберіть станицю для створення річного звіту</h5>
+                        <input type="text" placeholder="Знайти станицю.." id="CityFilter">
+                        <div class="search-content">
+                            @foreach (var city in Model.Cities)
+                            {
+                                <a asp-action="CreateAnnualReportAsAdmin" asp-route-cityId="@city.ID">@city.Name</a>
+                            }
                         </div>
                     </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>УСП<br></h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість старших пластунів прихильників:<br></label></div>
-                        <div class="col"><label class="col-form-label">Кількість старших пластунів:<br></label></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Закрити</button>
                     </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>УПС</h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість сеньйорів пластунів прихильників:<br></label></div>
-                        <div class="col"><label class="col-form-label">Кількість старших пластунів:<br></label></div>
-                    </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>Адміністрування та виховництво<br></h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість діючих виховників (з усіх членів УСП,УПС):<br></label></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість адміністраторів (в проводах будь якого рівня):<br></label></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість тих, хто поєднує виховництво та адміністрування:<br></label></div>
-                    </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість пільговиків:<br></label></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість членів Пластприяту:<br></label></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Кількість почесних членів:<br></label></div>
-                    </div>
-                </div>
-                <div class="form-group p-3 m-2 border">
-                    <h5>Залучені кошти<br></h5>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Державні кошти:<br></label></div>
-                        <div class="col"><label class="col-form-label">Внески:<br></label></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col"><label class="col-form-label">Пластовий заробіток:<br></label></div>
-                        <div class="col"><label class="col-form-label">Спонсорські кошти:<br></label></div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col text-center"><button class="btn btn-primary btn-success" type="button">Підтвердити</button></div>
-                    <div class="col text-center"><button class="btn btn-primary btn-success" type="button">Переглянути деталі</button></div>
                 </div>
             </div>
         </div>
-    }
+        <partial name="_SuccessModal" model='""' />
+        <partial name="_ErrorModal" model='""' />
+    </form>
 </div>
