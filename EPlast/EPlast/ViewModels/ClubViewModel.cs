@@ -9,5 +9,6 @@ namespace EPlast.ViewModels
     public class ClubViewModel
     {
         public Club Club { get; set; }
+        public User ClubAdmin { get; set; }
     }
 }

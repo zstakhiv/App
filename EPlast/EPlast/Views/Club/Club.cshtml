@@ -1,4 +1,5 @@
 ﻿@using EPlast.ViewModels
+@using Microsoft.AspNetCore.Identity
 @model ClubViewModel
 @{
     ViewData["Title"] = "Club";
@@ -6,9 +7,12 @@
 <div class="content-wrapper">
           <div class="club-page-wrapper">
             <div class="main-info grid-block">
-              <h1 class="grid-header">@Model.Club.ClubName
-                <a asp-controller="Club" asp-action="EditClub" asp-route-index="@Model.Club.ID" style="color: #3c5438;"><i class="material-icons">settings</i></a>
-                </h1>
+                <h1 class="grid-header">
+                    @Model.Club.ClubName
+                            @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin"))) { 
+                                <a asp-controller="Club" asp-action="EditClub" asp-route-index="@Model.Club.ID" style="color: #3c5438;"><i class="material-icons">settings</i></a>
+                            }
+                        </h1>
   
               <div class="top-info">
                 <img src="/images/Club/@Model.Club.Logo" alt="" class="curin-img">
@@ -79,10 +83,12 @@
                                     <div class="member-block">
                                         <div class="member-wrapper">
                                             <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
-
-                                            <div class="plus">
-                                                +
-                                            </div>
+                                            @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                                            {
+                                                <a class="plus" asp-controller="Club" asp-action="ChangeIsApprovedStatusClub" asp-route-index="@item.ID" asp-route-clubIndex="@item.Club.ID" style="display: block;">
+                                                    +
+                                                </a>
+                                            }
                                         </div>
                                         <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
 
