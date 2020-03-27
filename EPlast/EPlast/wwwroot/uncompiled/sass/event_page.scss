@@ -26,7 +26,7 @@
   font-size: 20px;
 }
 
-.event-page-wrapper .event-detail:hover {
+.event-page-wrapper a.event-detail:hover {
   color: #73bd79;
 }
 
@@ -41,29 +41,32 @@
   font-size: 25px;
 }
 
-button.event-page-wrapper.event-remove:hover {
-  color: #FF0000;
+.event-page-wrapper a.event-remove:hover {
+    color: #FF0000;
 }
+
 
 .event-page-wrapper .event-link {
   color: #3c5438;
   font-size: 25px;
 }
 
-button.event-page-wrapper.event-link:hover {
-  color: #73bd79;
+
+.event-page-wrapper .event-link:hover {
+    color: #73bd79;
+    font-size: 25px;
 }
 
 .event-page-wrapper .event-invisible {
   display: none;
 }
 
-.event-page-wrapper .participant-status {
+.event-page-wrapper a.participant-status {
   color: #FF8C00;
   font-size: 25px;
 }
 
-button.event-page-wrapper.participant-status:hover {
+.event-page-wrapper .participant-status:hover {
   color: #FFA500;
 }
 
@@ -76,9 +79,6 @@ button.event-page-wrapper.participant-status:hover {
   text-align: center;
 }
 
-a.event-page-wrapper :hover {
-  color: #73bd79;
-}
 
 .event-page-wrapper .plast-color {
   color: #3c5438;
