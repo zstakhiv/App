@@ -100,8 +100,9 @@ namespace EPlast.Controllers
                     return View("ChangePasswordNotAllowed");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -161,8 +162,9 @@ namespace EPlast.Controllers
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -191,8 +193,9 @@ namespace EPlast.Controllers
                 else
                     return View("Error");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -241,8 +244,9 @@ namespace EPlast.Controllers
                 }
                 return View("Login", loginVM);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -257,8 +261,10 @@ namespace EPlast.Controllers
                 await _signInManager.SignOutAsync();
                 return RedirectToAction("Login", "Account");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
+                //_logger.LofError("Exception", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -470,8 +476,9 @@ namespace EPlast.Controllers
             {
                 return View("ForgotPassword");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -504,8 +511,9 @@ namespace EPlast.Controllers
                 }
                 return View("ForgotPassword");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -518,8 +526,9 @@ namespace EPlast.Controllers
             {
                 return code == null ? View("Error") : View("ResetPassword");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -556,8 +565,9 @@ namespace EPlast.Controllers
                     return View("ResetPassword");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -573,8 +583,9 @@ namespace EPlast.Controllers
                 var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
                 return new ChallengeResult(provider, properties);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -660,8 +671,9 @@ namespace EPlast.Controllers
                     return View("Error");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
@@ -694,8 +706,9 @@ namespace EPlast.Controllers
                 }
                 return View(model);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
