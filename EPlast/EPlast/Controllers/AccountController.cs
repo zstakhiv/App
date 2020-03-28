@@ -264,7 +264,6 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                //_logger.LofError("Exception", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }

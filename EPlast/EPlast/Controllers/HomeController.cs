@@ -13,10 +13,13 @@ namespace EPlast.Controllers
     public class HomeController : Controller
     {
         private readonly IEmailConfirmation _emailConfirmation;
+        private readonly ILogger _logger;
 
-        public HomeController(IEmailConfirmation emailConfirmation)
+        public HomeController(IEmailConfirmation emailConfirmation,
+            ILogger<HomeController> logger)
         {
             _emailConfirmation = emailConfirmation;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -83,8 +86,9 @@ namespace EPlast.Controllers
                 }
                 return RedirectToAction("FeedBackSended", "Home");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
