@@ -2,18 +2,34 @@
 @model EPlast.ViewModels.UserViewModel
 @inject UserManager<EPlast.DataAccess.Entities.User> _userManager;
 <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 user-profile">
-    <ul class="nav nav-tabs">
-        <a class="nav-link active" asp-action="UserProfile" asp-controller="Account">Персональні дані</a>
-        <a class="nav-link text-muted" href="#">Дійсне членство</a>
-        <a class="nav-link text-muted" href="#">Діловодства</a>
-        <a class="nav-link text-muted" asp-action="EventUser" asp-controller="EventUser">Вишколи</a>
-        <a class="nav-link text-muted" href="#">З'їзди</a>
-        <a class="nav-link text-muted" href="#">Бланки</a>
-        <a class="nav-link text-muted" href="">Поручення</a>
-        @if (_userManager.GetUserId(User) == Model.User.Id)
-        {
-            <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id" class="nav-link text-muted">Редагувати профіль</a>
-        }
+    <ul class="nav nav-tabs tab-pane">
+        <li class="nav-item">
+            <a class="nav-link active" asp-action="UserProfile" asp-controller="Account">Персональні дані</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" href="#">Дійсне членство</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" href="#">Діловодства</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" asp-action="EventUser" asp-controller="EventUser">Вишколи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" href="#">З'їзди</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" href="#">Бланки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-muted" href="#">Поручення</a>
+        </li>
+        <li class="nav-item">
+            @if (_userManager.GetUserId(User) == Model.User.Id)
+            {
+                <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id" class="nav-link text-muted">Редагувати профіль</a>
+            }
+        </li>
     </ul>
     <div class="col-md-12 mt-4 d-flex">
         <div class="col-md-4">
