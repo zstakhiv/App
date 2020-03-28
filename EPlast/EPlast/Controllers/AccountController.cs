@@ -95,7 +95,7 @@ namespace EPlast.Controllers
             }
             else
             {
-                return RedirectToAction("UserProfile", "Account");
+                return View("ChangePasswordNotAllowed");
             }
         }
 
