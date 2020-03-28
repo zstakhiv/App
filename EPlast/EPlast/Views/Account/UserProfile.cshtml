@@ -45,81 +45,95 @@
                             <label for="name" class="col-6 col-form-label font-weight-bold">Імя</label>
                             <p class="col-6 col-form-label">@Model.User.FirstName</p>
                         </div>
-                        <div class="form-group row">
-                            <label for="name" class="col-6 col-form-label font-weight-bold">По-батькові</label>
-                            <p class="col-6 col-form-label">@Model.User.FatherName</p>
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
-                            @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                            @if (@Model.User.FatherName != null)
                             {
-                            <p class="col-6 col-form-label">@Model.User.Email</p>
+                                <div class="form-group row">
+                                    <label for="name" class="col-6 col-form-label font-weight-bold">По-батькові</label>
+                                    <p class="col-6 col-form-label">@Model.User.FatherName</p>
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Адреса</label>
-                            <p class="col-6 col-form-label">@Model.User.UserProfile.Address</p>
-                        </div>
-                        <div class="form-group row">
-                            <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
+                            <div class="form-group row">
+                                <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
+                                @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                                {
+                                    <p class="col-6 col-form-label">@Model.User.Email</p>
+                                }
+                            </div>
+                            @if (@Model.User.UserProfile.Address != null)
+                            {
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Адреса</label>
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Address</p>
+                                </div>
+                            }
                             @if (@Model.User.UserProfile.Nationality != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Nationality.Name</p>
+                                <div class="form-group row">
+                                    <label for="text" class="col-6 col-form-label font-weight-bold">Національність</label>
+
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Nationality.Name</p>
+
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
                             @if (@Model.User.UserProfile.Religion != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Religion.Name</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Віровизнання</label>
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Religion.Name</p>
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
                             @if (@Model.User.UserProfile.Gender != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Gender.Name</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Стать</label>
+
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Gender.Name</p>
+
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
                             @if (@Model.User.UserProfile.Education != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Education.PlaceOfStudy</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Education.PlaceOfStudy</p>
+
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Спеціальність</label>
                             @if (@Model.User.UserProfile.Education != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Speciality</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Спеціальність</label>
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Speciality</p>
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь</label>
                             @if (@Model.User.UserProfile.Education != null)
                             {
-                                @if (@Model.User.UserProfile.Education.Degree != null)
-                                {
-                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Degree.Name</p>
-                                }
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь</label>
+                                    @if (@Model.User.UserProfile.Education.Degree != null)
+                                    {
+                                        <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Degree.Name</p>
+                                    }
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце роботи</label>
                             @if (@Model.User.UserProfile.Work != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Work.PlaceOfwork</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Місце роботи</label>
+
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Work.PlaceOfwork</p>
+
+                                </div>
                             }
-                        </div>
-                        <div class="form-group row">
-                            <label for="email" class="col-6 col-form-label font-weight-bold">Посада</label>
                             @if (@Model.User.UserProfile.Work != null)
                             {
-                                <p class="col-6 col-form-label">@Model.User.UserProfile.Work.Position</p>
+                                <div class="form-group row">
+                                    <label for="email" class="col-6 col-form-label font-weight-bold">Посада</label>
+                                    <p class="col-6 col-form-label">@Model.User.UserProfile.Work.Position</p>
+                                </div>
                             }
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
