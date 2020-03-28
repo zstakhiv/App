@@ -22,6 +22,9 @@
                         Стать
                     </th>
                     <th class="th-sm">
+                        День народження
+                    </th>
+                    <th class="th-sm">
                         Ступінь
                     </th>
                     <th class="th-sm">
@@ -53,6 +56,7 @@
                             else
                             {<Span>Жінка</Span>}
                         </td>
+                        <td>@item.User.UserProfile.DateTime.ToString("dd-MM-yyyy")</td>
                         <td>@item.UserPlastDegreeName</td>
                         <td>@item.User.Email</td>
                         <td>@item.RegionName</td>

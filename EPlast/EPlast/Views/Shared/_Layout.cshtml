@@ -50,8 +50,8 @@
                                     <i class="material-icons nav-logo" style="margin: 5px;">settings</i>
                                 </a>
                                 <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                      <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Змінити пароль</a>
-                                    <a class="dropdown-item" href="/Account/Edit?id=@UserManager.GetUserId(User)">Редагувати профіль</a>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Змінити пароль</a>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">Редагувати профіль</a>
                                 </div>
                             </li>
                         </ul>
