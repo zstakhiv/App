@@ -78,7 +78,7 @@ namespace EPlast.Controllers
                 }
                 else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
-                    ModelState.AddModelError("", "файл за великий (більше 10 мб)");
+                    ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
                     return View("CreateDecesion");
                 }
 
@@ -90,11 +90,29 @@ namespace EPlast.Controllers
 
                 if (decesionViewModel.Decesion.HaveFile)
                 {
-                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                    Directory.CreateDirectory(path);
-                    using (var fileStream = new FileStream(Path.Combine(path, decesionViewModel.File.FileName), FileMode.Create))
+                    try
                     {
-                        await decesionViewModel.File.CopyToAsync(fileStream);
+                        string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                        Directory.CreateDirectory(path);
+
+                        if (!Directory.Exists(path))
+                        {
+                            throw new ArgumentException($"directory '{path}' is not exist");
+                        }
+
+                        path = Path.Combine(path, decesionViewModel.File.FileName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await decesionViewModel.File.CopyToAsync(fileStream);
+                            if (!System.IO.File.Exists(path))
+                            {
+                                throw new ArgumentException($"File was not created it '{path}' directory");
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return RedirectToAction("HandleError", "Error");
                     }
                 }
 
@@ -122,7 +140,19 @@ namespace EPlast.Controllers
                     .ToList());
                 foreach (var decesion in decesions)
                 {
-                    decesion.Filename = decesion.Decesion.HaveFile ? Path.GetFileName(Directory.GetFiles($"{_appEnvironment.WebRootPath}{_decesionsDocumentFolder}{decesion.Decesion.ID}").First()) : string.Empty;
+                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesion.Decesion.ID;
+                    if (decesion.Decesion.HaveFile || !Directory.Exists(path))
+                    {
+                        continue;
+                    }
+                    var files = Directory.GetFiles(path);
+
+                    if (files.Length == 0)
+                    {
+                        throw new ArgumentException($"File count in '{path}' is 0");
+                    }
+
+                    decesion.Filename = Path.GetFileName(files.First());
                 }
                 return View(decesions);
             }
@@ -135,18 +165,34 @@ namespace EPlast.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Download(string id, string filename)
         {
-            if (filename == null)
-                return Content("filename not present");
-
-            var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
+            try
             {
-                await stream.CopyToAsync(memory);
+                if (string.IsNullOrEmpty(filename) || string.IsNullOrEmpty(id))
+                    return Content("filename or id not present");
+
+                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
+
+                if (!Directory.Exists(path))
+                {
+                    throw new ArgumentException($"directory '{path}' is not exist");
+                }
+
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                    if (memory.Length == 0)
+                    {
+                        throw new ArgumentException("memory lenght is 0");
+                    }
+                }
+                memory.Position = 0;
+                return File(memory, GetContentType(path), Path.GetFileName(path));
             }
-            memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         private string GetContentType(string path)
@@ -182,7 +228,7 @@ namespace EPlast.Controllers
             {
                 if (objId <= 0)
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Cannot crated pdf id is not valid");
                 }
 
                 byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,

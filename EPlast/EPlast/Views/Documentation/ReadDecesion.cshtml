@@ -44,7 +44,12 @@
                         <td>@item.Decesion.DecesionTarget.TargetName</td>
                         <td>@item.Decesion.Description</td>
                         <td>@item.Decesion.Date.ToString("dd-MM-yyyy")</td>
-                        <td><a href="/Documentation/Download?id=@item.Decesion.ID&filename=@item.Filename">@item.Filename</a></td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Filename))
+                            {
+                                <a asp-controller="Documentation" asp-action="Download" asp-route-id="=@item.Decesion.ID" asp-route-filename="@item.Filename">@item.Filename</a>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
