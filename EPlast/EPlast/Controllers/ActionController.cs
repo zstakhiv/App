@@ -123,9 +123,24 @@ namespace EPlast.Controllers
             }
         }
 
-        public IActionResult EventInfo()
+        public IActionResult EventInfo(int ID)
         {
-            return View();
+            try 
+            {
+                EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
+                   .Include(e => e.Participants)
+                   .Include(e => e.EventAdmins)
+                   .ThenInclude(evAdm => evAdm.User)
+                   .Include(e => e.EventStatus)
+                   .Include(e => e.EventAdministrations)
+                   .Select(e => new EventViewModel() { user = _userManager, Event = e })
+                   .First();
+                   return View(eventModal);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
     }
 }

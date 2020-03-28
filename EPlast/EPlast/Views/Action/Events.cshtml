@@ -92,7 +92,7 @@
                         <div class="card-body">
                             <h1 class="event-logo"><i class="far fa-handshake"></i></h1>
 
-                            <a asp-controller="Action" asp-action="EventInfo" class="title-link">
+                            <a asp-controller="Action" asp-action="EventInfo" asp-route-ID=@_event.ID class="title-link event-link">
                                 <h5 class="card-title">@_event.EventName</h5>
                             </a>
                         </div>

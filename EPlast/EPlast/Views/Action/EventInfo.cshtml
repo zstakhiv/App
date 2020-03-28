@@ -1,4 +1,6 @@
-﻿<div class="container mt-4 event-page-wrapper  ">
+﻿@model EventViewModel
+<div class="container mt-4 event-page-wrapper">
+    <input type="hidden" id="eventId" value=@Model.Event.ID>
     <div class="row mt-2 shadow rounded">
         <div class="col-md-4 ">
             <div class="row justify-content-center ">
@@ -27,7 +29,7 @@
 
                 <div class="column-md-4 event-part">
                     <div class="">
-                        <a  class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви є учасником події, щоб відписатись від події натисніть спочатку на дану іконку">
+                        <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви є учасником події, щоб відписатись від події натисніть спочатку на дану іконку">
                             <i class="far fa-check-square"></i>
                         </a>
                     </div>
@@ -35,7 +37,7 @@
 
                 <div class="column-md-4 event-participant-status event-invisible">
                     <div class="">
-                        <a  class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                        <a class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
                             <i class="fas fa-user-clock"></i>
                         </a>
                     </div>
@@ -74,7 +76,7 @@
                     <p class="event-header font-weight-bold">Назва:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-value ">КПЗ-4056</p>
+                    <p class="event-value ">@Model.Event.EventName</p>
                 </div>
             </div>
 
@@ -84,7 +86,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="d-flex flex-row align-items-baseline">
-                        <p class="event-value ">Брич Роман</p>
+                        <p class="event-value ">@(Model.Event.EventAdmins.First().User.FirstName + " " + Model.Event.EventAdmins.First().User.LastName) </p>
                         <!-- <a href="#" class="admin-link"  data-toggle="tooltip" data-placement="right" title="Деталі">Роман Брич</a> -->
                         <a class="event-detail ml-2  event-fabutton" data-toggle="tooltip" data-placement="right" title="Деталі">
                             <i class="fas fa-info-circle "></i>
@@ -97,7 +99,7 @@
                     <p class="event-header font-weight-bold">Дата початку:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-value ">26-12-2020</p>
+                    <p class="event-value ">@Model.Event.EventDateStart.ToString("dd/MM/yyyy")</p>
                 </div>
             </div>
 
@@ -106,7 +108,7 @@
                     <p class="event-header font-weight-bold">Дата завершення:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-value ">05-01-2021</p>
+                    <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd/MM/yyyy")</p>
                 </div>
             </div>
 
@@ -115,7 +117,7 @@
                     <p class="event-header font-weight-bold">Локація:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-value ">м. Львів</p>
+                    <p class="event-value ">@Model.Event.Eventlocation</p>
                 </div>
             </div>
 
@@ -124,7 +126,7 @@
                     <p class="event-header font-weight-bold">Статус:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-value ">Завершено</p>
+                    <p class="event-value ">@Model.Event.EventStatus.EventStatusName</p>
                 </div>
             </div>
 
@@ -133,7 +135,8 @@
                     <p class="event-header font-weight-bold">Опис:</p>
                 </div>
                 <div class="col-md-7">
-                    <p class="event-description"> <em>Дана подія присвячена екологічним проблемам України. Метою даного заходу є пробудити почуття відповідальності у молодого покоління перед природою.</em> </p>
+                    @*<p class="event-description"> <em>Дана подія присвячена екологічним проблемам України. Метою даного заходу є пробудити почуття відповідальності у молодого покоління перед природою.</em> </p>*@
+                    <p class="event-description"> <em>@Model.Event.Description</em> </p>
                 </div>
             </div>
         </div>
