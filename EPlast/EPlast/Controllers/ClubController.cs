@@ -51,12 +51,15 @@ namespace EPlast.Controllers
                     .ThenInclude(u => u.User)
                     .FirstOrDefault();
 
+                var members = club.ClubMembers.Where(m => m.IsApproved).Take(6).ToList();
+                var followers = club.ClubMembers.Where(m => !m.IsApproved).Take(6).ToList();
+
                 var clubAdmin = club.ClubAdministration
                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
                     .Select(a => a.ClubMembers.User)
                     .FirstOrDefault();
                 ViewBag.usermanager = _userManager;
-                return View(new ClubViewModel { Club = club, ClubAdmin =  clubAdmin});
+                return View(new ClubViewModel { Club = club, ClubAdmin =  clubAdmin, Members = members, Followers = followers});
             }
             catch (Exception e)
             {
@@ -98,12 +101,14 @@ namespace EPlast.Controllers
                     .ThenInclude(u => u.User)
                     .FirstOrDefault();
 
+                var members = club.ClubMembers.Where(m => m.IsApproved).ToList();
+
                 var clubAdmin = club.ClubAdministration
                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
                    .Select(a => a.ClubMembers.User)
                    .FirstOrDefault();
                 ViewBag.usermanager = _userManager;
-                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin });
+                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin, Members = members });
             }
             catch (Exception e)
             {
@@ -125,12 +130,14 @@ namespace EPlast.Controllers
                     .ThenInclude(u => u.User)
                     .FirstOrDefault();
 
+                var followers = club.ClubMembers.Where(m => !m.IsApproved).ToList();
+
                 var clubAdmin = club.ClubAdministration
                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
                    .Select(a => a.ClubMembers.User)
                    .FirstOrDefault();
                 ViewBag.usermanager = _userManager;
-                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin });
+                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin, Followers = followers });
             }
             catch (Exception e)
             {
