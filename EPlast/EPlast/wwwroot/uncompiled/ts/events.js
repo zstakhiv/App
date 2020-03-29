@@ -46,22 +46,24 @@ $(document).ready(function () {
         });
     });
     $("#subscribe").click(function () {
-        $.ajax({
-            type: "POST",
-            url: "/Action/SubscribeOnEvent",
-            data: { ID: value },
-            success: function () {
-                $("#modalSubscribe").modal('hide');
-                $(activeEvent).parents("div.events-operations").children("div.events-part").hide();
-                $(activeEvent).parents("div.events-operations").children("div.events-pen").hide();
-                $(activeEvent).parents("div.events-operations").children("div.events-participants").show();
-                $("#modalSubscribeSuccess").modal('show');
-            },
-            error: function () {
-                $("#modalSubscribe").modal('hide');
-                $("#FAIL").modal('show');
-            },
-        });
+        if ($(this).parents('div.container').hasClass('events-page-wrapper')) {
+            $.ajax({
+                type: "POST",
+                url: "/Action/SubscribeOnEvent",
+                data: { ID: value },
+                success: function () {
+                    $("#modalSubscribe").modal('hide');
+                    $(activeEvent).parents("div.events-operations").children("div.events-part").hide();
+                    $(activeEvent).parents("div.events-operations").children("div.events-pen").hide();
+                    $(activeEvent).parents("div.events-operations").children("div.events-participants").show();
+                    $("#modalSubscribeSuccess").modal('show');
+                },
+                error: function () {
+                    $("#modalSubscribe").modal('hide');
+                    $("#FAIL").modal('show');
+                },
+            });
+        }
     });
     $("#unsubscribe").click(function () {
         $.ajax({

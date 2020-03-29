@@ -24,7 +24,8 @@ $(document).ready(function () {
                 $(activeElement).parents("tr").children("td:nth-child(3)").html(ParticipantStatus.Approved);
             },
             error: function () {
-                alert("Trouble with approving");
+                $("#resultOfStatusChanging").html(`Не вдалося змінити статус даного користувача на <b>'${ParticipantStatus.Approved}'</b>.`);
+                $("#statusModal").modal('show');
             },
         });
     });
@@ -40,7 +41,8 @@ $(document).ready(function () {
                 $(activeElement).parents("tr").children("td:nth-child(3)").html(ParticipantStatus.Undetermined);
             },
             error: function () {
-                alert("Trouble with approving");
+                $("#resultOfStatusChanging").html(`Не вдалося змінити статус даного користувача на <b>'${ParticipantStatus.Undetermined}'</b>.`);
+                $("#statusModal").modal('show');
             },
         });
     });
@@ -56,7 +58,8 @@ $(document).ready(function () {
                 $(activeElement).parents("tr").children("td:nth-child(3)").html(ParticipantStatus.Rejected);
             },
             error: function () {
-                alert("Trouble with approving");
+                $("#resultOfStatusChanging").html(`Не вдалося змінити статус даного користувача на <b>'${ParticipantStatus.Rejected}'</b>.`);
+                $("#statusModal").modal('show');
             },
         });
     });
