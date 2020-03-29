@@ -9,50 +9,85 @@
                     <i class="far fa-handshake logo "></i>
                 </div>
 
-                <div class="row justify-content-around my-2  ">
-                    <div class="column-md-4">
-                        <a class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Видалити">
-                            <i class="far fa-trash-alt"></i>
-                        </a>
-                    </div>
-                    <div class="column-md-4">
-                        <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Редагуати">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </div>
-                    <div class="column-md-4 event-pen event-invisible">
-                        <div class="">
-                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
+                <div id="pageIcons" class="row justify-content-around my-2  ">
+                    @if (Model.IsUserEventAdmin)
+                    {
+                        <div class="column-md-4">
+                            <a id="deleteIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Видалити">
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                        </div>
+                        <div class="column-md-4">
+                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Редагуати">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    }
+                    @if (!Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID))
+                    {
+                        <div id="subscribeBlock" class="column-md-4 event-pen">
+                            <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
                                 <i class="fas fa-pen-alt"></i>
                             </a>
                         </div>
-                    </div>
-
-
-                    <div class="column-md-4 event-part">
-                        <div class="">
-                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви є учасником події, щоб відписатись від події натисніть спочатку на дану іконку">
-                                <i class="far fa-check-square"></i>
+                    }
+                    else
+                    {
+                        <div id="subscribeBlock" class="column-md-4 event-pen event-invisible">
+                            <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
+                                <i class="fas fa-pen-alt"></i>
                             </a>
                         </div>
-                    </div>
+                    }
 
-                    <div class="column-md-4 event-participant-status event-invisible">
-                        <div class="">
-                            <a class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
-                                <i class="fas fa-user-clock"></i>
+                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.ApprovedStatus))
+                    {
+                        <div id="participantBlock" class="column-md-4 event-part">
+                                <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
+                                    <i class="far fa-check-square"></i>
+                                </a>
+                        </div>
+                    }
+
+                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.UndeterminedStatus))
+                    {
+                        <div id="userClockBlock" class="column-md-4 event-participant-status">
+                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                    <i class="fas fa-user-clock"></i>
+                                </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="userClockBlock" class="column-md-4 event-participant-status event-invisible">
+                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                    <i class="fas fa-user-clock"></i>
+                                </a>
+                        </div>
+                    }
+
+                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.RejectedStatus))
+                    {
+                        <div id="rejectBlock" class="events-participants-ban">
+                            <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Вашу заявку на участь у даній події відхилено">
+                                <i class="fas fa-user-slash"></i>
                             </a>
                         </div>
-                    </div>
 
-                    <div class="column-md-4 event-unsubscribe">
-                        <div class="">
-                            <a class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
-                                <i class="fas fa-user-minus"></i>
-                            </a>
+                        <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
+                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                    <i class="fas fa-user-minus"></i>
+                                </a>
                         </div>
-                    </div>
-
+                    }
+                    else
+                    {
+                        <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe">
+                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                    <i class="fas fa-user-minus"></i>
+                                </a>
+                        </div>
+                    }
 
                     <div class="column-md-4">
                         <div class="event-participants">
@@ -68,7 +103,6 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
 
             </div>
@@ -200,8 +234,8 @@
                 </div>
             </div>
             <form id="myCollapsible" class="row mt-3  col-md-12 justify-content-center">
-                <div class="row  col-md-11 justify-content-center">
-                    <div class="table-responsive">
+                <div class="row col-md-11 justify-content-center">
+                    <div id="myTable" class="table-responsive">
                         <table id="dtParticipants" class="table table-bordered table-hover table-sm" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
@@ -214,17 +248,20 @@
                                     <th class="th-sm">
                                         Поточний статус
                                     </th>
+                                    @if (Model.IsUserEventAdmin) 
+                                    {
                                     <th class="th-sm">
                                         Змінити статус
                                     </th>
                                     <th class="th-sm event-invisible">
                                         ParticipantID
                                     </th>
+                                    }
 
                                 </tr>
                             </thead>
-                            <tbody id="myTable">
-                                @foreach (var participant in Model.Event.Participants)
+                            <tbody>
+                                @foreach (var participant in Model.EventParticipants)
                                 {
                                     <tr>
                                         <td class="align-middle">
@@ -234,6 +271,8 @@
                                         </td>
                                         <td class="align-middle">@participant.User.UserName</td>
                                         <td class="align-middle">@participant.ParticipantStatus.ParticipantStatusName</td>
+                                        @if (Model.IsUserEventAdmin)
+                                        {
                                         <td>
                                             <div class="btn-group btn-group-sm d-flex">
                                                 <button type="button" class="btn btn-success approved">
@@ -250,6 +289,7 @@
                                         <td class="event-invisible">
                                             <input type="hidden" value=@participant.ID />
                                         </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -264,9 +304,12 @@
                                     <th>
                                         Поточний статус
                                     </th>
-                                    <th>
-                                        Змінити статус
-                                    </th>
+                                    @if (Model.IsUserEventAdmin)
+                                    {
+                                        <th>
+                                            Змінити статус
+                                        </th>
+                                    }
                                 </tr>
                             </tfoot>
                         </table>

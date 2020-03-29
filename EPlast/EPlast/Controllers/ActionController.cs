@@ -127,17 +127,56 @@ namespace EPlast.Controllers
         {
             try 
             {
-                EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
-                   .Include(e => e.Participants)
-                        .ThenInclude(p => p.User)
-                   .Include(e => e.Participants)
-                        .ThenInclude(p => p.ParticipantStatus)
-                   .Include(e => e.EventAdmins)
-                   .ThenInclude(evAdm => evAdm.User)
-                   .Include(e => e.EventStatus)
-                   .Include(e => e.EventAdministrations)
-                   .Select(e => new EventViewModel() { user = _userManager, Event = e })
-                   .First();
+                int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
+                int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
+
+                EventViewModel eventModal = new EventViewModel();
+                if (_repoWrapper.Event.FindByCondition(e => e.ID == ID).Include(e => e.EventAdmins).First().EventAdmins.Any(e => e.UserID == _userManager.GetUserId(User)))
+                {
+                     eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
+                       .Include(e => e.Participants)
+                            .ThenInclude(p => p.User)
+                       .Include(e => e.Participants)
+                            .ThenInclude(p => p.ParticipantStatus)
+                       .Include(e => e.EventAdmins)
+                       .ThenInclude(evAdm => evAdm.User)
+                       .Include(e => e.EventStatus)
+                       .Include(e => e.EventAdministrations)
+                       .Select(e => new EventViewModel() 
+                       { user = _userManager,
+                         Event = e,
+                         EventParticipants = e.Participants,
+                         IsUserEventAdmin =true,
+                         ApprovedStatus = approvedStatus,
+                         UndeterminedStatus = undeterminedStatus,
+                         RejectedStatus = rejectedStatus
+                       })
+                       .First();
+                }
+                else
+                {
+                    eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
+                      .Include(e => e.Participants)
+                           .ThenInclude(p => p.User)
+                      .Include(e => e.Participants)
+                           .ThenInclude(p => p.ParticipantStatus)
+                      .Include(e => e.EventAdmins)
+                      .ThenInclude(evAdm => evAdm.User)
+                      .Include(e => e.EventStatus)
+                      .Include(e => e.EventAdministrations)
+                      .Select(e => new EventViewModel()
+                      {
+                          user = _userManager,
+                          Event = e,
+                          EventParticipants = e.Participants.Where(p => p.ParticipantStatusId == approvedStatus),
+                          IsUserEventAdmin = false,
+                          ApprovedStatus = approvedStatus,
+                          UndeterminedStatus = undeterminedStatus,
+                          RejectedStatus = rejectedStatus
+                      })
+                      .First();
+                }
                    return View(eventModal);
             }
             catch

@@ -26,24 +26,26 @@ $(document).ready(function () {
         $("#modalUnSubscribe").modal('show');
     });
     $("#delete").click(function () {
-        $.ajax({
-            type: "POST",
-            url: "/Action/DeleteEvent",
-            data: { ID: value },
-            success: function () {
-                $("#myModal").modal('hide');
-                $("#fail").hide();
-                $("#success").show();
-                $("#deleteResult").modal('show');
-                $(elementTodelete).parents("div.single-card").remove();
-            },
-            error: function () {
-                $("#myModal").modal('hide');
-                $("#success").hide();
-                $("#fail").show();
-                $("#deleteResult").modal('show');
-            },
-        });
+        if ($(this).parents('div.container').hasClass('events-page-wrapper')) {
+            $.ajax({
+                type: "POST",
+                url: "/Action/DeleteEvent",
+                data: { ID: value },
+                success: function () {
+                    $("#myModal").modal('hide');
+                    $("#fail").hide();
+                    $("#success").show();
+                    $("#deleteResult").modal('show');
+                    $(elementTodelete).parents("div.single-card").remove();
+                },
+                error: function () {
+                    $("#myModal").modal('hide');
+                    $("#success").hide();
+                    $("#fail").show();
+                    $("#deleteResult").modal('show');
+                },
+            });
+        }
     });
     $("#subscribe").click(function () {
         if ($(this).parents('div.container').hasClass('events-page-wrapper')) {
@@ -66,23 +68,25 @@ $(document).ready(function () {
         }
     });
     $("#unsubscribe").click(function () {
-        $.ajax({
-            type: "POST",
-            url: "/Action/UnSubscribeOnEvent",
-            data: { ID: value },
-            success: function () {
-                $("#modalUnSubscribe").modal('hide');
-                $(activeEvent).parents("div.events-operations").children("div.events-unsubscribe").hide();
-                $(activeEvent).parents("div.events-operations").children("div.events-part").hide();
-                $(activeEvent).parents("div.events-operations").children("div.events-participants").hide();
-                $(activeEvent).parents("div.events-operations").children("div.events-pen").show();
-                $("#modalUnSubscribeSuccess").modal('show');
-            },
-            error: function () {
-                $("#modalUnSubscribe").modal('hide');
-                $("#FAIL").modal('show');
-            },
-        });
+        if ($(this).parents('div.container').hasClass('events-page-wrapper')) {
+            $.ajax({
+                type: "POST",
+                url: "/Action/UnSubscribeOnEvent",
+                data: { ID: value },
+                success: function () {
+                    $("#modalUnSubscribe").modal('hide');
+                    $(activeEvent).parents("div.events-operations").children("div.events-unsubscribe").hide();
+                    $(activeEvent).parents("div.events-operations").children("div.events-part").hide();
+                    $(activeEvent).parents("div.events-operations").children("div.events-participants").hide();
+                    $(activeEvent).parents("div.events-operations").children("div.events-pen").show();
+                    $("#modalUnSubscribeSuccess").modal('show');
+                },
+                error: function () {
+                    $("#modalUnSubscribe").modal('hide');
+                    $("#FAIL").modal('show');
+                },
+            });
+        }
     });
     //$("a.delete-card").click(function () {
     //    $(this).parents("div.single-card").remove();

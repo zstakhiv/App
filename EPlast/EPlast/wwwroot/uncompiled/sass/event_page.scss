@@ -64,6 +64,11 @@
   display: none;
 }
 
+.event-page-wrapper .disabled-element {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 .event-page-wrapper a.participant-status {
   color: #FF8C00;
   font-size: 25px;
