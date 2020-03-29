@@ -129,6 +129,9 @@ namespace EPlast.Controllers
             {
                 EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
                    .Include(e => e.Participants)
+                        .ThenInclude(p => p.User)
+                   .Include(e => e.Participants)
+                        .ThenInclude(p => p.ParticipantStatus)
                    .Include(e => e.EventAdmins)
                    .ThenInclude(evAdm => evAdm.User)
                    .Include(e => e.EventStatus)
@@ -141,6 +144,65 @@ namespace EPlast.Controllers
             {
                 return RedirectToAction("HandleError", "Error");
             }
+        }
+
+        public IActionResult ApproveParticipant(int ID)
+        {
+            try
+            {
+                Participant participant = _repoWrapper.Participant.FindByCondition(p => p.ID == ID)
+                    .Include(p => p.ParticipantStatus).First();
+                ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Учасник").First();
+                participant.ParticipantStatus = participantStatus;
+                _repoWrapper.Participant.Update(participant);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        public IActionResult UndetermineParticipant(int ID)
+        {
+            try
+            {
+                Participant participant = _repoWrapper.Participant.FindByCondition(p => p.ID == ID)
+                   .Include(p => p.ParticipantStatus).First();
+                ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Розглядається").First();
+                participant.ParticipantStatus = participantStatus;
+                _repoWrapper.Participant.Update(participant);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        public IActionResult RejectParticipant(int ID)
+        {
+            try
+            {
+                Participant participant = _repoWrapper.Participant.FindByCondition(p => p.ID == ID)
+                   .Include(p => p.ParticipantStatus).First();
+                ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Відмовлено").First();
+                participant.ParticipantStatus = participantStatus;
+                _repoWrapper.Participant.Update(participant);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        public IActionResult Table()
+        {
+            return View();
         }
     }
 }

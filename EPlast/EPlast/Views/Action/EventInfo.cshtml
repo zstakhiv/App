@@ -198,40 +198,83 @@
             </div>
         </div>
         <form id="myCollapsible" class="row mt-3  col-md-12 justify-content-center">
-            <div class="row  col-md-12 justify-content-center">
-                <div class="col-md-6 table-responsive">
-                    <table class="table table-sm table-bordered table-hover">
+            <div class="row  col-md-11 justify-content-center">
+                <div class="table-responsive">
+                    <table id="dtParticipants" class="table table-bordered table-hover table-sm" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th class="text-center">Ім'я</th>
-                                <th class="text-center">Прізвище</th>
-                                <th class="text-center">Email</th>
-                                <th class="text-center">Підтвердити</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td v>1</td>
-                                <td class="text-center">Орест</td>
-                                <td class="text-center">Онищенко</td>
-                                <td class="text-center">orest@gmail.com</td>
-                                <td class="text-center">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input part-check" id="materialIndeterminate2" checked>
-                                    </div>
-                                </td>
+                                <th class="th-sm">
+                                    Користувач
+                                </th>
+                                <th class="th-sm">
+                                    Email
+                                </th>
+                                <th class="th-sm">
+                                    Поточний статус
+                                </th>
+                                <th class="th-sm">
+                                    Змінити статус
+                                </th>
+                                <th class="th-sm event-invisible">
+                                    ParticipantID
+                                </th>
 
                             </tr>
+                        </thead>
+                        <tbody id="myTable">
+                            @foreach (var participant in Model.Event.Participants)
+                            {
+                            <tr>
+                                <td class="align-middle">
+                                    <a class="title-link">
+                                        @(participant.User.FirstName + " " + participant.User.LastName)
+                                    </a>
+                                </td>
+                                <td class="align-middle">@participant.User.UserName</td>
+                                <td class="align-middle">@participant.ParticipantStatus.ParticipantStatusName</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm d-flex">
+                                        <button type="button" class="btn btn-success approved">
+                                            <i style="font-size:15px" class="fas fa-check-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-warning undetermined">
+                                            <i style="font-size:15px;" class="fas fa-user-clock"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger rejected">
+                                            <i style="font-size:15px" class="fas fa-user-slash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="event-invisible">
+                                    <input type="hidden" value=@participant.ID />                      
+                                </td>
+                            </tr>
+                            }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    Користувач
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Поточний статус
+                                </th>
+                                <th>
+                                    Змінити статус
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
-            <div class="row col-md-12 mb-3 mt-1 justify-content-center">
+            @*<div class="row col-md-12 mb-3 mt-1 justify-content-center">
                 <div class="col-md-6 text-start ">
                     <input type="submit" class="btn btn-success btn-sm" value="Зберегти зміни">
                 </div>
-            </div>
+            </div>*@
         </form>
 
 
