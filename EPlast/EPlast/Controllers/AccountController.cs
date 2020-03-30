@@ -23,8 +23,8 @@ namespace EPlast.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private SignInManager<User> _signInManager;
         private UserManager<User> _userManager;
+        private SignInManager<User> _signInManager;
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly ILogger _logger;
         private readonly IEmailConfirmation _emailConfirmation;
@@ -37,10 +37,10 @@ namespace EPlast.Controllers
             IEmailConfirmation emailConfirmation,
             IHostingEnvironment env)
         {
-            _logger = logger;
-            _signInManager = signInManager;
             _userManager = userManager;
+            _signInManager = signInManager;
             _repoWrapper = repoWrapper;
+            _logger = logger;
             _emailConfirmation = emailConfirmation;
             _env = env;
         }
@@ -118,7 +118,6 @@ namespace EPlast.Controllers
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return View("Register");
                 }
-
                 var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
                 {
