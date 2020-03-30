@@ -12,5 +12,6 @@ namespace EPlast.ViewModels.Events
         public User User { get; set; }
         public ICollection<Event> Events { get; set; }
         public ICollection<Participant> Participants { get; set; }
+        public UserPlastDegree UserPlastDegree { get; set; }
     }
 }

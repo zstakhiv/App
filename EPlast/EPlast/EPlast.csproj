@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Account\EventCreate.cshtml" />
     <Content Remove="Views\Account\LoginAndRegister.cshtml" />
     <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\adminUser.ts" />
@@ -49,6 +50,10 @@
     <Folder Include="wwwroot\documents\" />
     <Folder Include="wwwroot\uncompiled\less\" />
     <Folder Include="wwwroot\lib\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\EventUser\EventCreate.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

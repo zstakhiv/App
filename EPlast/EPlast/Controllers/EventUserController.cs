@@ -37,11 +37,12 @@ namespace EPlast.Controllers
             {
                 model.Events.Add(item.Event);
             }
+            
             return View(model);
         }
         
         [HttpGet]
-        public IActionResult EventCreate(int id)
+        public IActionResult EventCreate()
         {
             if (!_repoWrapper.EventCategory.FindAll().Any())
             {
@@ -53,7 +54,6 @@ namespace EPlast.Controllers
             try
             {
                 var events = _repoWrapper.Event.
-                FindByCondition(q => q.ID == id).
                 Include(i => i.EventCategory).
                 Include(g => g.EventAdmins).
                 Include(g => g.EventAdministrations).
@@ -81,7 +81,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult EventCreate(EventCreateViewModel model, IFormFile file)
+        public IActionResult EventCreate(EventCreateViewModel model)
         {
             try
             {
