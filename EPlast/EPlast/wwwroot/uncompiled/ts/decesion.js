@@ -12,4 +12,4 @@ $(document).ready(function () {
         window.open("/Documentation/CreatePDFAsync?objId=" + content, '_blank');
     });
 });
-//# sourceMappingURL=raport.js.map
+//# sourceMappingURL=decesion.js.map

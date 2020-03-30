@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Event Create Page";
 }
+@model EPlast.ViewModels.Events.EventCreateViewModel;
 <div class="eventCreate">
     <div class="d-xl-flex justify-content-xl-center border shadow" style="width: 900px;height: 1120px;background-color: #ffffff;margin-top: 40px;">
         <div class="col " style="height: 1000px;">
@@ -13,12 +14,12 @@
                 </div>
             </div>
             <div class="row border shadow" style="height: 55px;">
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Вишкіл</button></div>
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Табір</button></div>
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="button" style="background-color: rgb(35,91,50);">Акція</button></div>
+                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Vyshkil"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Вишкіл</button></div>
+                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Tabir"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Табір</button></div>
+                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Akcia"><button class="btn btn-primary" type="button" style="background-color: rgb(35,91,50);">Акція</button></div>
             </div>
             <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Катергорія</label></div>
+                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label" id="type">Катергорія</label></div>
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
             </div>
             <div class="row border shadow">

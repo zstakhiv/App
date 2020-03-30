@@ -5,4 +5,4 @@ $(document).ready(function () {
         }
     });
 });
-//# sourceMappingURL=raport - Copy.js.map
+//# sourceMappingURL=clubAdmins.js.map
