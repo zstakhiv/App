@@ -1,8 +1,292 @@
 ﻿.annual-report-form {
+    form {
+        min-width: 1000px;
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #3C5438;
+        border-radius: 15px;
+        color: #505e6c;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        padding: 15px;
+    }
+
+    .btn-success {
+        background-color: #3c5438;
+    }
+
     textarea {
         min-height: 100px;
         max-height: 260px;
         padding-top: 10px;
         resize: none;
+    }
+
+    .modal-success {
+        .modal-header {
+            background-color: #3c5438;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #3c5438;
+            }
+
+            p {
+                font-size: 18px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #3c5438;
+                width: 100px;
+            }
+        }
+    }
+
+    .modal-error {
+        .modal-header {
+            background-color: #d90d0d;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #d90d0d;
+            }
+
+            p {
+                font-size: 18px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #d90d0d;
+                width: 100px;
+            }
+        }
+    }
+
+    .modal-info {
+        .modal-dialog {
+            max-width: 550px;
+            width: 550px;
+        }
+
+        .modal-header {
+            background-color: #3c5438;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #3c5438;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #3c5438;
+                width: 100px;
+            }
+        }
+    }
+}
+
+
+
+.view-annual-reports-form {
+    form {
+        min-width: 1000px;
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #3C5438;
+        border-radius: 15px;
+        color: #505e6c;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        padding: 15px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    table.dataTable thead {
+        .sorting {
+            &:after, &:before {
+                bottom: .5em;
+            }
+        }
+
+        .sorting_asc {
+            &:after, &:before {
+                bottom: .5em;
+            }
+        }
+
+        .sorting_asc_disabled {
+            &:after, &:before {
+                bottom: .5em;
+            }
+        }
+
+        .sorting_desc {
+            &:after, &:before {
+                bottom: .5em;
+            }
+        }
+
+        .sorting_desc_disabled {
+            &:after, &:before {
+                bottom: .5em;
+            }
+        }
+    }
+
+    .btn-management {
+        width: 125px;
+        margin: 0px 20px 0px 20px;
+        border-radius: 15px;
+    }
+
+    .row-selected {
+        background-color: #74a883;
+    }
+
+    .modal-success {
+        .modal-header {
+            background-color: #3c5438;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #3c5438;
+            }
+
+            p {
+                font-size: 18px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #3c5438;
+                width: 100px;
+            }
+        }
+    }
+
+    .modal-error {
+        .modal-header {
+            background-color: #d90d0d;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #d90d0d;
+            }
+
+            p {
+                font-size: 18px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #d90d0d;
+                width: 100px;
+            }
+        }
+    }
+
+    .modal-info {
+        .modal-dialog {
+            max-width: 550px;
+            width: 550px;
+        }
+
+        .modal-header {
+            background-color: #3c5438;
+
+            h4 {
+                color: #ffffff;
+            }
+        }
+
+        .modal-body {
+            i {
+                color: #3c5438;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+
+        .modal-footer {
+            .btn-success {
+                background-color: #3c5438;
+                width: 100px;
+            }
+        }
+    }
+
+    #ModalAddAnnualReport {
+        #CityFilter {
+            box-sizing: border-box;
+            font-size: 16px;
+            padding: 7px 27px;
+            border: none;
+            border: 1px solid #3C5438;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .search-content {
+            background-color: #f6f6f6;
+            min-width: 230px;
+            max-width: 230px;
+            min-height: 230px;
+            max-height: 230px;
+            overflow: auto;
+            border: 1px solid #3C5438;
+            z-index: 1;
+            text-align: left;
+            display: inline-block;
+
+            a {
+                color: black;
+                padding: 6px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            a:hover {
+                background-color: #ddd;
+            }
+        }
     }
 }

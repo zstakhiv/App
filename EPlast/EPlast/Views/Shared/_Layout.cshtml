@@ -50,8 +50,8 @@
                                     <i class="material-icons nav-logo" style="margin: 5px;">settings</i>
                                 </a>
                                 <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                      <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Змінити пароль</a>
-                                    <a class="dropdown-item" href="/Account/Edit?id=@UserManager.GetUserId(User)">Редагувати профіль</a>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Змінити пароль</a>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">Редагувати профіль</a>
                                 </div>
                             </li>
                         </ul>
@@ -76,7 +76,7 @@
 
             <div class="main-block">
                 <div class="sidebar">
-                    <div class="back-pic">
+                    <div class="back-pic" onclick='onMenuHover(0)'>
                         <div class="back-pic-inner">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
@@ -92,7 +92,6 @@
                     </div>
 
                     <ul class="sidebar-ul">
-                        <li class="sidebar-li"><a><div class="sidebar-logo profile-icon" onclick='onMenuHover(0)'></div></a></li>
                         <li class="sidebar-li"><a href="/Documentation/ReadDecesion"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>

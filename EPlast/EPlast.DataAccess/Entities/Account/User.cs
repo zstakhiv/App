@@ -16,6 +16,8 @@ namespace EPlast.DataAccess.Entities
         public string LastName { get; set; }
 
         [Display(Name = "По-батькові")]
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20})*$",
+            ErrorMessage = "По-батькові має містити тільки літери")]
         [MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
