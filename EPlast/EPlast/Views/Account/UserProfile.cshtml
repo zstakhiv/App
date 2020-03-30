@@ -26,6 +26,31 @@
                     <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
                 </div>
             </div>
+            <div>
+                @if (Model.Approvers.Count() != 0)
+                {
+                    @foreach (var item in Model.Approvers.ToList())
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <img src="/images/Users/@item.User.ImagePath" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="col">
+                                <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ID">@item.User.FirstName @item.User.LastName</a>
+                            </div>
+                        </div>
+                    }
+
+
+                }
+                @if (Model.Approvers.Count() < 3)
+                {
+                    <form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-route-userId="@Model.User.Id" asp-action="ApproveUser" enctype="multipart/form-data">
+
+                        <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Стати прихильником</button>
+                    </form>
+                }
+            </div>
         </div>
         <div class="col-md-8">
             <div class="card-body">

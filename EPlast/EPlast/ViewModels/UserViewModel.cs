@@ -9,5 +9,12 @@ namespace EPlast.ViewModels
     public class UserViewModel
     {
         public User User { get; set; }
+
+        public ICollection<Approver> Approvers { get; set; }
+
+        public UserViewModel()
+        {
+            Approvers = new List<Approver>();
+        }
     }
 }

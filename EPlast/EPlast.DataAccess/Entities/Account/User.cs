@@ -34,5 +34,11 @@ namespace EPlast.DataAccess.Entities
         public ICollection<RegionAdministration> RegionAdministrations { get; set; }
         public ICollection<AnnualReport> AnnualReports { get; set; }
         public ICollection<UserPlastDegree> UserPlastDegrees { get; set; }
+
+        public User()
+        {
+            Approvers = new List<Approver>();
+            ConfirmedUsers = new List<ConfirmedUser>();
+        }
     }
 }

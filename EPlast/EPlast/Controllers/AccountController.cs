@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -228,7 +229,7 @@ namespace EPlast.Controllers
             return RedirectToAction("Login", "Account");
         }
         
-
+        [HttpGet]
         public IActionResult UserProfile(string userId)
         {
             if(string.IsNullOrEmpty(userId))
@@ -249,13 +250,56 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
+                Include(g=>g.ConfirmedUsers).
+                Include(g=>g.Approvers).
                 FirstOrDefault();
-            var model = new UserViewModel { User = user };
+            var app = _repoWrapper.ConfirmedUser.FindByCondition(x => x.UserID == userId).Select(q => q.Approver).Include(x => x.User).ToList();
+            
+            var model = new UserViewModel { User = user,Approvers=app };
             if (model != null)
             {
                 return View(model);
             }
-            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
+            _logger.Log(LogLevel.Error, $"Cannot find this user:{userId}, or smth else");
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        [HttpPost]
+        public IActionResult ApproveUser(string userId)
+        {
+            if (userId != null)
+            {
+                var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
+                var id = _userManager.GetUserId(User);
+                var userApprover = _repoWrapper.User.FindByCondition(x => x.Id == id).FirstOrDefault();
+                var appUs = new Approver { User = userApprover };
+                var conUs = new ConfirmedUser { Approver = appUs, UserID = user.Id};
+                
+                if (user.Approvers == null)
+                {
+                    user.Approvers = new List<Approver> { appUs };
+                }
+                else
+                {
+                    //_repoWrapper.Approver.Create(appUs);
+                    //user.Approvers.Add(appUs);jo;
+                }
+                if (user.ConfirmedUsers==null)
+                {
+                    user.ConfirmedUsers = new List<ConfirmedUser> { conUs };
+                }
+                else
+                {
+                    _repoWrapper.ConfirmedUser.Create(conUs);
+                    user.ConfirmedUsers.Add(conUs);
+                }
+                //_repoWrapper.Approver.Update(appUs);
+                //_repoWrapper.ConfirmedUser.Update(conUs);
+                _repoWrapper.User.Update(user);
+                _repoWrapper.Save();
+                //return View();
+                return RedirectToAction("UserProfile", "Account", new { userId = userId });
+            }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
@@ -427,6 +471,8 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+
+        
 
         [HttpGet]
         [AllowAnonymous]
