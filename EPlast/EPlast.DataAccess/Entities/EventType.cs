@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public class EventCategory
+    public class EventType
     {
         public int ID { get; set; }
         [Required]
-        public string EventCategoryName { get; set; }
+        public string EventTypeName { get; set; }
         public ICollection<Event> Events { get; set; }
     }
 }
