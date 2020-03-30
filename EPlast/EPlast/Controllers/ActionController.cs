@@ -40,8 +40,9 @@ namespace EPlast.Controllers
         {
             try
             {
+                int actionID = _repoWrapper.EventType.FindByCondition(et => et.EventTypeName == "Акція").First().ID;
                 List<Event> events = _repoWrapper.Event
-                .FindByCondition(e => e.EventCategoryID == ID)
+                .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
                 .Include(e => e.EventAdmins)
                 .Include(e => e.Participants)
                 .ToList();
