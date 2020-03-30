@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,12 +20,13 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<User> _userManager;
-
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper)
+        private readonly ILogger _logger;
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper, ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _repoWrapper = repoWrapper;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -75,8 +78,9 @@ namespace EPlast.Controllers
 
                 return View(userTableViewModels);
             }
-            catch
+            catch(Exception e)
             {
+                _logger.Log(LogLevel.Error, $"Exception: {e.Message}");
                 return RedirectToAction("HandleError", "Error");
             }
         }
@@ -99,7 +103,7 @@ namespace EPlast.Controllers
                 };
                 return PartialView(model);
             }
-
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
         }
 
@@ -115,10 +119,10 @@ namespace EPlast.Controllers
                 var removedRoles = userRoles.Except(roles);
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
+                _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName,user.Id);
                 return RedirectToAction("Index");
             }
-
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
         }
 
@@ -142,9 +146,12 @@ namespace EPlast.Controllers
                 {
                     _repoWrapper.User.Delete(user);
                     _repoWrapper.Save();
+                    _logger.LogInformation("Successful delete user {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
                     return RedirectToAction("Index");
                 }
+                _logger.LogError("Cannot find user or admin cannot be deleted. ID:{0}",userId);
             }
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
         [HttpGet]
