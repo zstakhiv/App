@@ -13,5 +13,7 @@ namespace EPlast.ViewModels.Events
         public IEnumerable<EventCategory> EventCategory { get; set; }
         public IEnumerable<SubEventCategory> SubEventCategories { get; set; }
         public SubEventCategory SubEventCategory { get; set; }
+        public EventAdmin EventAdmin { get; set; }
+        public EventAdministration EventAdministration { get; set; }
     }
 }

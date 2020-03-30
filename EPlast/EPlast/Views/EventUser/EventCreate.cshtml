@@ -1,108 +1,128 @@
-﻿@using EPlast.DataAccess.Repositories;
+﻿@using EPlast.DataAccess.Repositories
+@using EPlast.DataAccess.Entities
 @{
     ViewData["Title"] = "Event Create Page";
 }
 @model EPlast.ViewModels.Events.EventCreateViewModel;
-<div class="eventCreate">
-    <div class="d-xl-flex justify-content-xl-center border shadow" style="width: 900px;height: 1120px;background-color: #ffffff;margin-top: 40px;">
-        <div class="col " style="height: 1000px;">
-            <div class="row">
-                <div class="col">
-                    <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <h1 class="text-center">Нова подія</h1>
+<form asp-action="EditConfirmed" enctype="multipart/form-data">
+    <div class="eventCreate">
+        <div class="d-xl-flex justify-content-xl-center border shadow" style="width: 900px;height: 1320px;background-color: #ffffff;margin-top: 40px;">
+            <div class="col " style="height: 1000px;">
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
+                            <h1 class="text-center">Нова подія</h1>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row border shadow" style="height: 55px;">
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Vyshkil"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Вишкіл</button></div>
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Tabir"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Табір</button></div>
-                <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Akcia"><button class="btn btn-primary" type="button" style="background-color: rgb(35,91,50);">Акція</button></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label" id="type">Катергорія</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Комендант</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Заступник коменданта</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Бунчужний/на</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Писар</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата початку</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата завершення</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Форма проведення</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Призначений для</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Учасники з яких станиць прийматимуть участь</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow">
-                <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Приблизна кількість учасників</label></div>
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-            </div>
-            <div class="row border shadow" style="height: 123px;">
-                <div class="col">
-                    <div class="row">
-                        <div class="col text-center">
-                            <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
-                                <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Питання/побажання до булави&nbsp; &nbsp;</label></div>
-                                <div class="col">
-                                    <div></div>
+                <div class="row border shadow" style="height: 55px;">
+                    @Html.HiddenFor(i => i.Event.EventCategory.EventCategoryName, new { @id = "name" })
+                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Vyshkil"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Вишкіл</button></div>
+                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Tabir"><button class="btn btn-primary" type="button" style="background-color: #3c5438;">Табір</button></div>
+                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Akcia"><button class="btn btn-primary" type="button" style="background-color: rgb(35,91,50);">Акція</button></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label" id="type">Катергорія</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.Event.EventCategory.SubEventCategories.SubEventCategoryName,
+                        new { @list = "SubEventType-value", @id = "autocomplete_input", @class = "form-control border", @style = "width: 370px;background-color: #eee;", @Value = "" })
+                        <datalist id="SubEventType-value">
+                            @foreach (SubEventCategory item in Model.SubEventCategories)
+                            {
+                                <option data-value="@item.ID" value="@item.SubEventCategoryName"></option>
+                            }
+                        </datalist>
+                        @Html.HiddenFor(i => i.Event.EventCategory.SubEventCategories.ID, new { @id = "autocomplete_input_id_0" })
+                        <span asp-validation-for="Event.EventCategory.SubEventCategories.SubEventCategoryName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Назва події</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventName" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Комендант</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdmin.User" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Заступник коменданта</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Бунчужний/на</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Писар</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата початку</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventDateStart" class="border TextIinput form-control" style="width: 370px;background-color: #eee;" placeholder="Виберіть..."><span class="ui-datepicker"></span></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата завершення</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventDateEnd" class="border TextIinput form-control" style="width: 370px;background-color: #eee;" placeholder="Виберіть..."><span class="ui-datepicker"></span></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Форма проведення</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Призначений для</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Учасники з яких станиць прийматимуть участь</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Приблизна кількість учасників</label></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow" style="height: 123px;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
+                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Питання/побажання до булави&nbsp; &nbsp;</label></div>
+                                    <div class="col">
+                                        <div></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row border shadow" style="height: 123px;">
-                <div class="col">
-                    <div class="row">
-                        <div class="col text-center">
-                            <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
-                                <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Які впрваджено зміни/додаки ?</label></div>
-                                <div class="col">
-                                    <div></div>
-                                </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
+                </div>
+                <div class="row border shadow" style="height: 123px;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
+                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Які впрваджено зміни/додаки ?</label></div>
+                                    <div class="col">
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="button" style="width: 298px;margin-top: 15px;background-color: #3c5438;">Створити подію</button></div>
+                <div class="row">
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="submit" style="width: 298px;margin-top: 15px;background-color: #3c5438;">Створити подію</button></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>

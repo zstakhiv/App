@@ -44,13 +44,6 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult EventCreate()
         {
-            if (!_repoWrapper.EventCategory.FindAll().Any())
-            {
-                _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Вишкіл" });
-                _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Табір" });
-                _repoWrapper.EventCategory.Create(new EventCategory { EventCategoryName = "Акція" });
-                _repoWrapper.Save();
-            }
             try
             {
                 var events = _repoWrapper.Event.
@@ -85,35 +78,19 @@ namespace EPlast.Controllers
         {
             try
             {
-                if (model.Event.EventCategory.ID == 0)
-                {
-                    string eventCategoryName = model.Event.EventCategory.EventCategoryName;
-                    if (string.IsNullOrEmpty(eventCategoryName))
-                    {
-                        model.Event.EventCategory = null;
-                    }
-                    else
-                    {
-                        model.Event.EventCategory = new EventCategory() 
-                        { EventCategoryName = eventCategoryName };
-                    }
-                }
-
                 if (model.Event.EventCategory.SubEventCategories.ID == 0)
                 {
-                    string subEventCategoryName = 
-                        model.Event.EventCategory.SubEventCategories.SubEventCategoryName;
+                    string subEventCategoryName = model.Event.EventCategory.SubEventCategories.SubEventCategoryName;
                     if (string.IsNullOrEmpty(subEventCategoryName))
                     {
                         model.Event.EventCategory.SubEventCategories = null;
                     }
                     else
                     {
-                        model.Event.EventCategory.SubEventCategories = new SubEventCategory()
+                        model.Event.EventCategory.SubEventCategories = new SubEventCategory() 
                         { SubEventCategoryName = subEventCategoryName };
                     }
                 }
-
                 _repoWrapper.Event.Update(model.Event);
                 _repoWrapper.Save();
                 return RedirectToAction("EventUser");
