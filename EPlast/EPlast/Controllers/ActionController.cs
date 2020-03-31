@@ -1,6 +1,7 @@
 ﻿using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace EPlast.Controllers
             _repoWrapper = repoWrapper;
         }
 
+        [Authorize]
         public IActionResult GetAction()
         {
             try
@@ -36,6 +38,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize]
         public IActionResult Events(int? ID)
         {
             try
@@ -57,6 +60,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult DeleteEvent(int ID)
         {
             try
@@ -73,6 +77,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult SubscribeOnEvent(int ID)
         {
             try
@@ -88,6 +93,7 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult UnSubscribeOnEvent(int ID)
         {
             try
@@ -103,6 +109,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize]
         public IActionResult EventInfo(int ID)
         {
             try 
@@ -123,6 +130,8 @@ namespace EPlast.Controllers
                        .ThenInclude(evAdm => evAdm.User)
                        .Include(e => e.EventStatus)
                        .Include(e => e.EventAdministrations)
+                       .Include(e => e.EventType)
+                       .Include(e => e.EventCategory)
                        .Select(e => new EventViewModel() 
                        { user = _userManager,
                          Event = e,
@@ -145,6 +154,8 @@ namespace EPlast.Controllers
                       .ThenInclude(evAdm => evAdm.User)
                       .Include(e => e.EventStatus)
                       .Include(e => e.EventAdministrations)
+                      .Include(e => e.EventType)
+                      .Include(e => e.EventCategory)
                       .Select(e => new EventViewModel()
                       {
                           user = _userManager,
@@ -165,6 +176,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize]
         public IActionResult ApproveParticipant(int ID)
         {
             try
@@ -183,6 +195,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize]
         public IActionResult UndetermineParticipant(int ID)
         {
             try
@@ -201,6 +214,7 @@ namespace EPlast.Controllers
             }
         }
 
+        [Authorize]
         public IActionResult RejectParticipant(int ID)
         {
             try
@@ -219,9 +233,5 @@ namespace EPlast.Controllers
             }
         }
 
-        public IActionResult Table()
-        {
-            return View();
-        }
     }
 }

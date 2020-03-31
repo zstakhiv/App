@@ -43,26 +43,26 @@
                     @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.ApprovedStatus))
                     {
                         <div id="participantBlock" class="column-md-4 event-part">
-                                <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
-                                    <i class="far fa-check-square"></i>
-                                </a>
+                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
+                                <i class="far fa-check-square"></i>
+                            </a>
                         </div>
                     }
 
                     @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.UndeterminedStatus))
                     {
                         <div id="userClockBlock" class="column-md-4 event-participant-status">
-                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
-                                    <i class="fas fa-user-clock"></i>
-                                </a>
+                            <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                <i class="fas fa-user-clock"></i>
+                            </a>
                         </div>
                     }
                     else
                     {
                         <div id="userClockBlock" class="column-md-4 event-participant-status event-invisible">
-                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
-                                    <i class="fas fa-user-clock"></i>
-                                </a>
+                            <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                <i class="fas fa-user-clock"></i>
+                            </a>
                         </div>
                     }
 
@@ -75,17 +75,17 @@
                         </div>
 
                         <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
-                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
-                                    <i class="fas fa-user-minus"></i>
-                                </a>
+                            <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                <i class="fas fa-user-minus"></i>
+                            </a>
                         </div>
                     }
                     else
                     {
                         <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe">
-                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
-                                    <i class="fas fa-user-minus"></i>
-                                </a>
+                            <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                <i class="fas fa-user-minus"></i>
+                            </a>
                         </div>
                     }
 
@@ -103,10 +103,39 @@
                             </a>
                         </div>
                     </div>
+                    <div class="column-md-4">
+                        <div data-toggle="tooltip" data-placement="bottom" title="Адміністратор(-и) події">
+                            <a class="event-link" data-toggle="collapse" data-target="#eventAdmins" aria-expanded="false" aria-controls="eventAdmins">
+                                <i class="fas fa-users-cog"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
+                <div id="eventAdmins" class="row mt-4 ml-2 collapse">
+                    <table class="table table-borderless table-sm">
+                        <thead>
+                            <tr>                              
+                                <th>Admin</th>                               
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var eventAdmin in Model.Event.EventAdmins)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Account" asp-action="UserProfile" asp-route-userId=@eventAdmin.User.Id class="title-link">
+                                            @(eventAdmin.User.FirstName + " " + eventAdmin.User.LastName)
+                                        </a>
+                                    </td>
+                                    <td>@eventAdmin.User.UserName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-md-8   ">
+            <div class="col-md-8 ">
                 <div class="row mt-4">
                     <div class="col-md-5 text-md-center ">
                         <p class="event-header font-weight-bold">Назва:</p>
@@ -115,19 +144,20 @@
                         <p class="event-value ">@Model.Event.EventName</p>
                     </div>
                 </div>
-
-                <div class="row mt-2">
+                <div class="row mt-2 align-items-center">
                     <div class="col-md-5 text-md-center ">
-                        <p class="event-header font-weight-bold">Адмін:</p>
+                        <p class="event-header font-weight-bold">Тип:</p>
                     </div>
                     <div class="col-md-7">
-                        <div class="d-flex flex-row align-items-baseline">
-                            <p class="event-value ">@(Model.Event.EventAdmins.First().User.FirstName + " " + Model.Event.EventAdmins.First().User.LastName) </p>
-                            <!-- <a href="#" class="admin-link"  data-toggle="tooltip" data-placement="right" title="Деталі">Роман Брич</a> -->
-                            <a class="event-detail ml-2  event-fabutton" data-toggle="tooltip" data-placement="right" title="Деталі">
-                                <i class="fas fa-info-circle "></i>
-                            </a>
-                        </div>
+                        <p class="event-value ">@Model.Event.EventType.EventTypeName</p>
+                    </div>
+                </div>
+                <div class="row mt-2 align-items-center">
+                    <div class="col-md-5 text-md-center ">
+                        <p class="event-header font-weight-bold">Категорія:</p>
+                    </div>
+                    <div class="col-md-7">
+                        <p class="event-value ">@Model.Event.EventCategory.EventCategoryName</p>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -230,7 +260,7 @@
         <div class="row mt-3 mb-5 justify-content-сenter  shadow rounded">
             <div class="row mt-3  col-md-12 justify-content-center mb-1">
                 <div class="col-md-8 text-center ">
-                    <input type="button" id="btn-part" class="btn btn-success btn-md  btn-collapse " data-toggle="collapse" data-target="#myCollapsible" value="Потенційні учасники">
+                    <input type="button" id="btn-part" class="btn btn-success btn-md  btn-collapse" data-toggle="collapse" data-target="#myCollapsible" value="Потенційні учасники">
                 </div>
             </div>
             <form id="myCollapsible" class="row mt-3  col-md-12 justify-content-center">
@@ -265,7 +295,7 @@
                                 {
                                     <tr>
                                         <td class="align-middle">
-                                            <a class="title-link">
+                                            <a asp-controller="Account" asp-action="UserProfile" asp-route-userId=@participant.User.Id class="title-link">
                                                 @(participant.User.FirstName + " " + participant.User.LastName)
                                             </a>
                                         </td>
@@ -315,11 +345,7 @@
                         </table>
                     </div>
                 </div>
-                @*<div class="row col-md-12 mb-3 mt-1 justify-content-center">
-                    <div class="col-md-6 text-start ">
-                        <input type="submit" class="btn btn-success btn-sm" value="Зберегти зміни">
-                    </div>
-                </div>*@
+         
             </form>
 
 

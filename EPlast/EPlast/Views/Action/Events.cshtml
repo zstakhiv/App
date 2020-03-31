@@ -30,7 +30,7 @@
                                     }
                                 </div>
                                 <div class="events-operations">
-                                    @if (!_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID))
+                                    @if (!_event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == _event.ID) )
                                     {
                                         <div class="events-pen">
                                             <a class="event-link subscribe" data-toggle="tooltip" data-placement="right" title="Зголоситись">
