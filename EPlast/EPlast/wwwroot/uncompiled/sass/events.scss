@@ -3,6 +3,15 @@
     font-size: 25px;
 }
 
+.events-page-wrapper .event-link-mytext {
+    color: #3c5438;
+    font-size: 18px;
+}
+
+.events-page-wrapper a.event-link-mytext:hover {
+    color: #73bd79;
+}
+
 .events-page-wrapper .event-remove {
     color: #8B0000;
     font-size: 25px;
@@ -10,6 +19,18 @@
 
 .events-page-wrapper button:hover {
     color: white;
+}
+
+.events-page-wrapper .events-content {
+    height: 175px;
+}
+
+.events-page-wrapper .events-card {
+    min-height: 300px;
+}
+
+.events-page-wrapper .events-card-header {
+    min-height: 63px;
 }
 
 .events-page-wrapper a.event-link:hover {
@@ -27,6 +48,10 @@
 .events-page-wrapper .disabledbutton {
     pointer-events: none;
     opacity: 0.4;
+}
+
+.events-page-wrapper .single-card {
+    border-color: red;
 }
 
 .events-page-wrapper .event-fabutton {

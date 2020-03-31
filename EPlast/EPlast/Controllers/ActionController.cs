@@ -39,18 +39,42 @@ namespace EPlast.Controllers
         }
 
         [Authorize]
-        public IActionResult Events(int? ID)
+        public IActionResult Events(int ID)
         {
             try
             {
                 int actionID = _repoWrapper.EventType.FindByCondition(et => et.EventTypeName == "Акція").First().ID;
-                List<Event> events = _repoWrapper.Event
-                .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
-                .Include(e => e.EventAdmins)
-                .Include(e => e.Participants)
-                .ToList();
-                EventsViewModel _event = new EventsViewModel() { Events = events, user = _userManager };
-                return View(_event);
+                int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
+                int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
+                int approvedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Затверджений(-на)").First().ID;
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                int notApprovedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Не затверджені").First().ID;
+
+                List<GeneralEventViewModel> newEvents = _repoWrapper.Event
+                 .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
+                 .Include(e => e.EventAdmins)
+                 .Include(e => e.Participants)
+                 .Select(ev => new GeneralEventViewModel
+                 {
+                   Event=ev,
+                   IsUserEventAdmin = ev.EventAdmins.Any(e => e.UserID == _userManager.GetUserId(User)),
+                   IsUserParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
+                   IsUserApprovedParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
+                   IsUserUndeterminedParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
+                   IsUserRejectedParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == rejectedStatus),
+                   IsEventApproved = ev.EventStatusID == approvedEvent,
+                   IsEventNotApproved = ev.EventStatusID == notApprovedEvent,
+                   IsEventFinished = ev.EventStatusID == finishedEvent
+                 }).ToList();
+
+                //List<Event> events = _repoWrapper.Event
+                //.FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
+                //.Include(e => e.EventAdmins)
+                //.Include(e => e.Participants)
+                //.ToList();
+                //EventsViewModel _event = new EventsViewModel() { Events = events, user = _userManager };
+                return View(newEvents);
             }
             catch
             {
