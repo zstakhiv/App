@@ -9,13 +9,12 @@ namespace EPlast.ViewModels.Events
 {
     public class EventViewModel
     {
-        public UserManager<User> user { get; set; }
         public Event Event { get; set; }
-
         public bool IsUserEventAdmin { get; set;}
-        public int ApprovedStatus { get; set;}
-        public int UndeterminedStatus { get; set;}
-        public int RejectedStatus { get; set; }
+        public bool IsUserParticipant { get; set; }
+        public bool IsUserApprovedParticipant { get; set; }
+        public bool IsUserUndeterminedParticipant { get; set; }
+        public bool IsUserRejectedParticipant { get; set; }
         public IEnumerable<Participant> EventParticipants { get; set; }
 
     }

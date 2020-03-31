@@ -67,13 +67,6 @@ namespace EPlast.Controllers
                    IsEventNotApproved = ev.EventStatusID == notApprovedEvent,
                    IsEventFinished = ev.EventStatusID == finishedEvent
                  }).ToList();
-
-                //List<Event> events = _repoWrapper.Event
-                //.FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
-                //.Include(e => e.EventAdmins)
-                //.Include(e => e.Participants)
-                //.ToList();
-                //EventsViewModel _event = new EventsViewModel() { Events = events, user = _userManager };
                 return View(newEvents);
             }
             catch
@@ -142,10 +135,7 @@ namespace EPlast.Controllers
                 int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
                 int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
 
-                EventViewModel eventModal = new EventViewModel();
-                if (_repoWrapper.Event.FindByCondition(e => e.ID == ID).Include(e => e.EventAdmins).First().EventAdmins.Any(e => e.UserID == _userManager.GetUserId(User)))
-                {
-                     eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
+                EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
                        .Include(e => e.Participants)
                             .ThenInclude(p => p.User)
                        .Include(e => e.Participants)
@@ -156,43 +146,24 @@ namespace EPlast.Controllers
                        .Include(e => e.EventAdministrations)
                        .Include(e => e.EventType)
                        .Include(e => e.EventCategory)
-                       .Select(e => new EventViewModel() 
-                       { user = _userManager,
-                         Event = e,
-                         EventParticipants = e.Participants,
-                         IsUserEventAdmin =true,
-                         ApprovedStatus = approvedStatus,
-                         UndeterminedStatus = undeterminedStatus,
-                         RejectedStatus = rejectedStatus
+                       .Select(e => new EventViewModel()
+                       {
+                           Event = e,
+                           EventParticipants = e.Participants,
+                           IsUserEventAdmin = e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User)),
+                           IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
+                           IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
+                           IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
+                           IsUserRejectedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == rejectedStatus)
                        })
                        .First();
-                }
-                else
+
+                if (!eventModal.IsUserEventAdmin)
                 {
-                    eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
-                      .Include(e => e.Participants)
-                           .ThenInclude(p => p.User)
-                      .Include(e => e.Participants)
-                           .ThenInclude(p => p.ParticipantStatus)
-                      .Include(e => e.EventAdmins)
-                      .ThenInclude(evAdm => evAdm.User)
-                      .Include(e => e.EventStatus)
-                      .Include(e => e.EventAdministrations)
-                      .Include(e => e.EventType)
-                      .Include(e => e.EventCategory)
-                      .Select(e => new EventViewModel()
-                      {
-                          user = _userManager,
-                          Event = e,
-                          EventParticipants = e.Participants.Where(p => p.ParticipantStatusId == approvedStatus),
-                          IsUserEventAdmin = false,
-                          ApprovedStatus = approvedStatus,
-                          UndeterminedStatus = undeterminedStatus,
-                          RejectedStatus = rejectedStatus
-                      })
-                      .First();
+                    eventModal.EventParticipants = eventModal.EventParticipants.Where(p => p.ParticipantStatusId == approvedStatus);
                 }
-                   return View(eventModal);
+                
+                return View(eventModal);
             }
             catch
             {

@@ -15,10 +15,6 @@
         Rejected: 'Відмовлено'
     }
 
-    if ($('#subscribeBlock').is((':visible'))) {
-        $('#unsubscribeBlock').hide();
-    }
-
     $('#deleteIcon').click(function () {
         eventID = $('#eventId').val();
         activeElement = this;

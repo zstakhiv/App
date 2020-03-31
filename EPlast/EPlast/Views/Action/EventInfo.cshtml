@@ -22,8 +22,15 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                         </div>
+                        <div class="column-md-4">
+                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви адмін!">
+                                <i class="fas fa-user-cog"></i>
+                            </a>
+                        </div>
                     }
-                    @if (!Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID))
+                  else 
+                  { 
+                    @if (!Model.IsUserParticipant)
                     {
                         <div id="subscribeBlock" class="column-md-4 event-pen">
                             <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
@@ -40,7 +47,7 @@
                         </div>
                     }
 
-                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.ApprovedStatus))
+                    @if (Model.IsUserApprovedParticipant)
                     {
                         <div id="participantBlock" class="column-md-4 event-part">
                             <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
@@ -49,7 +56,7 @@
                         </div>
                     }
 
-                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.UndeterminedStatus))
+                    @if (Model.IsUserUndeterminedParticipant)
                     {
                         <div id="userClockBlock" class="column-md-4 event-participant-status">
                             <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
@@ -66,29 +73,31 @@
                         </div>
                     }
 
-                    @if (Model.Event.Participants.Any(p => p.UserId == Model.user.GetUserId(User) && p.EventId == Model.Event.ID && p.ParticipantStatusId == Model.RejectedStatus))
+                    @if (Model.IsUserRejectedParticipant)
                     {
                         <div id="rejectBlock" class="events-participants-ban">
                             <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Вашу заявку на участь у даній події відхилено">
                                 <i class="fas fa-user-slash"></i>
                             </a>
                         </div>
-
+                    }
+                        if (!Model.IsUserParticipant || Model.IsUserRejectedParticipant)
+                        {
                         <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
                             <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
                                 <i class="fas fa-user-minus"></i>
                             </a>
                         </div>
-                    }
-                    else
-                    {
-                        <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe">
+                        }
+                       else
+                       {
+                        <div id = "unsubscribeBlock" class="column-md-4 event-unsubscribe">
                             <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
                                 <i class="fas fa-user-minus"></i>
                             </a>
                         </div>
+                       }
                     }
-
                     <div class="column-md-4">
                         <div class="event-participants">
                             <a class="event-link" href="#btn-part" data-toggle="tooltip" data-placement="bottom" title="Учасники">
