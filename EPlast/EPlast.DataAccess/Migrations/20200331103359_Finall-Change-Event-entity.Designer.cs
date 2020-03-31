@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200331103359_Finall-Change-Event-entity")]
+    partial class FinallChangeEvententity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -500,7 +502,8 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("EventStatusID");
 
-                    b.Property<string>("Eventlocation");
+                    b.Property<string>("Eventlocation")
+                        .IsRequired();
 
                     b.Property<string>("ForWhom")
                         .IsRequired();

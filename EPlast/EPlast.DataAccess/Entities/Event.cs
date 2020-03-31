@@ -10,16 +10,19 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public string EventName { get; set; }
         [Required]
-        public string Description{ get; set; }
+        public string Questions{ get; set; }
         [Required]
+        public string Descriptions { get; set; }
+        [Required]
+        public string ForWhom { get; set; }
         public DateTime EventDateStart { get; set; }
         [Required]
         public DateTime EventDateEnd { get; set; }
-        [Required]
         public string Eventlocation { get; set; }
-        [Required]
         public int EventCategoryID { get; set; }
         public int EventStatusID { get; set; }
+        public string FormOfHolding { get; set; }
+        public int NomberOfParticipants { get; set; } 
         public EventCategory EventCategory { get; set; }
         public EventStatus EventStatus { get; set; }
         public ICollection<Participant> Participants { get; set; }

@@ -67,19 +67,15 @@
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Форма проведення</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.FormOfHolding" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Призначений для</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Учасники з яких станиць прийматимуть участь</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.ForWhom" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Приблизна кількість учасників</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.NomberOfParticipants" type="text" class="border TextIinput" style="width: 370px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow" style="height: 123px;">
                     <div class="col">
@@ -95,7 +91,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input asp-for="Event.Questions" type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
                             </div>
                         </div>
                     </div>
@@ -114,7 +110,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input asp-for="Event.Descriptions" type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
                             </div>
                         </div>
                     </div>
