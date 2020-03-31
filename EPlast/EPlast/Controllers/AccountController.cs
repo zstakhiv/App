@@ -67,7 +67,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-            return View();
+            return View("Register");
         }
 
         [HttpGet]

@@ -57,7 +57,7 @@ namespace EPlast.XUnitTest
         }*/
 
         [Fact]
-        public async Task TestRegisterViewNameEqualRegister()
+        public async Task TestRegisterMethodViewNameEqualRegisterPost()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             
@@ -71,12 +71,17 @@ namespace EPlast.XUnitTest
             };
             accountController.ModelState.AddModelError("", "Required");
             var result = await accountController.Register(registerViewModel);
-            ViewResult viewType = Assert.IsType<Task<IActionResult>>(result);
-
-            var t = viewType.Result.ToString();
-            Assert.Equal("Register", viewType);
-            
+            var redirectToActionResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", redirectToActionResult.ViewName);
         }
 
+        [Fact]
+        public void TestRegisterMethodViewNameEqualRegisterGet()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.Register();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+        }
     }
 }
