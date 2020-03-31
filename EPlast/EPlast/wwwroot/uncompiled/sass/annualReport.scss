@@ -20,92 +20,6 @@
         padding-top: 10px;
         resize: none;
     }
-
-    .modal-success {
-        .modal-header {
-            background-color: #3c5438;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #3c5438;
-            }
-
-            p {
-                font-size: 18px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #3c5438;
-                width: 100px;
-            }
-        }
-    }
-
-    .modal-error {
-        .modal-header {
-            background-color: #d90d0d;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #d90d0d;
-            }
-
-            p {
-                font-size: 18px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #d90d0d;
-                width: 100px;
-            }
-        }
-    }
-
-    .modal-info {
-        .modal-dialog {
-            max-width: 550px;
-            width: 550px;
-        }
-
-        .modal-header {
-            background-color: #3c5438;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #3c5438;
-            }
-
-            p {
-                font-size: 16px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #3c5438;
-                width: 100px;
-            }
-        }
-    }
 }
 
 
@@ -158,102 +72,6 @@
         }
     }
 
-    .btn-management {
-        width: 125px;
-        margin: 0px 20px 0px 20px;
-        border-radius: 15px;
-    }
-
-    .row-selected {
-        background-color: #74a883;
-    }
-
-    .modal-success {
-        .modal-header {
-            background-color: #3c5438;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #3c5438;
-            }
-
-            p {
-                font-size: 18px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #3c5438;
-                width: 100px;
-            }
-        }
-    }
-
-    .modal-error {
-        .modal-header {
-            background-color: #d90d0d;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #d90d0d;
-            }
-
-            p {
-                font-size: 18px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #d90d0d;
-                width: 100px;
-            }
-        }
-    }
-
-    .modal-info {
-        .modal-dialog {
-            max-width: 550px;
-            width: 550px;
-        }
-
-        .modal-header {
-            background-color: #3c5438;
-
-            h4 {
-                color: #ffffff;
-            }
-        }
-
-        .modal-body {
-            i {
-                color: #3c5438;
-            }
-
-            p {
-                font-size: 16px;
-            }
-        }
-
-        .modal-footer {
-            .btn-success {
-                background-color: #3c5438;
-                width: 100px;
-            }
-        }
-    }
-
     #ModalAddAnnualReport {
         #CityFilter {
             box-sizing: border-box;
@@ -288,5 +106,107 @@
                 background-color: #ddd;
             }
         }
+    }
+}
+
+.modal-success {
+    .modal-header {
+        background-color: #3c5438;
+
+        h4 {
+            color: #ffffff;
+        }
+    }
+
+    .modal-body {
+        i {
+            color: #3c5438;
+        }
+
+        p {
+            font-size: 18px;
+        }
+    }
+
+    .modal-footer {
+        .btn-success {
+            background-color: #3c5438;
+            width: 100px;
+        }
+    }
+}
+
+.modal-error {
+    .modal-header {
+        background-color: #d90d0d;
+
+        h4 {
+            color: #ffffff;
+        }
+    }
+
+    .modal-body {
+        i {
+            color: #d90d0d;
+        }
+
+        p {
+            font-size: 18px;
+        }
+    }
+
+    .modal-footer {
+        .btn-success {
+            background-color: #d90d0d;
+            width: 100px;
+        }
+    }
+}
+
+.modal-info {
+    .modal-dialog {
+        max-width: 550px;
+        width: 550px;
+    }
+
+    .modal-header {
+        background-color: #3c5438;
+
+        h4 {
+            color: #ffffff;
+        }
+    }
+
+    .modal-body {
+        i {
+            color: #3c5438;
+        }
+
+        p {
+            font-size: 16px;
+        }
+    }
+
+    .modal-footer {
+        .btn-success {
+            background-color: #3c5438;
+            width: 100px;
+        }
+    }
+}
+
+.btn-management {
+    background-color: #3c5438 !important;
+    min-width: 125px;
+    margin: 10px 20px;
+}
+
+.row-selected {
+    background-color: #eaf0ce;
+}
+
+.nav-tabs {
+    a {
+        color: #3c5438 !important;
     }
 }

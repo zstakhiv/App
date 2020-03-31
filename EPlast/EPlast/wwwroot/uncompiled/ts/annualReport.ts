@@ -96,11 +96,6 @@
             }
         });
     })
-
-    function setDisabled(elements: JQuery<HTMLElement>[], disabled: boolean) {
-        for (let el of elements)
-            el.prop('disabled', disabled);
-    }
 });
 
 $('#annual-report-form').ready(function () {
@@ -129,3 +124,8 @@ $('#annual-report-form').ready(function () {
         }
     })
 })
+
+function setDisabled(elements: JQuery<HTMLElement>[], disabled: boolean) {
+    for (let el of elements)
+        el.prop('disabled', disabled);
+}

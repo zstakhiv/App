@@ -90,10 +90,6 @@ $('#view-annual-reports-form').ready(function () {
             }
         });
     });
-    function setDisabled(elements, disabled) {
-        for (let el of elements)
-            el.prop('disabled', disabled);
-    }
 });
 $('#annual-report-form').ready(function () {
     if ($('#ModalSuccess .modal-body:first p:first strong:first').contents().length != 0) {
@@ -121,4 +117,8 @@ $('#annual-report-form').ready(function () {
         }
     });
 });
+function setDisabled(elements, disabled) {
+    for (let el of elements)
+        el.prop('disabled', disabled);
+}
 //# sourceMappingURL=annualReport.js.map
