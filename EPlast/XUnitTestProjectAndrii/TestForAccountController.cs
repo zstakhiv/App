@@ -2,14 +2,18 @@ using EPlast.BussinessLayer.Interfaces;
 using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EPlast.XUnitTest
@@ -36,12 +40,43 @@ namespace EPlast.XUnitTest
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
 
-        [Fact]
-        public void TestCheckingForRegisterMethod()
+        /*[Fact]
+        public void TestCheckingIfUserIsNotNull()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var registerViewModel = new RegisterViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Name = "Andrii",
+                SurName = "Shainoha",
+                Password = "testpassword123",
+                ConfirmPassword = "testpassword123"
+            };
+            var result = accountController.Register(registerViewModel);
+            Assert.Equal(result, registerViewModel.Email);
+        }*/
 
-            //Assert.True(accountController != null);
+        [Fact]
+        public async Task TestRegisterViewNameEqualRegister()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            
+            var registerViewModel = new RegisterViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Name = "Andrii",
+                SurName = "Shainoha",
+                Password = "testpassword123",
+                ConfirmPassword = "testpassword123"
+            };
+            accountController.ModelState.AddModelError("", "Required");
+            var result = await accountController.Register(registerViewModel);
+            ViewResult viewType = Assert.IsType<Task<IActionResult>>(result);
+
+            var t = viewType.Result.ToString();
+            Assert.Equal("Register", viewType);
+            
         }
+
     }
 }
