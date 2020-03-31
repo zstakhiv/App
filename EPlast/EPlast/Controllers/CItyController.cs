@@ -9,8 +9,14 @@ namespace EPlast.Controllers
 {
     public class CItyController : Controller
     {
+        private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
         public IActionResult Index()
         {
+            List<CityViewModel> cities = new List<CityViewModel>(
+                _repoWrapper.City
+                .FindAll()
+                .Select(city => new CityViewModel { City = city })
+                .ToList());
             return View();
         }
 
