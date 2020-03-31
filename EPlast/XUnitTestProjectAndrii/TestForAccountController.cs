@@ -56,7 +56,7 @@ namespace EPlast.XUnitTest
             Assert.Equal(result, registerViewModel.Email);
         }*/
 
-        [Fact]
+        /*[Fact]
         public async Task TestRegisterMethodViewNameEqualRegisterPost()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -71,8 +71,9 @@ namespace EPlast.XUnitTest
             };
             accountController.ModelState.AddModelError("", "Required");
             var result = await accountController.Register(registerViewModel);
-            var redirectToActionResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Register", redirectToActionResult.ViewName);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
         [Fact]
@@ -82,6 +83,28 @@ namespace EPlast.XUnitTest
             var result = accountController.Register();
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }*/
+
+        //return View("AcceptingEmail");
+
+        [Fact]
+        public async Task TestAcceptingEmailInRegisterMethod()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var registerViewModel = new RegisterViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Name = "Andrii",
+                SurName = "Shainoha",
+                Password = "testpassword123",
+                ConfirmPassword = "testpassword123"
+            };
+
+            var result = await accountController.Register(registerViewModel);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("AcceptingEmail", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
     }
 }
