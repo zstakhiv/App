@@ -19,7 +19,7 @@ namespace EPlast.DataAccess.Repositories
         IEventCategoryRepository EventCategory { get; }
         IEventGallaryRepository EventGallary { get; }
         IEventAdminRepository EventAdmin { get; }
-        ISubEventCategoryRepository SubEventCategory { get; }
+        IEventTypeRepository EventType { get; }
         IEventStatusRepository EventStatus { get; }
 
         IEducationRepository Education { get; }
