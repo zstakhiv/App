@@ -72,40 +72,15 @@
         }
     }
 
-    #ModalAddAnnualReport {
-        #CityFilter {
-            box-sizing: border-box;
-            font-size: 16px;
-            padding: 7px 27px;
-            border: none;
-            border: 1px solid #3C5438;
-            margin-top: 10px;
-            margin-bottom: 5px;
-        }
+    .page-item.disabled .page-link {
+        background-color: #3c5438;
+        color: #ffffff;
+    }
 
-        .search-content {
-            background-color: #f6f6f6;
-            min-width: 230px;
-            max-width: 230px;
-            min-height: 230px;
-            max-height: 230px;
-            overflow: auto;
-            border: 1px solid #3C5438;
-            z-index: 1;
-            text-align: left;
-            display: inline-block;
-
-            a {
-                color: black;
-                padding: 6px 16px;
-                text-decoration: none;
-                display: block;
-            }
-
-            a:hover {
-                background-color: #ddd;
-            }
-        }
+    .page-item.active .page-link {
+        color: #000;
+        background-color: #ffffff;
+        border-color: none;
     }
 }
 

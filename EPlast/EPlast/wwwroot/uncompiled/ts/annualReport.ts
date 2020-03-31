@@ -96,6 +96,14 @@
             }
         });
     })
+
+    $('#CreateAnnualReport').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var cityId = $('#CitiesList option').filter(':selected').val();
+        var strURL = '/Documentation/CreateAnnualReportAsAdmin?cityId=' + cityId;
+        window.open(strURL, '_self')
+    })
 });
 
 $('#annual-report-form').ready(function () {
@@ -109,20 +117,6 @@ $('#annual-report-form').ready(function () {
             $('#CreateAnnualReport').prop('disabled', true);
         }
     }
-
-    $('#CityFilter').keyup(function () {
-        var i;
-        var filter = $('#CityFilter').val().toString().toUpperCase();
-        var a = $('#ModalAddAnnualReport a');
-        for (i = 0; i < a.length; i++) {
-            var txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
-            } else {
-                a[i].style.display = "none";
-            }
-        }
-    })
 })
 
 function setDisabled(elements: JQuery<HTMLElement>[], disabled: boolean) {
