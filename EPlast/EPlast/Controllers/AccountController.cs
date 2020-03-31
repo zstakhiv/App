@@ -250,7 +250,16 @@ namespace EPlast.Controllers
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
                 FirstOrDefault();
-            var model = new UserViewModel { User = user };
+            var userPositions = _repoWrapper.CityAdministration
+                .FindByCondition(ca => ca.UserId == userId)
+                    .Include(ca => ca.AdminType)
+                    .Include(ca => ca.City);
+            var model = new UserViewModel
+            { 
+                User = user,
+                CanManageUserPosition = _userManager.IsInRoleAsync(user, "Admin").Result,
+                UserPositions = userPositions
+            };
             if (model != null)
             {
                 return View(model);
@@ -615,6 +624,46 @@ namespace EPlast.Controllers
                 return View("ChangePasswordConfirmation");
             }
             return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public bool DeletePosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                    .First();
+                _repoWrapper.CityAdministration.Delete(cityAdministration);
+                _repoWrapper.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<bool> EndPosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.User)
+                    .First();
+                cityAdministration.EndDate = DateTime.Today;
+                _repoWrapper.CityAdministration.Update(cityAdministration);
+                _repoWrapper.Save();
+                await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
