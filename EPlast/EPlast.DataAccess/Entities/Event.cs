@@ -18,8 +18,12 @@ namespace EPlast.DataAccess.Entities
         [Required]
         public string Eventlocation { get; set; }
         [Required]
+        public int EventTypeID { get; set; }
+        [Required]
         public int EventCategoryID { get; set; }
+        [Required]
         public int EventStatusID { get; set; }
+        public EventType EventType { get; set; }
         public EventCategory EventCategory { get; set; }
         public EventStatus EventStatus { get; set; }
         public ICollection<Participant> Participants { get; set; }
