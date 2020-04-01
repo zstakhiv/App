@@ -8,7 +8,7 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
         [Required]
-        public string UserEventStatusName { get; set; }
+        public string ParticipantStatusName { get; set; }
         public ICollection<Participant> Participants { get; set; }
 
     }

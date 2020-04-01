@@ -19,7 +19,7 @@ namespace EPlast.DataAccess.Repositories
         private IParticipantRepository _participant;
         private IEventCategoryRepository _eventCategory;
         private IEventAdminRepository _eventAdmin;
-        private ISubEventCategoryRepository _subEventCategory;
+        private IEventTypeRepository _eventType;
         private IEventStatusRepository _eventStatus;
         private IReligionRepository _religion;
         private IGenderRepository _gender;
@@ -45,6 +45,7 @@ namespace EPlast.DataAccess.Repositories
         private ICityLegalStatusesRepository _cityLegalStatuses;
         private IUserPlastDegreesRepository _userPlastDegrees;
         private ICityManagementsRepository _cityManagements;
+        private IEventAdministrationRepository _eventAdministration;
 
         public IDecesionRepository Decesion
         {
@@ -145,6 +146,20 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
+        public IEventAdministrationRepository EventAdministration
+        {
+            get
+            {
+
+                if (_eventAdministration == null)
+                {
+                    _eventAdministration = new EventAdministrationRepository(_dbContext);
+
+                }
+                return _eventAdministration;
+            }
+        }
+
         public IGallaryRepository Gallary
         {
             get
@@ -208,16 +223,16 @@ namespace EPlast.DataAccess.Repositories
             }
         }
 
-        public ISubEventCategoryRepository SubEventCategory
+        public IEventTypeRepository EventType
         {
             get
             {
-                if (_subEventCategory == null)
+                if (_eventType == null)
                 {
-                    _subEventCategory = new SubEventCategoryRepository(_dbContext);
+                    _eventType = new EventTypeRepository(_dbContext);
                 }
 
-                return _subEventCategory;
+                return _eventType;
             }
         }
 

@@ -1,0 +1,74 @@
+﻿@model EPlast.ViewModels.ViewAnnualReportsViewModel
+@using EPlast.BussinessLayer.ExtensionMethods
+@{
+    ViewData["Title"] = "Річні звіти";
+}
+
+<div class="view-annual-reports-form m-3">
+    <form data-ajax="true" data-ajax-mode="replace">
+        <h1>Річні звіти станиць</h1>
+        <div class="form-group m-4">
+            <div class="d-flex justify-content-center buttons-wrapper">
+                <button id="addAnnualReport" class="btn btn-sm btn-primary btn-management">Додати</button>
+                <button id="reviewAnnualReport" class="btn btn-sm btn-info btn-management" disabled>Переглянути</button>
+                <button id="confirmAnnualReport" class="btn btn-sm btn-success btn-management" disabled>Підтвердити</button>
+                <button id="cancelAnnualReport" class="btn btn-sm btn-danger btn-management" disabled>Скасувати</button>
+            </div>
+            <div>
+                <table id="AnnualReportsTable" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Станиця</th>
+                            <th>Регіон</th>
+                            <th>Подавач</th>
+                            <th>Дата подання</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var annualReport in Model.AnnualReports)
+                        {
+                            <tr>
+                                <td>@annualReport.ID</td>
+                                <td>@annualReport.City.Name</td>
+                                <td>@annualReport.City.Region.RegionName</td>
+                                <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
+                                <td>@annualReport.Date.ToShortDateString()</td>
+                                <td>@annualReport.Status.GetDescription()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="ModalContent">
+            
+        </div>
+        <div class="modal modal-success" id="ModalAddAnnualReport">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="m-2">
+                            <h5 class="m-2">Оберіть станицю для створення річного звіту</h5>
+                        </div>
+                        <div class="m-2">
+                            <select id="CitiesList" asp-items="Model.Cities" class="form-control m-2"></select>
+                        </div>
+                        <div class="text-center m-2">
+                            <button id="CreateAnnualReport" type="button" class="btn btn-success btn-management m-2">Створити звіт</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Закрити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_SuccessModal" model='""' />
+        <partial name="_ErrorModal" model='""' />
+    </form>
+</div>

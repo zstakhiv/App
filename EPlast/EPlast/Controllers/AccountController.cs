@@ -85,9 +85,18 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult ChangePassword()
+        public async Task<IActionResult> ChangePassword()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                return RedirectToAction("UserProfile", "Account");
+            }
         }
 
         [HttpPost]
@@ -114,12 +123,12 @@ namespace EPlast.Controllers
                     UserName = registerVM.Email,
                     LastName = registerVM.SurName,
                     FirstName = registerVM.Name,
+                    RegistredOn=DateTime.Now,
                     ImagePath = "default.png",
                     UserProfile = new UserProfile()
                 };
 
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
-                await _userManager.AddToRoleAsync(user, "Користувач");
 
                 if (!result.Succeeded)
                 {
@@ -128,6 +137,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
+                    await _userManager.AddToRoleAsync(user, "Прихильник");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var confirmationLink = Url.Action(
                         nameof(ConfirmingEmail),
@@ -136,7 +146,7 @@ namespace EPlast.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ");
+                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
                     return View("AcceptingEmail");
                 }
@@ -160,8 +170,6 @@ namespace EPlast.Controllers
 
             if (result.Succeeded)
             {
-                //Цей код повинен знаходитись тут(замість 99 рядка) при релізі проекту
-                //await _userManager.AddToRoleAsync(user, "Користувач");
                 return RedirectToAction("ConfirmedEmail", "Account");
             }
             else
@@ -208,7 +216,7 @@ namespace EPlast.Controllers
                     return View(loginVM);
                 }
             }
-            return View("Login");
+            return View("Login",loginVM);
         }
 
         [HttpPost]
@@ -219,12 +227,17 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
+        
 
-        [HttpGet]
-        public IActionResult UserProfile()
+        public IActionResult UserProfile(string userId)
         {
+            if(string.IsNullOrEmpty(userId))
+            {
+                userId = _userManager.GetUserId(User);
+                _logger.Log(LogLevel.Information, "UserId is not null");
+            }
             var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).
+            FindByCondition(q => q.Id == userId).
                 Include(i => i.UserProfile).
                     ThenInclude(x => x.Nationality).
                 Include(g => g.UserProfile).
@@ -237,11 +250,21 @@ namespace EPlast.Controllers
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
                 FirstOrDefault();
-            var model = new UserViewModel { User = user };
+            var userPositions = _repoWrapper.CityAdministration
+                .FindByCondition(ca => ca.UserId == userId)
+                    .Include(ca => ca.AdminType)
+                    .Include(ca => ca.City);
+            var model = new UserViewModel
+            { 
+                User = user,
+                CanManageUserPosition = _userManager.IsInRoleAsync(user, "Admin").Result,
+                UserPositions = userPositions
+            };
             if (model != null)
             {
                 return View(model);
             }
+            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
@@ -259,6 +282,11 @@ namespace EPlast.Controllers
 
             try
             {
+                if(!string.Equals(id, _userManager.GetUserId(User)))
+                {
+                    _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
@@ -396,8 +424,8 @@ namespace EPlast.Controllers
                     }
                 }
 
-                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.User.Update(model.User);
+                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();
                 _logger.LogInformation("User {0} {1} was edited profile and saved in the database", model.User.FirstName, model.User.LastName);
                 return RedirectToAction("UserProfile");
@@ -437,7 +465,7 @@ namespace EPlast.Controllers
                     new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                     protocol: HttpContext.Request.Scheme);
                 await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
-                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>");
+                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                 return View("ForgotPasswordConfirmation");
             }
             return View("ForgotPassword");
@@ -457,7 +485,7 @@ namespace EPlast.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(resetpasswordVM);
+                return View("ResetPassword");
             }
             var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
             if (user == null)
@@ -481,8 +509,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [HttpPost]
         [AllowAnonymous]
+        [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
@@ -522,29 +550,51 @@ namespace EPlast.Controllers
             else
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (email != null)
+                if (info.LoginProvider.ToString() == "Google")
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
-
-                    if (user == null)
+                    if (email != null)
+                    {
+                        var user = await _userManager.FindByEmailAsync(email);
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile()
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                else if(info.LoginProvider.ToString() == "Facebook")
+                {   
+                    var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var identifierForSearching = email ?? nameIdentifier;
+                    var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
+                    if(user == null)
                     {
                         user = new User
                         {
-                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            UserName = (email ?? nameIdentifier),
+                            FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                            Email = (email ?? "facebookdefaultmail@gmail.com"),
+                            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                             ImagePath = "default.png",
                             UserProfile = new UserProfile()
                         };
                         await _userManager.CreateAsync(user);
                     }
-                    await _userManager.AddLoginAsync(user, info);
+                    await _userManager.AddLoginAsync(user,info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
-
                     return LocalRedirect(returnUrl);
                 }
-                ViewBag.ErrorTitle = $"Email claim not received from : {info.LoginProvider}";
-                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
-
                 return View("Error");
             }
         }
@@ -574,6 +624,46 @@ namespace EPlast.Controllers
                 return View("ChangePasswordConfirmation");
             }
             return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public bool DeletePosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                    .First();
+                _repoWrapper.CityAdministration.Delete(cityAdministration);
+                _repoWrapper.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<bool> EndPosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.User)
+                    .First();
+                cityAdministration.EndDate = DateTime.Today;
+                _repoWrapper.CityAdministration.Update(cityAdministration);
+                _repoWrapper.Save();
+                await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

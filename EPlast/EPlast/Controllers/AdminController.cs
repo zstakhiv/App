@@ -5,6 +5,9 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,18 +15,19 @@ using System.Threading.Tasks;
 namespace EPlast.Controllers
 {
     [Route("[controller]/[action]")]
-    [Authorize("Admin")]
     public class AdminController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<User> _userManager;
+        private readonly ILogger _logger;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper, ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _repoWrapper = repoWrapper;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -55,39 +59,34 @@ namespace EPlast.Controllers
                                               .Select(x => x.City.Name)
                                               .LastOrDefault() ?? string.Empty;
 
-                    #region Delete when all users will have UserPlastDegrees automatically
-
-                    if (user.UserPlastDegrees.Count == 0 || cityName.Equals(string.Empty))
-                        continue;
-
-                    #endregion Delete when all users will have UserPlastDegrees automatically
-
                     userTableViewModels.Add(new UserTableViewModel
                     {
                         User = user,
                         ClubName = clubMembers.Where(x => x.UserId.Equals(user.Id) && x.IsApproved == true)
                                               .Select(x => x.Club.ClubName).LastOrDefault() ?? string.Empty,
                         CityName = cityName,
-                        RegionName = cities.Where(x => x.Name.Equals(cityName))
+                        RegionName = !cityName.Equals(string.Empty) ? cities.Where(x => x.Name.Equals(cityName))
                                            .FirstOrDefault()
                                            .Region
-                                           .RegionName ?? string.Empty,
-                        UserPlastDegreeName = user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
+                                           .RegionName : string.Empty,
+                        UserPlastDegreeName = user.UserPlastDegrees.Count != 0 ? user.UserPlastDegrees.Where(x => x.UserId == user.Id && x.DateFinish == null)
                                                                    .FirstOrDefault()
                                                                    .UserPlastDegreeType
-                                                                   .GetDescription() ?? string.Empty,
+                                                                   .GetDescription() : string.Empty,
                         UserRoles = string.Join(", ", roles)
                     });
                 }
 
                 return View(userTableViewModels);
             }
-            catch
+            catch (Exception e)
             {
+                _logger.Log(LogLevel.Error, $"Exception: {e.Message}");
                 return RedirectToAction("HandleError", "Error");
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string userId)
         {
             User user = await _userManager.FindByIdAsync(userId);
@@ -95,7 +94,7 @@ namespace EPlast.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var admin = _roleManager.Roles.Where(i => i.Name == "Admin");
-                var allRoles = _roleManager.Roles.Except(admin).ToList();
+                var allRoles = _roleManager.Roles.Except(admin).OrderBy(i => i.Name).ToList();
                 RoleViewModel model = new RoleViewModel
                 {
                     UserID = user.Id,
@@ -105,10 +104,11 @@ namespace EPlast.Controllers
                 };
                 return PartialView(model);
             }
-
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
@@ -120,14 +120,15 @@ namespace EPlast.Controllers
                 var removedRoles = userRoles.Except(roles);
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
+                _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
                 return RedirectToAction("Index");
             }
-
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string userId)
         {
@@ -135,6 +136,7 @@ namespace EPlast.Controllers
             return PartialView();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string userId)
         {
             if (userId != null)
@@ -145,10 +147,29 @@ namespace EPlast.Controllers
                 {
                     _repoWrapper.User.Delete(user);
                     _repoWrapper.Save();
+                    _logger.LogInformation("Successful delete user {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
                     return RedirectToAction("Index");
                 }
+                _logger.LogError("Cannot find user or admin cannot be deleted. ID:{0}", userId);
             }
+            _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        [HttpGet]
+        public IActionResult RegionsAdmins()
+        {
+            var cities = _repoWrapper.City.FindAll();
+            var model = new RegionsAdmins();
+            model.Cities = cities;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetAdmins(int cityId)
+        {
+            var res = _repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i => i.User).Include(i => i.AdminType);
+            return PartialView(res);
         }
     }
 }

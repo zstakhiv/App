@@ -19,7 +19,7 @@ namespace EPlast.DataAccess.Repositories
         IEventCategoryRepository EventCategory { get; }
         IEventGallaryRepository EventGallary { get; }
         IEventAdminRepository EventAdmin { get; }
-        ISubEventCategoryRepository SubEventCategory { get; }
+        IEventTypeRepository EventType { get; }
         IEventStatusRepository EventStatus { get; }
 
         IEducationRepository Education { get; }
@@ -41,13 +41,12 @@ namespace EPlast.DataAccess.Repositories
         IClubAdministrationRepository GetClubAdministration { get; }
         IRegionRepository Region { get; }
         IRegionAdministrationRepository RegionAdministration { get; }
-
         IAnnualReportsRepository AnnualReports { get; }
         IMembersStatisticsRepository MembersStatistics { get; }
         ICityLegalStatusesRepository CityLegalStatuses { get; }
         IUserPlastDegreesRepository UserPlastDegrees { get; }
         ICityManagementsRepository CityManagements { get; }
-
+        IEventAdministrationRepository EventAdministration { get; }
         void Save();
     }
 }

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
+using EPlast.BussinessLayer.Settings;
 
 namespace EPlast
 {
@@ -32,9 +33,9 @@ namespace EPlast
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddDbContextPool<EPlastDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EPlastDBConnection")));
-
             services.AddIdentity<User, IdentityRole>()
                     .AddEntityFrameworkStores<EPlastDBContext>()
                     .AddDefaultTokenProviders();
@@ -66,7 +67,11 @@ namespace EPlast
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
+            services.AddScoped<IViewAnnualReportsVMInitializer, ViewAnnualReportsVMInitializer>();
+            services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
+
+            services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
@@ -83,13 +88,13 @@ namespace EPlast
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "484153862512-aru7mov0pns1oa46bmhi7kb6vs5734l4.apps.googleusercontent.com";
-                    options.ClientSecret = "shyAU1L-x4G64AZzD1mMhTDB";
+                    options.ClientId = Configuration.GetSection("GoogleAuthentication:GoogleClientId").Value;
+                    options.ClientSecret = Configuration.GetSection("GoogleAuthentication:GoogleClientSecret").Value;
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = "841088023074581";
-                    options.AppSecret = "f030e810406f6052f6770c66a25c82d3";
+                    options.AppId = Configuration.GetSection("FacebookAuthentication:FacebookAppId").Value;
+                    options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
             services.ConfigureApplicationCookie(options =>
@@ -105,7 +110,8 @@ namespace EPlast
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var roles = new[] { "Admin", "Користувач", "Учасник Пласту" };
+            var roles = new[] { "Admin", "Прихильник", "Пластун", "Голова Пласту","Адміністратор подій", "Голова Куреня","Діловод Куреня",
+            "Голова Округу","Діловод Округу","Голова Станиці","Діловод станиці"};
             foreach (var role in roles)
             {
                 if (!(await roleManager.RoleExistsAsync(role)))
@@ -114,6 +120,7 @@ namespace EPlast
                     {
                         Name = role
                     };
+
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
@@ -134,7 +141,7 @@ namespace EPlast
                 if (res.Succeeded)
                     await userManager.AddToRoleAsync(profile, "Admin");
             }
-            else
+            else if (!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
             {
                 var user = userManager.Users.First(item => item.Email == profile.Email);
                 await userManager.AddToRoleAsync(user, "Admin");

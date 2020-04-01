@@ -7,6 +7,7 @@ namespace EPlast.DataAccess.Entities
     {
         public int ID { get; set; }
         [Display(Name="Номер телефону")]
+        [DataType(DataType.PhoneNumber)]
         [StringLength(10, MinimumLength = 6, ErrorMessage = "Номер телефону повинен складати від 6 до 10 цифр")]
         public string PhoneNumber { get; set; }
         [DataType(DataType.Date)]

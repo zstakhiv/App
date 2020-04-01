@@ -94,7 +94,7 @@
 
             <div class="main-block">
                 <div class="sidebar">
-                    <div class="back-pic">
+                    <div class="back-pic" onclick='onMenuHover(0)'>
                         <div class="back-pic-inner">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
@@ -110,8 +110,7 @@
                     </div>
 
                     <ul class="sidebar-ul">
-                        <li class="sidebar-li"><a><div class="sidebar-logo profile-icon" onclick='onMenuHover(0)'></div></a></li>
-                        <li class="sidebar-li"><a href="/Report/ReadRaport"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
+                        <li class="sidebar-li"><a href="/Documentation/ReadDecesion"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>
                         <li class="sidebar-li"><a><div class="sidebar-logo cabinet-icon" onclick='onMenuHover(4)'></div></a></li>
@@ -212,6 +211,14 @@
     }
 
     @*<environment include="Development">*@
+
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Separated link</a>
+    </div>
 
     <script src="~/lib/mdbootstrap/js/jquery.min.js"></script>
     <script src="~/lib/mdbootstrap/js/bootstrap.min.js"></script>

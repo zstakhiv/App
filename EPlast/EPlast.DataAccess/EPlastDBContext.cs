@@ -28,8 +28,9 @@ namespace EPlast.DataAccess
         public DbSet<ParticipantStatus> ParticipantStatuses { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<EventCategory> EventCategories { get; set; }
-        public DbSet<SubEventCategory> SubEventCategories { get; set; }
+        public DbSet<EventType> EventTypes { get; set; }
         public DbSet<EventStatus> EventStatuses { get; set; }
+        public DbSet<EventAdministration> EventAdministration { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,13 +71,53 @@ namespace EPlast.DataAccess
                 .WithOne(x => x.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<CityMembers>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.CityMembers)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.CityMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                .HasMany(x => x.ClubMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.UserPlastDegrees)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.RegionAdministrations)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.UnconfirmedCityMembers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.CityAdministrations)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.Participants)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.Events)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.ConfirmedUsers)
+               .WithOne(x => x.User)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+               .HasMany(x => x.Approvers)
                .WithOne(x => x.User)
                .OnDelete(DeleteBehavior.Cascade);
         }
