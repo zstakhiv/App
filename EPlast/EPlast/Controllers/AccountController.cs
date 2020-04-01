@@ -424,8 +424,8 @@ namespace EPlast.Controllers
                     }
                 }
 
-                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.User.Update(model.User);
+                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();
                 _logger.LogInformation("User {0} {1} was edited profile and saved in the database", model.User.FirstName, model.User.LastName);
                 return RedirectToAction("UserProfile");
