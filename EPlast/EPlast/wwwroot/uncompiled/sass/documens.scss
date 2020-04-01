@@ -97,6 +97,10 @@
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 
     table.dataTable thead {
+        .th-sm {
+            vertical-align: middle;
+        }
+
         .sorting {
             &:after, &:before {
                 bottom: .5em;
@@ -124,6 +128,16 @@
         .sorting_desc_disabled {
             &:after, &:before {
                 bottom: .5em;
+            }
+        }
+    }
+
+    table.dataTable tbody {
+        tr.context-menu-one {
+            td {
+                a {
+                    color: #212529;
+                }
             }
         }
     }

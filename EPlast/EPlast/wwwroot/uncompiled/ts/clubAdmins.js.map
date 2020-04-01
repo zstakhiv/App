@@ -1,1 +1,1 @@
-{"version":3,"file":"raport - Copy.js","sourceRoot":"","sources":["raport - Copy.ts"],"names":[],"mappings":"AAAA,CAAC,CAAC,QAAQ,CAAC,CAAC,KAAK,CAAC;IAEd,CAAC,CAAC,eAAe,CAAC,CAAC,SAAS,CAAC;QACzB,UAAU,EAAE;YACR,KAAK,EAAE,iEAAiE;SAC3E;KACJ,CAAC,CAAC;AACP,CAAC,CAAC,CAAC"}
+{"version":3,"file":"clubAdmins.js","sourceRoot":"","sources":["clubAdmins.ts"],"names":[],"mappings":"AAAA,CAAC,CAAC,QAAQ,CAAC,CAAC,KAAK,CAAC;IAEd,CAAC,CAAC,eAAe,CAAC,CAAC,SAAS,CAAC;QACzB,UAAU,EAAE;YACR,KAAK,EAAE,iEAAiE;SAC3E;KACJ,CAAC,CAAC;AACP,CAAC,CAAC,CAAC"}
