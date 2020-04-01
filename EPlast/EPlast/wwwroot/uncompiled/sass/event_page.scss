@@ -140,3 +140,18 @@ input.event-page-wrapper.btn-collapse:hover {
     font-size: 15px;
     width: 100px;
 }
+
+.event-page-wrapper {
+
+
+    .page-item.disabled .page-link {
+        background-color: #3c5438;
+        color: #ffffff;
+    }
+
+    .page-item.active .page-link {
+        color: #000;
+        background-color: #ffffff;
+        border-color: none;
+    }
+}

@@ -1,6 +1,10 @@
 ﻿$(document).ready(function () {
 
-    $('#dtParticipants').DataTable();
+    $('#dtParticipants').DataTable({
+        'language': {
+            'url': "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
+        }
+    });
     $('.dataTables_length').addClass('bs-select');
     $('img').on("error", function () {
         $(this).attr('src', "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg");
