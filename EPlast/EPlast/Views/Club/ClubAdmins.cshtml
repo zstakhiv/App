@@ -31,7 +31,7 @@
                         <td>@item.AdminType.AdminTypeName</td>
                         <td>
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ClubMembers.User.Id" style="color:black">
-                                @item.ClubMembers.User.LastName @item.ClubMembers.User.FirstName @item.ClubMembers.User.FatherName
+                                @item.ClubMembers.User.LastName @item.ClubMembers.User.FirstName @(item.ClubMembers.User.FatherName??"")
                                 </a>
                         </td>
                         <td>@item.StartDate.ToString("dd-MM-yyyy")</td>
