@@ -1,21 +1,15 @@
 ﻿using EPlast.BussinessLayer;
-using EPlast.BussinessLayer.Interfaces;
 using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace EPlast.XUnitTest
