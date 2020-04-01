@@ -132,6 +132,16 @@
         }
     }
 
+    table.dataTable tbody {
+        tr.context-menu-one {
+            td {
+                a {
+                    color: #212529;
+                }
+            }
+        }
+    }
+
     .page-item.disabled .page-link {
         background-color: #3c5438;
         color: #ffffff;
