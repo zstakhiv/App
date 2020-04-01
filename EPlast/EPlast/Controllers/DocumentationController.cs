@@ -1,5 +1,4 @@
 ﻿using EPlast.BussinessLayer;
-using EPlast.BussinessLayer.Interfaces;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
@@ -26,11 +25,12 @@ namespace EPlast.Controllers
         private readonly IPDFService _PDFService;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
+        private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
 
         private const string _decesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment)
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer)
 
         {
             _repoWrapper = repoWrapper;
@@ -39,6 +39,7 @@ namespace EPlast.Controllers
             _PDFService = PDFService;
             _decisionVMCreator = decisionVMCreator;
             _appEnvironment = appEnvironment;
+            _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
         }
 
         public IActionResult Index()
@@ -277,7 +278,8 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Голова Округу")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult CreateAnnualReportAsAdmin(int cityId)
         {
             try
@@ -306,13 +308,13 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Голова Станиці, Голова Округу")]
+        [Authorize(Roles = "Admin, Голова Станиці")]
         [HttpPost]
-        public IActionResult CreateAnnualReport(string userId, int cityId, AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(int cityId, AnnualReport annualReport)
         {
             try
             {
-                annualReport.UserId = userId;
+                annualReport.UserId = _userManager.GetUserId(User);
                 annualReport.CityId = cityId;
                 annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
@@ -357,7 +359,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Голова Округу")]
+        [Authorize(Roles = "Admin")]
         public IActionResult ViewAnnualReports()
         {
             try
@@ -368,12 +370,11 @@ namespace EPlast.Controllers
                         .ThenInclude(c => c.Region)
                     .Include(ar => ar.User)
                     .ToList();
-                var cities = _repoWrapper.City
-                    .FindAll();
+                var cities = _repoWrapper.City.FindAll();
                 var viewAnnualReportsViewModel = new ViewAnnualReportsViewModel
                 {
                     AnnualReports = annualReports,
-                    Cities = cities
+                    Cities = _viewAnnualReportsVMInitializer.GetCities(cities)
                 };
                 return View(viewAnnualReportsViewModel);
             }
@@ -383,7 +384,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Голова Округу")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAnnualReport(int id)
         {
             var annualReport = _repoWrapper.AnnualReports
@@ -396,7 +397,7 @@ namespace EPlast.Controllers
             return PartialView("_GetAnnualReport", annualReport);
         }
 
-        [Authorize(Roles = "Голова Округу")]
+        [Authorize(Roles = "Admin")]
         public async Task<string> ConfirmAnnualReport(int id)
         {
             bool whetherTheRoleShouldBeDeleted = false;
@@ -472,7 +473,7 @@ namespace EPlast.Controllers
             return $"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік підтверджено!";
         }
 
-        [Authorize(Roles = "Голова Округу")]
+        [Authorize(Roles = "Admin")]
         public string CancelAnnualReport(int id)
         {
             var annualReport = _repoWrapper.AnnualReports

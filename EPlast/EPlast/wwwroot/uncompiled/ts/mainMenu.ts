@@ -1,7 +1,7 @@
 let profileListing = [
     ['<a class="text-light" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
-        'Діловодства',
+        '<a class="text-light" href="/Account/UserProfile">Діловодства</a>',
         '<a class="text-light" href="/EventUser/Eventuser">Вишколи</a>',
         'З`їзд',
         'Бланки'],
