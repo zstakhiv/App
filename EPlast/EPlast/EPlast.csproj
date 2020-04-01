@@ -24,10 +24,12 @@
     <Content Remove="wwwroot\uncompiled\ts\clubAdmins.ts" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
+    <Content Remove="wwwroot\uncompiled\ts\UserProfile.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.5.1" />
+    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />

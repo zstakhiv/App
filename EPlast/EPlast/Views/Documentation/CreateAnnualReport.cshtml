@@ -4,11 +4,7 @@
 }
 
 <div class="annual-report-form m-5 shadow-lg">
-    <form asp-action="CreateAnnualReport" asp-controller="Documentation" asp-all-route-data='new Dictionary<string, string>
-                           {
-                               { "userId", Model?.AnnualReport.UserId },
-                               { "cityId", Model?.AnnualReport.CityId.ToString() }
-                           }'>
+    <form asp-action="CreateAnnualReport" asp-controller="Documentation" asp-route-cityId="@Model?.AnnualReport.CityId" method="post">
         <h1 class="text-center">Річний звіт станиці @Model?.CityName</h1>
         <div class="form-group">
             <div class="form-row">
@@ -223,7 +219,7 @@
             </div>
         </div>
         <div class="form-group text-center p-3">
-            <button id="CreateAnnualReport" class="btn btn-lg btn-success">Створити</button>
+            <button class="btn btn-lg btn-success">Створити</button>
         </div>
         <partial name="_SuccessModal" model="@ViewData["Message"]" />
         <partial name="_ErrorModal" model="@ViewData["ErrorMessage"]" />
