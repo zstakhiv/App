@@ -20,8 +20,7 @@
                                 <p style="font-size: 18px;">@Model.City.CityURL<br /></p>
                                 <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Станичний</p>
                                 <div>
-                                    <p style="margin: 0px;font-size: 18px;">Юрій Чорновіл<br />2016 - <br /></p>
-                                    <p style="font-size: 18px;">Марія Шевчук<br />2014 - 2016<br /></p>
+                                    <p style="margin: 0px;font-size: 18px;">@Model.CityHead.User.FirstName @Model.CityHead.User.LastName<br />@Model.CityHead.StartDate.Year</p>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +68,7 @@
                                 var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
                                 <div class="mx-auto" style="width: 85px;">
                                     <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName @fullName</p>
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br/> @fullName</p>
                                 </div>
                             }
 
@@ -80,7 +79,7 @@
                                 var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
                                 <div class="mx-auto" style="width: 85px;">
                                     <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName @fullName</p>
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br /> @fullName</p>
                                 </div>
                             }
 

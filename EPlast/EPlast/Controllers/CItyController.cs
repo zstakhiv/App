@@ -61,7 +61,6 @@ namespace EPlast.Controllers
 
                 var cityHead = city.CityAdministration
                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
-                    .Select(a => a.User)
                     .FirstOrDefault();
 
                 var cityDoc = city.CityDocuments.Take(4).ToList();
