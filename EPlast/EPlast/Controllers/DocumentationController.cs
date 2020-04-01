@@ -72,7 +72,8 @@ namespace EPlast.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                
+                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID!=0)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return View("CreateDecesion");
@@ -142,7 +143,7 @@ namespace EPlast.Controllers
                 foreach (var decesion in decesions)
                 {
                     string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesion.Decesion.ID;
-                    if (decesion.Decesion.HaveFile || !Directory.Exists(path))
+                    if (!decesion.Decesion.HaveFile || !Directory.Exists(path))
                     {
                         continue;
                     }
@@ -171,13 +172,13 @@ namespace EPlast.Controllers
                 if (string.IsNullOrEmpty(filename) || string.IsNullOrEmpty(id))
                     return Content("filename or id not present");
 
-                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
+                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id);
 
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(path) || Directory.GetFiles(path).Length==0)
                 {
                     throw new ArgumentException($"directory '{path}' is not exist");
                 }
-
+                path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(path, FileMode.Open))
                 {
@@ -278,6 +279,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult CreateAnnualReportAsAdmin(int cityId)
         {
             try
@@ -306,13 +308,13 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Голова Округу")]
+        [Authorize(Roles = "Admin, Голова Станиці")]
         [HttpPost]
-        public IActionResult CreateAnnualReport(string userId, int cityId, AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(int cityId, AnnualReport annualReport)
         {
             try
             {
-                annualReport.UserId = userId;
+                annualReport.UserId = _userManager.GetUserId(User);
                 annualReport.CityId = cityId;
                 annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
