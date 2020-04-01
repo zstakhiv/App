@@ -18,4 +18,4 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./EPlast/EPlast.sln --configuration Release
     - name: Test with dotnet
-      run: dotnet test ./EPlast/EPlast.sln --configuration Releas
+      run: dotnet test ./EPlast/EPlast.sln --configuration Release
