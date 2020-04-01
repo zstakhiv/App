@@ -27,23 +27,23 @@
                 </div>
             </div>
             <div>
-                @if (Model.Approvers.Count() != 0)
+                @if (Model.User.ConfirmedUsers.Count() != 0)
                 {
-                    @foreach (var item in Model.Approvers.ToList())
+                    @foreach (var item in Model.User.ConfirmedUsers.ToList())
                     {
                         <div class="row">
                             <div class="col">
-                                <img src="/images/Users/@item.User.ImagePath" class="img-thumbnail" alt="">
+                                <img src="/images/Users/@item.Approver.User.ImagePath" class="img-thumbnail" alt="">
                             </div>
                             <div class="col">
-                                <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ID">@item.User.FirstName @item.User.LastName</a>
+                                <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.Approver.User.Id">@item.Approver.User.FirstName @item.Approver.User.LastName</a>
                             </div>
                         </div>
                     }
 
 
                 }
-                @if (Model.Approvers.Count() < 3)
+                @if (Model.User.ConfirmedUsers.Count() < 3)
                 {
                     <form class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5" style="background-color:white" asp-route-userId="@Model.User.Id" asp-action="ApproveUser" enctype="multipart/form-data">
 

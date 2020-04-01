@@ -250,12 +250,12 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
-                Include(g=>g.ConfirmedUsers).
-                Include(g=>g.Approvers).
                 FirstOrDefault();
-            var app = _repoWrapper.ConfirmedUser.FindByCondition(x => x.UserID == userId).Select(q => q.Approver).Include(x => x.User).ToList();
             
-            var model = new UserViewModel { User = user,Approvers=app };
+            var t = _repoWrapper.ConfirmedUser.FindByCondition(x => x.UserID == userId).Include(x => x.Approver).ThenInclude(x => x.User).ToList();
+
+            user.ConfirmedUsers = t;
+            var model = new UserViewModel { User = user };
             if (model != null)
             {
                 return View(model);
@@ -269,35 +269,14 @@ namespace EPlast.Controllers
         {
             if (userId != null)
             {
-                var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
                 var id = _userManager.GetUserId(User);
-                var userApprover = _repoWrapper.User.FindByCondition(x => x.Id == id).FirstOrDefault();
-                var appUs = new Approver { User = userApprover };
-                var conUs = new ConfirmedUser { Approver = appUs, UserID = user.Id};
-                
-                if (user.Approvers == null)
-                {
-                    user.Approvers = new List<Approver> { appUs };
-                }
-                else
-                {
-                    //_repoWrapper.Approver.Create(appUs);
-                    //user.Approvers.Add(appUs);jo;
-                }
-                if (user.ConfirmedUsers==null)
-                {
-                    user.ConfirmedUsers = new List<ConfirmedUser> { conUs };
-                }
-                else
-                {
-                    _repoWrapper.ConfirmedUser.Create(conUs);
-                    user.ConfirmedUsers.Add(conUs);
-                }
-                //_repoWrapper.Approver.Update(appUs);
-                //_repoWrapper.ConfirmedUser.Update(conUs);
-                _repoWrapper.User.Update(user);
+
+                var conUs = new ConfirmedUser {UserID=userId };
+                var appUs = new Approver { UserID = id, ConfirmedUser=conUs };
+                conUs.Approver = appUs;
+
+                _repoWrapper.ConfirmedUser.Create(conUs);
                 _repoWrapper.Save();
-                //return View();
                 return RedirectToAction("UserProfile", "Account", new { userId = userId });
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
