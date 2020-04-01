@@ -28,16 +28,16 @@
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label" id="type">Катергорія</label></div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        @Html.TextBoxFor(x => x.Event.EventCategory.SubEventCategories.SubEventCategoryName,
-                        new { @list = "SubEventType-value", @id = "autocomplete_input", @class = "form-control border", @style = "width: 370px;background-color: #eee;", @Value = "" })
-                        <datalist id="SubEventType-value">
-                            @foreach (SubEventCategory item in Model.SubEventCategories)
+                        @Html.TextBoxFor(x => x.Event.EventCategory.EventCategoryName,
+                        new { @list = "EventCategory-value", @id = "autocomplete_input", @class = "form-control border", @style = "width: 370px;background-color: #eee;", @Value = "" })
+                        <datalist id="Eventcategory-value">
+                            @foreach (EventCategory item in Model.EventCategory)
                             {
-                                <option data-value="@item.ID" value="@item.SubEventCategoryName"></option>
+                                <option data-value="@item.ID" value="@item.EventCategoryName"></option>
                             }
                         </datalist>
-                        @Html.HiddenFor(i => i.Event.EventCategory.SubEventCategories.ID, new { @id = "autocomplete_input_id_0" })
-                        <span asp-validation-for="Event.EventCategory.SubEventCategories.SubEventCategoryName" class="text-danger"></span>
+                        @Html.HiddenFor(i => i.Event.EventCategory.ID, new { @id = "autocomplete_input_id_0" })
+                        <span asp-validation-for="Event.EventCategory.EventCategoryName" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row border shadow">

@@ -63,8 +63,8 @@ namespace EPlast.Controllers
                 var model = new EventCreateViewModel()
                 {
                     Event = events,
+                    EventTypes = _repoWrapper.EventType.FindAll(),
                     EventCategory = _repoWrapper.EventCategory.FindAll(),
-                    SubEventCategories = _repoWrapper.SubEventCategory.FindAll(),
                 };
 
                 return View(model);
@@ -82,22 +82,23 @@ namespace EPlast.Controllers
             {
                 var events = _repoWrapper.Event.
                 Include(i => i.EventCategory).
+                Include(i=>i.EventType).
                 Include(g => g.EventAdmins).
                 Include(g => g.EventStatus).
                 Include(g => g.EventAdministrations).
                 FirstOrDefault();
 
-                if (model.Event.EventCategory.SubEventCategories.ID == 0)
+                if (model.Event.EventCategory.ID == 0)
                 {
-                    string subEventCategoryName = model.Event.EventCategory.SubEventCategories.SubEventCategoryName;
-                    if (string.IsNullOrEmpty(subEventCategoryName))
+                    string EventCategoryName = model.Event.EventCategory.EventCategoryName;
+                    if (string.IsNullOrEmpty(EventCategoryName))
                     {
-                        model.Event.EventCategory.SubEventCategories = null;
+                        model.Event.EventCategory = null;
                     }
                     else
                     {
-                        model.Event.EventCategory.SubEventCategories = new SubEventCategory()
-                        { SubEventCategoryName = subEventCategoryName };
+                        model.Event.EventCategory = new EventCategory()
+                        { EventCategoryName = EventCategoryName };
                     }
                 }
                 _repoWrapper.Event.Update(model.Event);

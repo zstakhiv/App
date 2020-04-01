@@ -307,26 +307,6 @@ namespace EPlast.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubEventCategories",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    SubEventCategoryName = table.Column<string>(nullable: false),
-                    EventCategoryID = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubEventCategories", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_SubEventCategories_EventCategories_EventCategoryID",
-                        column: x => x.EventCategoryID,
-                        principalTable: "EventCategories",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -1187,11 +1167,6 @@ namespace EPlast.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubEventCategories_EventCategoryID",
-                table: "SubEventCategories",
-                column: "EventCategoryID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UnconfirmedCityMember_CityID",
                 table: "UnconfirmedCityMember",
                 column: "CityID");
@@ -1279,9 +1254,6 @@ namespace EPlast.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "RegionAdministrations");
-
-            migrationBuilder.DropTable(
-                name: "SubEventCategories");
 
             migrationBuilder.DropTable(
                 name: "UnconfirmedCityMember");

@@ -692,24 +692,6 @@ namespace EPlast.DataAccess.Migrations
                     b.ToTable("Religions");
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.SubEventCategory", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EventCategoryID");
-
-                    b.Property<string>("SubEventCategoryName")
-                        .IsRequired();
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EventCategoryID");
-
-                    b.ToTable("SubEventCategories");
-                });
-
             modelBuilder.Entity("EPlast.DataAccess.Entities.UnconfirmedCityMember", b =>
                 {
                     b.Property<int>("ID")
@@ -1168,14 +1150,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("RegionAdministrations")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("EPlast.DataAccess.Entities.SubEventCategory", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
-                        .WithMany("SubEventCategories")
-                        .HasForeignKey("EventCategoryID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UnconfirmedCityMember", b =>
