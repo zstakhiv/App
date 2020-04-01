@@ -1,11 +1,14 @@
 ﻿using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace EPlast.Controllers
@@ -38,25 +41,33 @@ namespace EPlast.Controllers
             try
             {
                 var city = _repoWrapper.City
-                .FindByCondition(q => q.ID == cityId)
-                .Include(c => c.CityAdministration)
+                    .FindByCondition(q => q.ID == cityId)
+                    .Include(c => c.CityAdministration)
                     .ThenInclude(t => t.AdminType)
-                .Include(c => c.CityAdministration)
+                    .Include(k => k.CityAdministration)
                     .ThenInclude(a => a.User)
-                .Include(m => m.CityMembers)
+                    .Include(m => m.CityMembers)
                     .ThenInclude(u => u.User)
-                .FirstOrDefault();
+                    .Include(l=>l.CityDocuments)
+                    .ThenInclude(d=>d.CityDocumentType)
+                    .FirstOrDefault();
 
                 var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate!=null).Take(6).ToList();
                 var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).Take(6).ToList();
+                
+                var cityAdmins = city.CityAdministration
+                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                    .ToList();
 
-                var cityAdmin = city.CityAdministration
+                var cityHead = city.CityAdministration
                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
                     .Select(a => a.User)
                     .FirstOrDefault();
 
+                var cityDoc = city.CityDocuments.Take(4).ToList();
+
                 ViewBag.usermanager = _userManager;
-                return View(new CityViewModel { City = city, CityAdmin = cityAdmin, Members = members, Followers = followers });
+                return View(new CityViewModel { City = city, CityHead = cityHead, Members = members, Followers = followers , CityAdmins = cityAdmins , CityDoc = cityDoc});
 
             }
             catch (Exception e)

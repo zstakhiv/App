@@ -12,12 +12,12 @@
             <div class="col-md-12 col-xl-8" style="padding: 15px;padding-bottom: 0px;padding-top: 15px;">
                 <div class="d-flex justify-content-center" style="width: 100%;height: 100%;background-color: #ffffff;">
                     <div class="d-table d-xl-inline-block" style="width: 50%;">
-                        <p class="text-center d-inline-block d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця @Model.City.Name.ToString()</p>
+                        <p class="text-center d-inline-block d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця @Model.City.Name</p>
                         <div class="d-flex justify-content-center align-items-center" style="height: 75%;">
                             <img class="d-xl-flex" style="height: 200px;max-width: 250px;margin: 10px;width: 150px;margin-bottom: 0px;margin-top: 0px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Coat_of_arms_of_Lviv.svg/135px-Coat_of_arms_of_Lviv.svg.png" />
                             <div class="d-none d-md-inline mx-auto" style="padding: 10px;width: 60%;">
                                 <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Наша Web-сторінка</p>
-                                <p style="font-size: 18px;">@Model.City.CityURL.ToString()<br /></p>
+                                <p style="font-size: 18px;">@Model.City.CityURL<br /></p>
                                 <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Станичний</p>
                                 <div>
                                     <p style="margin: 0px;font-size: 18px;">Юрій Чорновіл<br />2016 - <br /></p>
@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">@Model.City.Description</button></div>
+                        <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
                     </div>
                     <div class="d-flex d-sm-flex d-xl-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="width: 50%;"><iframe allowfullscreen frameborder="0" src="https://cdn.bootstrapstudio.io/placeholders/map.html" class="d-xl-flex my-auto justify-content-xl-center align-items-xl-center" width="100%" height="400" style="width: 90%;height: 90%;"></iframe></div>
                 </div>
@@ -35,70 +35,55 @@
                     <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Члени станиці</p>
                     <div style="height: 75%;">
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
+                            @foreach (var membrCity in Model.Members.Take(3))
+                            {
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
+                                </div>
+                            }
                         </div>
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=1893&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
+                            @foreach (var membrCity in Model.Members.Skip(3).Take(3))
+                            {
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button></div>
                 </div>
             </div>
         </div>
+
         <div class="row d-inline float-none d-lg-flex d-xl-flex mx-auto" style="width: 100%;height: 400px;padding: 0px;padding-bottom: 15px;">
             <div class="col" style="padding: 15px;padding-bottom: 0px;">
                 <div style="width: 100%;height: 100%;background-color: #ffffff;">
                     <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Діловоди станиці</p>
                     <div style="height: 75%;">
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Скарбник 2016-</p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Скарбник 2016-<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Скарбник 2016-<br /></p>
-                            </div>
+                            @foreach (var adminCity in Model.CityAdmins.Take(3))
+                            {
+                                var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName @fullName</p>
+                                </div>
+                            }
+
                         </div>
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Скарбник 2016-<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Скарбник 2016-<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Скарбник 2016-<br /></p>
-                            </div>
+                            @foreach (var adminCity in Model.CityAdmins.Skip(3).Take(3))
+                            {
+                                var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName @fullName</p>
+                                </div>
+                            }
+
                         </div>
                     </div>
                     <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
@@ -109,28 +94,24 @@
                     <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Документообіг станиці</p>
                     <div style="height: 75%;">
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 120px;">
-                                <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                <p class="text-center d-xl-flex justify-content-xl-center"
-                                   style="margin: 0px;margin-bottom: 5px;">Протокол ЗЗС 27.10.17<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 120px;">
-                                <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                <p class="text-center d-xl-flex justify-content-xl-center"
-                                   style="margin: 0px;margin-bottom: 5px;">Протокол ЗЗС 27.10.17<br /></p>
-                            </div>
+                            @foreach (var doc in Model.CityDoc.Take(2))
+                            {
+                                var documentname = doc.CityDocumentType.Name + " " + doc.SubmitDate.ToString();
+                                <div class="mx-auto" style="width: 120px;">
+                                    <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
+                                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@documentname<br /></p>
+                                </div>
+                            }
                         </div>
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 120px;">
-                                <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                <p class="text-center d-xl-flex justify-content-xl-center"
-                                   style="margin: 0px;margin-bottom: 5px;">Протокол ЗЗС 27.10.17<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 120px;">
-                                <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                <p class="text-center d-xl-flex justify-content-xl-center"
-                                   style="margin: 0px;margin-bottom: 5px;">Протокол ЗЗС 27.10.17<br /></p>
-                            </div>
+                            @foreach (var doc in Model.CityDoc.Skip(2).Take(2))
+                            {
+                                var documentname = doc.CityDocumentType.Name + " " + doc.SubmitDate.ToString();
+                                <div class="mx-auto" style="width: 120px;">
+                                    <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
+                                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@documentname<br /></p>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
@@ -141,35 +122,28 @@
                     <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Прихильники станиці</p>
                     <div style="height: 75%;">
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin: 0px;margin-bottom: 5px;">Наталя Іванюк<br /></p>
-                            </div>
+                            @foreach (var membrCity in Model.Followers.Take(3))
+                            {
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
+                                </div>
+                            }
                         </div>
                         <div class="d-flex mx-auto">
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
-                            <div class="mx-auto" style="width: 90px;">
-                                <img class="border rounded-circle align-items-center" style="width: 90px;height: 90px;" src="http://plast-dev.sitegist.net/image.php?userid=729&amp;maxx=150&amp;maxy=200&amp;fit=fitmin" />
-                                <p class="text-center" style="margin-bottom: 10px;">Наталя Іванюк<br /></p>
-                            </div>
+                            @foreach (var membrCity in Model.Followers.Skip(3).Take(3))
+                            {
+                                <div class="mx-auto" style="width: 85px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
+                                </div>
+                            }
                         </div>
                     </div>
-                    <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button></div>
+                    <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="        height: 40px;
+        width: 60%;
+        padding: 0px;
+        background-color: #3c5438;">Більше</button></div>
                 </div>
             </div>
         </div>
