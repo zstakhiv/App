@@ -1,19 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EPlast.DataAccess.Entities;
-using EPlast.ViewModels;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EPlast.Controllers
 {
-    public class CItyController : Controller
+    public class CityController : Controller
     {
         private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
+        private readonly IHostingEnvironment _env;
+        private UserManager<User> _userManager;
+        public CityController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager, IHostingEnvironment env)
+        {
+            _userManager = userManager;
+            _repoWrapper = repoWrapper;
+            _env = env;
+        }
+
         public IActionResult Index()
         {
             List<CityViewModel> cities = new List<CityViewModel>(
@@ -21,7 +29,8 @@ namespace EPlast.Controllers
                 .FindAll()
                 .Select(city => new CityViewModel { City = city })
                 .ToList());
-            return View();
+
+            return View(cities);
         }
 
         public IActionResult CityProfile(int cityId)
@@ -29,25 +38,26 @@ namespace EPlast.Controllers
             try
             {
                 var city = _repoWrapper.City
-                    .FindByCondition(q => q.ID == cityId)
-                    .Include(c => c.CityAdministration)
+                .FindByCondition(q => q.ID == cityId)
+                .Include(c => c.CityAdministration)
                     .ThenInclude(t => t.AdminType)
-                    .Include(n => n.CityAdministration)
-                    .ThenInclude(t => t.CityMembers)
-                    .ThenInclude(us => us.User)
-                    .Include(m => m.CityMembers)
+                .Include(c => c.CityAdministration)
+                    .ThenInclude(a => a.User)
+                .Include(m => m.CityMembers)
                     .ThenInclude(u => u.User)
+                .FirstOrDefault();
+
+                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate!=null).Take(6).ToList();
+                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).Take(6).ToList();
+
+                var cityAdmin = city.CityAdministration
+                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
+                    .Select(a => a.User)
                     .FirstOrDefault();
 
-                var members = club.ClubMembers.Where(m => m.IsApproved).Take(6).ToList();
-                var followers = club.ClubMembers.Where(m => !m.IsApproved).Take(6).ToList();
-
-                var clubAdmin = club.ClubAdministration
-                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
-                    .Select(a => a.ClubMembers.User)
-                    .FirstOrDefault();
                 ViewBag.usermanager = _userManager;
-                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin, Members = members, Followers = followers });
+                return View(new CityViewModel { City = city, CityAdmin = cityAdmin, Members = members, Followers = followers });
+
             }
             catch (Exception e)
             {

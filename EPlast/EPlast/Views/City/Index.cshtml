@@ -1,3 +1,28 @@
-﻿@{
+﻿@using EPlast.ViewModels
+@model List<CityViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
+<div class="content-wrapper">
+    <div class="all-clubs-view">
+        <h1 class="all-clubs-title">Cтаниці</h1>
+        <div class="club-list">
 
+            @foreach (var city in Model)
+            {
+                <form method="post" class="club-block-wrapper" action='~/City/CityProfile'>
+                    <span class="club-block club-wrappers-radius">
+                        <button type="submit" class="club-block-submit rounded ">
+                            <div class="club-img-wrapper">
+                                <div class="club-img"></div>
+                            </div>
+                            <p class="club-name">@city.City.Name</p>
+                            <input value="@city.City.ID" type="hidden" name="index" id="clubId" />
+                        </button>
+                    </span>
+                </form>
+
+            }
+        </div>
+    </div>
+</div>
