@@ -278,6 +278,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult CreateAnnualReportAsAdmin(int cityId)
         {
             try
@@ -306,13 +307,13 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Голова Округу")]
+        [Authorize(Roles = "Admin, Голова Станиці")]
         [HttpPost]
-        public IActionResult CreateAnnualReport(string userId, int cityId, AnnualReport annualReport)
+        public IActionResult CreateAnnualReport(int cityId, AnnualReport annualReport)
         {
             try
             {
-                annualReport.UserId = userId;
+                annualReport.UserId = _userManager.GetUserId(User);
                 annualReport.CityId = cityId;
                 annualReport.Status = AnnualReportStatus.Unconfirmed;
                 annualReport.Date = DateTime.Today;
