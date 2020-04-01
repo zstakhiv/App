@@ -72,7 +72,7 @@ namespace EPlast.Controllers
             try
             {
                 
-                if (!ModelState.IsValid)
+                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID!=0)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return View("CreateDecesion");
