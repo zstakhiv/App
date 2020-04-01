@@ -146,71 +146,70 @@
             </div>
             <div class="col-md-8 ">
                 <div class="row mt-4">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Назва:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventName</p>
                     </div>
                 </div>
                 <div class="row mt-2 align-items-center">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Тип:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventType.EventTypeName</p>
                     </div>
                 </div>
                 <div class="row mt-2 align-items-center">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Категорія:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventCategory.EventCategoryName</p>
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Дата початку:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventDateStart.ToString("dd/MM/yyyy")</p>
                     </div>
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Дата завершення:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd/MM/yyyy")</p>
                     </div>
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Локація:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.Eventlocation</p>
                     </div>
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Статус:</p>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-value ">@Model.Event.EventStatus.EventStatusName</p>
                     </div>
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-5 text-md-center ">
+                    <div class="col-lg-4 col-sm-5 text-sm-center text-md-right">
                         <p class="event-header font-weight-bold">Опис:</p>
                     </div>
-                    <div class="col-md-7">
-                        @*<p class="event-description"> <em>Дана подія присвячена екологічним проблемам України. Метою даного заходу є пробудити почуття відповідальності у молодого покоління перед природою.</em> </p>*@
+                    <div class="col-md-7 ml-lg-5 ml-sm-0">
                         <p class="event-description"> <em>@Model.Event.Description</em> </p>
                     </div>
                 </div>
