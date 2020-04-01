@@ -26,15 +26,17 @@
                 </div>
   
               <div class="bottom-info-content">
-                  @foreach (var item in Model.Club.ClubAdministration.Take(4))
-                  {
-                  <div class="line-pair">
-                      <p class="line-upper">@item.AdminType.AdminTypeName</p>
-                      <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ClubMembers.User.Id" style="color:black">
-                          <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
-                          </a>
+                  <div>
+                      @foreach (var item in Model.Club.ClubAdministration.Take(4))
+                      {
+                          <div class="line-pair">
+                              <p class="line-upper">@item.AdminType.AdminTypeName</p>
+                              <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ClubMembers.User.Id" style="color:black">
+                                  <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
+                              </a>
+                          </div>
+                      }
                   </div>
-                  }
                   <a asp-controller="Club" asp-action="ClubAdmins" asp-route-index="@Model.Club.ID" class="btn btn-primary btn-lg colors-for-club-buttons" role="button">Більше</a>
               </div>
             </div>
