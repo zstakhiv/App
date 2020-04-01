@@ -16,6 +16,9 @@ $(document).ready(function () {
         Undetermined: 'Розглядається',
         Rejected: 'Відмовлено'
     };
+    $("#emptyGallery").click(function () {
+        $("#emptyGalleryModal").modal('show');
+    });
     $('#deleteIcon').click(function () {
         eventID = $('#eventId').val();
         activeElement = this;

@@ -31,75 +31,75 @@
                             </a>
                         </div>
                     }
-                  else 
-                  { 
-                    @if (!Model.IsUserParticipant)
-                    {
-                        <div id="subscribeBlock" class="column-md-4 event-pen">
-                            <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
-                                <i class="fas fa-pen-alt"></i>
-                            </a>
-                        </div>
-                    }
                     else
                     {
-                        <div id="subscribeBlock" class="column-md-4 event-pen event-invisible">
-                            <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
-                                <i class="fas fa-pen-alt"></i>
-                            </a>
-                        </div>
-                    }
+                        @if (!Model.IsUserParticipant)
+                        {
+                            <div id="subscribeBlock" class="column-md-4 event-pen">
+                                <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
+                                    <i class="fas fa-pen-alt"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="subscribeBlock" class="column-md-4 event-pen event-invisible">
+                                <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
+                                    <i class="fas fa-pen-alt"></i>
+                                </a>
+                            </div>
+                        }
 
-                    @if (Model.IsUserApprovedParticipant)
-                    {
-                        <div id="participantBlock" class="column-md-4 event-part">
-                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
-                                <i class="far fa-check-square"></i>
-                            </a>
-                        </div>
-                    }
+                        @if (Model.IsUserApprovedParticipant)
+                        {
+                            <div id="participantBlock" class="column-md-4 event-part">
+                                <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
+                                    <i class="far fa-check-square"></i>
+                                </a>
+                            </div>
+                        }
 
-                    @if (Model.IsUserUndeterminedParticipant)
-                    {
-                        <div id="userClockBlock" class="column-md-4 event-participant-status">
-                            <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
-                                <i class="fas fa-user-clock"></i>
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="userClockBlock" class="column-md-4 event-participant-status event-invisible">
-                            <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
-                                <i class="fas fa-user-clock"></i>
-                            </a>
-                        </div>
-                    }
+                        @if (Model.IsUserUndeterminedParticipant)
+                        {
+                            <div id="userClockBlock" class="column-md-4 event-participant-status">
+                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                    <i class="fas fa-user-clock"></i>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="userClockBlock" class="column-md-4 event-participant-status event-invisible">
+                                <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
+                                    <i class="fas fa-user-clock"></i>
+                                </a>
+                            </div>
+                        }
 
-                    @if (Model.IsUserRejectedParticipant)
-                    {
-                        <div id="rejectBlock" class="events-participants-ban">
-                            <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Вашу заявку на участь у даній події відхилено">
-                                <i class="fas fa-user-slash"></i>
-                            </a>
-                        </div>
-                    }
+                        @if (Model.IsUserRejectedParticipant)
+                        {
+                            <div id="rejectBlock" class="events-participants-ban">
+                                <a class="event-remove" data-toggle="tooltip" data-placement="right" title="Вашу заявку на участь у даній події відхилено">
+                                    <i class="fas fa-user-slash"></i>
+                                </a>
+                            </div>
+                        }
                         if (!Model.IsUserParticipant || Model.IsUserRejectedParticipant)
                         {
-                        <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
-                            <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
-                                <i class="fas fa-user-minus"></i>
-                            </a>
-                        </div>
+                            <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
+                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                    <i class="fas fa-user-minus"></i>
+                                </a>
+                            </div>
                         }
-                       else
-                       {
-                        <div id = "unsubscribeBlock" class="column-md-4 event-unsubscribe">
-                            <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
-                                <i class="fas fa-user-minus"></i>
-                            </a>
-                        </div>
-                       }
+                        else
+                        {
+                            <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe">
+                                <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
+                                    <i class="fas fa-user-minus"></i>
+                                </a>
+                            </div>
+                        }
                     }
                     <div class="column-md-4">
                         <div class="event-participants">
@@ -108,13 +108,26 @@
                             </a>
                         </div>
                     </div>
-                    <div class="column-md-4">
-                        <div class="event-gallery">
-                            <a class="event-link" href="#gallery" data-toggle="tooltip" data-placement="bottom" title="Галерея">
-                                <i class="fas fa-images"></i>
-                            </a>
+                    @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
+                    {
+                        <div class="column-md-4">
+                            <div class="event-gallery">
+                                <a class="event-link" href="#gallery" data-toggle="tooltip" data-placement="bottom" title="Галерея">
+                                    <i class="fas fa-images"></i>
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div id="emptyGallery" class="column-md-4">
+                            <div class="event-gallery">
+                                <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Галерея">
+                                    <i class="fas fa-images"></i>
+                                </a>
+                            </div>
+                        </div>
+                    }
                     <div class="column-md-4">
                         <div data-toggle="tooltip" data-placement="bottom" title="Адміністратор(-и) події">
                             <a class="event-link" data-toggle="collapse" data-target="#eventAdmins" aria-expanded="false" aria-controls="eventAdmins">
@@ -220,11 +233,12 @@
         </div>
 
         <!-- Карусель -->
-
+     @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
+     {
         <div class="row mt-3  justify-content-center  shadow rounded">
             <div class="col-md-12 mt-3 text-center">
                 <div class="row ">
-                    <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея КПЗ-4056</h2>
+                    <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея</h2>
                 </div>
             </div>
 
@@ -239,11 +253,11 @@
                                 {
                                     if (i == 0)
                                     {
-                                        <li data-target="#demo" data-slide-to="@(i+1)" class="active"></li>
+                                        <li data-target="#demo" data-slide-to="@(i + 1)" class="active"></li>
                                     }
                                     else
                                     {
-                                        <li data-target="#demo" data-slide-to="@(i+1)"></li>
+                                        <li data-target="#demo" data-slide-to="@(i + 1)"></li>
                                     }
 
                                 }
@@ -290,8 +304,8 @@
                     }
                         </div>
                     </div>
-
         </div>
+     }
 
         <div class="row mt-3 mb-5 justify-content-сenter  shadow rounded">
             <div class="row mt-3  col-md-12 justify-content-center mb-1">
