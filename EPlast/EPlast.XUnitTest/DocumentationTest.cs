@@ -20,7 +20,7 @@ using Xunit;
 
 namespace EPlast.XUnitTest
 {
-    public class DocumentationTest
+    public class DocumentationControllerTests
     {
         [Fact]
         public void CreateDecesionTest()
@@ -33,12 +33,13 @@ namespace EPlast.XUnitTest
             var decisionVMIitializer = new Mock<IDecisionVMIitializer>();
             var pdfService = new Mock<IPDFService>();
             var hostingEnvironment = new Mock<IHostingEnvironment>();
+            var viewAnnualReportsVMInitializer = new Mock<IViewAnnualReportsVMInitializer>();
             //settup
             repository.Setup(rep => rep.Organization.FindAll()).Returns(GetTestOrganizations());
             repository.Setup(rep => rep.DecesionTarget.FindAll()).Returns(GetTestDecesionTargets());
             //action
             var controller = new DocumentationController(repository.Object, usermanger.Object, annualReportVMInitializer.Object, decisionVMIitializer.Object, pdfService.Object,
-                hostingEnvironment.Object);
+                hostingEnvironment.Object, viewAnnualReportsVMInitializer.Object);
             var result = controller.CreateDecesion();
 
             //assert
