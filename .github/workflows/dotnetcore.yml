@@ -17,7 +17,5 @@ jobs:
         dotnet-version: 2.2.108
     - name: Build with dotnet
       run: dotnet build ./EPlast/EPlast.sln --configuration Release
-      
-   # We don't have any tests yet: '(
-   # - name: Test with dotnet
-   #  run: dotnet test ./src/Solution.sln --configuration Release
+    - name: Test with dotnet
+      run: dotnet test ./EPlast/EPlast.sln --configuration Release
