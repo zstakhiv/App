@@ -48,8 +48,8 @@
                 @foreach (var item in Model)
                 {
                     <tr class="context-menu-one" data-id="@item.User.Id">
-                        <td>@item.User.LastName</td>
-                        <td>@item.User.FirstName</td>
+                        <td><a asp-controller="Account" asp-action="UserProfile" asp-route-id="@item.User.Id">@item.User.LastName</a></td>
+                        <td><a asp-controller="Account" asp-action="UserProfile" asp-route-id="@item.User.Id">@item.User.FirstName</a></td>
                         <td>
                             @if (item.User.UserProfile.GenderID == 1)
                             {<span>Чоловік</span>}
