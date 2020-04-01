@@ -98,7 +98,7 @@
 }
 
 .event-page-wrapper .carousel-inner img {
-  width: 100%;
+  width: auto;
   height: 400px;
   object-fit: cover;
 }
@@ -142,8 +142,6 @@ input.event-page-wrapper.btn-collapse:hover {
 }
 
 .event-page-wrapper {
-
-
     .page-item.disabled .page-link {
         background-color: #3c5438;
         color: #ffffff;

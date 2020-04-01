@@ -2,11 +2,17 @@
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EPlast.Controllers
 {
@@ -14,12 +20,14 @@ namespace EPlast.Controllers
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
+        private readonly IHostingEnvironment _env;
 
 
-        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper)
+        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env)
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
+            _env = env;
         }
 
         [Authorize]
@@ -146,6 +154,8 @@ namespace EPlast.Controllers
                        .Include(e => e.EventAdministrations)
                        .Include(e => e.EventType)
                        .Include(e => e.EventCategory)
+                       .Include(e => e.EventGallarys)
+                            .ThenInclude(eg => eg.Gallary)
                        .Select(e => new EventViewModel()
                        {
                            Event = e,
@@ -228,5 +238,33 @@ namespace EPlast.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult FillEventGallery(int ID, IList<IFormFile> files)
+        {
+            try
+            {
+                foreach (IFormFile file in files)
+                {
+                    if (file != null && file.Length > 0)
+                    {
+                        var img = Image.FromStream(file.OpenReadStream());
+                        var uploads = Path.Combine(_env.WebRootPath, "images\\EventsGallery");
+                        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+                        img.Save(filePath);
+                        var gallery = new Gallary() { GalaryFileName = fileName };
+                        _repoWrapper.Gallary.Create(gallery);
+                        _repoWrapper.EventGallary.Create(new EventGallary { EventID = ID, Gallary = gallery });
+                    }
+                }
+               
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

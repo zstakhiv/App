@@ -9,7 +9,7 @@
                 @foreach(EventCategoryViewModel evc in Model)
                 {
                    <div class="col-md-4 cust_blogteaser">
-                        <a href="#"><img class="rounded img-fluid" src="~/images/events/ActionLogo.png"></a>
+                        <a><img class="rounded img-fluid" src="~/images/Events/ActionLogo.png"></a>
                         <h3>@evc.EventCategory.EventCategoryName</h3>
                         <a asp-action="Events"asp-route-ID=@evc.EventCategory.ID class="h4">
                             <i class="fa fa-arrow-circle-right"></i>
