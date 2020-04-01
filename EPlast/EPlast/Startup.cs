@@ -67,6 +67,7 @@ namespace EPlast
             services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
+            services.AddScoped<IViewAnnualReportsVMInitializer, ViewAnnualReportsVMInitializer>();
             services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
 
@@ -110,7 +111,7 @@ namespace EPlast
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var roles = new[] { "Admin", "Прихильник", "Пластун", "Голова Пласту","Адміністратор подій", "Голова Куреня","Діловод Куреня",
-            "Голова Округу","Діловод Округу","Голова Станиці","Діловод станиці"};
+            "Голова Округу","Діловод Округу","Голова Станиці","Діловод Станиці"};
             foreach (var role in roles)
             {
                 if (!(await roleManager.RoleExistsAsync(role)))
@@ -119,7 +120,7 @@ namespace EPlast
                     {
                         Name = role
                     };
-                    
+
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
@@ -140,7 +141,7 @@ namespace EPlast
                 if (res.Succeeded)
                     await userManager.AddToRoleAsync(profile, "Admin");
             }
-            else if(!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
+            else if (!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
             {
                 var user = userManager.Users.First(item => item.Email == profile.Email);
                 await userManager.AddToRoleAsync(user, "Admin");
