@@ -71,6 +71,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
@@ -141,7 +142,7 @@ namespace EPlast.Controllers
                 foreach (var decesion in decesions)
                 {
                     string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesion.Decesion.ID;
-                    if (decesion.Decesion.HaveFile || !Directory.Exists(path))
+                    if (!decesion.Decesion.HaveFile || !Directory.Exists(path))
                     {
                         continue;
                     }
@@ -170,13 +171,13 @@ namespace EPlast.Controllers
                 if (string.IsNullOrEmpty(filename) || string.IsNullOrEmpty(id))
                     return Content("filename or id not present");
 
-                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id, filename);
+                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id);
 
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(path) || Directory.GetFiles(path).Length==0)
                 {
                     throw new ArgumentException($"directory '{path}' is not exist");
                 }
-
+                path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(path, FileMode.Open))
                 {

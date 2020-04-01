@@ -119,7 +119,7 @@ namespace EPlast
                     {
                         Name = role
                     };
-                    
+
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
@@ -140,7 +140,7 @@ namespace EPlast
                 if (res.Succeeded)
                     await userManager.AddToRoleAsync(profile, "Admin");
             }
-            else if(!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
+            else if (!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
             {
                 var user = userManager.Users.First(item => item.Email == profile.Email);
                 await userManager.AddToRoleAsync(user, "Admin");
