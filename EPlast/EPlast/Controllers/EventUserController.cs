@@ -42,16 +42,18 @@ namespace EPlast.Controllers
         }
         
         [HttpGet]
-        public IActionResult EventCreate()
+        public IActionResult EventCreate(int id)
         {
             try
             {
                 var events = _repoWrapper.Event.
+                    FindByCondition(p=>p.ID==id).
                 Include(i => i.EventCategory).
                 Include(g => g.EventAdmins).
-                Include(g => g.EventAdministrations).
                 Include(g => g.EventStatus).
+                Include(g => g.EventAdministrations).
                 FirstOrDefault();
+
                 ViewBag.categories = (from item in _repoWrapper.EventCategory.FindAll()
                                    select new SelectListItem
                                    {
@@ -78,6 +80,13 @@ namespace EPlast.Controllers
         {
             try
             {
+                var events = _repoWrapper.Event.
+                Include(i => i.EventCategory).
+                Include(g => g.EventAdmins).
+                Include(g => g.EventStatus).
+                Include(g => g.EventAdministrations).
+                FirstOrDefault();
+
                 if (model.Event.EventCategory.SubEventCategories.ID == 0)
                 {
                     string subEventCategoryName = model.Event.EventCategory.SubEventCategories.SubEventCategoryName;
@@ -87,13 +96,11 @@ namespace EPlast.Controllers
                     }
                     else
                     {
-                        model.Event.EventCategory.SubEventCategories = new SubEventCategory() 
+                        model.Event.EventCategory.SubEventCategories = new SubEventCategory()
                         { SubEventCategoryName = subEventCategoryName };
                     }
                 }
                 _repoWrapper.Event.Update(model.Event);
-                _repoWrapper.EventAdmin.Update(model.EventAdmin);
-                _repoWrapper.EventAdministration.Update(model.EventAdministration);
                 _repoWrapper.Save();
                 return RedirectToAction("EventUser");
             }
