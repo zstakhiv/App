@@ -5,108 +5,61 @@
 @model EPlast.ViewModels.Events.EventUserViewModel;
 @inject IRepositoryWrapper  _repository;
 <div class=" eventUserPage d-md-flex d-xl-flex justify-content-md-center justify-content-xl-center align-items-xl-top container">
-        <div class="d-sm-flex justify-content-sm-center row">
-            <div class="d-flex justify-content-center col-sm">
-                <div class="d-lg-flex align-items-center justify-content-lg-center border shadow events" id="eventPersonalInfo">
-                    <div class="text-center justify-content-center box">
-                        <img class="img-fluid border rounded-circle" src="/images/Users/@Model.User.ImagePath" style="margin-top: 10px; width: 200px;height :200px;">
-                        <h4 style="margin-top: 32px;">@Model.User.FirstName @Model.User.LastName</h4>
-                        <p>Пластун</p>
-                        <div class="d-lg-flex spliter" id="infoSplit" style="width: 256px;margin-top: 0px;"></div>
-                        <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 3px;">5</h3>
-                        <p>Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal-2">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>Усі події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <ul class="text-left">
-                                            @foreach (var item in Model.Events)
-                                            {
-                                                <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
-                                            }
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="d-sm-flex justify-content-sm-center row">
+        <div class="d-flex justify-content-center col-sm">
+            <div class="d-lg-flex align-items-center justify-content-lg-center border shadow events" id="eventPersonalInfo">
+                <div class="text-center justify-content-center box">
+                    <img class="img-fluid border rounded-circle" src="/images/Users/@Model.User.ImagePath" style="margin-top: 10px; width: 200px;height :200px;">
+                    <h4 style="margin-top: 32px;">@Model.User.FirstName @Model.User.LastName</h4>
+                    <p>Пластун прихильник</p>
+                    <div class="d-lg-flex spliter" id="infoSplit" style="width: 256px;margin-top: 0px;"></div>
+                    <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 3px;">0</h3>
+                    <p>Створені Події</p><a class="btn btn-primary btn-lg" role="button" asp-action="EventCreate" asp-controller="EventUser">Створити подію</a>
                 </div>
             </div>
-            <div class="col-sm big">
-                <div class="d-flex d-sm-flex justify-content-center justify-content-sm-center row" id="detailes">
-                    <div class="col-sm small">
-                        <div id="permitedEvents" class="border shadow events">
-                            <div class="text-center justify-content-center box">
-                                <h4 style="margin-top: 10px;margin-bottom: 26px;"><br>Відвідані події<br></h4>
-                                <div class="d-lg-flex spliter" id="infoSplit" style="width: 262px;"></div>
-                                <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">3</h3>
-                                <p style="margin-bottom: 2px;">Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
-                                <div class="modal fade" role="dialog" tabindex="-1" id="myModal-1">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4>Відвідані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <ul class="text-left">
-                                                    @foreach (var item in Model.Events)
-                                                    {
-                                                        <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
-                                                    }
-                                                </ul>
-                                            </div>
-                                            <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm small">
-                        <div id="notPermitedEvents" class="border shadow events">
-                            <div class="text-center justify-content-center box">
-                                <h4 style="margin-top: 0px;"><br>Відвідані події (непідтвердженні)<br></h4>
-                                <div class="d-lg-flex spliter" id="infoSplit" style="width: 262px;"></div>
-                                <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">2</h3>
-                                <p style="margin-bottom: 2px;">Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
-                                <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4>Не підтверджені події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <ul class="text-left">
-                                                    @foreach (var item in Model.Events)
-                                                    {
-                                                        <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
-                                                    }
-                                                </ul>
-                                            </div>
-                                            <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-sm-flex justify-content-sm-center row">
-                    <div id="planedEvents" class="border shadow events">
-                        <div class="text-center box">
-                            <h4 style="margin-top: 0px;margin-bottom: 9px;"><br>Заплановані події<br></h4>
-                            <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
-                            <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">3</h3>
+        </div>
+        <div class="col-sm big">
+            <div class="d-flex d-sm-flex justify-content-center justify-content-sm-center row" id="detailes">
+                <div class="col-sm small">
+                    <div id="permitedEvents" class="border shadow events">
+                        <div class="text-center justify-content-center box">
+                            <h4 style="margin-top: 10px;margin-bottom: 26px;"><br>Відвідані події<br></h4>
+                            <div class="d-lg-flex spliter" id="infoSplit" style="width: 262px;"></div>
+                            <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">0</h3>
                             <p style="margin-bottom: 2px;">Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
-                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal-3">
+                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal-1">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4>Заплановані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <h4>Відвідані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul class="text-left">
+                                                @foreach (var item in Model.Events)
+                                                {
+                                                    <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm small">
+                    <div id="notPermitedEvents" class="border shadow events">
+                        <div class="text-center justify-content-center box">
+                            <h4 style="margin-top: 0px;"><br>Непідтвердженні<br>події<br></h4>
+                            <div class="d-lg-flex spliter" id="infoSplit" style="width: 262px;"></div>
+                            <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">0</h3>
+                            <p style="margin-bottom: 2px;">Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
+                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4>Не підтверджені події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <ul class="text-left">
@@ -124,5 +77,34 @@
                     </div>
                 </div>
             </div>
+            <div class="d-sm-flex justify-content-sm-center row">
+                <div id="planedEvents" class="border shadow events">
+                    <div class="text-center box">
+                        <h4 style="margin-top: 0px;margin-bottom: 9px;"><br>Заплановані події<br></h4>
+                        <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
+                        <h3 style="margin: 0px;margin-bottom: -6px;margin-top: 6px;">0</h3>
+                        <p style="margin-bottom: 2px;">Події</p><a class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#myModal">Деталі</a>
+                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal-3">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Заплановані події:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="text-left">
+                                            @foreach (var item in Model.Events)
+                                            {
+                                                <li>@item.EventName, @item.Eventlocation, Дата початку: @item.EventDateStart Дата кінця: @item.EventDateEnd </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>

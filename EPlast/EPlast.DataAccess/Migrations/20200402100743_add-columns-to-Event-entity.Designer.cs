@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200402100743_add-columns-to-Event-entity")]
+    partial class addcolumnstoEvententity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,9 +126,6 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("HouseNumber")
                         .IsRequired()
                         .HasMaxLength(10);
-
-                    b.Property<string>("Logo")
-                        .HasMaxLength(2147483647);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -553,13 +552,9 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int?>("EventID");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("ID");
 
                     b.HasIndex("EventID");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("EventAdministration");
                 });
@@ -1285,10 +1280,6 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
                         .WithMany("EventAdministrations")
                         .HasForeignKey("EventID");
-
-                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.EventGallary", b =>

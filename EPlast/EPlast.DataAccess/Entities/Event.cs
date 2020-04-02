@@ -4,13 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EPlast.DataAccess.Entities
 {
-    public  class Event
+    public class Event
     {
         public int ID { get; set; }
         [Required]
         public string EventName { get; set; }
         [Required]
-        public string Description{ get; set; }
+        public string Description { get; set; }
+        [Required]
+        public string Questions { get; set; }
         [Required]
         public DateTime EventDateStart { get; set; }
         [Required]
@@ -23,6 +25,12 @@ namespace EPlast.DataAccess.Entities
         public int EventCategoryID { get; set; }
         [Required]
         public int EventStatusID { get; set; }
+        [Required]
+        public string FormOfHolding { get; set; }
+        [Required]
+        public string ForWhom { get; set; }
+        [Required]
+        public int NumberOfPartisipants { get; set; }
         public EventType EventType { get; set; }
         public EventCategory EventCategory { get; set; }
         public EventStatus EventStatus { get; set; }
