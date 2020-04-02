@@ -4,6 +4,7 @@ using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -65,19 +66,24 @@ namespace EPlast.Controllers
         [HttpPost]
         public async Task<IActionResult> SendContacts(ContactsViewModel contactsViewModel)
         {
-            if (!ModelState.IsValid)
+            try {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Дані введені неправильно");
+                    return View("Contacts");
+                }
+                else {
+                    await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com",
+                    "Питання користувачів",
+                     $"Контактні дані користувача : Електронна пошта {contactsViewModel.Email}, Ім'я {contactsViewModel.Name}, Телефон {contactsViewModel.PhoneNumber}" +
+                     $"  Опис питання : {contactsViewModel.FeedBackDescription}",
+                     contactsViewModel.Email);
+                }
+                return RedirectToAction("FeedBackSended", "Home");
+            }
+            catch (Exception e)
             {
-                ModelState.AddModelError("", "Дані введені неправильно");
-                return View("Contacts");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            else {
-                await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com",
-                "Питання користувачів",
-                 $"Контактні дані користувача : Електронна пошта {contactsViewModel.Email}, Ім'я {contactsViewModel.Name}, Телефон {contactsViewModel.PhoneNumber}" +
-                 $"  Опис питання : {contactsViewModel.FeedBackDescription}",
-                 contactsViewModel.Email);
-            }
-            return RedirectToAction("FeedBackSended", "Home");
         }
-    }
 }
