@@ -627,13 +627,19 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public bool DeletePosition(int id)
+        public async Task<bool> DeletePosition(int id)
         {
             try
             {
                 CityAdministration cityAdministration = _repoWrapper.CityAdministration
                     .FindByCondition(ca => ca.ID == id)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.User)
                     .First();
+                if (cityAdministration.EndDate == null)
+                {
+                    await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
+                }
                 _repoWrapper.CityAdministration.Delete(cityAdministration);
                 _repoWrapper.Save();
                 return true;
