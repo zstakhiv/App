@@ -108,22 +108,25 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             try
             {
+                var a = registerVM.Email;
+                var b = registerVM.Name;
+                var c = registerVM.SurName;
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return View("Register");
                 }
-                var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
+                /*var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
                 {
                     ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
                     return View("Register");
-                }
+                }*/
                 else
                 {
                     var user = new User()

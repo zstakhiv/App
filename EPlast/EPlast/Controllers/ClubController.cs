@@ -1,4 +1,5 @@
 ﻿using EPlast.DataAccess.Entities;
+using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +16,10 @@ namespace EPlast.Controllers
 {
     public class ClubController : Controller
     {
-        private readonly DataAccess.Repositories.IRepositoryWrapper _repoWrapper;
+        private readonly IRepositoryWrapper _repoWrapper;
         private readonly IHostingEnvironment _env;
         private UserManager<User> _userManager;
-        public ClubController(DataAccess.Repositories.IRepositoryWrapper repoWrapper, UserManager<User> userManager , IHostingEnvironment env)
+        public ClubController(IRepositoryWrapper repoWrapper, UserManager<User> userManager , IHostingEnvironment env)
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
