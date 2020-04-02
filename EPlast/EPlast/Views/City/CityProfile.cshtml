@@ -14,13 +14,33 @@
                     <div class="d-table d-xl-inline-block" style="width: 50%;">
                         <p class="text-center d-inline-block d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця @Model.City.Name</p>
                         <div class="d-flex justify-content-center align-items-center" style="height: 75%;">
-                            <img class="d-xl-flex" style="height: 200px;max-width: 250px;margin: 10px;width: 150px;margin-bottom: 0px;margin-top: 0px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Coat_of_arms_of_Lviv.svg/135px-Coat_of_arms_of_Lviv.svg.png" />
+                            @if (Model.City.Logo != null)
+                            {
+                                <img class="d-xl-flex" style="height: 200px;max-width: 250px;margin: 10px;width: 150px;margin-bottom: 0px;margin-top: 0px; padding-left:10px;" src="/images/Cities/@Model.City.Logo" />
+                            }
+                            else
+                            {
+                                <img class="d-xl-flex" style="height: 200px;max-width: 250px;margin: 10px;width: 150px;margin-bottom: 0px;margin-top: 0px; padding-left:10px;" src="~/images/Cities/default.jpg" />
+                            }
                             <div class="d-none d-md-inline mx-auto" style="padding: 10px;width: 60%;">
                                 <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Наша Web-сторінка</p>
-                                <p style="font-size: 18px;">@Model.City.CityURL<br /></p>
+                                <p style="font-size: 18px;">
+                                    @if (@Model.City.CityURL != null)
+                                    {
+                                        @Model.City.CityURL
+                                    }
+                                    <br />
+                                </p>
                                 <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Станичний</p>
                                 <div>
-                                    <p style="margin: 0px;font-size: 18px;">@Model.CityHead.User.FirstName @Model.CityHead.User.LastName<br />@Model.CityHead.StartDate.Year</p>
+                                    @if (Model.CityHead != null)
+                                    {
+                                        <p style="margin: 0px;font-size: 18px;">@Model.CityHead.User.FirstName @Model.CityHead.User.LastName<br />@Model.CityHead.StartDate.Year</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="margin: 0px;font-size: 18px;"><br /></p>
+                                    }
                                 </div>
                             </div>
                         </div>
