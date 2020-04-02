@@ -610,6 +610,7 @@ namespace EPlast.Controllers
                                 };
                                 await _userManager.CreateAsync(user);
                             }
+                            await _userManager.AddToRoleAsync(user, "Прихильник");
                             await _userManager.AddLoginAsync(user, info);
                             await _signInManager.SignInAsync(user, isPersistent: false);
                             return LocalRedirect(returnUrl);
@@ -633,6 +634,7 @@ namespace EPlast.Controllers
                             };
                             await _userManager.CreateAsync(user);
                         }
+                        await _userManager.AddToRoleAsync(user, "Прихильник");
                         await _userManager.AddLoginAsync(user, info);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
