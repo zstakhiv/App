@@ -20,7 +20,7 @@ namespace EPlast.BussinessLayer
             Author = "EPlast system";
             FontName = "Times New Roman";
             StyleName = "Normal";
-            ImagePath = "../../EPlast/wwwroot/images/pdf/Header-Eplast.png";
+            ImagePath = "../EPlast/wwwroot/images/pdf/Header-Eplast.png";
         }
     }
 }
