@@ -42,7 +42,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -79,7 +79,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
 
         }
@@ -177,7 +177,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
