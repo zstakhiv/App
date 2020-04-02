@@ -50,23 +50,17 @@ namespace EPlast.XUnitTest
             var pwdValidators = new List<IPasswordValidator<User>>();
             pwdValidators.Add(passValidator);
 
-           
-            var userStore = new Mock<IUserStore<User>>();
-
-
-            userStore.Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
-           .Returns(Task.FromResult(IdentityResult.Success));
-
-
-            var mockUserManager = new Mock<UserManager<User>>(userStore.Object,
+            var mockUserManager = new Mock<UserManager<User>>(userPasswordStore.Object,
                 options.Object, new PasswordHasher<User>(),
                 userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
                 new IdentityErrorDescriber(), null,
                 new Mock<ILogger<UserManager<User>>>().Object);
 
+            mockUserManager.Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+           .Returns(Task.FromResult(IdentityResult.Success));
+
             mockUserManager.Setup(x => x.FindByNameAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(It.IsAny<User>()));
-
 
             var _contextAccessor = new Mock<IHttpContextAccessor>();
             var _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
@@ -86,7 +80,7 @@ namespace EPlast.XUnitTest
         public async Task TestRegisterMethodViewNameEqualRegisterAndNotNull()
          {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = await accountController.Register(GetTestUserForRegistration());  //тут вилітає
+            var result = await accountController.Register(GetTestUserForRegistration());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Register", viewResult.ViewName);
             Assert.NotNull(viewResult);
@@ -97,15 +91,15 @@ namespace EPlast.XUnitTest
         {
             var registerViewModel = new RegisterViewModel
             {
-                Email = "andriishainoha@gmail.com",
-              
-                Password = "testpassword123",
-                Name = "Andrii",
+                Email = "Andrii",
+                Name =  "Andrii",
                 SurName = "Shainoha",
+                Password = "testpassword123",
                 ConfirmPassword = "testpassword123"
             };
             return registerViewModel;
         }
+
 
     }
 }
