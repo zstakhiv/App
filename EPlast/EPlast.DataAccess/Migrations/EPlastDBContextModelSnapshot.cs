@@ -15,7 +15,7 @@ namespace EPlast.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -124,6 +124,9 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("HouseNumber")
                         .IsRequired()
                         .HasMaxLength(10);
+
+                    b.Property<string>("Logo")
+                        .HasMaxLength(2147483647);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -505,6 +508,17 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<string>("Eventlocation")
                         .IsRequired();
 
+                    b.Property<string>("ForWhom")
+                        .IsRequired();
+
+                    b.Property<string>("FormOfHolding")
+                        .IsRequired();
+
+                    b.Property<int>("NumberOfPartisipants");
+
+                    b.Property<string>("Questions")
+                        .IsRequired();
+
                     b.HasKey("ID");
 
                     b.HasIndex("EventCategoryID");
@@ -539,9 +553,13 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int?>("EventID");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("ID");
 
                     b.HasIndex("EventID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("EventAdministration");
                 });
@@ -1267,6 +1285,10 @@ namespace EPlast.DataAccess.Migrations
                     b.HasOne("EPlast.DataAccess.Entities.Event", "Event")
                         .WithMany("EventAdministrations")
                         .HasForeignKey("EventID");
+
+                    b.HasOne("EPlast.DataAccess.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.EventGallary", b =>

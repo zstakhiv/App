@@ -1,9 +1,11 @@
 ﻿using EPlast.BussinessLayer.Interfaces;
+using EPlast.DataAccess.Repositories;
 using EPlast.Models;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -12,10 +14,13 @@ namespace EPlast.Controllers
     public class HomeController : Controller
     {
         private readonly IEmailConfirmation _emailConfirmation;
+        private readonly IRepositoryWrapper _repoWrapper;
 
-        public HomeController(IEmailConfirmation emailConfirmation)
+        public HomeController(IEmailConfirmation emailConfirmation, IRepositoryWrapper repoWrapper)
         {
             _emailConfirmation = emailConfirmation;
+            _repoWrapper = repoWrapper;
+
         }
 
         public IActionResult Index()
@@ -56,6 +61,23 @@ namespace EPlast.Controllers
             return View("Views/Account/Login.cshtml");
         }
 
+        
+        public IActionResult Search(string search)
+        {
+            var surnames = _repoWrapper.User.FindByCondition(q=>q.LastName==search);
+            var model = new SearchSurname();
+            model.Users = surnames;
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult GetSearchUser(string userId)
+        {
+            var res = _repoWrapper.User.FindByCondition(x => x.Id == userId);
+            return PartialView(res);
+        }
+
+
         [HttpGet]
         public IActionResult FeedBackSended()
         {
@@ -70,7 +92,8 @@ namespace EPlast.Controllers
                 ModelState.AddModelError("", "Дані введені неправильно");
                 return View("Contacts");
             }
-            else {
+            else
+            {
                 await _emailConfirmation.SendEmailAsync("eplastdmnstrtr@gmail.com",
                 "Питання користувачів",
                  $"Контактні дані користувача : Електронна пошта {contactsViewModel.Email}, Ім'я {contactsViewModel.Name}, Телефон {contactsViewModel.PhoneNumber}" +
@@ -79,5 +102,6 @@ namespace EPlast.Controllers
             }
             return RedirectToAction("FeedBackSended", "Home");
         }
+
     }
 }
