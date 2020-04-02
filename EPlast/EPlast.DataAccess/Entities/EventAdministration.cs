@@ -9,5 +9,6 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
         public string AdministrationType { get; set; }
         public Event Event { get; set; }
+        public User User { get; set; }
     }
 }

@@ -45,17 +45,8 @@
 
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Комендант</label></div>
-                    @Html.TextBoxFor(x => x.EventAdmin.User,
-                        new { @list = "EventAdmin-value", @id = "autocomplete_input", @class = "form-control border", @style = "width: 370px;background-color: #eee;", @Value = "" })
-                    <datalist id="EventAdmin-value">
-                        @foreach (EventAdmin item in Model.EventAdmins)
-                        {
-                            <option data-value="@item.UserID" value="@item.User.FirstName, @item.User.LastName"></option>
-                        }
-                    </datalist>
-                    @Html.HiddenFor(i => i.EventAdmin.EventID, new { @id = "autocomplete_input_id_1" })
-                    <span asp-validation-for="EventAdmin.User.FirstName" class="text-danger"></span>
-                    <span asp-validation-for="EventAdmin.User.LastName" class="text-danger"></span>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
+
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Заступник коменданта</label></div>
