@@ -13,7 +13,7 @@ namespace EPlast.Controllers
     public class EventUserController : Controller
     {
         private readonly IRepositoryWrapper _repoWrapper;
-        private UserManager<User> _userManager;
+        private readonly UserManager<User> _userManager;
 
         public EventUserController(UserManager<User> userManager, IRepositoryWrapper repoWrapper)
         {
