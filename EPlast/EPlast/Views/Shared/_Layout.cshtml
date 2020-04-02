@@ -210,10 +210,16 @@
     <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
+    <script src="~/lib/@@aspnet/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/bundles/js/bundle-min.js"></script>
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     @*</environment>*@
-
+    <script>    
+        function ready() {
+        }
+        //random number between 1 and 100 for demo
+        var userId = Math.floor((Math.random() * 100) + 1); document.addEventListener("DOMContentLoaded", ready);
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -21,6 +21,7 @@
     <Content Remove="wwwroot\uncompiled\ts\events.ts" />
     <Content Remove="wwwroot\uncompiled\ts\clubAdmins.ts" />
     <Content Remove="wwwroot\uncompiled\ts\mainMenu.ts" />
+    <Content Remove="wwwroot\uncompiled\ts\notification.ts" />
     <Content Remove="wwwroot\uncompiled\ts\site.ts" />
     <Content Remove="wwwroot\uncompiled\ts\UserProfile.ts" />
   </ItemGroup>

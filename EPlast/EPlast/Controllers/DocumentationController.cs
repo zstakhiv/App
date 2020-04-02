@@ -2,12 +2,14 @@
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.Models.ViewModelInitializations.Interfaces;
+using EPlast.SignalR;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,11 +28,12 @@ namespace EPlast.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
-
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
         private const string _decesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer)
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
+            IHubContext<NotificationHub> notificationHubContext)
 
         {
             _repoWrapper = repoWrapper;
@@ -40,6 +43,18 @@ namespace EPlast.Controllers
             _decisionVMCreator = decisionVMCreator;
             _appEnvironment = appEnvironment;
             _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
+            _notificationHubContext = notificationHubContext;
+        }
+
+        public IActionResult SendNot()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async void SendNotify(Article model)
+        {
+            await _notificationHubContext.Clients.All.SendAsync("sendToUser", model.ArticleHeading, model.ArticleContent);
         }
 
         public IActionResult Index()

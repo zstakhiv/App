@@ -60,6 +60,14 @@
       "files": [
         "dist/jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "signalr@2.4.1",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "jquery.signalR.min.js"
+      ]
     }
   ]
 }

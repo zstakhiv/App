@@ -18,6 +18,7 @@ using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
 using EPlast.BussinessLayer.Settings;
+using EPlast.SignalR;
 
 namespace EPlast
 {
@@ -104,6 +105,8 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+
+            services.AddSignalR();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
@@ -120,7 +123,7 @@ namespace EPlast
                     {
                         Name = role
                     };
-                    
+
                     var res = await roleManager.CreateAsync(idRole);
                 }
             }
@@ -141,7 +144,7 @@ namespace EPlast
                 if (res.Succeeded)
                     await userManager.AddToRoleAsync(profile, "Admin");
             }
-            else if(!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
+            else if (!await userManager.IsInRoleAsync(userManager.Users.First(item => item.Email == profile.Email), "Admin"))
             {
                 var user = userManager.Users.First(item => item.Email == profile.Email);
                 await userManager.AddToRoleAsync(user, "Admin");
@@ -171,6 +174,10 @@ namespace EPlast
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
             CreateRoles(services).Wait();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationHub>("/NotificationHub");
+            });
         }
     }
 }
