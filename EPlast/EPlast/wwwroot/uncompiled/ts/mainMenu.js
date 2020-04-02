@@ -7,7 +7,7 @@ let profileListing = [
         'Бланки'],
     [],
     ['Користувачі',
-        'Станиці',
+        '<a class="text-light nav-link p-0" href="/City/Index">Станиці</a>',
         'Округи',
         '<a class="text-light nav-link p-0" href="/Action/GetAction">Акції</a>',
         '<a class="text-light nav-link p-0" href="/Club">Курені</a>',
