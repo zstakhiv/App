@@ -150,5 +150,52 @@ namespace EPlast.XUnitTest
             // Assert
             Assert.False(result.Result);
         }
+
+        [Fact]
+        public void EndPositionTrueTest()
+        {
+            // Arrange
+            var cityAdministrations = new List<CityAdministration>
+            {
+                new CityAdministration
+                {
+                    ID = 1,
+                    User = new User(),
+                    AdminType = new AdminType(),
+                    StartDate = DateTime.Now
+                },
+            };
+            var repoMock = new Mock<IRepositoryWrapper>();
+            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(cityAdministrations.AsQueryable());
+            var userStoreMock = new Mock<IUserStore<User>>();
+            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+
+            // Act
+            var result = controller.EndPosition(cityAdministrations[0].ID);
+
+            // Assert
+            Assert.True(result.Result);
+            Assert.NotNull(cityAdministrations[0].EndDate);
+        }
+
+        [Fact]
+        public void EndPositionFalseTest()
+        {
+            // Arrange
+            var repoMock = new Mock<IRepositoryWrapper>();
+            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(new List<CityAdministration>().AsQueryable());
+            var userStoreMock = new Mock<IUserStore<User>>();
+            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+
+            // Act
+            var result = controller.EndPosition(0);
+
+            // Assert
+            Assert.False(result.Result);
+        }
     }
 }
