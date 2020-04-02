@@ -72,13 +72,13 @@
                                             <p class="col-6 col-form-label">@Model.User.FatherName</p>
                                         </div>
                                     }
-                                    <div class="form-group row">
+                                <div class="form-group row">
+                                    @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                                    {
                                         <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
-                                        @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
-                                        {
-                                            <p class="col-6 col-form-label">@Model.User.Email</p>
-                                        }
-                                    </div>
+                                        <p class="col-6 col-form-label">@Model.User.Email</p>
+                                    }
+                                </div>
                                     @if (@Model.User.UserProfile.Address != null)
                                     {
                                         <div class="form-group row">
