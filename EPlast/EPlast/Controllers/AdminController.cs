@@ -30,12 +30,6 @@ namespace EPlast.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-            var users = _userManager.Users.ToList();
-            return View(users);
-        }
-
         public async Task<IActionResult> UsersTable()
         {
             try
@@ -121,7 +115,7 @@ namespace EPlast.Controllers
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
                 _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
-                return RedirectToAction("Index");
+                return RedirectToAction("UsersTable");
             }
             _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
@@ -148,7 +142,7 @@ namespace EPlast.Controllers
                     _repoWrapper.User.Delete(user);
                     _repoWrapper.Save();
                     _logger.LogInformation("Successful delete user {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("UsersTable");
                 }
                 _logger.LogError("Cannot find user or admin cannot be deleted. ID:{0}", userId);
             }
