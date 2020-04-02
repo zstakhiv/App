@@ -7,6 +7,48 @@
     box-shadow: 1px 1px 5px rgba(0,0,0,.1);
     text-align: center;
 }
+.content-wrapper {
+    .club-wrappers-radius {
+        border-radius: 15px;
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+
+    .colors-for-club-buttons {
+        color: #fff;
+        background-color: #3C5438;
+        border-color: #3C5438;
+        margin: 0 auto;
+        display: block;
+        width: fit-content;
+    }
+
+    .btn-primary {
+        &.focus, &:focus {
+            color: #fff;
+            background-color: #73bd79;
+            border-color: #73bd79;
+            box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+        }
+
+
+
+        &:hover {
+            color: #000;
+            background-color: #73bd79;
+            border-color: #73bd79;
+        }
+    }
+
+    .btn-primary:not(:disabled):not(.disabled) {
+        &.active, &:active {
+            color: #fff;
+            background-color: #73bd79;
+            border-color: #73bd79;
+            color: #000000;
+        }
+    }
+}
+
 .buttons {
     border: 0;
     color: white;

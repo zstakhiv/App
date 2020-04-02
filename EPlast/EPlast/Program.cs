@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using NLog.Extensions.Logging;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace EPlast
 {

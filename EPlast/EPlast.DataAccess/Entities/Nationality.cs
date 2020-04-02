@@ -8,7 +8,9 @@ namespace EPlast.DataAccess.Entities
         public int ID { get; set; }
 
         [Display(Name = "Національність")]
-        [StringLength(20, MinimumLength = 3, ErrorMessage = "Національність повинна складати від 3 до 20 символів")]
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ]{1,20})*$",
+            ErrorMessage = "Національність має містити тільки літери")]
+        [StringLength(25, MinimumLength = 3, ErrorMessage = "Національність повинна складати від 3 до 25 символів")]
         public string Name { get; set; }
         public ICollection<UserProfile> UserProfiles { get; set; }
     }
