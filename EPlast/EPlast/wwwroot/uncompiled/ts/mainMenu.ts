@@ -1,16 +1,16 @@
 let profileListing = [
-    ['<a class="text-light" href="/Account/UserProfile">Персональні дані</a>',
+    ['<a class="text-light nav-link p-0" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
-        '<a class="text-light" href="/Account/UserProfile">Діловодства</a>',
-        '<a class="text-light" href="/EventUser/Eventuser">Вишколи</a>',
+        '<a class="text-light nav-link p-0" href="/Account/UserProfile">Діловодства</a>',
+        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Вишколи</a>',
         'З`їзд',
         'Бланки'],
     [],
     ['Користувачі',
         'Станиці',
         'Округи',
-        '<a class="text-light" href="/Action/GetAction">Акції</a>',
-        '<a class="text-light" href="/Club">Курені</a>',
+        '<a class="text-light nav-link p-0" href="/Action/GetAction">Акції</a>',
+        '<a class="text-light nav-link p-0" href="/Club">Курені</a>',
         'Відзначення',
         'Кадра Виховників'],
     ['Користувачі',
@@ -19,21 +19,21 @@ let profileListing = [
         'Кваліфікаційні Вишколи',
         'Акції/Табори',
         'Відзначення'],
-    ['<a class="text-light" href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>',
-        '<a class="text-light" href="/Admin/UsersTable">Таблиця користувачів</a>',
+    ['<a class="text-light nav-link p-0" href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>',
+        '<a class="text-light nav-link p-0" href="/Admin/UsersTable">Таблиця користувачів</a>',
         'Зголосити вишкіл',
-        '<a class="text-light" href="/Documentation/ViewAnnualReports">Річні звіти</a>',
-        '<a class="text-light" href="/Admin/RegionsAdmins">Осередки та адміни</a>',
+        '<a class="text-light nav-link p-0" href="/Documentation/ViewAnnualReports">Річні звіти</a>',
+        '<a class="text-light nav-link p-0" href="/Admin/RegionsAdmins">Осередки та адміни</a>',
         'Зголошення вишколів',
         'Геостатистика',
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        '<a class="text-light" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
+        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
         'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
-let buttonClone: Element;
+let buttonClone: Element; 
 let backdrop: Element;
 let mainWrapper: Element;
 let menuOpen: boolean = false;
