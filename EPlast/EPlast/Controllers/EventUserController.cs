@@ -100,7 +100,7 @@ namespace EPlast.Controllers
                 _repoWrapper.Event.Update(model.Event);
                 _repoWrapper.Save();
                 return RedirectToAction("EventUser");
-            }
+        }
             catch
             {
                 return RedirectToAction("HandleError", "Error", new { code = 505 });

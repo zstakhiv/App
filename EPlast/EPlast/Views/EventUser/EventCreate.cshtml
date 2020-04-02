@@ -5,7 +5,8 @@
 }
 @model EPlast.ViewModels.Events.EventCreateViewModel;
 @Html.HiddenFor(model => model.Event.ID)
-<form asp-action="EditConfirmed" enctype="multipart/form-data">
+@Html.HiddenFor(model => model.EventAdmin.EventID)
+<form asp-action="EventCreate" enctype="multipart/form-data">
     <div class="eventCreate">
         <div class="d-xl-flex justify-content-xl-center border shadow" style="width: 900px;height: 1320px;background-color: #ffffff;margin-top: 40px;">
             <div class="col " style="height: 1000px;">
@@ -18,7 +19,7 @@
                 </div>
                 <div class="row border shadow" style="height: 55px;">
                     @Html.HiddenFor(i => i.Event.EventType.EventTypeName, new { @id = "name" })
-                    @Html.HiddenFor(i => i.Event.EventStatus.EventStatusName, new { @val = "Не підтверджено" })
+                    @Html.HiddenFor(i => i.Event.EventStatus.EventStatusName, new { @id = "status" })
                     <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Vyshkil"><button class="btn btn-primary" type="button" style="background-color: #3c5438; width:100px;">Вишкіл</button></div>
                     <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Tabir"><button class="btn btn-primary" type="button" style="background-color: #3c5438; width:100px;">Табір</button></div>
                     <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Akcia"><button class="btn btn-primary" type="button" style="background-color: #3c5438;width:100px">Акція</button></div>
@@ -45,20 +46,19 @@
 
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Комендант</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdmin.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Заступник коменданта</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input  type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Бунчужний/на</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Писар</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
                 </div>
                 <div class="row border shadow">
                     <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата початку</label></div>
