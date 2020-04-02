@@ -66,7 +66,7 @@ namespace EPlast.Controllers
                  .Select(ev => new GeneralEventViewModel
                  {
                    Event=ev,
-                   IsUserEventAdmin = ev.EventAdmins.Any(e => e.UserID == _userManager.GetUserId(User)),
+                   IsUserEventAdmin = (ev.EventAdmins.Any(e => e.UserID == _userManager.GetUserId(User))) || User.IsInRole("Адміністратор подій"),
                    IsUserParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
                    IsUserApprovedParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
                    IsUserUndeterminedParticipant = ev.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
@@ -160,7 +160,7 @@ namespace EPlast.Controllers
                        {
                            Event = e,
                            EventParticipants = e.Participants,
-                           IsUserEventAdmin = e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User)),
+                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || User.IsInRole("Адміністратор подій"),
                            IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
                            IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
                            IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
@@ -256,8 +256,7 @@ namespace EPlast.Controllers
                         _repoWrapper.Gallary.Create(gallery);
                         _repoWrapper.EventGallary.Create(new EventGallary { EventID = ID, Gallary = gallery });
                     }
-                }
-               
+                }            
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
