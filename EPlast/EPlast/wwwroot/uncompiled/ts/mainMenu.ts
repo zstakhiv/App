@@ -33,7 +33,7 @@ let profileListing = [
         'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
-let buttonClone: Element;
+let buttonClone: Element; 
 let backdrop: Element;
 let mainWrapper: Element;
 let menuOpen: boolean = false;

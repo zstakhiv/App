@@ -8,16 +8,13 @@
             <div class="row">
                 @foreach(EventCategoryViewModel evc in Model)
                 {
-                <div class="col-md-4 cust_blogteaser">
-                    <form method="post" action="~/Action/Events">
-                        <input type="hidden" value=@evc.EventCategory.ID name="ID" id="something" />
-                        <a href="#"><img class="rounded img-fluid" src="~/images/events/ActionLogo.png"></a>
+                   <div class="col-md-4 cust_blogteaser">
+                        <a><img class="rounded img-fluid" src="~/images/Events/ActionLogo.png"></a>
                         <h3>@evc.EventCategory.EventCategoryName</h3>
-                        <button type="submit" id="completed-task" class="h4 event-fabutton">
+                        <a asp-action="Events"asp-route-ID=@evc.EventCategory.ID class="h4">
                             <i class="fa fa-arrow-circle-right"></i>
-                        </button>
-                    </form>
-                </div>
+                        </a>
+                   </div>
                 }
             </div>
         </div>
