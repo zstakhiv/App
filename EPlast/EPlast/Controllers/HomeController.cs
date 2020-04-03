@@ -25,7 +25,7 @@ namespace EPlast.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("Index");
             //return StatusCode(500);
         }
 
