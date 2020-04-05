@@ -14,18 +14,29 @@
                             }
                         </h1>
   
-              <div class="top-info">
-                <img src="/images/Club/@Model.Club.Logo" alt="" class="curin-img">
-              </div>
+                <div class="top-info">
+                    @if (Model.Club.Logo != null)
+                    {
+                    <img src="/images/Club/@Model.Club.Logo" alt="" class="curin-img">
+                    }
+                    else
+                    {
+                        <img src="~/images/Club/default.jpg" alt="" class="curin-img">
+                    }
+                </div>
   
               <div class="bottom-info-content">
-                  @foreach (var item in Model.Club.ClubAdministration.Take(4))
-                  {
-                      <div class="line-pair">
-                          <p class="line-upper">@item.AdminType.AdminTypeName</p>
-                          <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
-                      </div>
-                  }
+                  <div>
+                      @foreach (var item in Model.Club.ClubAdministration.Take(4))
+                      {
+                          <div class="line-pair">
+                              <p class="line-upper">@item.AdminType.AdminTypeName</p>
+                              <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ClubMembers.User.Id" style="color:black">
+                                  <p class="line-lower">@item.ClubMembers.User.FirstName.ToString() @item.ClubMembers.User.LastName.ToString()</p>
+                              </a>
+                          </div>
+                      }
+                  </div>
                   <a asp-controller="Club" asp-action="ClubAdmins" asp-route-index="@Model.Club.ID" class="btn btn-primary btn-lg colors-for-club-buttons" role="button">Більше</a>
               </div>
             </div>
@@ -60,11 +71,21 @@
                         <div class="members-list">
                             @foreach (var item in Model.Members)
                             {
-                                    <div class="member-block">
+                            <div class="member-block" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id">
+                                <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id">
+                                    @if (item.User.ImagePath != null)
+                                    {
                                         <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
-                                        <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
 
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/Users/default.png" alt="" class="member-img rounded-circle">
+                                    }
+                                </a>
+                                <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
+
+                            </div>
                             }
                             @if(Model.Members.Count == 0)
                             {
@@ -81,13 +102,23 @@
                             {
                                 <div class="member-block">
                                     <div class="member-wrapper">
-                                        <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
-                                        @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
-                                        {
-                                            <a class="plus" asp-controller="Club" asp-action="ChangeIsApprovedStatusClub" asp-route-index="@item.ID" asp-route-clubIndex="@item.Club.ID" style="display: block;">
-                                                +
-                                            </a>
-                                        }
+                                        <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id">
+                                            @if (item.User.ImagePath != null)
+                                            {
+                                                <img src="/images/Users/@item.User.ImagePath" alt="" class="member-img rounded-circle">
+
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/Users/default.png" alt="" class="member-img rounded-circle">
+                                            }
+                                         </a>
+                                            @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                                            {
+                                                <a class="plus" asp-controller="Club" asp-action="ChangeIsApprovedStatusClub" asp-route-index="@item.ID" asp-route-clubIndex="@item.Club.ID" style="display: block;">
+                                                    +
+                                                </a>
+                                            }
                                     </div>
                                     <p class="member-name">@item.User.FirstName.ToString() @item.User.LastName.ToString()</p>
 

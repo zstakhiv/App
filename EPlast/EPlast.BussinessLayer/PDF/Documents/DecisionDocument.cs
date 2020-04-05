@@ -22,7 +22,7 @@ namespace EPlast.BussinessLayer
 
         public override void SetDocumentBody(Section section)
         {
-            var paragraph = section.AddParagraph($"{decesion.Name} від {decesion.Date}");
+            var paragraph = section.AddParagraph($"{decesion.Name} від {decesion.Date.ToString("dd/MM/yyyy")}");
             paragraph.Format.Font.Size = 14;
             paragraph.Format.SpaceAfter = "3cm";
             paragraph.Format.SpaceBefore = "5cm";

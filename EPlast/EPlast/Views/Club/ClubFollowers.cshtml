@@ -11,10 +11,17 @@
                 {
                     <div class="club-block-wrapper">
                         <div class="club-block  club-wrappers-radius">
-                            <a class="club-img-wrapper blocking">
-                                <div class="club-img" style="background-image:url('/images/Users/@item.User.ImagePath')"></div>
+                            <a class="club-img-wrapper blocking" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id">
+                                @if(item.User.ImagePath != null)
+                                {
+                                    <div class="club-img" style="background-image:url('/images/Users/@item.User.ImagePath')"></div>
+                                }
+                                else
+                                {
+                                    <div class="club-img" style="background-image:url('/images/Users/default.png')"></div>
+                                }
                             </a>
-                            <a class="club-name" style="color: black;">
+                            <a class="club-name" style="color: black;" asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.User.Id">
                                 @item.User.FirstName @item.User.LastName
                             </a>
                             @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))

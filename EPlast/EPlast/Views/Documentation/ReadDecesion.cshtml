@@ -47,7 +47,7 @@
                         <td>
                             @if (!string.IsNullOrEmpty(item.Filename))
                             {
-                                <a asp-controller="Documentation" asp-action="Download" asp-route-id="=@item.Decesion.ID" asp-route-filename="@item.Filename">@item.Filename</a>
+                                <a asp-controller="Documentation" asp-action="Download" asp-route-id="@item.Decesion.ID" asp-route-filename="@item.Filename">@item.Filename</a>
                             }
                         </td>
                     </tr>
