@@ -56,19 +56,27 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            LoginViewModel model = new LoginViewModel
+            try
             {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
-            return View(model);
+                LoginViewModel model = new LoginViewModel
+                {
+                    ReturnUrl = returnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
         {
-            return View();
+                return View();
         }
 
         [HttpGet]
@@ -96,7 +104,7 @@ namespace EPlast.Controllers
             }
             else
             {
-                return RedirectToAction("UserProfile", "Account");
+                return View("ChangePasswordNotAllowed");
             }
         }
 
@@ -104,53 +112,61 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                ModelState.AddModelError("", "Дані введені неправильно");
-                return View("Register");
-            }
-
-            var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
-            if (registeredUser != null)
-            {
-                ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
-                return View("Register");
-            }
-            else
-            {
-                var user = new User()
+                if (!ModelState.IsValid)
                 {
-                    Email = registerVM.Email,
-                    UserName = registerVM.Email,
-                    LastName = registerVM.SurName,
-                    FirstName = registerVM.Name,
-                    RegistredOn=DateTime.Now,
-                    ImagePath = "default.png",
-                    UserProfile = new UserProfile()
-                };
+                    ModelState.AddModelError("", "Дані введені неправильно");
+                    return View("Register");
+                }
 
-                var result = await _userManager.CreateAsync(user, registerVM.Password);
-
-                if (!result.Succeeded)
+                var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
+                if (registeredUser != null)
                 {
-                    ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
                     return View("Register");
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(user, "Прихильник");
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var confirmationLink = Url.Action(
-                        nameof(ConfirmingEmail),
-                        "Account",
-                        new { code = code, userId = user.Id },
-                        protocol: HttpContext.Request.Scheme);
+                    var user = new User()
+                    {
+                        Email = registerVM.Email,
+                        UserName = registerVM.Email,
+                        LastName = registerVM.SurName,
+                        FirstName = registerVM.Name,
+                        RegistredOn = DateTime.Now,
+                        ImagePath = "default.png",
+                        UserProfile = new UserProfile()
+                    };
 
-                    await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
-                        $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
+                    var result = await _userManager.CreateAsync(user, registerVM.Password);
 
-                    return View("AcceptingEmail");
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                        return View("Register");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "Прихильник");
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationLink = Url.Action(
+                            nameof(ConfirmingEmail),
+                            "Account",
+                            new { code = code, userId = user.Id },
+                            protocol: HttpContext.Request.Scheme);
+
+                        await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
+                            $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
+
+                        return View("AcceptingEmail");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -181,43 +197,51 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel loginVM, string returnUrl)
         {
-            loginVM.ReturnUrl = returnUrl;
-            loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userManager.FindByEmailAsync(loginVM.Email);
-                if (user == null)
+                loginVM.ReturnUrl = returnUrl;
+                loginVM.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+                if (ModelState.IsValid)
                 {
-                    ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
-                    return View(loginVM);
-                }
-                else
-                {
-                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    var user = await _userManager.FindByEmailAsync(loginVM.Email);
+                    if (user == null)
                     {
-                        ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
+                        ModelState.AddModelError("", "Ви не зареєстровані в системі, або не підтвердили свою електронну пошту");
+                        return View(loginVM);
+                    }
+                    else
+                    {
+                        if (!await _userManager.IsEmailConfirmedAsync(user))
+                        {
+                            ModelState.AddModelError("", "Ваш акаунт не підтверджений, будь ласка увійдіть та зробіть підтвердження");
+                            return View(loginVM);
+                        }
+                    }
+
+                    var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, true);
+                    if (result.IsLockedOut)
+                    {
+                        return RedirectToAction("AccountLocked", "Account");
+                    }
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("UserProfile", "Account");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
                         return View(loginVM);
                     }
                 }
-
-                var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.RememberMe, true);
-                if (result.IsLockedOut)
-                {
-                    return RedirectToAction("AccountLocked", "Account");
-                }
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("UserProfile", "Account");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Ви ввели неправильний пароль, спробуйте ще раз");
-                    return View(loginVM);
-                }
+                return View("Login", loginVM);
             }
-            return View("Login",loginVM);
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
         }
 
         [HttpPost]
@@ -251,6 +275,16 @@ namespace EPlast.Controllers
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
                 FirstOrDefault();
+            var userPositions = _repoWrapper.CityAdministration
+                .FindByCondition(ca => ca.UserId == userId)
+                    .Include(ca => ca.AdminType)
+                    .Include(ca => ca.City);
+            var model = new UserViewModel
+            { 
+                User = user,
+                CanManageUserPosition = User.IsInRole("Admin"),
+                UserPositions = userPositions
+            };
             
             var t = _repoWrapper.ConfirmedUser.FindByCondition(x => x.UserID == userId).Include(x => x.Approver).ThenInclude(x => x.User).ToList();
 
@@ -299,7 +333,7 @@ namespace EPlast.Controllers
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
                     _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
@@ -336,7 +370,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -438,8 +472,8 @@ namespace EPlast.Controllers
                     }
                 }
 
-                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.User.Update(model.User);
+                _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();
                 _logger.LogInformation("User {0} {1} was edited profile and saved in the database", model.User.FirstName, model.User.LastName);
                 return RedirectToAction("UserProfile");
@@ -447,7 +481,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -465,26 +499,34 @@ namespace EPlast.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotpasswordVM)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (ModelState.IsValid)
                 {
-                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
-                    return View("ForgotPassword");
-                }
+                    var user = await _userManager.FindByEmailAsync(forgotpasswordVM.Email);
+                    if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                    {
+                        ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
+                        return View("ForgotPassword");
+                    }
 
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action(
-                    nameof(ResetPassword),
-                    "Account",
-                    new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
-                    protocol: HttpContext.Request.Scheme);
-                await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
-                    $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
-                return View("ForgotPasswordConfirmation");
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Action(
+                        nameof(ResetPassword),
+                        "Account",
+                        new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
+                        protocol: HttpContext.Request.Scheme);
+                    await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
+                        $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
+                    return View("ForgotPasswordConfirmation");
+                }
+                return View("ForgotPassword");
             }
-            return View("ForgotPassword");
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
         }
 
         [HttpGet]
@@ -499,29 +541,37 @@ namespace EPlast.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View("ResetPassword");
-            }
-            var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
-                return View("ResetPassword");
-            }
-            var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
-            if (result.Succeeded)
-            {
-                if (await _userManager.IsLockedOutAsync(user))
+                if (!ModelState.IsValid)
                 {
-                    await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                    return View("ResetPassword");
                 }
-                return View("ResetPasswordConfirmation");
+                var user = await _userManager.FindByEmailAsync(resetpasswordVM.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "Користувача із заданою електронною поштою немає в системі або він не підтвердив свою реєстрацію");
+                    return View("ResetPassword");
+                }
+                var result = await _userManager.ResetPasswordAsync(user, HttpUtility.UrlDecode(resetpasswordVM.Code), resetpasswordVM.Password);
+                if (result.Succeeded)
+                {
+                    if (await _userManager.IsLockedOutAsync(user))
+                    {
+                        await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                    }
+                    return View("ResetPasswordConfirmation");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Проблеми зі скидуванням пароля або введений новий пароль повинен вміщати 8символів, включаючи літери та цифри");
+                    return View("ResetPassword");
+                }
             }
-            else
+            catch (Exception e)
             {
-                ModelState.AddModelError("", "Проблеми зі скидуванням пароля або введений новий пароль повинен вміщати 8символів, включаючи літери та цифри");
-                return View("ResetPassword");
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -538,80 +588,90 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
-            LoginViewModel loginViewModel = new LoginViewModel
+            try
             {
-                ReturnUrl = returnUrl,
-                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            };
-
-            if (remoteError != null)
-            {
-                ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
-                return View("Login");
-            }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                ModelState.AddModelError(string.Empty, "Error loading external login information");
-                return View("Login", loginViewModel);
-            }
-
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            if (signInResult.Succeeded)
-            {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (info.LoginProvider.ToString() == "Google")
+                returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
+                LoginViewModel loginViewModel = new LoginViewModel
                 {
-                    if (email != null)
+                    ReturnUrl = returnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+
+                if (remoteError != null)
+                {
+                    ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
+                    return View("Login");
+                }
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Error loading external login information");
+                    return View("Login", loginViewModel);
+                }
+
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                    info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                if (signInResult.Succeeded)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    if (info.LoginProvider.ToString() == "Google")
                     {
-                        var user = await _userManager.FindByEmailAsync(email);
+                        if (email != null)
+                        {
+                            var user = await _userManager.FindByEmailAsync(email);
+                            if (user == null)
+                            {
+                                user = new User
+                                {
+                                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                    ImagePath = "default.png",
+                                    UserProfile = new UserProfile()
+                                };
+                                await _userManager.CreateAsync(user);
+                            }
+                            await _userManager.AddToRoleAsync(user, "Прихильник");
+                            await _userManager.AddLoginAsync(user, info);
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    else if (info.LoginProvider.ToString() == "Facebook")
+                    {
+                        var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var identifierForSearching = email ?? nameIdentifier;
+                        var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
                         if (user == null)
                         {
                             user = new User
                             {
-                                UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                UserName = (email ?? nameIdentifier),
                                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                Email = (email ?? "facebookdefaultmail@gmail.com"),
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
                                 UserProfile = new UserProfile()
                             };
                             await _userManager.CreateAsync(user);
                         }
+                        await _userManager.AddToRoleAsync(user, "Прихильник");
                         await _userManager.AddLoginAsync(user, info);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
+                    return View("Error");
                 }
-                else if(info.LoginProvider.ToString() == "Facebook")
-                {   
-                    var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var identifierForSearching = email ?? nameIdentifier;
-                    var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
-                    if(user == null)
-                    {
-                        user = new User
-                        {
-                            UserName = (email ?? nameIdentifier),
-                            FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                            Email = (email ?? "facebookdefaultmail@gmail.com"),
-                            LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                            ImagePath = "default.png",
-                            UserProfile = new UserProfile()
-                        };
-                        await _userManager.CreateAsync(user);
-                    }
-                    await _userManager.AddLoginAsync(user,info);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
-                }
-                return View("Error");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -619,27 +679,81 @@ namespace EPlast.Controllers
         [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = await _userManager.GetUserAsync(User);
-                if(user == null)
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Login");
-                }
-                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
-                    model.NewPassword);
-                if (!result.Succeeded)
-                {
-                    foreach(var error in result.Errors)
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user == null)
                     {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        return RedirectToAction("Login");
                     }
-                    return View();
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
+                        model.NewPassword);
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View();
+                    }
+                    await _signInManager.RefreshSignInAsync(user);
+                    return View("ChangePasswordConfirmation");
                 }
-                await _signInManager.RefreshSignInAsync(user);
-                return View("ChangePasswordConfirmation");
+                return View(model);
             }
-            return View(model);
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<bool> DeletePosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.User)
+                    .First();
+                if (cityAdministration.EndDate == null)
+                {
+                    await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
+                }
+                _repoWrapper.CityAdministration.Delete(cityAdministration);
+                _repoWrapper.Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<bool> EndPosition(int id)
+        {
+            try
+            {
+                CityAdministration cityAdministration = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID == id)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.User)
+                    .First();
+                cityAdministration.EndDate = DateTime.Today;
+                _repoWrapper.CityAdministration.Update(cityAdministration);
+                _repoWrapper.Save();
+                await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

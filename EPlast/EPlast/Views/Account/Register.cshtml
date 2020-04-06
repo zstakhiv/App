@@ -1,8 +1,4 @@
-﻿@{
-    Layout = "~/Views/Shared/_LayoutWithoutFooter.cshtml";
-}
-
-@using EPlast.ViewModels;
+﻿@using EPlast.ViewModels;
 @model RegisterViewModel
 
 <div class="main-wrapper" style="background-color: rgb(245,245,245);">
@@ -40,7 +36,7 @@
                     <span asp-validation-for="@Model.ConfirmPassword" style="color:#db0b3c;"></span>
                 </div>
                 <div class="form-group">
-                    <input asp-for="@Model.Name" class="form-control" type="text" name="Name" placeholder="Імя">
+                    <input asp-for="@Model.Name" class="form-control" type="text" name="Name" placeholder="Ім'я">
                     <span asp-validation-for="@Model.Name" style="color:#db0b3c;"></span>
                 </div>
                 <div class="form-group">

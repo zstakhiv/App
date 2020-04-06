@@ -21,18 +21,13 @@ namespace EPlast.Controllers
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<User> _userManager;
         private readonly ILogger _logger;
+
         public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IRepositoryWrapper repoWrapper, ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _repoWrapper = repoWrapper;
             _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            var users = _userManager.Users.ToList();
-            return View(users);
         }
 
         public async Task<IActionResult> UsersTable()
@@ -78,7 +73,7 @@ namespace EPlast.Controllers
 
                 return View(userTableViewModels);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Log(LogLevel.Error, $"Exception: {e.Message}");
                 return RedirectToAction("HandleError", "Error");
@@ -119,8 +114,8 @@ namespace EPlast.Controllers
                 var removedRoles = userRoles.Except(roles);
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
-                _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName,user.Id);
-                return RedirectToAction("Index");
+                _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
+                return RedirectToAction("UsersTable");
             }
             _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 404 });
@@ -147,13 +142,14 @@ namespace EPlast.Controllers
                     _repoWrapper.User.Delete(user);
                     _repoWrapper.Save();
                     _logger.LogInformation("Successful delete user {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("UsersTable");
                 }
-                _logger.LogError("Cannot find user or admin cannot be deleted. ID:{0}",userId);
+                _logger.LogError("Cannot find user or admin cannot be deleted. ID:{0}", userId);
             }
             _logger.Log(LogLevel.Error, $"User, with userId: {userId}, is null");
             return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
+
         [HttpGet]
         public IActionResult RegionsAdmins()
         {
@@ -166,7 +162,7 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult GetAdmins(int cityId)
         {
-            var res=_repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i=>i.User).Include(i=>i.AdminType);
+            var res = _repoWrapper.CityAdministration.FindByCondition(x => x.CityId == cityId).Include(i => i.User).Include(i => i.AdminType);
             return PartialView(res);
         }
     }
