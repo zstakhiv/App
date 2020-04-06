@@ -67,7 +67,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -165,7 +165,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -239,7 +239,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -289,7 +289,7 @@ namespace EPlast.Controllers
                 return View(model);
             }
             _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
-            return RedirectToAction("HandleError", "Error", new { code = 500 });
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
         [Authorize]
@@ -309,7 +309,7 @@ namespace EPlast.Controllers
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
                     _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return RedirectToAction("HandleError", "Error", new { code = 500 });
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
@@ -346,7 +346,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -499,7 +499,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -545,7 +545,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -645,7 +645,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -680,7 +680,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
