@@ -10,6 +10,8 @@ namespace EPlast.ViewModels.Events
     public class EventCreateViewModel
     {
         public Event Event { get; set; }
+        public IEnumerable<User> Users { get; set; }
+        public User User { get; set; }
         public IEnumerable<EventCategory> EventCategory { get; set; }
         public IEnumerable<EventType> EventTypes { get; set; }
         public EventType EventType { get; set; }
