@@ -32,7 +32,7 @@
             <datalist id="DecisionType-value">
                 @foreach (var item in Model.DecesionTargets)
                 {
-                    <option data-value="@item.ID" value="@item.TargetName"></option>
+                <option data-value="@item.ID" value="@item.TargetName"></option>
                 }
             </datalist>
             @Html.HiddenFor(x => x.Decesion.DecesionTarget.ID, new { @id = "autocomplete_input_id_0", @Value = "0" })
