@@ -19,6 +19,7 @@ namespace EPlast.XUnitTest
 {
     public class EventUserControllerTests
     {
+        [Fact]
         public void EventCreateTest()
         {
             // Arrange
