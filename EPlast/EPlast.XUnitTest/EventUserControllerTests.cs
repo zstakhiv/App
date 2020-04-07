@@ -39,7 +39,8 @@ namespace EPlast.XUnitTest
                 Questions = "Questions",
             };
             var repository = new Mock<IRepositoryWrapper>();
-            repository.Setup(r => r.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(new List<Event>{new Event
+            repository.Setup(r => r.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>()))
+                .Returns(new List<Event>{new Event
             {
                 EventName = "Event1",
                 EventType = new EventType { EventTypeName = "EventType1" },
