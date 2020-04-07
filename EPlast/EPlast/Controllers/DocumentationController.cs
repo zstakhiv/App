@@ -65,11 +65,12 @@ namespace EPlast.Controllers
                     DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
                 };
 
-                return View(decesionViewModel);
+                return decesionViewModel;
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                RedirectToAction("HandleError", "Error");
+                return null;
             }
         }
 
@@ -104,10 +105,10 @@ namespace EPlast.Controllers
                         string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesionViewModel.Decesion.ID;
                         Directory.CreateDirectory(path);
 
-                    if (!Directory.Exists(path))
-                    {
-                        throw new ArgumentException($"directory '{path}' is not exist");
-                    }
+                        if (!Directory.Exists(path))
+                        {
+                            throw new ArgumentException($"directory '{path}' is not exist");
+                        }
 
                         if (decesionViewModel.File != null)
                         {
