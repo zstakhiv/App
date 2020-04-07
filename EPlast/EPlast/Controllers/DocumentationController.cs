@@ -13,8 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace EPlast.Controllers
@@ -79,7 +77,8 @@ namespace EPlast.Controllers
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return Json(new { success = false });
                 }
-                else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
+
+                if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
                     return Json(new { success = false });
@@ -121,7 +120,6 @@ namespace EPlast.Controllers
                         return Json(new { success = false });
                     }
                 }
-                //Create ajax and response for create descesion, also added model winodw for success and error response
                 return Json(new { success = true, Text = "Рішення додано, обновіть сторінку." });
             }
             catch
