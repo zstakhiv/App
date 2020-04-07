@@ -98,10 +98,7 @@ namespace EPlast.Controllers
                         { EventCategoryName = EventCategoryName };
                     }
                 }
-            _repoWrapper.User.Update(model.User);
             _repoWrapper.Event.Update(model.Event);
-            _repoWrapper.EventAdmin.Update(model.EventAdmin);
-            _repoWrapper.EventAdministration.Update(model.EventAdministration);
             _repoWrapper.Save();
                 return RedirectToAction("EventUser");
             //}

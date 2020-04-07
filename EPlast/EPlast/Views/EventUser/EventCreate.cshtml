@@ -70,7 +70,7 @@
                         <label class="col-form-label">Комендант</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        @Html.TextBoxFor(x => x.EventAdmin.User,
+                        @Html.TextBoxFor(x => x.EventAdmin.UserID,
                         new
                              {
                                  @list = "Users-value",
@@ -79,9 +79,10 @@
                                  @Value = ""
                              })
                         <datalist id="Users-value">
+                            <option selected="selected" value="">Будь ласка, виберіть ...</option>
                             @foreach (User item in Model.Users)
                             {
-                                <option data-value="@item.Id" value="@item.FirstName @item.LastName"></option>
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
                             }
                         </datalist>
                         @Html.HiddenFor(i => i.EventAdmin.UserID, new { @id = "autocomplete_input_id_3" })
