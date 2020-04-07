@@ -609,6 +609,8 @@ namespace EPlast.Controllers
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
+                                await _emailConfirmation.SendEmailAsync(user.Email, "Повідомлення про реєстрацію",
+                            "Ви зареєструвались в системі EPlast використовуючи свій Google-акаунт ", "Адміністрація сайту EPlast");
                             }
                             await _userManager.AddToRoleAsync(user, "Прихильник");
                             await _userManager.AddLoginAsync(user, info);
