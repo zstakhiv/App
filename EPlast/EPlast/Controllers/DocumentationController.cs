@@ -50,20 +50,27 @@ namespace EPlast.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult CreateDecesion()
         {
-            DecesionViewModel decesionViewModel = new DecesionViewModel
+            try
             {
-                Decesion = new Decesion(),
-                OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
-                                         select new SelectListItem
-                                         {
-                                             Text = item.OrganizationName,
-                                             Value = item.ID.ToString()
-                                         }),
-                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
-                DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
-            };
+                DecesionViewModel decesionViewModel = new DecesionViewModel
+                {
+                    Decesion = new Decesion(),
+                    OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
+                                             select new SelectListItem
+                                             {
+                                                 Text = item.OrganizationName,
+                                                 Value = item.ID.ToString()
+                                             }),
+                    DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
+                    DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
+                };
 
-            return View(decesionViewModel);
+                return View(decesionViewModel);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -72,16 +79,15 @@ namespace EPlast.Controllers
         {
             try
             {
-                
-                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID!=0)
+                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return View("CreateDecesion");
+                    return RedirectToAction("CreateDecesion");
                 }
                 else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
-                    return View("CreateDecesion");
+                    return RedirectToAction("CreateDecesion");
                 }
 
                 decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
@@ -92,32 +98,24 @@ namespace EPlast.Controllers
 
                 if (decesionViewModel.Decesion.HaveFile)
                 {
-                    try
+                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                    Directory.CreateDirectory(path);
+
+                    if (!Directory.Exists(path))
                     {
-                        string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                        Directory.CreateDirectory(path);
-
-                        if (!Directory.Exists(path))
-                        {
-                            throw new ArgumentException($"directory '{path}' is not exist");
-                        }
-
-                        path = Path.Combine(path, decesionViewModel.File.FileName);
-                        using (var fileStream = new FileStream(path, FileMode.Create))
-                        {
-                            await decesionViewModel.File.CopyToAsync(fileStream);
-                            if (!System.IO.File.Exists(path))
-                            {
-                                throw new ArgumentException($"File was not created it '{path}' directory");
-                            }
-                        }
+                        throw new ArgumentException($"directory '{path}' is not exist");
                     }
-                    catch
+
+                    path = Path.Combine(path, decesionViewModel.File.FileName);
+                    using (var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        return RedirectToAction("HandleError", "Error");
+                        await decesionViewModel.File.CopyToAsync(fileStream);
+                        if (!System.IO.File.Exists(path))
+                        {
+                            throw new ArgumentException($"File was not created it '{path}' directory");
+                        }
                     }
                 }
-
                 return RedirectToAction("CreateDecesion");
             }
             catch
@@ -174,7 +172,7 @@ namespace EPlast.Controllers
 
                 var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id);
 
-                if (!Directory.Exists(path) || Directory.GetFiles(path).Length==0)
+                if (!Directory.Exists(path) || Directory.GetFiles(path).Length == 0)
                 {
                     throw new ArgumentException($"directory '{path}' is not exist");
                 }
