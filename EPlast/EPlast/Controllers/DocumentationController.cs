@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace EPlast.Controllers
@@ -68,19 +70,19 @@ namespace EPlast.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
+        public async Task<JsonResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
             try
             {
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return View("CreateDecesion");
+                    return Json(new { success = false });
                 }
                 else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
-                    return View("CreateDecesion");
+                    return Json(new { success = false });
                 }
 
                 decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
@@ -101,27 +103,30 @@ namespace EPlast.Controllers
                             throw new ArgumentException($"directory '{path}' is not exist");
                         }
 
-                        path = Path.Combine(path, decesionViewModel.File.FileName);
-                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        if (decesionViewModel.File != null)
                         {
-                            await decesionViewModel.File.CopyToAsync(fileStream);
-                            if (!System.IO.File.Exists(path))
+                            path = Path.Combine(path, decesionViewModel.File.FileName);
+                            using (var fileStream = new FileStream(path, FileMode.Create))
                             {
-                                throw new ArgumentException($"File was not created it '{path}' directory");
+                                await decesionViewModel.File.CopyToAsync(fileStream);
+                                if (!System.IO.File.Exists(path))
+                                {
+                                    throw new ArgumentException($"File was not created it '{path}' directory");
+                                }
                             }
                         }
                     }
                     catch
                     {
-                        return RedirectToAction("HandleError", "Error");
+                        return Json(new { success = false });
                     }
                 }
-
-                return RedirectToAction("CreateDecesion");
+                //Create ajax and response for create descesion, also added model winodw for success and error response
+                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку." });
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return Json(new { success = false });
             }
         }
 
