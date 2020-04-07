@@ -6,7 +6,6 @@ namespace EPlast.ViewModels
     public class UserViewModel
     {
         public User User { get; set; }
-        public bool CanManageUserPosition { get; set; }
         public IEnumerable<CityAdministration> UserPositions { get; set; }
     }
 }
