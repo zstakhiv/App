@@ -50,20 +50,27 @@ namespace EPlast.Controllers
         [Authorize(Roles = "Admin")]
         public DecesionViewModel _CreateDecesion()
         {
-            DecesionViewModel decesionViewModel = new DecesionViewModel
+            try
             {
-                Decesion = new Decesion(),
-                OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
-                                         select new SelectListItem
-                                         {
-                                             Text = item.OrganizationName,
-                                             Value = item.ID.ToString()
-                                         }),
-                DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
-                DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
-            };
+                DecesionViewModel decesionViewModel = new DecesionViewModel
+                {
+                    Decesion = new Decesion(),
+                    OrganizationListItems = (from item in _repoWrapper.Organization.FindAll()
+                                             select new SelectListItem
+                                             {
+                                                 Text = item.OrganizationName,
+                                                 Value = item.ID.ToString()
+                                             }),
+                    DecesionTargets = _repoWrapper.DecesionTarget.FindAll().ToList(),
+                    DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
+                };
 
-            return decesionViewModel;
+                return View(decesionViewModel);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error");
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -72,7 +79,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0)
+                if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
                     return Json(new { success = false });
@@ -97,10 +104,10 @@ namespace EPlast.Controllers
                         string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesionViewModel.Decesion.ID;
                         Directory.CreateDirectory(path);
 
-                        if (!Directory.Exists(path))
-                        {
-                            throw new ArgumentException($"directory '{path}' is not exist");
-                        }
+                    if (!Directory.Exists(path))
+                    {
+                        throw new ArgumentException($"directory '{path}' is not exist");
+                    }
 
                         if (decesionViewModel.File != null)
                         {
