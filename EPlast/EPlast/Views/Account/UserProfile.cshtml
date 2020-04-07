@@ -23,7 +23,7 @@
                 <a class="nav-link" data-toggle="tab" href="#">Бланки</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#">Поручення</a>
+                <a class="nav-link" data-toggle="tab" href="#approvers">Поручення</a>
             </li>
             @if (_userManager.GetUserId(User) == Model.User.Id)
             {
@@ -47,6 +47,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-8">
                         <div class="card-body">
                             <div class="row">
@@ -72,13 +73,13 @@
                                             <p class="col-6 col-form-label">@Model.User.FatherName</p>
                                         </div>
                                     }
-                                <div class="form-group row">
-                                    @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
-                                    {
-                                        <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
-                                        <p class="col-6 col-form-label">@Model.User.Email</p>
-                                    }
-                                </div>
+                                    <div class="form-group row">
+                                        @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                                        {
+                                            <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
+                                            <p class="col-6 col-form-label">@Model.User.Email</p>
+                                        }
+                                    </div>
                                     @if (@Model.User.UserProfile.Address != null)
                                     {
                                         <div class="form-group row">
@@ -220,6 +221,81 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div id="approvers" class="container tab-pane active">
+                <div class="col-md-12 mt-4 d-flex">
+                    <div class="col-md-4">
+                        <div class="portlet light profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
+                            </div>
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">  </div>
+                                <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>@Model.User.FirstName @Model.User.LastName</h4>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card text-center">
+                                        <h5 class="card-header">
+                                            Поручення дійсних членів
+                                        </h5>
+                                        <div class="card-body">
+                                            <div class="card " id="insideCard">
+                                                    @if (Model.User.ConfirmedUsers.Count() != 0)
+                                                    {
+                                                        @foreach (var item in Model.User.ConfirmedUsers.ToList())
+                                                        {
+                                                            <div class="card">
+                                                                <img class="card-img"  width="150" height="150" src="/images/Users/@item.Approver.User.ImagePath" alt="Generic placeholder image"/>
+                                                                <div class="card-body">
+                                                                    <div class="card-text">
+                                                                        <h5>@item.Approver.User.FirstName @item.Approver.User.LastName</h5>
+                                                                        @item.ConfirmDate
+                                                                    </div>
+                                                                </div>
+                                                             
+                                                            </div>
+                                                            
+                                                        }
+                                                    }
+                                                    @if (Model.User.ConfirmedUsers.Count() < 3)
+                                                    {
+
+                                                        <div class="media">
+                                                            <a asp-action="ApproveUser" asp-route-userId="@Model.User.Id" class="btn btn-fix text-left">
+                                                                <img class="mr-3" src="/images/add_user.png" alt="Generic placeholder image">
+                                                                <div class="media-body">
+                                                                    <h5 class="mt-0 mb-1">Поручитись</h5>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                            </div>
+                                            <h5 class="card-title">Special title treatment</h5>
+                                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        </div>
+                                    </div>
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <partial name="_SuccessModal" model='""' />

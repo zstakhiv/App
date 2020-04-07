@@ -274,22 +274,21 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Work).
+                Include(x=>x.ConfirmedUsers).
+                    ThenInclude(q=>(q as ConfirmedUser).Approver).
+                        ThenInclude(q=>q.User).
                 FirstOrDefault();
             var userPositions = _repoWrapper.CityAdministration
                 .FindByCondition(ca => ca.UserId == userId)
                     .Include(ca => ca.AdminType)
                     .Include(ca => ca.City);
+            
             var model = new UserViewModel
-            { 
+            {
                 User = user,
                 CanManageUserPosition = User.IsInRole("Admin"),
                 UserPositions = userPositions
             };
-            
-            var t = _repoWrapper.ConfirmedUser.FindByCondition(x => x.UserID == userId).Include(x => x.Approver).ThenInclude(x => x.User).ToList();
-
-            user.ConfirmedUsers = t;
-            var model = new UserViewModel { User = user };
             if (model != null)
             {
                 return View(model);
