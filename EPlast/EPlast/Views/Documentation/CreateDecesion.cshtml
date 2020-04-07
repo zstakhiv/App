@@ -70,13 +70,17 @@
                 <strong>Додати файл</strong>
                 <br>
             </label>
-            @Html.TextBoxFor(x => x.File, new
-            {
-                @placeholder = "прекріплення файлу",
-                @type = "file",
-                @class = "form-control",
-                @accept = $"application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*"
-            })
+            <br />
+            <div class="upload-btn-wrapper">
+                <button class="upload-btn">Прикріпити файл</button>
+                @Html.TextBoxFor(x => x.File, new
+           {
+               @placeholder = "прекріплення файлу",
+               @type = "file",
+               @class = "form-control",
+               @accept = $"application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*"
+           })
+            </div>
         </div>
         <div class="form-group">
             <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
