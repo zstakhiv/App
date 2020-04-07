@@ -40,7 +40,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                var club = _repoWrapper.Club
+                 var club = _repoWrapper.Club
                     .FindByCondition(q => q.ID == index)
                     .Include(c => c.ClubAdministration)
                     .ThenInclude(t => t.AdminType)
@@ -58,7 +58,7 @@ namespace EPlast.Controllers
                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
                     .Select(a => a.ClubMembers.User)
                     .FirstOrDefault();
-                ViewBag.usermanager = _userManager;
+               ViewBag.usermanager = _userManager;
                 return View(new ClubViewModel { Club = club, ClubAdmin =  clubAdmin, Members = members, Followers = followers});
             }
             catch (Exception e)
