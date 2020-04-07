@@ -26,8 +26,6 @@ namespace EPlast.Controllers
             EventUserViewModel model = new EventUserViewModel();
             var user = _repoWrapper.User.
             FindByCondition(q => q.Id == _userManager.GetUserId(User)).First();
-            model.EventAdmins = _repoWrapper.EventAdmin.FindByCondition(i => i.UserID == _userManager.GetUserId(User)).
-                Include(i => i.Event).ToList();
             model.User = user;
             model.Participants = _repoWrapper.Participant.FindByCondition(i => i.UserId == _userManager.GetUserId(User)).
                 Include(i => i.Event).ToList();
@@ -62,8 +60,8 @@ namespace EPlast.Controllers
                     Event = events,
                     EventTypes = _repoWrapper.EventType.FindAll(),
                     EventCategory = _repoWrapper.EventCategory.FindAll(),
-                    Users = _repoWrapper.User.FindAll(),
                 };
+
                 return View(model);
             }
             catch
@@ -75,15 +73,15 @@ namespace EPlast.Controllers
         [HttpPost]
         public IActionResult EventCreate(EventCreateViewModel model)
         {
-            //try
-            //{
+            try
+            {
                 var events = _repoWrapper.Event.
-                    Include(i => i.EventCategory).
-                    Include(i => i.EventType).
-                    Include(g => g.EventAdmins).
-                    Include(g => g.EventStatus).
-                    Include(g => g.EventAdministrations).
-                    FirstOrDefault();
+                Include(i => i.EventCategory).
+                Include(i => i.EventType).
+                Include(g => g.EventAdmins).
+                Include(g => g.EventStatus).
+                Include(g => g.EventAdministrations).
+                FirstOrDefault();
 
                 if (model.Event.EventCategory.ID == 0)
                 {
@@ -98,17 +96,15 @@ namespace EPlast.Controllers
                         { EventCategoryName = EventCategoryName };
                     }
                 }
-            _repoWrapper.User.Update(model.User);
-            _repoWrapper.Event.Update(model.Event);
-            _repoWrapper.EventAdmin.Update(model.EventAdmin);
-            _repoWrapper.EventAdministration.Update(model.EventAdministration);
-            _repoWrapper.Save();
+
+                _repoWrapper.Event.Update(model.Event);
+                _repoWrapper.Save();
                 return RedirectToAction("EventUser");
-            //}
-            //catch
-            //{
-            //    return RedirectToAction("HandleError", "Error", new { code = 505 });
-            //}
+        }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
         }
     }
 }
