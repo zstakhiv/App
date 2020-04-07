@@ -281,7 +281,6 @@ namespace EPlast.Controllers
             var model = new UserViewModel
             { 
                 User = user,
-                CanManageUserPosition = User.IsInRole("Admin"),
                 UserPositions = userPositions
             };
             if (model != null)
