@@ -52,21 +52,7 @@ namespace EPlast
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-            services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-            services.AddScoped<IEducationRepository, EducationRepository>();
-            services.AddScoped<IDegreeRepository, DegreeRepository>();
-            services.AddScoped<IReligionRepository, ReligionRepository>();
-            services.AddScoped<IGenderRepository, GenderRepository>();
-            services.AddScoped<IWorkRepository, WorkRepository>();
-            services.AddScoped<IApproverRepository, ApproverRepository>();
-            services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
-
-            services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
-            services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
-            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-            services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
             services.AddScoped<IViewAnnualReportsVMInitializer, ViewAnnualReportsVMInitializer>();
