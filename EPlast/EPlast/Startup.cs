@@ -18,6 +18,8 @@ using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
 using EPlast.BussinessLayer.Settings;
+using EPlast.BussinessLayer.AccessManagers;
+using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast
 {
@@ -70,7 +72,8 @@ namespace EPlast
             services.AddScoped<IViewAnnualReportsVMInitializer, ViewAnnualReportsVMInitializer>();
             services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
-
+            services.AddScoped<ICityAccessManagerSettings, CityAccessManagerSettings>();
+            services.AddScoped<ICityAccessManager, CityAccessManager>();
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {

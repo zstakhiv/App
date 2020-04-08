@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast.Controllers
 {
@@ -26,11 +27,13 @@ namespace EPlast.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
+        private readonly ICityAccessManager _cityAccessManager;
 
         private const string _decesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer)
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
+            ICityAccessManager cityAccessManager)
 
         {
             _repoWrapper = repoWrapper;
@@ -40,6 +43,7 @@ namespace EPlast.Controllers
             _decisionVMCreator = decisionVMCreator;
             _appEnvironment = appEnvironment;
             _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
+            _cityAccessManager = cityAccessManager;
         }
 
         public IActionResult Index()
@@ -248,16 +252,8 @@ namespace EPlast.Controllers
         {
             try
             {
-                var user = _repoWrapper.User
-                .FindByCondition(u => u.Id == _userManager.GetUserId(User))
-                .First();
-                var adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
-                    .First();
-                var city = _repoWrapper.City
-                    .FindByCondition(c => c.CityAdministration
-                    .Any(ca => ca.UserId == user.Id && ca.AdminTypeId == adminType.ID && ca.StartDate != null && ca.EndDate == null))
-                    .First();
+                var userId = _userManager.GetUserId(User);
+                var city = _cityAccessManager.GetCities(userId).First();
                 var cityMembers = _repoWrapper.User
                     .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                     .Include(u => u.UserPlastDegrees);
@@ -266,7 +262,7 @@ namespace EPlast.Controllers
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
                     CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(user.Id, city.ID, cityMembers)
+                    AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
                 };
                 return View(annualReportViewModel);
             }
@@ -276,15 +272,15 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу")]
         [HttpGet]
         public IActionResult CreateAnnualReportAsAdmin(int cityId)
         {
+            var userId = _userManager.GetUserId(User);
+            if (!_cityAccessManager.HasAccess(userId, cityId))
+                return RedirectToAction("HandleError", "Error", new { code = 403 });
             try
             {
-                var user = _repoWrapper.User
-                    .FindByCondition(u => u.Id == _userManager.GetUserId(User))
-                    .First();
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.ID == cityId)
                     .First();
@@ -296,7 +292,7 @@ namespace EPlast.Controllers
                     CityName = city.Name,
                     CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
                     CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(user.Id, city.ID, cityMembers)
+                    AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
                 };
                 return View("CreateAnnualReport", annualReportViewModel);
             }
@@ -306,10 +302,13 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Голова Станиці")]
+        [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         [HttpPost]
         public IActionResult CreateAnnualReport(int cityId, AnnualReport annualReport)
         {
+            var userId = _userManager.GetUserId(User);
+            if (!_cityAccessManager.HasAccess(userId, cityId))
+                return RedirectToAction("HandleError", "Error", new { code = 403 });
             try
             {
                 annualReport.UserId = _userManager.GetUserId(User);
@@ -357,18 +356,20 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу")]
         public IActionResult ViewAnnualReports()
         {
             try
             {
+                var userId = _userManager.GetUserId(User);
+                var cities = _cityAccessManager.GetCities(userId);
                 var annualReports = _repoWrapper.AnnualReports
                     .FindAll()
                     .Include(ar => ar.City)
                         .ThenInclude(c => c.Region)
                     .Include(ar => ar.User)
                     .ToList();
-                var cities = _repoWrapper.City.FindAll();
+                annualReports.RemoveAll(ar => !cities.Any(c => c.ID == ar.CityId));
                 var viewAnnualReportsViewModel = new ViewAnnualReportsViewModel
                 {
                     AnnualReports = annualReports,
@@ -382,7 +383,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу")]
         public IActionResult GetAnnualReport(int id)
         {
             try
@@ -394,6 +395,11 @@ namespace EPlast.Controllers
                     .Include(ar => ar.CityManagement)
                         .ThenInclude(cm => cm.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 return PartialView("_GetAnnualReport", annualReport);
             }
             catch
@@ -402,20 +408,26 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу")]
         public async Task<IActionResult> ConfirmAnnualReport(int id)
         {
             try
             {
                 bool whetherTheRoleShouldBeDeleted = false;
                 bool whetherTheRoleShouldBeAdded = false;
-                // update annualReport status
                 AnnualReport annualReport = _repoWrapper.AnnualReports
                     .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
                     .Include(ar => ar.City)
                     .Include(ar => ar.CityManagement)
                         .ThenInclude(cm => cm.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
+
+                // update annualReport status
                 annualReport.Status = AnnualReportStatus.Confirmed;
                 _repoWrapper.AnnualReports.Update(annualReport);
 
@@ -483,7 +495,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу")]
         public IActionResult CancelAnnualReport(int id)
         {
             try
@@ -492,6 +504,11 @@ namespace EPlast.Controllers
                     .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
                     .Include(ar => ar.City)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 annualReport.Status = AnnualReportStatus.Canceled;
                 _repoWrapper.AnnualReports.Update(annualReport);
                 _repoWrapper.Save();
