@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using Xunit;
 
@@ -21,6 +23,57 @@ namespace EPlast.XUnitTest
 {
     public class AccountControllerTests
     {
+        private Mock<IRepositoryWrapper> _repoWrapper;
+        private Mock<IUserStore<User>> _userStoreMock;
+        private Mock<IHttpContextAccessor> _contextAccessor;
+        private Mock<IUserClaimsPrincipalFactory<User>> _userPrincipalFactory;
+        private Mock<UserManager<User>> _userManager;
+        private Mock<SignInManager<User>> _signInManager;
+        private Mock<ILogger<AccountController>> _logger;
+        private Mock<IEmailConfirmation> _emailConfirm;
+        private Mock<IHostingEnvironment> _hostEnv;
+        public AccountControllerTests()
+        {
+            _repoWrapper = new Mock<IRepositoryWrapper>();
+            _userStoreMock = new Mock<IUserStore<User>>();
+            _contextAccessor = new Mock<IHttpContextAccessor>();
+            _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
+            _userManager = new Mock<UserManager<User>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
+            _signInManager = new Mock<SignInManager<User>>(_userManager.Object, _contextAccessor.Object, _userPrincipalFactory.Object, null, null, null);
+            _logger = new Mock<ILogger<AccountController>>();
+            _emailConfirm = new Mock<IEmailConfirmation>();
+            _hostEnv = new Mock<IHostingEnvironment>();
+        }
+        [Fact]
+        public void UserProfileTest()
+        {
+            _repoWrapper.Setup(r => r.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>())).Returns(new List<User>{new User
+            {
+                FirstName = "Vova",
+                LastName = "Vermii",
+                UserProfile = new UserProfile
+                {
+                    Nationality = new Nationality { Name = "Українець" },
+                    Religion = new Religion { Name = "Християнство" },
+                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН", Degree = new Degree { Name = "Бакалавр" } },
+                    Work = new Work { PlaceOfwork = "SoftServe", Position = "ProjectManager" },
+                    Gender = new Gender { Name = "Чоловік" }
+                }
+            } }.AsQueryable());
+
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>())).Returns(new List<CityAdministration>{new CityAdministration
+            {
+                AdminType=new AdminType{ AdminTypeName="Admin"},
+                City=new City{ Name="City", HouseNumber="1", Street="Street"}
+            } }.AsQueryable());
+
+            var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object);
+            // Act
+            var result = controller.UserProfile("1");
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<UserViewModel>(viewResult.Model);
+        }
         [Fact]
         public void EditTest()
         {
@@ -38,9 +91,8 @@ namespace EPlast.XUnitTest
                     Gender = new Gender { Name = "Чоловік" }
                 }
             };
-            var repository = new Mock<IRepositoryWrapper>();
-            
-            repository.Setup(r => r.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>())).Returns(new List<User>{new User
+
+            _repoWrapper.Setup(r => r.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>())).Returns(new List<User>{new User
             {
                 FirstName = "Vova",
                 LastName = "Vermii",
@@ -54,26 +106,28 @@ namespace EPlast.XUnitTest
                 }
             } }.AsQueryable() );
 
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var contextAccessor = new Mock<IHttpContextAccessor>();
-            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
-            var usManager = new Mock<UserManager<User>>(userStoreMock.Object,
-                null, null, null, null, null, null, null, null);
-            var signInmanager = new Mock<SignInManager<User>>(usManager.Object,
-                contextAccessor.Object, userPrincipalFactory.Object, null, null, null);
-            var log = new Mock<ILogger<AccountController>>();
-            var emConfrm = new Mock<IEmailConfirmation>();
-            var hostEnv = new Mock<IHostingEnvironment>();
+            _repoWrapper.Setup(r => r.Gender.FindAll()).Returns(new List<Gender>().AsQueryable());
+            _repoWrapper.Setup(r => r.Nationality.FindAll()).Returns(new List<Nationality>().AsQueryable());
+            _repoWrapper.Setup(r => r.Education.FindAll()).Returns(new List<Education>().AsQueryable());
+            _repoWrapper.Setup(r => r.Work.FindAll()).Returns(new List<Work>().AsQueryable());
+            _repoWrapper.Setup(r => r.Degree.FindAll()).Returns(new List<Degree>().AsQueryable());
+            _repoWrapper.Setup(r => r.Religion.FindAll()).Returns(new List<Religion>().AsQueryable());
 
-            usManager.Setup(x => x.CreateSecurityTokenAsync(expected));
+            _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expected.Id);
+            _userManager.Setup(x => x.CreateSecurityTokenAsync(expected));
             
-            var controller = new AccountController(usManager.Object, signInmanager.Object, repository.Object, log.Object, emConfrm.Object, hostEnv.Object);
+            var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object);
             var mockFile = new Mock<IFormFile>();
-            // Act
             var user = new UserViewModel { User = expected };
-            var result=controller.Edit(user,mockFile.Object);
+
+            // Act
+            var resultPost =controller.Edit(user,mockFile.Object);
+            var resultGet = controller.Edit(user.User.Id);
+
             // Assert
-            repository.Verify(r => r.User.Update(It.IsAny<User>()), Times.Once());
+            var viewResult = Assert.IsType<ViewResult>(resultGet);
+            var model = Assert.IsAssignableFrom<EditUserViewModel>(viewResult.Model);
+            _repoWrapper.Verify(r => r.User.Update(It.IsAny<User>()), Times.Once());
         }
 
         [Fact]
@@ -89,19 +143,16 @@ namespace EPlast.XUnitTest
                     AdminType = new AdminType(),
                 },
             };
-            var repoMock = new Mock<IRepositoryWrapper>();
-            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
                 .Returns(cityAdministrations.AsQueryable());
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+            var controller = new AccountController(_userManager.Object, null, _repoWrapper.Object, null, null, null);
 
             // Act
             var result = controller.DeletePosition(cityAdministrations[0].ID);
 
             // Assert
             Assert.True(result.Result);
-            userManagerMock.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName));
+            _userManager.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName));
         }
 
         [Fact]
@@ -118,31 +169,25 @@ namespace EPlast.XUnitTest
                     EndDate = DateTime.Now,
                 },
             };
-            var repoMock = new Mock<IRepositoryWrapper>();
-            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
                 .Returns(cityAdministrations.AsQueryable());
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+            var controller = new AccountController(_userManager.Object, null, _repoWrapper.Object, null, null, null);
 
             // Act
             var result = controller.DeletePosition(cityAdministrations[0].ID);
 
             // Assert
             Assert.True(result.Result);
-            userManagerMock.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName), Times.Never);
+            _userManager.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName), Times.Never);
         }
 
         [Fact]
         public void DeletePositionFalseTest()
         {
             // Arrange
-            var repoMock = new Mock<IRepositoryWrapper>();
-            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
                 .Returns(new List<CityAdministration>().AsQueryable());
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+            var controller = new AccountController(_userManager.Object, null, _repoWrapper.Object, null, null, null);
 
             // Act
             var result = controller.DeletePosition(0);
@@ -165,12 +210,9 @@ namespace EPlast.XUnitTest
                     StartDate = DateTime.Now
                 },
             };
-            var repoMock = new Mock<IRepositoryWrapper>();
-            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
                 .Returns(cityAdministrations.AsQueryable());
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+            var controller = new AccountController(_userManager.Object, null, _repoWrapper.Object, null, null, null);
 
             // Act
             var result = controller.EndPosition(cityAdministrations[0].ID);
@@ -184,12 +226,9 @@ namespace EPlast.XUnitTest
         public void EndPositionFalseTest()
         {
             // Arrange
-            var repoMock = new Mock<IRepositoryWrapper>();
-            repoMock.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+            _repoWrapper.Setup(r => r.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
                 .Returns(new List<CityAdministration>().AsQueryable());
-            var userStoreMock = new Mock<IUserStore<User>>();
-            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
-            var controller = new AccountController(userManagerMock.Object, null, repoMock.Object, null, null, null);
+            var controller = new AccountController(_userManager.Object, null, _repoWrapper.Object, null, null, null);
 
             // Act
             var result = controller.EndPosition(0);
