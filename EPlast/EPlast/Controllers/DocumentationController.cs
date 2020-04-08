@@ -272,7 +272,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -302,7 +302,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -353,7 +353,7 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -378,110 +378,129 @@ namespace EPlast.Controllers
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
         [Authorize(Roles = "Admin")]
         public IActionResult GetAnnualReport(int id)
         {
-            var annualReport = _repoWrapper.AnnualReports
+            try
+            {
+                var annualReport = _repoWrapper.AnnualReports
                     .FindByCondition(ar => ar.ID == id)
                     .Include(ar => ar.City)
                     .Include(ar => ar.MembersStatistic)
                     .Include(ar => ar.CityManagement)
                         .ThenInclude(cm => cm.User)
                     .First();
-            return PartialView("_GetAnnualReport", annualReport);
+                return PartialView("_GetAnnualReport", annualReport);
+            }
+            catch
+            {
+                return NotFound("Не вдалося завантажити річний звіт!");
+            }
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<string> ConfirmAnnualReport(int id)
+        public async Task<IActionResult> ConfirmAnnualReport(int id)
         {
-            bool whetherTheRoleShouldBeDeleted = false;
-            bool whetherTheRoleShouldBeAdded = false;
-
-            // update annualReport status
-            AnnualReport annualReport = _repoWrapper.AnnualReports
-                .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
-                .Include(ar => ar.City)
-                .Include(ar => ar.CityManagement)
-                    .ThenInclude(cm => cm.User)
-                .First();
-            annualReport.Status = AnnualReportStatus.Confirmed;
-            _repoWrapper.AnnualReports.Update(annualReport);
-
-            // update oldCityAdmin EndDate
-            CityAdministration cityAdminOld = _repoWrapper.CityAdministration
-                    .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.EndDate == null)
-                    .Include(ca => ca.User)
-                    .FirstOrDefault();
-            if (cityAdminOld != null && annualReport.CityManagement.User != null && cityAdminOld.UserId != annualReport.CityManagement.UserId)
+            try
             {
-                cityAdminOld.EndDate = DateTime.Today;
-                _repoWrapper.CityAdministration.Update(cityAdminOld);
-                whetherTheRoleShouldBeDeleted = true;
-            }
-
-            // create newCityAdmin
-            if (annualReport.CityManagement.User != null && (cityAdminOld == null || (cityAdminOld != null && cityAdminOld.EndDate != null)))
-            {
-                AdminType adminType = _repoWrapper.AdminType
-                    .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                bool whetherTheRoleShouldBeDeleted = false;
+                bool whetherTheRoleShouldBeAdded = false;
+                // update annualReport status
+                AnnualReport annualReport = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
+                    .Include(ar => ar.City)
+                    .Include(ar => ar.CityManagement)
+                        .ThenInclude(cm => cm.User)
                     .First();
-                CityAdministration cityAdminNew = new CityAdministration
+                annualReport.Status = AnnualReportStatus.Confirmed;
+                _repoWrapper.AnnualReports.Update(annualReport);
+
+                // update oldCityAdmin EndDate
+                CityAdministration cityAdminOld = _repoWrapper.CityAdministration
+                        .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.EndDate == null)
+                        .Include(ca => ca.User)
+                        .FirstOrDefault();
+                if (cityAdminOld != null && annualReport.CityManagement.User != null && cityAdminOld.UserId != annualReport.CityManagement.UserId)
                 {
-                    UserId = annualReport.CityManagement.UserId,
+                    cityAdminOld.EndDate = DateTime.Today;
+                    _repoWrapper.CityAdministration.Update(cityAdminOld);
+                    whetherTheRoleShouldBeDeleted = true;
+                }
+
+                // create newCityAdmin
+                if (annualReport.CityManagement.User != null && (cityAdminOld == null || (cityAdminOld != null && cityAdminOld.EndDate != null)))
+                {
+                    AdminType adminType = _repoWrapper.AdminType
+                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                        .First();
+                    CityAdministration cityAdminNew = new CityAdministration
+                    {
+                        UserId = annualReport.CityManagement.UserId,
+                        CityId = annualReport.CityId,
+                        AdminTypeId = adminType.ID,
+                        StartDate = DateTime.Today
+                    };
+                    _repoWrapper.CityAdministration.Create(cityAdminNew);
+                    whetherTheRoleShouldBeAdded = true;
+                }
+
+                // update oldCityLegalStatus EndDate
+                CityLegalStatus cityLegalStatusOld = _repoWrapper.CityLegalStatuses
+                    .FindByCondition(cls => cls.CityId == annualReport.CityId && cls.DateFinish == null)
+                    .FirstOrDefault();
+                if (cityLegalStatusOld != null)
+                {
+                    cityLegalStatusOld.DateFinish = DateTime.Today;
+                    _repoWrapper.CityLegalStatuses.Update(cityLegalStatusOld);
+                }
+
+                // create newCityLegalStatus
+                CityLegalStatus cityLegalStatusNew = new CityLegalStatus
+                {
                     CityId = annualReport.CityId,
-                    AdminTypeId = adminType.ID,
-                    StartDate = DateTime.Today
+                    LegalStatusType = annualReport.CityManagement.CityLegalStatus,
+                    DateStart = DateTime.Today
                 };
-                _repoWrapper.CityAdministration.Create(cityAdminNew);
-                whetherTheRoleShouldBeAdded = true;
+                _repoWrapper.CityLegalStatuses.Create(cityLegalStatusNew);
+                _repoWrapper.Save();
+                if (whetherTheRoleShouldBeDeleted)
+                {
+                    await _userManager.RemoveFromRoleAsync(cityAdminOld.User, "Голова Станиці");
+                }
+                if (whetherTheRoleShouldBeAdded)
+                {
+                    await _userManager.AddToRoleAsync(annualReport.CityManagement.User, "Голова Станиці");
+                }
+                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік підтверджено!");
             }
-
-            // update oldCityLegalStatus EndDate
-            CityLegalStatus cityLegalStatusOld = _repoWrapper.CityLegalStatuses
-                .FindByCondition(cls => cls.CityId == annualReport.CityId && cls.DateFinish == null)
-                .FirstOrDefault();
-            if (cityLegalStatusOld != null)
+            catch
             {
-                cityLegalStatusOld.DateFinish = DateTime.Today;
-                _repoWrapper.CityLegalStatuses.Update(cityLegalStatusOld);
+                return NotFound("Не вдалося підтвердити річний звіт!");
             }
-
-            // create newCityLegalStatus
-            CityLegalStatus cityLegalStatusNew = new CityLegalStatus
-            {
-                CityId = annualReport.CityId,
-                LegalStatusType = annualReport.CityManagement.CityLegalStatus,
-                DateStart = DateTime.Today
-            };
-            _repoWrapper.CityLegalStatuses.Create(cityLegalStatusNew);
-
-            _repoWrapper.Save();
-            if (whetherTheRoleShouldBeDeleted)
-            {
-                await _userManager.RemoveFromRoleAsync(cityAdminOld.User, "Голова Станиці");
-            }
-            if (whetherTheRoleShouldBeAdded)
-            {
-                await _userManager.AddToRoleAsync(annualReport.CityManagement.User, "Голова Станиці");
-            }
-            return $"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік підтверджено!";
         }
 
         [Authorize(Roles = "Admin")]
-        public string CancelAnnualReport(int id)
+        public IActionResult CancelAnnualReport(int id)
         {
-            var annualReport = _repoWrapper.AnnualReports
-                .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
-                .Include(ar => ar.City)
-                .First();
-            annualReport.Status = AnnualReportStatus.Canceled;
-            _repoWrapper.AnnualReports.Update(annualReport);
-            _repoWrapper.Save();
-            return $"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік скасовано!";
+            try
+            {
+                var annualReport = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
+                    .Include(ar => ar.City)
+                    .First();
+                annualReport.Status = AnnualReportStatus.Canceled;
+                _repoWrapper.AnnualReports.Update(annualReport);
+                _repoWrapper.Save();
+                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік скасовано!");
+            }
+            catch
+            {
+                return NotFound("Не вдалося скасувати річний звіт!");
+            }
         }
     }
 }
