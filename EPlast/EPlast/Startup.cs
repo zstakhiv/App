@@ -74,6 +74,8 @@ namespace EPlast
             services.AddScoped<IPDFService, PDFService>();
             services.AddScoped<ICityAccessManagerSettings, CityAccessManagerSettings>();
             services.AddScoped<ICityAccessManager, CityAccessManager>();
+            services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();
+            services.AddScoped<IUserAccessManager, UserAccessManager>();
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {

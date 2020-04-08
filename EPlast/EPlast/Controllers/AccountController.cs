@@ -1,6 +1,7 @@
 ﻿using EPlast.BussinessLayer.Interfaces;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -29,13 +30,15 @@ namespace EPlast.Controllers
         private readonly ILogger _logger;
         private readonly IEmailConfirmation _emailConfirmation;
         private readonly IHostingEnvironment _env;
+        private readonly IUserAccessManager _userAccessManager;
 
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IRepositoryWrapper repoWrapper,
             ILogger<AccountController> logger,
             IEmailConfirmation emailConfirmation,
-            IHostingEnvironment env)
+            IHostingEnvironment env,
+            IUserAccessManager userAccessManager)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -43,6 +46,7 @@ namespace EPlast.Controllers
             _repoWrapper = repoWrapper;
             _emailConfirmation = emailConfirmation;
             _env = env;
+            _userAccessManager = userAccessManager;
         }
 
         [HttpGet]
@@ -281,7 +285,8 @@ namespace EPlast.Controllers
             var model = new UserViewModel
             { 
                 User = user,
-                UserPositions = userPositions
+                UserPositions = userPositions,
+                HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId)
             };
             if (model != null)
             {
@@ -683,7 +688,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         public async Task<IActionResult> DeletePosition(int id)
         {
             try
@@ -693,6 +698,11 @@ namespace EPlast.Controllers
                         .Include(ca => ca.AdminType)
                         .Include(ca => ca.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_userAccessManager.HasAccess(userId, cityAdministration.UserId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 if (cityAdministration.EndDate == null)
                 {
                     await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
@@ -707,7 +717,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         public async Task<IActionResult> EndPosition(int id)
         {
             try
@@ -717,6 +727,11 @@ namespace EPlast.Controllers
                         .Include(ca => ca.AdminType)
                         .Include(ca => ca.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_userAccessManager.HasAccess(userId, cityAdministration.UserId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 cityAdministration.EndDate = DateTime.Today;
                 _repoWrapper.CityAdministration.Update(cityAdministration);
                 _repoWrapper.Save();
