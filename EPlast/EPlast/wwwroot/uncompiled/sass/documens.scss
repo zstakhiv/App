@@ -25,6 +25,10 @@
     }
 
     form {
+        .form-group:last-of-type {
+            text-align: center;
+        }
+
         .form-control {
             background: #fff;
             border-radius: 2px;
@@ -124,7 +128,15 @@
 
     button[data-toggle="modal"] {
         margin: 0 0 1rem 2rem;
-        border-color: green;
+        border-color: #3c5438;
+    }
+
+    button[data-toggle="modal"]:focus {
+        box-shadow: 0 0 0 0.2rem #3c5438 !important;
+    }
+
+    button[data-toggle="modal"]:active {
+        border-color: #3c5438 !important;
     }
 
     table.dataTable thead {
