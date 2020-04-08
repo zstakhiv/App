@@ -142,7 +142,7 @@ namespace EPlast.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повина складати 8");
                         return View("Register");
                     }
                     else
