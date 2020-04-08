@@ -149,5 +149,19 @@ $(document).ready(function () {
         });
     });
     $('[data-toggle="tooltip"]').tooltip();
+    $("#editGallery").click(() => {
+        $("#fullCarousel").hide();
+        $("#addPicture").hide();
+        $("#deletePicture").show();
+    });
+    $("#backBut").click(() => {
+        $("#deletePicture").hide();
+        $("#fullCarousel").show();
+        $("#addPicture").show();
+    });
+    $('a.delete-card').click(function () {
+        let pictureToDelete = $(this).parents("div.single-card").children('input[type="hidden"]').val();
+        alert(pictureToDelete);
+    });
 });
 //# sourceMappingURL=eventPage.js.map
