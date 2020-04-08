@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EPlast.Wrapper;
 
 namespace EPlast.Controllers
 {
@@ -26,11 +27,13 @@ namespace EPlast.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
-
+        private readonly IDirectoryManager _directoryManager;
+        private readonly IFileManager _fileManager;
         private const string DecesionsDocumentFolder = @"\documents\";
 
-        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
-            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer)
+        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator, IDirectoryManager directoryManager,
+            IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
+            IFileManager fileManager)
 
         {
             _repoWrapper = repoWrapper;
@@ -40,6 +43,8 @@ namespace EPlast.Controllers
             _decisionVMCreator = decisionVMCreator;
             _appEnvironment = appEnvironment;
             _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
+            _directoryManager = directoryManager;
+            _fileManager = fileManager;
         }
 
         public IActionResult Index()
@@ -103,9 +108,9 @@ namespace EPlast.Controllers
                     try
                     {
                         string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                        Directory.CreateDirectory(path);
+                        _directoryManager.CreateDirectory(path);
 
-                        if (!Directory.Exists(path))
+                        if (!_directoryManager.Exists(path))
                         {
                             throw new ArgumentException($"directory '{path}' is not exist");
                         }
@@ -113,10 +118,10 @@ namespace EPlast.Controllers
                         if (decesionViewModel.File != null)
                         {
                             path = Path.Combine(path, decesionViewModel.File.FileName);
-                            using (var fileStream = new FileStream(path, FileMode.Create))
+                            using (var fileStream = new FileStreamManager(path, FileMode.Create))
                             {
-                                await decesionViewModel.File.CopyToAsync(fileStream);
-                                if (!System.IO.File.Exists(path))
+                                await decesionViewModel.File.CopyToAsync(fileStream.GetFileStream());
+                                if (!_fileManager.Exists(path))
                                 {
                                     throw new ArgumentException($"File was not created it '{path}' directory");
                                 }
@@ -153,11 +158,11 @@ namespace EPlast.Controllers
                 foreach (var decesion in decisions)
                 {
                     string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesion.Decesion.ID;
-                    if (!decesion.Decesion.HaveFile || !Directory.Exists(path))
+                    if (!decesion.Decesion.HaveFile || !_directoryManager.Exists(path))
                     {
                         continue;
                     }
-                    var files = Directory.GetFiles(path);
+                    var files = _directoryManager.GetFiles(path);
 
                     if (files.Length == 0)
                     {
@@ -184,13 +189,13 @@ namespace EPlast.Controllers
 
                 var path = Path.Combine(_appEnvironment.WebRootPath + DecesionsDocumentFolder, id);
 
-                if (!Directory.Exists(path) || Directory.GetFiles(path).Length == 0)
+                if (!_directoryManager.Exists(path) || _directoryManager.GetFiles(path).Length == 0)
                 {
                     throw new ArgumentException($"directory '{path}' is not exist");
                 }
                 path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
+                using (var stream = new FileStreamManager(path, FileMode.Open))
                 {
                     await stream.CopyToAsync(memory);
                     if (memory.Length == 0)
