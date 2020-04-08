@@ -25,6 +25,10 @@
     }
 
     form {
+        .form-group:last-of-type {
+            text-align: center;
+        }
+
         .form-control {
             background: #fff;
             border-radius: 2px;
@@ -74,6 +78,32 @@
             margin-top: 15px;
             color: #fff;
         }
+
+        .form-group {
+            .upload-btn-wrapper {
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+            }
+
+            .upload-btn {
+                border: 2px solid gray;
+                color: gray;
+                background-color: white;
+                padding: 8px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            input[type=file] {
+                font-size: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+            }
+        }
     }
 }
 
@@ -96,6 +126,19 @@
     color: #505e6c;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 
+    button[data-toggle="modal"] {
+        margin: 0 0 1rem 2rem;
+        border-color: #3c5438;
+    }
+
+    button[data-toggle="modal"]:focus {
+        box-shadow: 0 0 0 0.2rem #3c5438 !important;
+    }
+
+    button[data-toggle="modal"]:active {
+        border-color: #3c5438 !important;
+    }
+
     table.dataTable thead {
         .th-sm {
             vertical-align: middle;
@@ -103,31 +146,31 @@
 
         .sorting {
             &:after, &:before {
-                bottom: .5em;
+                top: 18px;
             }
         }
 
         .sorting_asc {
             &:after, &:before {
-                bottom: .5em;
+                top: 18px;
             }
         }
 
         .sorting_asc_disabled {
             &:after, &:before {
-                bottom: .5em;
+                top: 18px;
             }
         }
 
         .sorting_desc {
             &:after, &:before {
-                bottom: .5em;
+                top: 18px;
             }
         }
 
         .sorting_desc_disabled {
             &:after, &:before {
-                bottom: .5em;
+                top: 18px;
             }
         }
     }
@@ -142,14 +185,31 @@
         }
     }
 
-    .page-item.disabled .page-link {
-        background-color: #3c5438;
-        color: #ffffff;
-    }
-
     .page-item.active .page-link {
         color: #000;
         background-color: #ffffff;
         border-color: none;
+        box-shadow: 0 0 0 0.2rem #3c5438;
+    }
+
+    .paginate_button.page-item {
+        .page-link {
+            background: #3c5438 !important;
+            color: #ffffff !important;
+        }
+
+        .page-link &:hover, &:active, &:focus {
+            background: #344a30 !important;
+            color: #fff !important;
+            border-color: #fff;
+        }
+    }
+
+    .page-item.disabled .page-link {
+        background: #2e402b !important;
+    }
+
+    .page-item.active .page-link {
+        border-color: #3c5438;
     }
 }

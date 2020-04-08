@@ -29,7 +29,7 @@ namespace EPlast.Controllers
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
         private readonly ICityAccessManager _cityAccessManager;
 
-        private const string _decesionsDocumentFolder = @"\documents\";
+        private const string DecesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
@@ -52,7 +52,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult CreateDecesion()
+        public DecesionViewModel _CreateDecesion()
         {
             try
             {
@@ -69,29 +69,31 @@ namespace EPlast.Controllers
                     DecesionStatusTypeListItems = _decisionVMCreator.GetDecesionStatusTypes()
                 };
 
-                return View(decesionViewModel);
+                return decesionViewModel;
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                RedirectToAction("HandleError", "Error");
+                return null;
             }
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
+        public async Task<JsonResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
             try
             {
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return RedirectToAction("CreateDecesion");
+                    return Json(new { success = false });
                 }
-                else if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
+
+                if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
-                    return RedirectToAction("CreateDecesion");
+                    return Json(new { success = false });
                 }
 
                 decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
@@ -102,29 +104,39 @@ namespace EPlast.Controllers
 
                 if (decesionViewModel.Decesion.HaveFile)
                 {
-                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                    Directory.CreateDirectory(path);
-
-                    if (!Directory.Exists(path))
+                    try
                     {
-                        throw new ArgumentException($"directory '{path}' is not exist");
-                    }
+                        string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesionViewModel.Decesion.ID;
+                        Directory.CreateDirectory(path);
 
-                    path = Path.Combine(path, decesionViewModel.File.FileName);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        await decesionViewModel.File.CopyToAsync(fileStream);
-                        if (!System.IO.File.Exists(path))
+                        if (!Directory.Exists(path))
                         {
-                            throw new ArgumentException($"File was not created it '{path}' directory");
+                            throw new ArgumentException($"directory '{path}' is not exist");
+                        }
+
+                        if (decesionViewModel.File != null)
+                        {
+                            path = Path.Combine(path, decesionViewModel.File.FileName);
+                            using (var fileStream = new FileStream(path, FileMode.Create))
+                            {
+                                await decesionViewModel.File.CopyToAsync(fileStream);
+                                if (!System.IO.File.Exists(path))
+                                {
+                                    throw new ArgumentException($"File was not created it '{path}' directory");
+                                }
+                            }
                         }
                     }
+                    catch
+                    {
+                        return Json(new { success = false });
+                    }
                 }
-                return RedirectToAction("CreateDecesion");
+                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку." });
             }
             catch
             {
-                return RedirectToAction("HandleError", "Error");
+                return Json(new { success = false });
             }
         }
 
@@ -133,7 +145,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                List<DecesionViewModel> decesions = new List<DecesionViewModel>(
+                var decisions = new List<DecesionViewModel>(
                     _repoWrapper.Decesion
                     .Include(x => x.DecesionTarget, x => x.Organization)
                     .Take(200)
@@ -142,9 +154,9 @@ namespace EPlast.Controllers
                         Decesion = decesion
                     })
                     .ToList());
-                foreach (var decesion in decesions)
+                foreach (var decesion in decisions)
                 {
-                    string path = _appEnvironment.WebRootPath + _decesionsDocumentFolder + decesion.Decesion.ID;
+                    string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesion.Decesion.ID;
                     if (!decesion.Decesion.HaveFile || !Directory.Exists(path))
                     {
                         continue;
@@ -158,7 +170,7 @@ namespace EPlast.Controllers
 
                     decesion.Filename = Path.GetFileName(files.First());
                 }
-                return View(decesions);
+                return View(Tuple.Create(_CreateDecesion(), decisions));
             }
             catch
             {
@@ -174,7 +186,7 @@ namespace EPlast.Controllers
                 if (string.IsNullOrEmpty(filename) || string.IsNullOrEmpty(id))
                     return Content("filename or id not present");
 
-                var path = Path.Combine(_appEnvironment.WebRootPath + _decesionsDocumentFolder, id);
+                var path = Path.Combine(_appEnvironment.WebRootPath + DecesionsDocumentFolder, id);
 
                 if (!Directory.Exists(path) || Directory.GetFiles(path).Length == 0)
                 {
@@ -187,7 +199,7 @@ namespace EPlast.Controllers
                     await stream.CopyToAsync(memory);
                     if (memory.Length == 0)
                     {
-                        throw new ArgumentException("memory lenght is 0");
+                        throw new ArgumentException("memory length is 0");
                     }
                 }
                 memory.Position = 0;
@@ -199,14 +211,14 @@ namespace EPlast.Controllers
             }
         }
 
-        private string GetContentType(string path)
+        private static string GetContentType(string path)
         {
             var types = GetMimeTypes();
             var ext = Path.GetExtension(path).ToLowerInvariant();
             return types[ext];
         }
 
-        private Dictionary<string, string> GetMimeTypes()
+        private static Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
             {
@@ -236,8 +248,8 @@ namespace EPlast.Controllers
                 }
 
                 byte[] arr = await _PDFService.DecesionCreatePDFAsync(_repoWrapper.Decesion.Include(x => x.DecesionTarget,
-                                                                                                    x => x.Organization).Where(x => x.ID == objId)
-                                                                                                                        .FirstOrDefault());
+                        x => x.Organization)
+                    .FirstOrDefault(x => x.ID == objId));
                 return File(arr, "application/pdf");
             }
             catch

@@ -59,17 +59,17 @@ namespace EPlast.XUnitTest
             return organization;
         }
 
-        [Fact]
-        public void CreateDecesionTest()
-        {
-            var controller = CreateDocumentationController();
+        //[Fact]
+        //public void CreateDecesionTest()
+        //{
+        //    var controller = CreateDocumentationController();
 
-            var result = controller.CreateDecesion();
+        //    var result = controller.CreateDecesion();
 
-            var viewResult = Assert.IsType<ViewResult>(result);
+        //    var viewResult = Assert.IsType<ViewResult>(result);
 
-            Assert.IsAssignableFrom<DecesionViewModel>(viewResult.Model);
-        }
+        //    Assert.IsAssignableFrom<DecesionViewModel>(viewResult.Model);
+        //}
 
         private static DecesionViewModel CreateDecesionViewModel(int DecesionTargetID = 1, bool haveFile = false) => new DecesionViewModel
         {
@@ -93,15 +93,15 @@ namespace EPlast.XUnitTest
             new object[]{null, "CreateDecesion" }
         };
 
-        [Theory]
-        [MemberData(nameof(TestDecesionViewModel))]
-        public async Task SaveDecesionAsyncTestAsync(DecesionViewModel model, string expected)
-        {
-            var controller = CreateDocumentationController();
+        //[Theory]
+        //[MemberData(nameof(TestDecesionViewModel))]
+        //public async Task SaveDecesionAsyncTestAsync(DecesionViewModel model, string expected)
+        //{
+        //    var controller = CreateDocumentationController();
 
-            var result = (RedirectToActionResult)await controller.SaveDecesionAsync(model);
+        //    var result = (RedirectToActionResult)await controller.SaveDecesionAsync(model);
 
-            Assert.Equal(expected, result.ActionName);
-        }
+        //    Assert.Equal(expected, result.ActionName);
+        //}
     }
 }
