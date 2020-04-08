@@ -11,33 +11,37 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EPlast.Wrapper;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace EPlast.XUnitTest
 {
     public class DocumentationControllerTests
     {
-        private DocumentationController CreateDocumentationController()
+        private static DocumentationController CreateDocumentationController()
         {
             var repository = new Mock<IRepositoryWrapper>();
             var store = new Mock<IUserStore<User>>();
-            var usermanger = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            var annualReportVMInitializer = new Mock<IAnnualReportVMInitializer>();
-            var decisionVMIitializer = new Mock<IDecisionVMIitializer>();
+            var userManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            var annualReportVmInitializer = new Mock<IAnnualReportVMInitializer>();
+            var decisionVmInitializer = new Mock<IDecisionVMIitializer>();
             var pdfService = new Mock<IPDFService>();
             var hostingEnvironment = new Mock<IHostingEnvironment>();
-            var viewAnnualReportsVMInitializer = new Mock<IViewAnnualReportsVMInitializer>();
+            var viewAnnualReportsVmInitializer = new Mock<IViewAnnualReportsVMInitializer>();
+            var directoryManager = new Mock<IDirectoryManager>();
+            var fileManager = new Mock<IFileManager>();
             repository.Setup(rep => rep.Organization.FindAll()).Returns(GetTestOrganizations());
             repository.Setup(rep => rep.DecesionTarget.FindAll()).Returns(GetTestDecesionTargets());
             repository.Setup(rep => rep.Decesion.Attach(new Decesion()));
             repository.Setup(rep => rep.Decesion.Create(new Decesion()));
             repository.Setup(rep => rep.Save());
 
-            return new DocumentationController(repository.Object, usermanger.Object, annualReportVMInitializer.Object, decisionVMIitializer.Object, pdfService.Object,
-                hostingEnvironment.Object, viewAnnualReportsVMInitializer.Object);
+            return new DocumentationController(repository.Object, userManager.Object, annualReportVmInitializer.Object, decisionVmInitializer.Object, pdfService.Object,
+                hostingEnvironment.Object, viewAnnualReportsVmInitializer.Object, directoryManager.Object, fileManager.Object);
         }
 
-        private IQueryable<Organization> GetTestOrganizations()
+        private static IQueryable<Organization> GetTestOrganizations()
         {
             var organization = new List<Organization>
             {
@@ -48,7 +52,7 @@ namespace EPlast.XUnitTest
             return organization;
         }
 
-        private IQueryable<DecesionTarget> GetTestDecesionTargets()
+        private static IQueryable<DecesionTarget> GetTestDecesionTargets()
         {
             var organization = new List<DecesionTarget>
             {
@@ -59,17 +63,15 @@ namespace EPlast.XUnitTest
             return organization;
         }
 
-        //[Fact]
-        //public void CreateDecesionTest()
-        //{
-        //    var controller = CreateDocumentationController();
+        [Fact]
+        public void CreateDecesionTest()
+        {
+            var controller = CreateDocumentationController();
 
-        //    var result = controller.CreateDecesion();
+            var result = controller.CreateDecesion();
 
-        //    var viewResult = Assert.IsType<ViewResult>(result);
-
-        //    Assert.IsAssignableFrom<DecesionViewModel>(viewResult.Model);
-        //}
+            Assert.IsType<DecesionViewModel>(result);
+        }
 
         private static DecesionViewModel CreateDecesionViewModel(int DecesionTargetID = 1, bool haveFile = false) => new DecesionViewModel
         {
@@ -88,20 +90,20 @@ namespace EPlast.XUnitTest
 
         public static IEnumerable<object[]> TestDecesionViewModel =>
         new List<object[]> {
-            new object[]{CreateDecesionViewModel(), "CreateDecesion" },
-            new object[]{CreateDecesionViewModel(DecesionTargetID: 0), "CreateDecesion" },
-            new object[]{null, "CreateDecesion" }
+            new object[]{CreateDecesionViewModel(), true },
+            new object[]{CreateDecesionViewModel(DecesionTargetID: 0), true },
+            new object[]{null, false}
         };
 
         //[Theory]
         //[MemberData(nameof(TestDecesionViewModel))]
-        //public async Task SaveDecesionAsyncTestAsync(DecesionViewModel model, string expected)
+        //public async Task SaveDecesionAsyncTestAsync(DecesionViewModel model, bool expected)
         //{
         //    var controller = CreateDocumentationController();
 
-        //    var result = (RedirectToActionResult)await controller.SaveDecesionAsync(model);
+        //    var result = JObject.FromObject(await controller.SaveDecesionAsync(model)).First.Values();
 
-        //    Assert.Equal(expected, result.ActionName);
+        //    Assert.Equal(expected, result.Value<bool>());
         //}
     }
 }

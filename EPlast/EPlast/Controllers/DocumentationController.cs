@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EPlast.Wrapper;
+using Microsoft.AspNetCore.Http;
 
 namespace EPlast.Controllers
 {
@@ -29,11 +30,12 @@ namespace EPlast.Controllers
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
         private readonly IDirectoryManager _directoryManager;
         private readonly IFileManager _fileManager;
+
         private const string DecesionsDocumentFolder = @"\documents\";
 
-        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator, IDirectoryManager directoryManager,
+        public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
-            IFileManager fileManager)
+            IDirectoryManager directoryManager, IFileManager fileManager)
 
         {
             _repoWrapper = repoWrapper;
@@ -53,7 +55,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public DecesionViewModel _CreateDecesion()
+        public DecesionViewModel CreateDecesion()
         {
             try
             {
@@ -85,6 +87,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                ModelState.Remove("Decesion.DecesionStatusType");
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
@@ -118,9 +121,11 @@ namespace EPlast.Controllers
                         if (decesionViewModel.File != null)
                         {
                             path = Path.Combine(path, decesionViewModel.File.FileName);
-                            using (var fileStream = new FileStreamManager(path, FileMode.Create))
+                            var memory = new MemoryStream();
+
+                            using (var stream = new FileStream(path, FileMode.Create))
                             {
-                                await decesionViewModel.File.CopyToAsync(fileStream.GetFileStream());
+                                await stream.CopyToAsync(memory);
                                 if (!_fileManager.Exists(path))
                                 {
                                     throw new ArgumentException($"File was not created it '{path}' directory");
@@ -171,7 +176,7 @@ namespace EPlast.Controllers
 
                     decesion.Filename = Path.GetFileName(files.First());
                 }
-                return View(Tuple.Create(_CreateDecesion(), decisions));
+                return View(Tuple.Create(CreateDecesion(), decisions));
             }
             catch
             {
@@ -195,15 +200,16 @@ namespace EPlast.Controllers
                 }
                 path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
-                using (var stream = new FileStreamManager(path, FileMode.Open))
+                using (var stream = new FileStream(path, FileMode.Open))
                 {
                     await stream.CopyToAsync(memory);
                     if (memory.Length == 0)
                     {
                         throw new ArgumentException("memory length is 0");
                     }
+                    memory.Position = 0;
                 }
-                memory.Position = 0;
+
                 return File(memory, GetContentType(path), Path.GetFileName(path));
             }
             catch

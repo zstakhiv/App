@@ -72,7 +72,6 @@ namespace EPlast
             services.AddScoped<IPDFService, PDFService>();
 
             services.AddScoped<IDirectoryManager, DirectoryManager>();
-            services.AddScoped<IFileStreamManager, FileStreamManager>();
             services.AddScoped<IFileManager, FileManager>();
 
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
