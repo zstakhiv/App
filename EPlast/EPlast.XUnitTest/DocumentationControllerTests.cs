@@ -34,7 +34,7 @@ namespace EPlast.XUnitTest
             repository.Setup(rep => rep.Save());
 
             return new DocumentationController(repository.Object, usermanger.Object, annualReportVMInitializer.Object, decisionVMIitializer.Object, pdfService.Object,
-                hostingEnvironment.Object, viewAnnualReportsVMInitializer.Object);
+                hostingEnvironment.Object, viewAnnualReportsVMInitializer.Object, null);
         }
 
         private IQueryable<Organization> GetTestOrganizations()
