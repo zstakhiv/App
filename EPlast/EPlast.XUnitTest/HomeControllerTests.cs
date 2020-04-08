@@ -33,7 +33,79 @@ namespace EPlast.XUnitTest
             var result = controller.Index();
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.NotNull(result);
+            Assert.NotNull(viewResult);
         }
+
+        [Fact]
+        public void AboutPLASTViewResultNotNull()
+        {
+            var _repoWrapper = new Mock<IRepositoryWrapper>();
+            var _emailConfirmation = new Mock<IEmailConfirmation>();
+            // Arrange
+            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            // Act
+            var result = controller.AboutPLAST();
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public void ContactsViewResultNotNull()
+        {
+            var _repoWrapper = new Mock<IRepositoryWrapper>();
+            var _emailConfirmation = new Mock<IEmailConfirmation>();
+            // Arrange
+            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            // Act
+            var result = controller.Contacts();
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public void FAQViewResultNotNull()
+        {
+            var _repoWrapper = new Mock<IRepositoryWrapper>();
+            var _emailConfirmation = new Mock<IEmailConfirmation>();
+            // Arrange
+            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            // Act
+            var result = controller.FAQ();
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public void FeedBackSendedResultNotNull()
+        {
+            var _repoWrapper = new Mock<IRepositoryWrapper>();
+            var _emailConfirmation = new Mock<IEmailConfirmation>();
+            // Arrange
+            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            // Act
+            var result = controller.FeedBackSended();
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public void SearchResultNotNull()
+        {
+            var _repoWrapper = new Mock<IRepositoryWrapper>();
+            var _emailConfirmation = new Mock<IEmailConfirmation>();
+            // Arrange
+            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            // Act
+            //var result = controller.Search();
+            // Assert
+            //var viewResult = Assert.IsType<ViewResult>(result);
+            //Assert.NotNull(viewResult);
+        }
+
+
     }
 }

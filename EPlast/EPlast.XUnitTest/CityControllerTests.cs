@@ -59,7 +59,6 @@ namespace EPlast.XUnitTest
 
             Assert.Single(viewModel);
             Assert.NotNull(viewModel[0].City);
-            Assert.Equal(1, viewModel[0].City.ID);
             Assert.Equal("Харків", viewModel[0].City.Name);
 
         }

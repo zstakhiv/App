@@ -26,17 +26,11 @@ namespace EPlast.Controllers
         public IActionResult Index()
         {
             return View("Index");
-            //return StatusCode(500);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         public IActionResult AboutPLAST()
         {
-            return View();
+            return View("AboutPLAST");
         }
 
         public IActionResult Contacts()
@@ -46,7 +40,7 @@ namespace EPlast.Controllers
 
         public IActionResult FAQ()
         {
-            return View();
+            return View("FAQ");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -81,7 +75,7 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult FeedBackSended()
         {
-            return View();
+            return View("FeedBackSended");
         }
 
         [HttpPost]
