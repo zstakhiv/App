@@ -67,7 +67,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -142,7 +142,7 @@ namespace EPlast.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повина складати 8");
                         return View("Register");
                     }
                     else
@@ -165,7 +165,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -239,7 +239,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -288,7 +288,7 @@ namespace EPlast.Controllers
                 return View(model);
             }
             _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
-            return RedirectToAction("HandleError", "Error", new { code = 500 });
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
         }
 
         [Authorize]
@@ -308,7 +308,7 @@ namespace EPlast.Controllers
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
                     _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return RedirectToAction("HandleError", "Error", new { code = 500 });
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
@@ -345,7 +345,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -498,7 +498,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -544,7 +544,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -608,6 +608,8 @@ namespace EPlast.Controllers
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
+                                await _emailConfirmation.SendEmailAsync(user.Email, "Повідомлення про реєстрацію",
+                            "Ви зареєструвались в системі EPlast використовуючи свій Google-акаунт ", "Адміністрація сайту EPlast");
                             }
                             await _userManager.AddToRoleAsync(user, "Прихильник");
                             await _userManager.AddLoginAsync(user, info);
@@ -644,7 +646,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -679,7 +681,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
