@@ -25,7 +25,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#">Поручення</a>
             </li>
-            @if (_userManager.GetUserId(User) == Model.User.Id)
+            @if (_userManager.GetUserId(User) == Model.User.Id || User.IsInRole("Admin"))
             {
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id">Редагувати профіль</a>
@@ -72,18 +72,25 @@
                                             <p class="col-6 col-form-label">@Model.User.FatherName</p>
                                         </div>
                                     }
-                                <div class="form-group row">
-                                    @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
-                                    {
-                                        <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
-                                        <p class="col-6 col-form-label">@Model.User.Email</p>
-                                    }
-                                </div>
+                                    <div class="form-group row">
+                                        @if (@Model.User.Email != "facebookdefaultmail@gmail.com")
+                                        {
+                                            <label for="email" class="col-6 col-form-label font-weight-bold">Email</label>
+                                            <p class="col-6 col-form-label">@Model.User.Email</p>
+                                        }
+                                    </div>
                                     @if (@Model.User.UserProfile.Address != null)
                                     {
                                         <div class="form-group row">
                                             <label for="email" class="col-6 col-form-label font-weight-bold">Адреса</label>
                                             <p class="col-6 col-form-label">@Model.User.UserProfile.Address</p>
+                                        </div>
+                                    }
+                                    @if (@Model.User.PhoneNumber != null)
+                                    {
+                                        <div class="form-group row">
+                                            <label for="phone" class="col-6 col-form-label font-weight-bold">Номер телефону</label>
+                                            <p class="col-6 col-form-label">@Model.User.PhoneNumber</p>
                                         </div>
                                     }
                                     @if (@Model.User.UserProfile.Nationality != null)

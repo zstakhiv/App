@@ -379,74 +379,59 @@ namespace EPlast.Controllers
                     model.User.ImagePath = oldImageName;
                 }
 
-                if (model.User.UserProfile.Nationality.ID == 0)
+                string nationality = model.User.UserProfile.Nationality.Name;
+                if (model.User.UserProfile.NationalityID == null && !string.IsNullOrEmpty(nationality))
                 {
-                    string name = model.User.UserProfile.Nationality.Name;
-                    if (string.IsNullOrEmpty(name))
-                    {
-                        model.User.UserProfile.Nationality = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Nationality = new Nationality() { Name = name };
-                    }
+                    model.User.UserProfile.Nationality = new Nationality() { Name = nationality };
+                }
+                else
+                {
+                    model.User.UserProfile.Nationality = null;
                 }
 
-                if (model.User.UserProfile.Religion.ID == 0)
+                string religion = model.User.UserProfile.Religion.Name;
+                if (model.User.UserProfile.ReligionID == null && !string.IsNullOrEmpty(religion))
                 {
-                    string name = model.User.UserProfile.Religion.Name;
-                    if (string.IsNullOrEmpty(name))
-                    {
-                        model.User.UserProfile.Religion = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Religion = new Religion() { Name = name };
-                    }
+                    model.User.UserProfile.Religion = new Religion() { Name = religion };
+                }
+                else
+                {
+                    model.User.UserProfile.Religion = null;
                 }
 
                 Degree degree = model.User.UserProfile.Education.Degree;
-                if (model.User.UserProfile.Education.Degree.ID == 0)
+                string degree_name = model.User.UserProfile.Education.Degree.Name;
+                if (model.User.UserProfile.Education.DegreeID == null && !string.IsNullOrEmpty(degree_name))
                 {
-                    string name = model.User.UserProfile.Education.Degree.Name;
-                    if (string.IsNullOrEmpty(name))
-                    {
-                        model.User.UserProfile.Education.Degree = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Education.Degree = new Degree() { Name = name };
-                    }
+                    model.User.UserProfile.Education.Degree = new Degree() { Name = degree_name };
+                }
+                else
+                {
+                    model.User.UserProfile.Education.Degree = null;
                 }
 
-                if (model.User.UserProfile.Education.ID == 0)
+                string placeOfStudy = model.User.UserProfile.Education.PlaceOfStudy;
+                string speciality = model.User.UserProfile.Education.Speciality;
+                if (model.User.UserProfile.EducationID == null && (!string.IsNullOrEmpty(placeOfStudy) ||!string.IsNullOrEmpty(speciality)))
                 {
-                    string placeOfStudy = model.User.UserProfile.Education.PlaceOfStudy;
-                    string speciality = model.User.UserProfile.Education.Speciality;
-                    if (string.IsNullOrEmpty(placeOfStudy) || string.IsNullOrEmpty(speciality))
-                    {
-                        model.User.UserProfile.Education = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
-                    }
+                    model.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
+                }
+                else
+                {
+                    model.User.UserProfile.Education = null;
                 }
 
-                if (model.User.UserProfile.Work.ID == 0)
+                string placeOfWork = model.User.UserProfile.Work.PlaceOfwork;
+                string position = model.User.UserProfile.Work.Position;
+                if (model.User.UserProfile.WorkID == null && (!string.IsNullOrEmpty(placeOfWork) || !string.IsNullOrEmpty(position)))
                 {
-                    string placeOfWork = model.User.UserProfile.Work.PlaceOfwork;
-                    string position = model.User.UserProfile.Work.Position;
-                    if (string.IsNullOrEmpty(placeOfWork) || string.IsNullOrEmpty(position))
-                    {
-                        model.User.UserProfile.Work = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
-                    }
+                    model.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
                 }
-
+                else
+                {
+                    model.User.UserProfile.Work = null;
+                }
+                
                 _repoWrapper.User.Update(model.User);
                 _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();
