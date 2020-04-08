@@ -684,7 +684,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<bool> DeletePosition(int id)
+        public async Task<IActionResult> DeletePosition(int id)
         {
             try
             {
@@ -699,16 +699,16 @@ namespace EPlast.Controllers
                 }
                 _repoWrapper.CityAdministration.Delete(cityAdministration);
                 _repoWrapper.Save();
-                return true;
+                return Ok("Діловодство успішно видалено!");
             }
             catch
             {
-                return false;
+                return NotFound("Не вдалося видалити діловодство!");
             }
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<bool> EndPosition(int id)
+        public async Task<IActionResult> EndPosition(int id)
         {
             try
             {
@@ -721,11 +721,11 @@ namespace EPlast.Controllers
                 _repoWrapper.CityAdministration.Update(cityAdministration);
                 _repoWrapper.Save();
                 await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
-                return true;
+                return Ok("Каденцію діловодства успішно завершено!");
             }
             catch
             {
-                return false;
+                return NotFound("Не вдалося завершити каденцію діловодства!");
             }
         }
     }

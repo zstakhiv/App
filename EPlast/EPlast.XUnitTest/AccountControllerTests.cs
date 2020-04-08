@@ -151,8 +151,7 @@ namespace EPlast.XUnitTest
             var result = controller.DeletePosition(cityAdministrations[0].ID);
 
             // Assert
-            Assert.True(result.Result);
-            _userManager.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName));
+            Assert.IsType<OkObjectResult>(result.Result);
         }
 
         [Fact]
@@ -177,7 +176,7 @@ namespace EPlast.XUnitTest
             var result = controller.DeletePosition(cityAdministrations[0].ID);
 
             // Assert
-            Assert.True(result.Result);
+            Assert.IsType<OkObjectResult>(result.Result);
             _userManager.Verify(u => u.RemoveFromRoleAsync(cityAdministrations[0].User, cityAdministrations[0].AdminType.AdminTypeName), Times.Never);
         }
 
@@ -193,7 +192,10 @@ namespace EPlast.XUnitTest
             var result = controller.DeletePosition(0);
 
             // Assert
-            Assert.False(result.Result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
+            _repoWrapper.Verify(r => r.CityAdministration.Delete(It.IsAny<CityAdministration>()), Times.Never);
+            _repoWrapper.Verify(r => r.Save(), Times.Never);
+            _userManager.Verify(u => u.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -218,7 +220,7 @@ namespace EPlast.XUnitTest
             var result = controller.EndPosition(cityAdministrations[0].ID);
 
             // Assert
-            Assert.True(result.Result);
+            Assert.IsType<OkObjectResult>(result.Result);
             Assert.NotNull(cityAdministrations[0].EndDate);
         }
 
@@ -234,7 +236,10 @@ namespace EPlast.XUnitTest
             var result = controller.EndPosition(0);
 
             // Assert
-            Assert.False(result.Result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
+            _repoWrapper.Verify(r => r.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
+            _repoWrapper.Verify(r => r.Save(), Times.Never);
+            _userManager.Verify(u => u.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
         }
     }
 }
