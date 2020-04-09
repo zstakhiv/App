@@ -1,6 +1,7 @@
 ﻿using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -47,7 +48,8 @@ namespace EPlast.XUnitTest
             // Act
             var result =await controller.Edit(user.Id);
             // Assert
-            Assert.IsType<PartialViewResult>(result);
+            var viewResult = Assert.IsType<PartialViewResult>(result);
+            Assert.IsAssignableFrom<RoleViewModel>(viewResult.Model);
         }
 
         [Fact]
@@ -57,7 +59,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.Edit("1");
             // Assert
-            Assert.IsType<RedirectToActionResult>(result);
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
         }
 
         [Fact]
@@ -72,7 +76,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.Edit(user.Id,roles);
             // Assert
-            Assert.IsType<RedirectToActionResult>(result);
+             
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("UsersTable", viewResult.ActionName);
         }
 
         [Fact]
@@ -82,8 +88,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.Edit("1", new List<string>());
             // Assert
-            Assert.IsType<RedirectToActionResult>(result);
-            //Assert.Equal("sdv",)
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
         }
 
         [Fact]
@@ -94,7 +101,6 @@ namespace EPlast.XUnitTest
             var result = controller.ConfirmDelete("1");
             // Assert
             Assert.IsType<PartialViewResult>(result);
-            //Assert.Equal("sdv",)
         }
 
         [Fact]
@@ -111,7 +117,9 @@ namespace EPlast.XUnitTest
             // Assert
             _repoWrapper.Verify(r => r.User.Delete(It.IsAny<User>()), Times.Once());
             _repoWrapper.Verify(r => r.Save(), Times.Once());
-            Assert.IsType<RedirectToActionResult>(result);
+            
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("UsersTable", viewResult.ActionName);
         }
 
         [Fact]
@@ -121,7 +129,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.Delete(null);
             // Assert
-            Assert.IsType<RedirectToActionResult>(result);
+            var viewResult=Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
         }
 
         [Fact]
@@ -132,7 +142,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = controller.RegionsAdmins();
             // Assert
-            Assert.IsType<ViewResult>(result);
+            
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<RegionsAdmins>(viewResult.Model);
         }
 
         [Fact]
@@ -143,7 +155,8 @@ namespace EPlast.XUnitTest
             // Act
             var result = controller.GetAdmins(1);
             // Assert
-            Assert.IsType<PartialViewResult>(result);
+            var viewResult = Assert.IsType<PartialViewResult>(result);
+            Assert.IsAssignableFrom<IQueryable<CityAdministration>>(viewResult.Model);
         }
 
         [Fact]
@@ -161,7 +174,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.UsersTable();
             // Assert
-            Assert.IsType<ViewResult>(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<List<UserTableViewModel>>(viewResult.Model);
+
         }
 
         [Fact]
@@ -171,7 +186,9 @@ namespace EPlast.XUnitTest
             // Act
             var result = await controller.UsersTable();
             // Assert
-            Assert.IsType<RedirectToActionResult>(result);
+            var viewResult=Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
         }
     }
 }
