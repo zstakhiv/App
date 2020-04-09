@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -267,13 +268,25 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(GetTestUserWithEmailConfirmed()))
-                .ReturnsAsync(Task.FromResult(true));
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
 
             mockUserManager
                 .Setup(i => i.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
                 .ReturnsAsync(GetTestCodeForResetPassword());
 
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
             var result = await accountController.ForgotPassword(GetTestForgotViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ForgotPasswordConfirmation", viewResult.ViewName);
@@ -305,7 +318,8 @@ namespace EPlast.XUnitTest
             {
                 UserName = "andriishainoha@gmail.com",
                 FirstName = "Andrii",
-                LastName = "Shainoha"
+                LastName = "Shainoha",
+                EmailConfirmed = true
             };
 
         }
