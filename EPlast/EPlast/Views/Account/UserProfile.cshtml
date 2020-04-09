@@ -185,7 +185,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <h3>Поточні діловодства:</h3>
-                            @if (User.IsInRole("Admin"))
+                            @if (Model.HasAccessToManageUserPositions)
                             {
                                 <div class="d-flex">
                                     <button id="endPosition" class="btn btn-sm btn-success btn-management" disabled>Завершити каденцію</button>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="form-group">
                             <h3>Колишні діловодства:</h3>
-                            @if (User.IsInRole("Admin"))
+                            @if (Model.HasAccessToManageUserPositions)
                             {
                                 <div class="d-flex">
                                     <button id="deletePosition" class="btn btn-sm btn-success btn-management" disabled>Видалити діловодство</button>
