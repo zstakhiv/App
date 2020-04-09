@@ -35,7 +35,6 @@ $(document).ready(() => {
         formData.append("Decesion.Date", decesionDate);
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
-        console.log(...formData);//LOGGER
 
         $.ajax({
             url: "/Documentation/SaveDecesionAsync",

@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using EPlast.Wrapper;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace EPlast.XUnitTest
 {
@@ -31,6 +33,7 @@ namespace EPlast.XUnitTest
             var viewAnnualReportsVmInitializer = new Mock<IViewAnnualReportsVMInitializer>();
             var directoryManager = new Mock<IDirectoryManager>();
             var fileManager = new Mock<IFileManager>();
+            directoryManager.Setup(dir => dir.Exists(It.IsAny<string>())).Returns(true);
             repository.Setup(rep => rep.Organization.FindAll()).Returns(GetTestOrganizations());
             repository.Setup(rep => rep.DecesionTarget.FindAll()).Returns(GetTestDecesionTargets());
             repository.Setup(rep => rep.Decesion.Attach(new Decesion()));
@@ -88,22 +91,62 @@ namespace EPlast.XUnitTest
             }
         };
 
-        public static IEnumerable<object[]> TestDecesionViewModel =>
+        public static IEnumerable<object[]> TestDecesionViewModelWithoutFile =>
         new List<object[]> {
             new object[]{CreateDecesionViewModel(), true },
             new object[]{CreateDecesionViewModel(DecesionTargetID: 0), true },
             new object[]{null, false}
         };
 
-        //[Theory]
-        //[MemberData(nameof(TestDecesionViewModel))]
-        //public async Task SaveDecesionAsyncTestAsync(DecesionViewModel model, bool expected)
-        //{
-        //    var controller = CreateDocumentationController();
+        [Theory]
+        [MemberData(nameof(TestDecesionViewModelWithoutFile))]
+        public async Task SaveDecesionAsyncTestWithoutFileAsync(DecesionViewModel model, bool expected)
+        {
+            var controller = CreateDocumentationController();
 
-        //    var result = JObject.FromObject(await controller.SaveDecesionAsync(model)).First.Values();
+            var result = await controller.SaveDecesionAsync(model);
+            bool actual = result.Value.ToString().Contains("True") ? true : false;
 
-        //    Assert.Equal(expected, result.Value<bool>());
-        //}
+            Assert.Equal(expected, actual);
+        }
+
+        public static IEnumerable<object[]> TestDecesionViewModelWithFile =>
+            new List<object[]> {
+            new object[]{CreateDecesionViewModel(haveFile:true), true },
+            new object[]{CreateDecesionViewModel(haveFile: true), true },
+            new object[]{null, false}
+            };
+
+        public static IFormFile FakeFile()
+        {
+            var fileMock = new Mock<IFormFile>();
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake File";
+            var fileName = "test.pdf";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+
+            return fileMock.Object;
+        }
+
+        [Theory]
+        [MemberData(nameof(TestDecesionViewModelWithFile))]
+        public async Task SaveDecesionAsyncTestWithFileAsync(DecesionViewModel model, bool expected)
+        {
+            model.File = FakeFile();
+            var controller = CreateDocumentationController();
+
+            var result = await controller.SaveDecesionAsync(model);
+
+            bool actual = result.Value.ToString().Contains("True") ? true : false;
+
+            Assert.Equal(expected, actual);
+        }
     }
 }

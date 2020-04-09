@@ -30,7 +30,6 @@ namespace EPlast.Controllers
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
         private readonly IDirectoryManager _directoryManager;
         private readonly IFileManager _fileManager;
-
         private const string DecesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
@@ -121,11 +120,10 @@ namespace EPlast.Controllers
                         if (decesionViewModel.File != null)
                         {
                             path = Path.Combine(path, decesionViewModel.File.FileName);
-                            var memory = new MemoryStream();
 
-                            using (var stream = new FileStream(path, FileMode.Create))
+                            using (var stream = new FileStreamManager(path, FileMode.Create))
                             {
-                                await stream.CopyToAsync(memory);
+                                await decesionViewModel.File.CopyToAsync(stream.GetStream());
                                 if (!_fileManager.Exists(path))
                                 {
                                     throw new ArgumentException($"File was not created it '{path}' directory");
@@ -200,16 +198,15 @@ namespace EPlast.Controllers
                 }
                 path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
+                using (var stream = new FileStreamManager(path, FileMode.Open))
                 {
                     await stream.CopyToAsync(memory);
                     if (memory.Length == 0)
                     {
                         throw new ArgumentException("memory length is 0");
                     }
-                    memory.Position = 0;
                 }
-
+                memory.Position = 0;
                 return File(memory, GetContentType(path), Path.GetFileName(path));
             }
             catch
