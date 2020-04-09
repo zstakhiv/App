@@ -144,6 +144,42 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public async Task TestChangePasswordPostReturnChangePassword()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithAllFields()));
+
+            mockUserManager
+                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+
+            var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestChangePasswordPostReturnChangePasswordConfirmation()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithAllFields()));
+
+            mockUserManager
+                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+
+            /*mockUserManager
+                .Setup(s => s.RefreshSign)*/
+             //тут треба настроїти signinmanager і воно всьо буде добре работати
+        }
+
+        //далі буде йти ResetPassword
 
 
 
@@ -151,7 +187,15 @@ namespace EPlast.XUnitTest
             return null;
         }
 
+        private User GetTestUserWithAllFields() {
+            return new User()
+            {
+                UserName = "andriishainoha@gmail.com",
+                FirstName = "Andrii",
+                LastName = "Shainoha"
+            };
 
+        }
 
         private ChangePasswordViewModel GetTestChangeViewModel()
         {
