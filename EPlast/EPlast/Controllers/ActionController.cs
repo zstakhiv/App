@@ -109,6 +109,11 @@ namespace EPlast.Controllers
             {
                 Gallary objectToDelete = _repoWrapper.Gallary.FindByCondition(g =>g.ID == ID).First();
                 _repoWrapper.Gallary.Delete(objectToDelete);
+                var picturePath = Path.Combine(_env.WebRootPath, "images\\EventsGallery",objectToDelete.GalaryFileName);
+                if (System.IO.File.Exists(picturePath))
+                {
+                    System.IO.File.Delete(picturePath);
+                }
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
