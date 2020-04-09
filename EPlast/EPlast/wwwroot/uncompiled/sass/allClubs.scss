@@ -24,6 +24,7 @@
                 align-items: center;
                 padding: 10px;
                 background-color: white;
+                height: 100%;
 
                 .club-img-wrapper {
                     width: 100%;
@@ -60,6 +61,9 @@
                     .club-name {
                         margin-bottom: 0;
                         font-size: 17px;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
                     }
 
                     .white-icon {

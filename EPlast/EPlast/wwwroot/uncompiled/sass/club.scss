@@ -141,8 +141,9 @@
                 text-align: justify;
             }
         }
+
         .people-info, .members-info, .followers-info {
-            flex-basis: 66%;
+            flex-grow: 1;
         }
 
         .members-info {
@@ -153,6 +154,10 @@
             flex-wrap: wrap;
             justify-content: center;
             min-height: 100px;
+
+            .no-followers-in-club{
+                text-align: center;
+            }
         }
 
         .followers-info {
@@ -175,7 +180,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 8px;
+            padding: 8px;
+            width: 33%;
+            text-align: center;
 
             .member-img-block {
                 width: 50px;
@@ -194,6 +201,10 @@
 
             .member-name {
                 margin-bottom: 0;
+                text-overflow: ellipsis;
+                max-height: 4.5em;
+                overflow: hidden;
+                width: 100%;
             }
         }
     }

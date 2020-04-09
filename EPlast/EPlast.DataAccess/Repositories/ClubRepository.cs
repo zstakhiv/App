@@ -12,14 +12,6 @@ namespace EPlast.DataAccess.Repositories
             : base(dbContext)
         {
         }
-            public new void Update(Club item)
-        {
-            var club = EPlastDBContext.Clubs.Find(item.ID);
-            club.ClubName = item.ClubName;
-            club.ClubURL = item.ClubURL;
-            club.Description = item.Description;
-            EPlastDBContext.Clubs.Update(club);
-        }
     
     }
 }

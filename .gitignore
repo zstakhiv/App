@@ -366,3 +366,6 @@ EPlast/EPlast/wwwroot/bundles/css/*
 
 # Ignore documents
 EPlast/EPlast/wwwroot/documents/*
+/EPlast/EPlast/wwwroot/images/Club/35acfaeb-8355-4e2f-bbe2-b2cb183c248f.png
+/EPlast/EPlast/wwwroot/images/Club/7caae87d-d14f-4125-920b-97e1fca253f3.jpg
+/EPlast/EPlast/wwwroot/images/Club/c3bbaf44-885e-4cdd-9c72-52bcfdc0dba0.jpg
