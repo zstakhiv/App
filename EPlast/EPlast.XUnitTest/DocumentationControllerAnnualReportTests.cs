@@ -175,5 +175,74 @@ namespace EPlast.XUnitTest
             cityAccessManager.Verify(cam => cam.GetCities(It.IsAny<string>()));
             repositoryWrapper.Verify(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()), Times.Never);
         }
+
+        [Fact]
+        public void CreateAnnualReportAsAdminCorrect()
+        {
+            // Arrange
+            var cities = new List<City>
+            {
+                new City { ID = 1, Name = "Золочів" }
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(cities.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
+                .Returns(Enumerable.Empty<User>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
+                null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.CreateAnnualReportAsAdmin(cities[0].ID);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewModel = Assert.IsAssignableFrom<AnnualReportViewModel>(viewResult.Model);
+            Assert.NotNull(viewModel);
+        }
+
+        [Fact]
+        public void CreateAnnualReportAsAdminIncorrectCityEmpty()
+        {
+            // Arrange
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(Enumerable.Empty<City>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
+                null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
+            cityAccessManager.Verify(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()));
+            repositoryWrapper.Verify(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()), Times.Never);
+        }
+
+        [Fact]
+        public void CreateAnnualReportAsAdminIncorrectHasNoAccess()
+        {
+            // Arrange
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(false);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(Enumerable.Empty<City>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
+                null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(403, result.RouteValues["code"]);
+            repositoryWrapper.Verify(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()), Times.Never);
+        }
     }
 }
