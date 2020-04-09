@@ -99,7 +99,7 @@ namespace EPlast.XUnitTest
 
         //ChangePassword
         [Fact]
-        public async Task TestChangePasswordGetReturnsResultNotNull()
+        public async Task TestChangePasswordGetReturnsChangePasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -117,7 +117,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestChangePasswordGetReturnsResultNull()
+        public async Task TestChangePasswordGetReturnsChangePasswordNotAllowedView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -135,7 +135,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestChangePasswordPostReturnLogin()
+        public async Task TestChangePasswordPostReturnsLoginRedirect()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -148,7 +148,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestChangePasswordPostReturnChangePassword()
+        public async Task TestChangePasswordPostReturnsChangePasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -176,16 +176,16 @@ namespace EPlast.XUnitTest
             mockUserManager
                 .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
-
-            /*mockUserManager
-                .Setup(s => s.RefreshSign)*/
-             
-            //тут треба настроїти signinmanager і воно всьо буде добре работати
+            //треба налаштувати signInManager
+            /*var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);*/
         }
 
         //ResetPassword
         [Fact]
-        public void TestResetPasswordGetReturnError()
+        public void TestResetPasswordGetReturnsErrorView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             var result = accountController.ResetPassword();
@@ -195,7 +195,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void TestResetPasswordGetReturnResetPassword()
+        public void TestResetPasswordGetReturnsResetPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             var result = accountController.ResetPassword(GetTestCodeForResetPassword());
@@ -205,7 +205,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestResetPasswordPostReturnResetPassword()
+        public async Task TestResetPasswordPostReturnsResetPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -233,7 +233,7 @@ namespace EPlast.XUnitTest
 
         //ForgotPassword
         [Fact]
-        public void TestForgotPasswordGetReturnView()
+        public void TestForgotPasswordGetReturnsForgotPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             var result = accountController.ForgotPassword();
@@ -242,8 +242,18 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
+        [Fact]   //переробити бо ModelState завжди каже шо тру
+        public async Task TestForgotPasswordPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = await accountController.ForgotPassword(GetBadTestForgotViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
         [Fact]
-        public async Task TestForgotPasswordPostReturnViewForgotPassword()
+        public async Task TestForgotPasswordPostReturnsForgotPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -261,7 +271,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestForgotPasswordPostReturnViewForgotPasswordConfirmation() {
+        public async Task TestForgotPasswordPostReturnsForgotPasswordConfirmationView() {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
@@ -293,8 +303,6 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-
-
         private string GetTestCodeForResetPassword()
         {
             return new string("500");
@@ -309,6 +317,15 @@ namespace EPlast.XUnitTest
             var forgotPasswordViewModel = new ForgotPasswordViewModel
             {
                 Email = "andriishainoha@gmail.com"
+            };
+            return forgotPasswordViewModel;
+        }
+
+        private ForgotPasswordViewModel GetBadTestForgotViewModel()
+        {
+            var forgotPasswordViewModel = new ForgotPasswordViewModel
+            {
+                Email = "andr"
             };
             return forgotPasswordViewModel;
         }

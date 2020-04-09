@@ -91,22 +91,6 @@ namespace EPlast.Controllers
             return View();
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _userManager.IsEmailConfirmedAsync(user);
-            if (result)
-            {
-                return View("ChangePassword");
-            }
-            else
-            {
-                return View("ChangePasswordNotAllowed");
-            }
-        }
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
@@ -548,6 +532,54 @@ namespace EPlast.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                return View("ChangePasswordNotAllowed");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user == null)
+                    {
+                        return RedirectToAction("Login");
+                    }
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
+                        model.NewPassword);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Проблема зі зміною пароля, можливо неправильно введений старий пароль");
+                        return View("ChangePassword");
+                    }
+                    await _signInManager.RefreshSignInAsync(user);
+                    return View("ChangePasswordConfirmation");
+                }
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
@@ -650,37 +682,7 @@ namespace EPlast.Controllers
             }
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    if (user == null)
-                    {
-                        return RedirectToAction("Login");
-                    }
-                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
-                        model.NewPassword);
-                    if (!result.Succeeded)
-                    {
-                        ModelState.AddModelError("", "Проблема зі зміною пароля, можливо неправильно введений старий пароль");
-                        return View("ChangePassword");
-                    }
-                    await _signInManager.RefreshSignInAsync(user);
-                    return View("ChangePasswordConfirmation");
-                }
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
-            }
-        }
+        
 
         [Authorize(Roles = "Admin")]
         public async Task<bool> DeletePosition(int id)
