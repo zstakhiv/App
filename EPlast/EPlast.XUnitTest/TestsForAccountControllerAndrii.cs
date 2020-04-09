@@ -176,12 +176,44 @@ namespace EPlast.XUnitTest
 
             /*mockUserManager
                 .Setup(s => s.RefreshSign)*/
-             //тут треба настроїти signinmanager і воно всьо буде добре работати
+             
+            //тут треба настроїти signinmanager і воно всьо буде добре работати
         }
 
         //далі буде йти ResetPassword
 
+        [Fact]
+        public void TestResetPasswordGetReturnError()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.ResetPassword();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
 
+        [Fact]
+        public void TestResetPasswordGetReturnResetPassword()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.ResetPassword(GetTestCodeForResetPassword());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        private string GetTestCodeForResetPassword()
+        {
+            return new string("500");
+        }
+
+
+        /*[HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View("ResetPassword");
+        }*/
 
         private User GetTestUserWithNullFields() {
             return null;
@@ -223,40 +255,5 @@ namespace EPlast.XUnitTest
                 EmailConfirmed = false
             };
         }
-
-        /*[HttpPost]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    if (user == null)
-                    {
-                        return RedirectToAction("Login");
-                    }
-                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
-                        model.NewPassword);
-                    if (!result.Succeeded)
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                        return View();
-                    }
-                    await _signInManager.RefreshSignInAsync(user);
-                    return View("ChangePasswordConfirmation");
-                }
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
-            }
-        }*/
     }
 }
