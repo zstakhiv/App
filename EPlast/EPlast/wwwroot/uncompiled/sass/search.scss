@@ -1,16 +1,4 @@
-﻿
-.vh {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-}
-
-.fade-screen {
+﻿.fade-screen {
     background: rgba(0,0,0,0.2);
     visibility: hidden;
     position: fixed;
@@ -22,10 +10,6 @@
     height: 100%;
     z-index: 1;
 }
-
-// ----------------------------
-// ANIMATIONS
-// ----------------------------
 
 @keyframes specialFadeIn {
     from {
@@ -200,10 +184,6 @@
     }
 }
 
-// ----------------------------
-// NAV Search Form
-// ----------------------------
-
 .menu-search-container {
     display: none;
     position: absolute;
@@ -253,11 +233,10 @@
 
 .menu-search-close {
     position: absolute;
-    right: -183px;
+    right: -10px;
     top: 0;
 }
 
-// Sub Menu
 .search-sub-menu {
     background: #fff;
     width: 100%;
