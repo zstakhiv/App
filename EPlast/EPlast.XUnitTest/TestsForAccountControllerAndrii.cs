@@ -90,7 +90,7 @@ namespace EPlast.XUnitTest
 
             //SignInManager does not mocked
             AccountController accountController = new AccountController(mockUserManager.Object, null,
-                mockRepositoryWrapper.Object, mockLogger.Object, mockEmailConfirmation.Object, mockHosting.Object);
+                mockRepositoryWrapper.Object, mockLogger.Object, mockEmailConfirmation.Object, mockHosting.Object, null);
 
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
