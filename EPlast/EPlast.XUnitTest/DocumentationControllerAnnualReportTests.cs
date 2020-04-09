@@ -244,5 +244,146 @@ namespace EPlast.XUnitTest
             Assert.Equal(403, result.RouteValues["code"]);
             repositoryWrapper.Verify(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()), Times.Never);
         }
+
+        [Fact]
+        public void CreateAnnualReportHttpPostCorrectIsValid()
+        {
+            // Arrange
+            var cities = new List<City>
+            {
+                new City { ID = 1, Name = "Золочів" }
+            };
+            var annualReport = new AnnualReport()
+            {
+                CityManagement = new CityManagement(),
+                MembersStatistic = new MembersStatistic()
+            };
+            userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
+                .Returns(string.Empty);
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(cities.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.CreateAnnualReport(cities[0].ID, annualReport);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal($"Звіт станиці {cities[0].Name} за {annualReport.Date.Year} рік створено!", viewResult.ViewData["Message"]);
+        }
+
+        [Fact]
+        public void CreateAnnualReportHttpPostIsValidNotCreate()
+        {
+            // Arrange
+            var cities = new List<City>
+            {
+                new City { ID = 1, Name = "Золочів" }
+            };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport()
+                {
+                    CityManagement = new CityManagement(),
+                    MembersStatistic = new MembersStatistic()
+                }
+            };
+            userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
+                .Returns(string.Empty);
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(cities.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            controller.ModelState.Clear();
+
+            // Act
+            var result = controller.CreateAnnualReport(cities[0].ID, annualReports[0]);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal($"Звіт станиці {cities[0].Name} за {annualReports[0].Date.Year} рік вже існує!", viewResult.ViewData["ErrorMessage"]);
+        }
+
+        [Fact]
+        public void CreateAnnualReportHttpPostCorrectIsInvalid()
+        {
+            // Arrange
+            var cities = new List<City>
+            {
+                new City { ID = 1, Name = "Золочів" }
+            };
+            var annualReport = new AnnualReport()
+            {
+                CityManagement = new CityManagement(),
+                MembersStatistic = new MembersStatistic(),
+                NumberOfAdministrators = -1
+            };
+            userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
+                .Returns(string.Empty);
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(cities.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
+                .Returns(Enumerable.Empty<User>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object);
+            controller.ModelState.AddModelError("test", "test");
+
+            // Act
+            var result = controller.CreateAnnualReport(cities[0].ID, annualReport);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewModel = Assert.IsAssignableFrom<AnnualReportViewModel>(viewResult.Model);
+            Assert.NotNull(viewModel);
+            repositoryWrapper.Verify(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()));
+        }
+
+        [Fact]
+        public void CreateAnnualReportHttpPostIncorrectHasNoAccess()
+        {
+            // Arrange
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(false);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
+                null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(403, result.RouteValues["code"]);
+            repositoryWrapper.Verify(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()), Times.Never);
+        }
+
+        [Fact]
+        public void CreateAnnualReportHttpPostIncorrectCitiesEmpty()
+        {
+            // Arrange
+            userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
+                .Returns(string.Empty);
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
+                .Returns(Enumerable.Empty<City>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
+        }
     }
 }
