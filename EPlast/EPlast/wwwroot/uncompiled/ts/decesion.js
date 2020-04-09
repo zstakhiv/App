@@ -31,7 +31,7 @@ $(document).ready(() => {
             },
             error() {
                 $("#CreateDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
+                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
             }
         });
     });

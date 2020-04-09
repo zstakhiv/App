@@ -15,27 +15,21 @@
                 <div id="pageIcons" class="row justify-content-around my-2  ">
                     @if (Model.IsUserEventAdmin)
                     {
-                        <div class="column-md-4">
-                            <a id="deleteIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Видалити">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
-                        </div>
-                        <div class="column-md-4">
-                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Редагуати">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
-                        <div class="column-md-4">
-                            <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви адмін!">
-                                <i class="fas fa-user-cog"></i>
-                            </a>
-                        </div>
+                        <a id="deleteIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Видалити">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+                        <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Редагуати">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Ви адмін!">
+                            <i class="fas fa-user-cog"></i>
+                        </a>
                     }
                     else
                     {
                         @if (!Model.IsUserParticipant)
                         {
-                            <div id="subscribeBlock" class="column-md-4 event-pen">
+                            <div id="subscribeBlock" class="event-pen">
                                 <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
                                     <i class="fas fa-pen-alt"></i>
                                 </a>
@@ -43,7 +37,7 @@
                         }
                         else
                         {
-                            <div id="subscribeBlock" class="column-md-4 event-pen event-invisible">
+                            <div id="subscribeBlock" class="event-pen event-invisible">
                                 <a id="subscribeIcon" class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Зголоситись">
                                     <i class="fas fa-pen-alt"></i>
                                 </a>
@@ -52,7 +46,7 @@
 
                         @if (Model.IsUserApprovedParticipant)
                         {
-                            <div id="participantBlock" class="column-md-4 event-part">
+                            <div id="participantBlock" class="event-part">
                                 <a class="event-link ml-2" data-toggle="tooltip" data-placement="bottom" title="Вітаємо! Ви учасник події.">
                                     <i class="far fa-check-square"></i>
                                 </a>
@@ -61,7 +55,7 @@
 
                         @if (Model.IsUserUndeterminedParticipant)
                         {
-                            <div id="userClockBlock" class="column-md-4 event-participant-status">
+                            <div id="userClockBlock" class="event-participant-status">
                                 <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
                                     <i class="fas fa-user-clock"></i>
                                 </a>
@@ -69,7 +63,7 @@
                         }
                         else
                         {
-                            <div id="userClockBlock" class="column-md-4 event-participant-status event-invisible">
+                            <div id="userClockBlock" class="event-participant-status event-invisible">
                                 <a id="userClock" class="participant-status ml-2" data-toggle="tooltip" data-placement="bottom" title="Ваша кандидатура розглядається">
                                     <i class="fas fa-user-clock"></i>
                                 </a>
@@ -86,7 +80,7 @@
                         }
                         if (!Model.IsUserParticipant || Model.IsUserRejectedParticipant)
                         {
-                            <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe event-invisible">
+                            <div id="unsubscribeBlock" class="event-unsubscribe event-invisible">
                                 <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
                                     <i class="fas fa-user-minus"></i>
                                 </a>
@@ -94,33 +88,29 @@
                         }
                         else
                         {
-                            <div id="unsubscribeBlock" class="column-md-4 event-unsubscribe">
+                            <div id="unsubscribeBlock" class="event-unsubscribe">
                                 <a id="unsubscribeIcon" class="event-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб відписатись від івенту">
                                     <i class="fas fa-user-minus"></i>
                                 </a>
                             </div>
                         }
                     }
-                    <div class="column-md-4">
-                        <div class="event-participants">
-                            <a class="event-link" href="#btn-part" data-toggle="tooltip" data-placement="bottom" title="Учасники">
-                                <i class="fas fa-users"></i>
-                            </a>
-                        </div>
+                    <div class="event-participants">
+                        <a class="event-link" href="#btn-part" data-toggle="tooltip" data-placement="bottom" title="Учасники">
+                            <i class="fas fa-users"></i>
+                        </a>
                     </div>
                     @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
                     {
-                        <div class="column-md-4">
-                            <div class="event-gallery">
-                                <a class="event-link" href="#gallery" data-toggle="tooltip" data-placement="bottom" title="Галерея">
-                                    <i class="fas fa-images"></i>
-                                </a>
-                            </div>
+                        <div class="event-gallery">
+                            <a class="event-link" href="#gallery" data-toggle="tooltip" data-placement="bottom" title="Галерея">
+                                <i class="fas fa-images"></i>
+                            </a>
                         </div>
                     }
                     else
                     {
-                        <div id="emptyGallery" class="column-md-4">
+                        <div id="emptyGallery">
                             <div class="event-gallery">
                                 <a class="event-link" data-toggle="tooltip" data-placement="bottom" title="Галерея">
                                     <i class="fas fa-images"></i>
@@ -128,14 +118,13 @@
                             </div>
                         </div>
                     }
-                    <div class="column-md-4">
-                        <div data-toggle="tooltip" data-placement="bottom" title="Адміністратор(-и) події">
-                            <a class="event-link" data-toggle="collapse" data-target="#eventAdmins" aria-expanded="false" aria-controls="eventAdmins">
-                                <i class="fas fa-users-cog"></i>
-                            </a>
-                        </div>
+                    <div data-toggle="tooltip" data-placement="bottom" title="Адміністратор(-и) події">
+                        <a class="event-link" data-toggle="collapse" data-target="#eventAdmins" aria-expanded="false" aria-controls="eventAdmins">
+                            <i class="fas fa-users-cog"></i>
+                        </a>
                     </div>
                 </div>
+
                 <div id="eventAdmins" class="row mt-4 ml-2 collapse">
                     <table class="table table-borderless table-sm">
                         <thead>
@@ -235,76 +224,110 @@
         <!-- Карусель -->
      @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
      {
-        <div class="row mt-3  justify-content-center  shadow rounded">
-            <div class="col-md-12 mt-3 text-center">
-                <div class="row ">
-                    <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея</h2>
-                </div>
-            </div>
+ <div id="carouselContainer" class="row mt-3  justify-content-center  shadow rounded">
+     <div class="col-md-12 mt-3 text-center">
+         <div class="row ">
+             <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея</h2>
+         </div>
+     </div>
 
-            <div id="carouselBlock" class="col-md-12  my-3">
-                <div class="row  justify-content-center">
-                    <div class="col-md-8">
-                        <div id="demo" class="carousel slide" data-ride="carousel">
+     <div id="carouselBlock" class="col-md-12  mt-3 mb-1">
+         <div class="row  justify-content-center">
+             <div id="fullCarousel" class="col-md-8">
+                 <div id="demo" class="carousel slide" data-ride="carousel">
 
-                            <!-- Indicators -->
-                            <ul class="carousel-indicators">
-                                @for (int i = 0; i < Model.Event.EventGallarys.Count; ++i)
-                                {
-                                    if (i == 0)
-                                    {
-                                        <li data-target="#demo" data-slide-to="@(i + 1)" class="active"></li>
-                                    }
-                                    else
-                                    {
-                                        <li data-target="#demo" data-slide-to="@(i + 1)"></li>
-                                    }
+                     <!-- Indicators -->
+                     <ul class="carousel-indicators">
+                         @for (int i = 0; i < Model.Event.EventGallarys.Count; ++i)
+                         {
+                             if (i == 0)
+                             {
+                                 <li data-target="#demo" data-slide-to="@(i + 1)" class="active"></li>
+                             }
+                             else
+                             {
+                                 <li data-target="#demo" data-slide-to="@(i + 1)"></li>
+                             }
 
-                                }
-                            </ul>
+                         }
+                     </ul>
 
-                            <!-- The slideshow -->
-                            <div class="carousel-inner">
-                                @foreach (var picture in Model.Event.EventGallarys)
-                                {
-                                    if (isActiveImage)
-                                    {
-                                        <div class="carousel-item active">
-                                            <img class="carousel-pictures" src="~/images/EventsGallery/@picture.Gallary.GalaryFileName"  width="1100" height="500">
-                                        </div>
-                                        isActiveImage = false;
-                                    }
-                                    else
-                                    {
-                                        <div class="carousel-item">
-                                            <img class="carousel-pictures" src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" width="1100" height="500">
-                                        </div>
-                                    }
-                                }
-                            </div>
+                     <!-- The slideshow -->
+                     <div class="carousel-inner">
+                         @foreach (var picture in Model.Event.EventGallarys)
+                         {
+                             if (isActiveImage)
+                             {
+                                 <div class="carousel-item active">
+                                     <img class="carousel-pictures" src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" width="1100" height="500">
+                                 </div>
+                                 isActiveImage = false;
+                             }
+                             else
+                             {
+                                 <div class="carousel-item">
+                                     <img class="carousel-pictures" src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" width="1100" height="500">
+                                 </div>
+                             }
+                         }
+                     </div>
 
-                            <!-- Left and right controls -->
-                            <a class="carousel-control-prev" href="#demo" data-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </a>
-                            <a class="carousel-control-next" href="#demo" data-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </a>
-                        </div>
-                    </div>
+                     <!-- Left and right controls -->
+                     <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                         <span class="carousel-control-prev-icon"></span>
+                     </a>
+                     <a class="carousel-control-next" href="#demo" data-slide="next">
+                         <span class="carousel-control-next-icon"></span>
+                     </a>
+                 </div>
+             </div>
 
-                    @if (Model.IsUserEventAdmin)
-                    {
-                        <div class="col-md-8 mt-2">
-                            <form id="form" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
-                                <label for="files">Додати фотографії:</label>
-                                <input type="file" id="files" name="files" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');"><br><br>
-                            </form>
-                        </div>
-                    }
-                        </div>
-                    </div>
-        </div>
+             @if (Model.IsUserEventAdmin)
+             {
+                 <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
+                     <form id="form" class="ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
+                         <label for="files">Додати фотографії:</label>
+                         <input type="file" id="files" name="files" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
+                     </form>
+                 </div>
+             }
+         </div>
+     </div>
+   
+     <div class="col-md-12  mb-3">
+         @if (Model.IsUserEventAdmin)
+         {
+             <div class="row  justify-content-center">
+                 <div class="col-md-8">
+                     <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
+                 </div>
+                 <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
+                     <div class="row event-page-wrapper overflow-auto picture-deleting">
+                         @foreach (var picture in Model.Event.EventGallarys)
+                         {
+                             <div class="col-md-4 my-1 picture-deleting">
+                                 <input type="hidden" value="@picture.GallaryID">
+                                 <div class="card text-center">
+                                     <div class="card-header">
+                                         <div class="row justify-content-end">
+                                             <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
+                                                 <i class="far fa-trash-alt"></i>
+                                             </a>
+                                         </div>
+                                     </div>
+                                     <div class="pictureToDelete">
+                                         <img src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" class="img-fluid" alt="Cloudy Sky">
+                                     </div>
+                                 </div>
+                             </div>
+                         }
+                     </div>
+                     <button id="backBut" type="button" class="btn btn-success gallery-buttons mt-3">Повернутися назад</button>
+                 </div>
+             </div>
+         }
+         </div>
+ </div>
      }
 
         <div class="row mt-3 mb-5 justify-content-сenter  shadow rounded">
