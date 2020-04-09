@@ -18,6 +18,8 @@ using System.Linq;
 using EPlast.Models.ViewModelInitializations.Interfaces;
 using EPlast.Models.ViewModelInitializations;
 using EPlast.BussinessLayer.Settings;
+using EPlast.BussinessLayer.AccessManagers;
+using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast
 {
@@ -50,27 +52,16 @@ namespace EPlast
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
-            services.AddScoped<INationalityRepository, NationalityRepository>();
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-            services.AddScoped<IEducationRepository, EducationRepository>();
-            services.AddScoped<IDegreeRepository, DegreeRepository>();
-            services.AddScoped<IReligionRepository, ReligionRepository>();
-            services.AddScoped<IGenderRepository, GenderRepository>();
-            services.AddScoped<IWorkRepository, WorkRepository>();
-            services.AddScoped<IApproverRepository, ApproverRepository>();
-            services.AddScoped<IConfirmedUserRepository, ConfirmedUserRepository>();
-
-            services.AddScoped<IDocumentTemplateRepository, DocumentTemplateRepository>();
-            services.AddScoped<IDecesionTargetRepository, DecesionTargetRepository>();
-            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-            services.AddScoped<IDecesionRepository, DecesionRepository>();
             services.AddScoped<IEmailConfirmation, EmailConfirmation>();
             services.AddScoped<IAnnualReportVMInitializer, AnnualReportVMInitializer>();
             services.AddScoped<IViewAnnualReportsVMInitializer, ViewAnnualReportsVMInitializer>();
             services.AddScoped<IDecisionVMIitializer, DecisionVMIitializer>();
             services.AddScoped<IPDFService, PDFService>();
-
+            services.AddScoped<ICityAccessManagerSettings, CityAccessManagerSettings>();
+            services.AddScoped<ICityAccessManager, CityAccessManager>();
+            services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();
+            services.AddScoped<IUserAccessManager, UserAccessManager>();
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
