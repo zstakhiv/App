@@ -149,19 +149,39 @@ $(document).ready(function () {
         });
     });
     $('[data-toggle="tooltip"]').tooltip();
-    $("#editGallery").click(() => {
+    $("#uploadRes").click(function () {
+        location.reload(true);
+    });
+    $("#editGallery").click(function () {
+        $("#deletePicture").show();
         $("#fullCarousel").hide();
         $("#addPicture").hide();
-        $("#deletePicture").show();
+        $(this).hide();
     });
-    $("#backBut").click(() => {
+    $("#backBut").click(function () {
+        $('#carouselBlock').load(document.URL + ' #carouselBlock');
         $("#deletePicture").hide();
         $("#fullCarousel").show();
         $("#addPicture").show();
+        $("#editGallery").show();
     });
-    $('a.delete-card').click(function () {
-        let pictureToDelete = $(this).parents("div.single-card").children('input[type="hidden"]').val();
-        alert(pictureToDelete);
+    $("a.picture-remove").click(function () {
+        let pictureToDelete = $(this).parents("div.picture-deleting").children('input[type="hidden"]').val();
+        let elementToDelete = $(this).parents("div.picture-deleting").get(0);
+        DeletePicture(pictureToDelete, elementToDelete);
     });
+    function DeletePicture(pictureToDelete, elementToDelete) {
+        $.ajax({
+            type: "POST",
+            url: "/Action/DeletePicture",
+            data: { ID: pictureToDelete },
+            success: () => {
+                $(elementToDelete).remove();
+            },
+            error: () => {
+                $("#FAIL").modal("show");
+            },
+        });
+    }
 });
 //# sourceMappingURL=eventPage.js.map
