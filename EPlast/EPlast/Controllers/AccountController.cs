@@ -260,51 +260,69 @@ namespace EPlast.Controllers
 
         public IActionResult UserProfile(string userId)
         {
-            if(string.IsNullOrEmpty(userId))
+            try
             {
-                userId = _userManager.GetUserId(User);
-                _logger.Log(LogLevel.Information, "UserId is not null");
+                if (string.IsNullOrEmpty(userId))
+                {
+                    userId = _userManager.GetUserId(User);
+                    _logger.Log(LogLevel.Information, "UserId is not null");
+                }
+                var user = _repoWrapper.User.
+                FindByCondition(q => q.Id == userId).
+                    Include(i => i.UserProfile).
+                        ThenInclude(x => x.Nationality).
+                    Include(g => g.UserProfile).
+                    ThenInclude(g => g.Gender).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Education).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Degree).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Religion).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Work).
+                    FirstOrDefault();
+                var userPositions = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.UserId == userId)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.City);
+
+                var edit = Edit(userId);
+                if (edit == null)
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
+                }
+
+                if (user != null)
+                {
+                    var model = new UserViewModel
+                    {
+                        User = user,
+                        UserPositions = userPositions,
+                        HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
+                        EditView = edit
+                    };
+                    return View(model);
+                }
+                _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == userId).
-                Include(i => i.UserProfile).
-                    ThenInclude(x => x.Nationality).
-                Include(g => g.UserProfile).
-                ThenInclude(g => g.Gender).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Education).
-                Include(g=>g.UserProfile).
-                    ThenInclude(g=>g.Degree).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Religion).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Work).
-                FirstOrDefault();
-            var userPositions = _repoWrapper.CityAdministration
-                .FindByCondition(ca => ca.UserId == userId)
-                    .Include(ca => ca.AdminType)
-                    .Include(ca => ca.City);
-            var model = new UserViewModel
-            {
-                User = user,
-                UserPositions = userPositions,
-                HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
-                EditView = Edit(userId)
-            };
-            if(model.EditView==null)
+            catch
             {
                 return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            if (model != null)
-            {
-                return View(model);
-            }
-            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
-            return RedirectToAction("HandleError", "Error", new { code = 500 });
         }
 
         private EditUserViewModel Edit(string id)
         {
+            if (!_repoWrapper.Gender.FindAll().Any())
+            {
+                _repoWrapper.Gender.Create(new Gender { Name = "Не обрано" });
+                _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
+                _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
+                _repoWrapper.Save();
+            }
+            //!!
             try
             {
                 if(!string.Equals(id, _userManager.GetUserId(User)))
