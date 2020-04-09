@@ -152,4 +152,26 @@ input.event-page-wrapper.btn-collapse:hover {
         background-color: #ffffff;
         border-color: none;
     }
+
+    a.picture-remove {
+        color: #8B0000;
+        font-size: 20px;
+    }
+
+    a.picture-remove:hover {
+        color: #FF0000;
+        font-size: 20px;
+    }
+
+    .picture-deleting {
+        max-height: 400px;
+    }
+
+    .gallery-buttons {
+        background-color: #3c5438;
+    }
+
+    .pictureToDelete img{
+        height:150px;
+    }
 }
