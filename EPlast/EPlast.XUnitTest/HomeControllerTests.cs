@@ -21,17 +21,22 @@ namespace EPlast.XUnitTest
 {
     public class HomeControllerTests
     {
-        
+        private Mock<IRepositoryWrapper> _repoWrapper;
+        private Mock<IEmailConfirmation> _emailConfirmation;
+
+        public HomeControllerTests()
+        {
+            _repoWrapper = new Mock<IRepositoryWrapper>();
+            _emailConfirmation = new Mock<IEmailConfirmation>();
+        }
+
         [Fact]
         public void IndexViewResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
             var controller = new HomeController(_emailConfirmation.Object,_repoWrapper.Object);
-            // Act
+
             var result = controller.Index();
-            // Assert
+
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.NotNull(viewResult);
         }
@@ -39,13 +44,10 @@ namespace EPlast.XUnitTest
         [Fact]
         public void AboutPLASTViewResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
             var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
-            // Act
+
             var result = controller.AboutPLAST();
-            // Assert
+
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.NotNull(viewResult);
         }
@@ -53,13 +55,11 @@ namespace EPlast.XUnitTest
         [Fact]
         public void ContactsViewResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
+            
             var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
-            // Act
+
             var result = controller.Contacts();
-            // Assert
+
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.NotNull(viewResult);
         }
@@ -67,13 +67,10 @@ namespace EPlast.XUnitTest
         [Fact]
         public void FAQViewResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
             var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
-            // Act
+
             var result = controller.FAQ();
-            // Assert
+
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.NotNull(viewResult);
         }
@@ -81,13 +78,10 @@ namespace EPlast.XUnitTest
         [Fact]
         public void FeedBackSendedResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
             var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
-            // Act
+
             var result = controller.FeedBackSended();
-            // Assert
+
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.NotNull(viewResult);
         }
@@ -95,17 +89,47 @@ namespace EPlast.XUnitTest
         [Fact]
         public void SearchResultNotNull()
         {
-            var _repoWrapper = new Mock<IRepositoryWrapper>();
-            var _emailConfirmation = new Mock<IEmailConfirmation>();
-            // Arrange
-            var controller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
-            // Act
-            //var result = controller.Search();
-            // Assert
-            //var viewResult = Assert.IsType<ViewResult>(result);
-            //Assert.NotNull(viewResult);
-        }
+            _repoWrapper.Setup(p => p.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>())).Returns(
+                new List<User> { 
+                    new User
+                    {
+                        FirstName="Денис",
+                        LastName = "Іванків"
+                    },
+                    new User
+                    {
+                        FirstName="Іван",
+                        LastName = "Іванків"
+                    },
+                    new User
+                    {
+                        FirstName="Петро",
+                        LastName = "Іванків"
+                    },
+                    new User
+                    {
+                        FirstName="Олег",
+                        LastName = "Іванків"
+                    },
+                    new User
+                    {
+                        FirstName="Андрій",
+                        LastName = "Іванків"
+                    },
+                    new User
+                    {
+                        FirstName="Микола",
+                        LastName = "Іванків"
+                    }
+                }.AsQueryable());
 
+            var homecontroller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            var searchResultNotNull = homecontroller.Search("Іванків") as ViewResult;
+            var searchResultNull = homecontroller.Search(null) as ViewResult;
+
+            Assert.NotNull(searchResultNotNull);
+            Assert.NotNull(searchResultNotNull.Model);
+        }
 
     }
 }
