@@ -305,14 +305,6 @@ namespace EPlast.Controllers
 
         private EditUserViewModel Edit(string id)
         {
-            if (!_repoWrapper.Gender.FindAll().Any())
-            {
-                _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
-                _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
-                _repoWrapper.Save();
-            }
-            //!!
-
             try
             {
                 if(!string.Equals(id, _userManager.GetUserId(User)))
