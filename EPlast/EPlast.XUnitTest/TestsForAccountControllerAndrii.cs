@@ -94,9 +94,9 @@ namespace EPlast.XUnitTest
 
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
-        
+
         [Fact]
-        public async Task TestChangePasswordReturnsResultNotNull()
+        public async Task TestChangePasswordGetReturnsResultNotNull()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -114,7 +114,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestChangePasswordReturnsResultNull()
+        public async Task TestChangePasswordGetReturnsResultNull()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -131,6 +131,28 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
+        [Fact]
+        public async Task TestChangePasswordPostReturnLogin()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithNullFields()));
+
+            var result = await accountController.ChangePassword(GetTestChangeViewModel()) as RedirectToActionResult;
+            Assert.Equal("Login", result.ActionName);
+            Assert.NotNull(result);
+        }
+
+
+
+
+        private User GetTestUserWithNullFields() {
+            return null;
+        }
+
+
+
         private ChangePasswordViewModel GetTestChangeViewModel()
         {
             var changePasswordViewModel = new ChangePasswordViewModel
@@ -146,7 +168,6 @@ namespace EPlast.XUnitTest
         {
             return new User()
             {
-                UserName = "andriishainoha@gmail.com",
                 EmailConfirmed = true
             };
         }
@@ -155,9 +176,43 @@ namespace EPlast.XUnitTest
         {
             return new User()
             {
-                UserName = "andriishainoha@gmail.com",
                 EmailConfirmed = false
             };
         }
+
+        /*[HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user == null)
+                    {
+                        return RedirectToAction("Login");
+                    }
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
+                        model.NewPassword);
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View();
+                    }
+                    await _signInManager.RefreshSignInAsync(user);
+                    return View("ChangePasswordConfirmation");
+                }
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }*/
     }
 }

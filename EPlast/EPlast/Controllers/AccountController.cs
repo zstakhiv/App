@@ -667,11 +667,8 @@ namespace EPlast.Controllers
                         model.NewPassword);
                     if (!result.Succeeded)
                     {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                        return View();
+                        ModelState.AddModelError("", "Проблема зі зміною пароля, можливо неправильно введений старий пароль");
+                        return View("ChangePassword");
                     }
                     await _signInManager.RefreshSignInAsync(user);
                     return View("ChangePasswordConfirmation");
