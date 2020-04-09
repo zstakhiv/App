@@ -55,7 +55,8 @@ namespace EPlast.XUnitTest
                 {
                     Nationality = new Nationality { Name = "Українець" },
                     Religion = new Religion { Name = "Християнство" },
-                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН", Degree = new Degree { Name = "Бакалавр" } },
+                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН"  },
+                    Degree = new Degree { Name = "Бакалавр" },
                     Work = new Work { PlaceOfwork = "SoftServe", Position = "ProjectManager" },
                     Gender = new Gender { Name = "Чоловік" }
                 }
@@ -86,7 +87,8 @@ namespace EPlast.XUnitTest
                 {
                     Nationality = new Nationality { Name = "Українець" },
                     Religion = new Religion { Name = "Християнство" },
-                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН", Degree = new Degree { Name = "Бакалавр" } },
+                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН" },
+                    Degree = new Degree { Name = "Бакалавр" },
                     Work = new Work { PlaceOfwork = "SoftServe", Position = "ProjectManager" },
                     Gender = new Gender { Name = "Чоловік" }
                 }
@@ -100,7 +102,8 @@ namespace EPlast.XUnitTest
                 {
                     Nationality = new Nationality { Name = "Українець" },
                     Religion = new Religion { Name = "Християнство" },
-                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН", Degree = new Degree { Name = "Бакалавр" } },
+                    Education = new Education() { PlaceOfStudy = "ЛНУ", Speciality = "КН" },
+                    Degree = new Degree { Name = "Бакалавр" },
                     Work = new Work { PlaceOfwork = "SoftServe", Position = "ProjectManager" },
                     Gender = new Gender { Name = "Чоловік" }
                 }
@@ -118,7 +121,7 @@ namespace EPlast.XUnitTest
             
             var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object);
             var mockFile = new Mock<IFormFile>();
-            var user = new UserViewModel { User = expected };
+            var user = new EditUserViewModel { User = expected };
 
             // Act
             var resultPost =controller.Edit(user,mockFile.Object);

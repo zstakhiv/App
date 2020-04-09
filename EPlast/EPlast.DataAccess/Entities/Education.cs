@@ -17,8 +17,6 @@ namespace EPlast.DataAccess.Entities
             ErrorMessage = "Спеціальність має містити тільки літери")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Спеціальність повинна складати від 3 до 50 символів")]
         public string Speciality { get; set; }
-        public int? DegreeID { get; set; }
-        public Degree Degree { get; set; }
         public ICollection<UserProfile> UsersProfiles { get; set; }
     }
 }

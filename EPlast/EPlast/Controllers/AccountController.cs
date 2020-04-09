@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -268,7 +269,8 @@ namespace EPlast.Controllers
                 ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
+                Include(g=>g.UserProfile).
+                    ThenInclude(g=>g.Degree).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
@@ -318,7 +320,8 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
+                Include(g=>g.UserProfile).
+                    ThenInclude(g=>g.Degree).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
@@ -330,14 +333,22 @@ namespace EPlast.Controllers
                                        Text = item.Name,
                                        Value = item.ID.ToString()
                                    });
+                var placeOfStudyUnique = _repoWrapper.Education.FindAll().GroupBy(x => x.PlaceOfStudy).Select(x => x.FirstOrDefault()).ToList();
+                var specialityUnique = _repoWrapper.Education.FindAll().GroupBy(x => x.Speciality).Select(x => x.FirstOrDefault()).ToList();
+                var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
+                var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
+
+                var educView = new EducationViewModel { PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
                     Nationalities = _repoWrapper.Nationality.FindAll(),
                     Religions = _repoWrapper.Religion.FindAll(),
-                    Educations = _repoWrapper.Education.FindAll(),
+                    EducationView = educView,
+                    WorkView=workView,
                     Works = _repoWrapper.Work.FindAll(),
-                    Degrees = _repoWrapper.Degree.FindAll()
+                    Degrees = _repoWrapper.Degree.FindAll(),
                 };
 
                 return View(model);
@@ -351,7 +362,7 @@ namespace EPlast.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Edit(UserViewModel model, IFormFile file)
+        public IActionResult Edit(EditUserViewModel model, IFormFile file)
         {
             try
             {
@@ -379,59 +390,106 @@ namespace EPlast.Controllers
                     model.User.ImagePath = oldImageName;
                 }
 
-                string nationality = model.User.UserProfile.Nationality.Name;
-                if (model.User.UserProfile.NationalityID == null && !string.IsNullOrEmpty(nationality))
+                //Nationality
+                if(model.User.UserProfile.NationalityId==null)
                 {
-                    model.User.UserProfile.Nationality = new Nationality() { Name = nationality };
+                    if(string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
+                    {
+                        model.User.UserProfile.Nationality = null;
+                    }
                 }
                 else
                 {
                     model.User.UserProfile.Nationality = null;
                 }
 
-                string religion = model.User.UserProfile.Religion.Name;
-                if (model.User.UserProfile.ReligionID == null && !string.IsNullOrEmpty(religion))
+                //Religion
+                if (model.User.UserProfile.ReligionId == null)
                 {
-                    model.User.UserProfile.Religion = new Religion() { Name = religion };
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Religion.Name))
+                    {
+                        model.User.UserProfile.Religion = null;
+                    }
                 }
                 else
                 {
                     model.User.UserProfile.Religion = null;
                 }
 
-                Degree degree = model.User.UserProfile.Education.Degree;
-                string degree_name = model.User.UserProfile.Education.Degree.Name;
-                if (model.User.UserProfile.Education.DegreeID == null && !string.IsNullOrEmpty(degree_name))
+                //Degree
+                if (model.User.UserProfile.DegreeId == null)
                 {
-                    model.User.UserProfile.Education.Degree = new Degree() { Name = degree_name };
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Degree.Name))
+                    {
+                        model.User.UserProfile.Degree = null;
+                    }
                 }
                 else
                 {
-                    model.User.UserProfile.Education.Degree = null;
+                    model.User.UserProfile.Degree = null;
                 }
 
-                string placeOfStudy = model.User.UserProfile.Education.PlaceOfStudy;
-                string speciality = model.User.UserProfile.Education.Speciality;
-                if (model.User.UserProfile.EducationID == null && (!string.IsNullOrEmpty(placeOfStudy) ||!string.IsNullOrEmpty(speciality)))
+                //Education
+                if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
                 {
-                    model.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
+                    model.User.UserProfile.EducationId = model.EducationView.SpecialityID;
                 }
                 else
                 {
-                    model.User.UserProfile.Education = null;
+                    model.User.UserProfile.EducationId = null;
                 }
 
-                string placeOfWork = model.User.UserProfile.Work.PlaceOfwork;
-                string position = model.User.UserProfile.Work.Position;
-                if (model.User.UserProfile.WorkID == null && (!string.IsNullOrEmpty(placeOfWork) || !string.IsNullOrEmpty(position)))
+                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId==0)
                 {
-                    model.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) && string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    {
+                        model.User.UserProfile.Education = null;
+                        model.User.UserProfile.EducationId = null;
+                    }
                 }
                 else
                 {
-                    model.User.UserProfile.Work = null;
+                    if(string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    {
+                        model.User.UserProfile.EducationId = null;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.Education = null;
+                    }
                 }
-                
+
+                //Work
+                if (model.WorkView.PositionID== model.WorkView.PlaceOfWorkID)
+                {
+                    model.User.UserProfile.WorkId = model.WorkView.PositionID;
+                }
+                else
+                {
+                    model.User.UserProfile.WorkId = null;
+                }
+
+                if (model.User.UserProfile.WorkId == null || model.User.UserProfile.WorkId == 0)
+                {
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Work.PlaceOfwork) && string.IsNullOrEmpty(model.User.UserProfile.Work.Position))
+                    {
+                        model.User.UserProfile.Work = null;
+                        model.User.UserProfile.WorkId = null;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Work.PlaceOfwork) || string.IsNullOrEmpty(model.User.UserProfile.Work.Position))
+                    {
+                        model.User.UserProfile.WorkId = null;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.Work = null;
+                    }
+                }
+
+
                 _repoWrapper.User.Update(model.User);
                 _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();

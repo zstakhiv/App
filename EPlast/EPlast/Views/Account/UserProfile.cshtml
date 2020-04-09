@@ -120,45 +120,48 @@
                                     }
                                     @if (@Model.User.UserProfile.Education != null)
                                     {
-                                        <div class="form-group row">
-                                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+                                        @if (Model.User.UserProfile.Education.PlaceOfStudy != null)
+                                        {
+                                            <div class="form-group row">
+                                                <label for="email" class="col-6 col-form-label font-weight-bold">Місце навчання</label>
+                                                <p class="col-6 col-form-label">@Model.User.UserProfile.Education.PlaceOfStudy</p>
+                                            </div>
+                                        }
 
-                                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education.PlaceOfStudy</p>
+                                        @if (Model.User.UserProfile.Education.Speciality != null)
+                                        {
+                                            <div class="form-group row">
+                                                <label for="email" class="col-6 col-form-label font-weight-bold">Спеціальність</label>
+                                                <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Speciality</p>
+                                            </div>
+                                        }
+                                    }
 
-                                        </div>
-                                    }
-                                    @if (@Model.User.UserProfile.Education != null)
-                                    {
-                                        <div class="form-group row">
-                                            <label for="email" class="col-6 col-form-label font-weight-bold">Спеціальність</label>
-                                            <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Speciality</p>
-                                        </div>
-                                    }
-                                    @if (@Model.User.UserProfile.Education != null)
+                                    @if (@Model.User.UserProfile.Degree != null)
                                     {
                                         <div class="form-group row">
                                             <label for="email" class="col-6 col-form-label font-weight-bold">Ступінь</label>
-                                            @if (@Model.User.UserProfile.Education.Degree != null)
-                                            {
-                                                <p class="col-6 col-form-label">@Model.User.UserProfile.Education.Degree.Name</p>
-                                            }
+                                            <p class="col-6 col-form-label">@Model.User.UserProfile.Degree.Name</p>
                                         </div>
                                     }
+
                                     @if (@Model.User.UserProfile.Work != null)
                                     {
-                                        <div class="form-group row">
-                                            <label for="email" class="col-6 col-form-label font-weight-bold">Місце роботи</label>
+                                        @if (Model.User.UserProfile.Work.PlaceOfwork != null)
+                                        {
+                                            <div class="form-group row">
+                                                <label for="email" class="col-6 col-form-label font-weight-bold">Місце роботи</label>
+                                                <p class="col-6 col-form-label">@Model.User.UserProfile.Work.PlaceOfwork</p>
+                                            </div>
+                                        }
 
-                                            <p class="col-6 col-form-label">@Model.User.UserProfile.Work.PlaceOfwork</p>
-
-                                        </div>
-                                    }
-                                    @if (@Model.User.UserProfile.Work != null)
-                                    {
-                                        <div class="form-group row">
-                                            <label for="email" class="col-6 col-form-label font-weight-bold">Посада</label>
-                                            <p class="col-6 col-form-label">@Model.User.UserProfile.Work.Position</p>
-                                        </div>
+                                        @if (Model.User.UserProfile.Work.Position != null)
+                                        {
+                                            <div class="form-group row">
+                                                <label for="email" class="col-6 col-form-label font-weight-bold">Посада</label>
+                                                <p class="col-6 col-form-label">@Model.User.UserProfile.Work.Position</p>
+                                            </div>
+                                        }
                                     }
                                 </div>
                             </div>
