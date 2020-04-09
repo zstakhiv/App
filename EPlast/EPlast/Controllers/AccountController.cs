@@ -285,22 +285,25 @@ namespace EPlast.Controllers
                     .Include(ca => ca.AdminType)
                     .Include(ca => ca.City);
             var model = new UserViewModel
-            { 
+            {
                 User = user,
                 UserPositions = userPositions,
-                HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId)
+                HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
+                EditView = Edit(userId)
             };
+            if(model.EditView==null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
             if (model != null)
             {
                 return View(model);
             }
             _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
-            return RedirectToAction("HandleError", "Error", new { code = 505 });
+            return RedirectToAction("HandleError", "Error", new { code = 500 });
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Edit(string id)
+        private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
             {
@@ -315,7 +318,7 @@ namespace EPlast.Controllers
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
                     _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                    return null;
                 }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
@@ -356,12 +359,12 @@ namespace EPlast.Controllers
                     Degrees = _repoWrapper.Degree.FindAll(),
                 };
 
-                return View(model);
+                return model;
             }
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return null;
             }
         }
 

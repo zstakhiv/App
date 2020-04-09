@@ -28,7 +28,7 @@
             @if (_userManager.GetUserId(User) == Model.User.Id || User.IsInRole("Admin"))
             {
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Account" asp-action="Edit" asp-route-id="@Model.User.Id">Редагувати профіль</a>
+                    <a id="Edit" class="nav-link" data-toggle="tab" href="#editProfile">Редагувати профіль</a>
                 </li>
 
             }
@@ -168,6 +168,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div id="editProfile" class="container tab-pane fade">
+                <partial name="Edit" model="Model.EditView"/>
             </div>
             <div id="positions" class="container tab-pane fade">
                 <div class="col-md-12 mt-4 d-flex">
