@@ -82,7 +82,7 @@ namespace EPlast.XUnitTest
 
             var _contextAccessor = new Mock<IHttpContextAccessor>();
             var _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
-            Mock<SignInManager<User>> mockSignInManager = new Mock<SignInManager<User>>(mockUserManager.Object,
+            var mockSignInManager = new Mock<SignInManager<User>>(mockUserManager.Object,
                            _contextAccessor.Object, _userPrincipalFactory.Object, null, null, null, null);
 
             Mock<IRepositoryWrapper> mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
@@ -166,7 +166,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestChangePasswordPostReturnChangePasswordConfirmation()
+        public async Task TestChangePasswordPostReturnChangePasswordConfirmationView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
@@ -176,7 +176,12 @@ namespace EPlast.XUnitTest
             mockUserManager
                 .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+        
+            mockSignInManager
+                .Setup(s => s.RefreshSignInAsync(It.IsAny<User>()))
+                .Verifiable();
             //треба налаштувати signInManager
+
             /*var result = await accountController.ChangePassword(GetTestChangeViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ChangePasswordConfirmation", viewResult.ViewName);
@@ -219,16 +224,43 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestResetPasswordPostReturnResetPasswordConfirmation()     //тут дописати
+        public async Task TestResetPasswordPostReturnsResetPasswordConfirmation()     //тут дописати
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
-            /*mockUserManager
-                .Setup(s => s.ResetPasswordAsync(GetTestUserWithAllFields(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(Task.FromResult(IdentityResult.Success));*/
+            mockUserManager
+                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+
+            mockUserManager
+                .Setup(s => s.IsLockedOutAsync(It.IsAny<User>()))
+                .Returns(Task.FromResult(false));
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestResetPasswordPostReturnsResultFailedResetPasswordView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
         //ForgotPassword
