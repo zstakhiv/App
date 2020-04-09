@@ -385,5 +385,93 @@ namespace EPlast.XUnitTest
             Assert.Equal("Error", result.ControllerName);
             Assert.Equal(500, result.RouteValues["code"]);
         }
+
+        [Fact]
+        public void ViewAnnualReportsCorrect()
+        {
+            // Arrange
+            var cities = new List<City>
+            {
+                new City { ID = 1, Name = "Золочів" },
+                new City { ID = 2, Name = "Перемишляни" }
+            };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport { ID = 1, CityId = 1 },
+                new AnnualReport { ID = 1, CityId = 2 },
+                new AnnualReport { ID = 1, CityId = 3 },
+                new AnnualReport { ID = 1, CityId = 4 },
+            };
+            var expectedViewModel = new ViewAnnualReportsViewModel
+            {
+                AnnualReports = new List<AnnualReport> { annualReports[0], annualReports[1] },
+                Cities = viewAnnualReportsVMInitializer.GetCities(cities)
+            };
+            cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>()))
+                .Returns(cities);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
+                .Returns(annualReports.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+
+            // Act
+            var result = controller.ViewAnnualReports();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var actualViewModel = Assert.IsAssignableFrom<ViewAnnualReportsViewModel>(viewResult.Model);
+            Assert.Equal(JsonConvert.SerializeObject(expectedViewModel),
+                JsonConvert.SerializeObject(actualViewModel));
+        }
+
+        [Fact]
+        public void ViewAnnualReportsCorrectCitiesEmpty()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport { ID = 1, CityId = 1 },
+                new AnnualReport { ID = 1, CityId = 2 },
+                new AnnualReport { ID = 1, CityId = 3 },
+                new AnnualReport { ID = 1, CityId = 4 },
+            };
+            var expectedViewModel = new ViewAnnualReportsViewModel
+            {
+                AnnualReports = Enumerable.Empty<AnnualReport>(),
+                Cities = viewAnnualReportsVMInitializer.GetCities(Enumerable.Empty<City>())
+            };
+            cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>()))
+                .Returns(Enumerable.Empty<City>());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
+                .Returns(annualReports.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+
+            // Act
+            var result = controller.ViewAnnualReports();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var actualViewModel = Assert.IsAssignableFrom<ViewAnnualReportsViewModel>(viewResult.Model);
+            Assert.Equal(JsonConvert.SerializeObject(expectedViewModel),
+                JsonConvert.SerializeObject(actualViewModel));
+        }
+
+        [Fact]
+        public void ViewAnnualReportsCorrectCitiesNull()
+        {
+            // Arrange
+            cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>()))
+                .Returns((IQueryable<City>)null);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.ViewAnnualReports();
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
+        }
     }
 }
