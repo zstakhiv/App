@@ -13,6 +13,12 @@ html {
 шоб не було великого проміжку
 }*/
 
+@media(max-width:1200px) {
+    .form .login-register-switcher {
+        margin-bottom: 30px;
+    }
+}
+
 @media(max-width:576px) {
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 22px;
@@ -24,6 +30,10 @@ html {
 
     html {
         font-size: 12px;
+    }
+
+    .form .login-register-switcher {
+        margin-bottom: 30px;
     }
 }
 
@@ -39,6 +49,10 @@ html {
     html {
         font-size: 11px;
     }
+
+    .form .login-register-switcher {
+        margin-bottom: 30px;
+    }
 }
 
 @media(max-width:470px) {
@@ -53,12 +67,20 @@ html {
     html {
         font-size: 10px;
     }
+
+    .form .login-register-switcher {
+        margin-bottom: 30px;
+    }
 }
 
 
 @media(max-width:425px) {
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 13px;
+    }
+
+    .form .login-register-switcher {
+        margin-bottom: 30px;
     }
 
     .login-clean a {
@@ -70,7 +92,7 @@ html {
     }
 }
 
-@media(max-width:410px) { /*тут з інпутами*/
+@media(max-width:412px) { /*тут з інпутами*/
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 13px;
     }
@@ -83,6 +105,10 @@ html {
         font-size: 10px;
     }
 
+    .form .login-register-switcher {
+        margin-bottom: 20px;
+    }
+
     .form .login-register-switcher .circle-wrapper .login-circle {
         width: 55px;
         height: 55px;
@@ -90,6 +116,14 @@ html {
 
     .form .login-register-switcher .login-rectangle {
         height: 36px;
+    }
+
+    .register-form .form-group {
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            height: 30px;
+        }
     }
 }
 
@@ -105,10 +139,10 @@ html {
     html {
         font-size: 10px;
     }
-    /*
-    .form .login-register-switcher{
-        height:80%;
-    }*/
+
+    .form .login-register-switcher {
+        margin-bottom: 20px;
+    }
 
     .form .login-register-switcher .circle-wrapper .login-circle {
         width: 50px;
@@ -119,8 +153,16 @@ html {
         height: 32px;
     }
     //тут для інпута стилі
-    .login-clean .form.form-control input[type="email"] {
-        height: 28px;
+    /*.login-clean .form.form-control input[type="email"]{
+        height:28px;   
+    }*/
+    // тут пофіксив проблему зі  стилями
+    .register-form .form-group {
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            height: 28px;
+        }
     }
 
     .login-clean .form .form-control {

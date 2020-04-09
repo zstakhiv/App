@@ -224,7 +224,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestResetPasswordPostReturnsResetPasswordConfirmation()     //тут дописати
+        public async Task TestResetPasswordPostReturnsResetPasswordConfirmation()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
