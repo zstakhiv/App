@@ -16,6 +16,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Xunit;
 
 namespace EPlast.XUnitTest
@@ -95,6 +96,7 @@ namespace EPlast.XUnitTest
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
 
+        //ChangePassword
         [Fact]
         public async Task TestChangePasswordGetReturnsResultNotNull()
         {
@@ -180,8 +182,7 @@ namespace EPlast.XUnitTest
             //тут треба настроїти signinmanager і воно всьо буде добре работати
         }
 
-        //далі буде йти ResetPassword
-
+        //ResetPassword
         [Fact]
         public void TestResetPasswordGetReturnError()
         {
@@ -202,21 +203,101 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
+        [Fact]
+        public async Task TestResetPasswordPostReturnResetPassword()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestResetPasswordPostReturnResetPasswordConfirmation()     //тут дописати
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            /*mockUserManager
+                .Setup(s => s.ResetPasswordAsync(GetTestUserWithAllFields(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(Task.FromResult(IdentityResult.Success));*/
+        }
+
+        //ForgotPassword
+        [Fact]
+        public void TestForgotPasswordGetReturnView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.ForgotPassword();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestForgotPasswordPostReturnViewForgotPassword()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestUserWithAllFields().EmailConfirmed);
+
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestForgotPasswordPostReturnViewForgotPasswordConfirmation() {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(GetTestUserWithEmailConfirmed()))
+                .ReturnsAsync(Task.FromResult(true));
+
+            mockUserManager
+                .Setup(i => i.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestCodeForResetPassword());
+
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ForgotPasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+
+
         private string GetTestCodeForResetPassword()
         {
             return new string("500");
         }
 
-
-        /*[HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
-        {
-            return code == null ? View("Error") : View("ResetPassword");
-        }*/
-
         private User GetTestUserWithNullFields() {
             return null;
+        }
+
+        private ForgotPasswordViewModel GetTestForgotViewModel()
+        {
+            var forgotPasswordViewModel = new ForgotPasswordViewModel
+            {
+                Email = "andriishainoha@gmail.com"
+            };
+            return forgotPasswordViewModel;
         }
 
         private User GetTestUserWithAllFields() {
@@ -227,6 +308,18 @@ namespace EPlast.XUnitTest
                 LastName = "Shainoha"
             };
 
+        }
+
+        private ResetPasswordViewModel GetTestResetViewModel()
+        {
+            var resetPasswordViewModel = new ResetPasswordViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Password = "andrii123",
+                ConfirmPassword = "andrii123",
+                Code  = "500"
+            };
+            return resetPasswordViewModel;
         }
 
         private ChangePasswordViewModel GetTestChangeViewModel()
