@@ -72,13 +72,33 @@ namespace EPlast.XUnitTest
                 City=new City{ Name="City", HouseNumber="1", Street="Street"}
             } }.AsQueryable());
 
+            _repoWrapper.Setup(r => r.Gender.FindAll()).Returns(new List<Gender>().AsQueryable());
+            _repoWrapper.Setup(r => r.Nationality.FindAll()).Returns(new List<Nationality>().AsQueryable());
+            _repoWrapper.Setup(r => r.Education.FindAll()).Returns(new List<Education>().AsQueryable());
+            _repoWrapper.Setup(r => r.Work.FindAll()).Returns(new List<Work>().AsQueryable());
+            _repoWrapper.Setup(r => r.Degree.FindAll()).Returns(new List<Degree>().AsQueryable());
+            _repoWrapper.Setup(r => r.Religion.FindAll()).Returns(new List<Religion>().AsQueryable());
+
+            _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns("1");
+
             var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object,
                 _userAccessManager.Object);
             // Act
             var result = controller.UserProfile("1");
             // Assert
-            var viewResult = Assert.IsType<RedirectToActionResult>(result);
-            //var model = Assert.IsAssignableFrom<UserViewModel>(viewResult.Model);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<UserViewModel>(viewResult.Model);
+        }
+
+        [Fact]
+        public void UserProfileTestFailure()
+        {
+            var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object,
+                _userAccessManager.Object);
+            // Act
+            var result = controller.UserProfile("1");
+            // Assert
+            Assert.IsType<RedirectToActionResult>(result);
         }
         [Fact]
         public void EditTest()
@@ -120,6 +140,7 @@ namespace EPlast.XUnitTest
             _repoWrapper.Setup(r => r.Work.FindAll()).Returns(new List<Work>().AsQueryable());
             _repoWrapper.Setup(r => r.Degree.FindAll()).Returns(new List<Degree>().AsQueryable());
             _repoWrapper.Setup(r => r.Religion.FindAll()).Returns(new List<Religion>().AsQueryable());
+            _repoWrapper.Setup(r => r.UserProfile.FindAll()).Returns(new List<UserProfile>().AsQueryable());
 
             _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expected.Id);
             _userManager.Setup(x => x.CreateSecurityTokenAsync(expected));
@@ -127,18 +148,32 @@ namespace EPlast.XUnitTest
             var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object,
                 _userAccessManager.Object);
             var mockFile = new Mock<IFormFile>();
-            var user = new EditUserViewModel { User = expected };
+            var user = new EditUserViewModel { User = expected,EducationView=new EducationViewModel(),WorkView=new WorkViewModel() };
 
             // Act
             var resultPost =controller.Edit(user,mockFile.Object);
-            //var resultGet = controller.Edit(user.User.Id);
 
             // Assert
-           // var viewResult = Assert.IsType<ViewResult>(resultGet);
-           // var model = Assert.IsAssignableFrom<EditUserViewModel>(viewResult.Model);
-            _repoWrapper.Verify(r => r.User.Update(It.IsAny<User>()), Times.Never());
+            _repoWrapper.Verify(r => r.User.Update(It.IsAny<User>()), Times.Once());
+            _repoWrapper.Verify(r => r.UserProfile.Update(It.IsAny<UserProfile>()), Times.Once());
+            _repoWrapper.Verify(r => r.Save(), Times.Once());
         }
 
+        [Fact]
+        public void EditTestFailure()
+        {
+            // Arrange
+            var controller = new AccountController(_userManager.Object, _signInManager.Object, _repoWrapper.Object, _logger.Object, _emailConfirm.Object, _hostEnv.Object,
+                _userAccessManager.Object);
+            var mockFile = new Mock<IFormFile>();
+            var user = new EditUserViewModel();
+
+            // Act
+            var result = controller.Edit(user, mockFile.Object);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(result);
+        }
         [Fact]
         public void DeletePositionTrueRemoveRoleTrueTest()
         {
