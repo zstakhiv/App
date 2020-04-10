@@ -5,7 +5,8 @@ $(document).ready(() => {
     $("#dtReadRaport").DataTable({
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
-        }
+        },
+        responsive: true
     });
     $('#dtReadRaport').on('page.dt', function () {
         $('html, body').animate({

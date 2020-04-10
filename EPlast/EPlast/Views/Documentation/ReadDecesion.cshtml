@@ -14,7 +14,7 @@
         </div>
         <button class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>
 
-        <table id="dtReadRaport" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <table id="dtReadRaport" class="table table-striped table-bordered table-sm table-responsive" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th class="th-sm">
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<div id="CreateDecesionModal" role="dialog" tabindex="-1" class="modal fade">
+<div id="CreateDecesionModal" role="dialog" tabindex="-1" class="modal" style="">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <partial name="~/Views/Documentation/_CreateDecesion.cshtml" model="Model.Item1" />
