@@ -8,15 +8,19 @@ namespace EPlast.DataAccess.Entities
     public class User : IdentityUser
     {
         [Display(Name = "Ім'я")]
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
+            ErrorMessage = "Ім'я має містити тільки літери")]
         [Required, MaxLength(50, ErrorMessage = "Ім'я не може перевищувати 50 символів")]
         public string FirstName { get; set; }
 
         [Display(Name = "Прізвище")]
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
+            ErrorMessage = "Прізвище має містити тільки літери")]
         [Required, MaxLength(50, ErrorMessage = "Прізвище не може перевищувати 50 символів")]
         public string LastName { get; set; }
 
         [Display(Name = "По-батькові")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ'.`]{1,20})*$",
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
             ErrorMessage = "По-батькові має містити тільки літери")]
         [MaxLength(50, ErrorMessage = "По-батькові не може перевищувати 50 символів")]
         public string FatherName { get; set; }

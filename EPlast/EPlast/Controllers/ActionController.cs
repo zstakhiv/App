@@ -90,7 +90,30 @@ namespace EPlast.Controllers
         {
             try
             {
-                _repoWrapper.Event.Delete(_repoWrapper.Event.FindByCondition(e => e.ID == ID).First());
+                Event objectToDelete = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                _repoWrapper.Event.Delete(objectToDelete);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeletePicture(int ID)
+        {
+            try
+            {
+                Gallary objectToDelete = _repoWrapper.Gallary.FindByCondition(g =>g.ID == ID).First();
+                _repoWrapper.Gallary.Delete(objectToDelete);
+                var picturePath = Path.Combine(_env.WebRootPath, "images\\EventsGallery",objectToDelete.GalaryFileName);
+                if (System.IO.File.Exists(picturePath))
+                {
+                    System.IO.File.Delete(picturePath);
+                }
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
