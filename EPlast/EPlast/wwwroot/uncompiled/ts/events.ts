@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     let status = 0;
     let value: string | number | string[];
-    let elementTodelete: HTMLElement;
+    let elementToDelete: HTMLElement;
     let activeEvent: HTMLElement;
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -15,7 +15,7 @@
 
     $('a.delete-card').click(function () {
         value = $(this).parents("div.single-card").children('input[type="hidden"]').val();
-        elementTodelete = this;
+        elementToDelete = this;
         $("#myModal").modal('show');
     });
 
@@ -42,7 +42,7 @@
                     $("#fail").hide();
                     $("#success").show();
                     $("#deleteResult").modal('show');
-                    $(elementTodelete).parents("div.single-card").remove();
+                    $(elementToDelete).parents("div.single-card").remove();
                 },
                 error: function () {
                     $("#myModal").modal('hide');

@@ -14,7 +14,6 @@ function uploadFiles(inputId) {
         type: "POST",
         success: function (data) {
             $("#uploadModal").modal('show');
-            $('#carouselBlock').load(document.URL + ' #carouselBlock');
         },
         error: function () {
             $("#FAIL").modal('show');
