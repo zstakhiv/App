@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EPlast.XUnitTest
@@ -131,5 +132,59 @@ namespace EPlast.XUnitTest
             Assert.NotNull(searchResultNotNull.Model);
         }
 
+        [Fact]
+        public void GetSerchUserTest()
+        {
+            _repoWrapper.Setup(u => u.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>())).Returns(
+                new List<User> {
+                    new User
+                    {
+                        Id="aaaa-bbbb-cccc",
+                        FirstName="Олег",
+                        LastName="Іванків"
+                    }
+                }.AsQueryable());
+
+            var homecontroller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+            var getSearchUserResult = homecontroller.GetSearchUser("aaaa-bbbb-cccc");
+
+            var viewResult = Assert.IsType<PartialViewResult>(getSearchUserResult);
+            Assert.NotNull(getSearchUserResult);
+            Assert.NotNull(viewResult.Model);
+            Assert.IsAssignableFrom<IQueryable<User>>(viewResult.Model);
+
+        }
+
+        [Fact]
+        public async Task TestSendContacts()
+        {
+            ContactsViewModel test1 = new ContactsViewModel
+            {
+                Name="Настя",
+                Email="nasty@gmail.com",
+                PhoneNumber="0934353139",
+                FeedBackDescription="Хотіла б стати вашим волонтером"
+            };
+            ContactsViewModel test2 = new ContactsViewModel
+            {
+                Name = "",
+                PhoneNumber = "",
+                FeedBackDescription = ""
+            };
+
+
+            var homecontroller = new HomeController(_emailConfirmation.Object, _repoWrapper.Object);
+
+            var validResult = await homecontroller.SendContacts(test1);
+            var invalidResult =await homecontroller.SendContacts(test2);
+
+            //Assert.Equal("FeedBackSended", valiVviewResult.ViewName);
+            Assert.NotNull(validResult);
+            Assert.NotNull(invalidResult);
+
+
+
+
+        }
     }
 }
