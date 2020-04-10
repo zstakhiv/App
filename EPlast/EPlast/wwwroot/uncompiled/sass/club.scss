@@ -76,6 +76,9 @@
         padding: 10px;
         margin: 10px;
         background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .vertical-grid {
@@ -94,6 +97,7 @@
     }
 
     .main-info {
+        flex-basis: 33%;
 
         .top-info {
             display: flex;
@@ -130,7 +134,7 @@
 
     .secondary-info {
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
 
         .about-info {
             .info {
@@ -139,7 +143,7 @@
         }
 
         .people-info, .members-info, .followers-info {
-            flex-basis: 50%;
+            flex-grow: 1;
         }
 
         .members-info {
@@ -149,6 +153,11 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            min-height: 100px;
+
+            .no-followers-in-club{
+                text-align: center;
+            }
         }
 
         .followers-info {
@@ -171,7 +180,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 8px;
+            padding: 8px;
+            width: 33%;
+            text-align: center;
 
             .member-img-block {
                 width: 50px;
@@ -190,12 +201,16 @@
 
             .member-name {
                 margin-bottom: 0;
+                text-overflow: ellipsis;
+                max-height: 4.5em;
+                overflow: hidden;
+                width: 100%;
             }
         }
     }
 }
 
-@media (max-width: 767px),(orientation: portrait) {
+@media (max-width: 850px),(orientation: portrait) {
     .club-page-wrapper {
         flex-direction: column;
 
