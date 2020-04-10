@@ -335,6 +335,73 @@ namespace EPlast.XUnitTest
             Assert.Equal("ForgotPasswordConfirmation", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
+        //Register
+        [Fact]
+        public async Task TestRegisterPostRegisterIsInSystemReturnsRegisterView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            var result = await accountController.Register(GetTestRegisterViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestRegisterPostProblemWithPasswordReturnsRegisterView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            mockUserManager
+                .Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+
+            var result = await accountController.Register(GetTestRegisterViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestRegisterPostReturnsAcceptingEmailView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            mockUserManager
+                .Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+            //тут мож треба назвати по іншому код
+            mockUserManager
+                .Setup(i => i.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestCodeForResetPassword());
+
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            /*var result = await accountController.Register(GetTestRegisterViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);*/
+        }
 
         private string GetTestCodeForResetPassword()
         {
@@ -344,6 +411,19 @@ namespace EPlast.XUnitTest
         private User GetTestUserWithNullFields()
         {
             return null;
+        }
+
+        private RegisterViewModel GetTestRegisterViewModel()
+        {
+            var registerViewModel = new RegisterViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Name = "Andrii",
+                SurName = "Shainoha",
+                Password = "andrii123",
+                ConfirmPassword = "andrii123"
+            };
+            return registerViewModel;
         }
 
         private ForgotPasswordViewModel GetTestForgotViewModel()
