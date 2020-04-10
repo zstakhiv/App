@@ -80,20 +80,20 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-                return View();
+            return View("Register");
         }
 
         [HttpGet]
         public IActionResult ConfirmedEmail()
         {
-            return View();
+            return View("ConfirmedEmail");
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult AccountLocked()
         {
-            return View();
+            return View("AccountLocked");
         }
 
         [HttpPost]

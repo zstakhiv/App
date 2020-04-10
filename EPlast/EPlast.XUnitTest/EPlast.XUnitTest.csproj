@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="AccountControllerTests.cs" />
+    <Compile Remove="AdminControllerTests.cs" />
+    <Compile Remove="CityControllerTests.cs" />
+    <Compile Remove="ClubControllerTests.cs" />
+    <Compile Remove="DocumentationControllerAnnualReportTests.cs" />
+    <Compile Remove="DocumentationControllerTests.cs" />
+    <Compile Remove="EventUserControllerTests.cs" />
+    <Compile Remove="HomeControllerTests.cs" />
   </ItemGroup>
 
   <ItemGroup>

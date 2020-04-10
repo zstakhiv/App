@@ -337,6 +337,16 @@ namespace EPlast.XUnitTest
         }
         //Register
         [Fact]
+        public async Task TestRegisterGetReturnsRegisterView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.Register();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
         public async Task TestRegisterPostRegisterIsInSystemReturnsRegisterView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -403,6 +413,30 @@ namespace EPlast.XUnitTest
             Assert.Equal("AcceptingEmail", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
+
+        //ConfirmedEmail
+        [Fact]
+        public async Task TestConfirmEmailGetReturnsConfirmedEmailView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.ConfirmedEmail();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ConfirmedEmail", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        //AccountLocked
+        [Fact]
+        public async Task TestAccountLockedGetReturnsAccountLockedView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.AccountLocked();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("AccountLocked", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+
 
         private string GetTestCodeForResetPassword()
         {
