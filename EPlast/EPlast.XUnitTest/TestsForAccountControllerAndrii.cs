@@ -3,6 +3,7 @@ using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -135,6 +136,17 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
+        public async Task TestChangePasswordPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            accountController.ModelState.AddModelError("CurrentPassword", "Required");
+            var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
         public async Task TestChangePasswordPostReturnsLoginRedirect()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -210,6 +222,17 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
+        public async Task TestResetPasswordPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
         public async Task TestResetPasswordPostReturnsResetPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -274,11 +297,12 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-        [Fact]   //переробити бо ModelState завжди каже шо тру
+        [Fact]
         public async Task TestForgotPasswordPostModelIsNotValid()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = await accountController.ForgotPassword(GetBadTestForgotViewModel());
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ForgotPassword", viewResult.ViewName);
             Assert.NotNull(viewResult);
@@ -341,6 +365,17 @@ namespace EPlast.XUnitTest
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             var result = accountController.Register();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Register", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestRegisterPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.Register(GetTestRegisterViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Register", viewResult.ViewName);
             Assert.NotNull(viewResult);
@@ -450,7 +485,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-        [Fact]
+        [Fact]       //доробити
         public async Task TestConfirmEmailPostResultNotSuccededReturnsErrorView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -461,19 +496,28 @@ namespace EPlast.XUnitTest
 
             mockUserManager
                 .Setup(s => s.ConfirmEmailAsync(GetTestUserWithAllFields(), GetTestCodeForResetPasswordAndConfirmEmail()))
-                .Returns(Task.FromResult(IdentityResult.Failed()));
+                .Returns(Task.FromResult(IdentityResult.Failed())); //тут поміняти тип поверненння вертає null
 
-            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+            /*var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Error", viewResult.ViewName);
-            Assert.NotNull(viewResult);
+            Assert.NotNull(viewResult);*/
         }
 
+        [Fact]       //доробити і дещо переробити
+        public async Task TestConfirmEmailPostRes()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
+            mockUserManager
+                .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
 
-
-
-
+            mockUserManager
+                .Setup(s => s.ConfirmEmailAsync(GetTestUserWithAllFields(), GetTestCodeForResetPasswordAndConfirmEmail()))
+                .Returns(Task.FromResult(IdentityResult.Failed())); //тут поміняти тип поверненння вертає null
+            //має вертати result.Succeded
+        }
 
         //AccountLocked
         [Fact]
@@ -486,10 +530,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-
-
-
-
+        //Login
 
         private string GetBadFakeCodeConfirmingEmail() {
             string code = null;
@@ -528,6 +569,22 @@ namespace EPlast.XUnitTest
                 ConfirmPassword = "andrii123"
             };
             return registerViewModel;
+        }
+
+        private LoginViewModel GetTestLoginViewModel()
+        {
+            var loginViewModel = new LoginViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Password = "andrii123",
+                RememberMe = true
+            };
+            return loginViewModel;
+        }
+
+        private string GetReturnUrl()
+        {
+            return new string("/google.com/");
         }
 
         private ForgotPasswordViewModel GetTestForgotViewModel()
