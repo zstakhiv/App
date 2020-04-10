@@ -15,7 +15,7 @@ namespace EPlast.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -468,8 +468,6 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DegreeID");
-
                     b.Property<string>("PlaceOfStudy")
                         .HasMaxLength(50);
 
@@ -477,8 +475,6 @@ namespace EPlast.DataAccess.Migrations
                         .HasMaxLength(50);
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DegreeID");
 
                     b.ToTable("Educations");
                 });
@@ -861,36 +857,37 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("DateTime");
 
-                    b.Property<int?>("EducationID");
+                    b.Property<int?>("DegreeId");
+
+                    b.Property<int?>("EducationId");
 
                     b.Property<int?>("GenderID");
 
-                    b.Property<int?>("NationalityID");
+                    b.Property<int?>("NationalityId");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(10);
-
-                    b.Property<int?>("ReligionID");
+                    b.Property<int?>("ReligionId");
 
                     b.Property<string>("UserID");
 
-                    b.Property<int?>("WorkID");
+                    b.Property<int?>("WorkId");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("EducationID");
+                    b.HasIndex("DegreeId");
+
+                    b.HasIndex("EducationId");
 
                     b.HasIndex("GenderID");
 
-                    b.HasIndex("NationalityID");
+                    b.HasIndex("NationalityId");
 
-                    b.HasIndex("ReligionID");
+                    b.HasIndex("ReligionId");
 
                     b.HasIndex("UserID")
                         .IsUnique()
                         .HasFilter("[UserID] IS NOT NULL");
 
-                    b.HasIndex("WorkID");
+                    b.HasIndex("WorkId");
 
                     b.ToTable("UserProfiles");
                 });
@@ -1242,13 +1239,6 @@ namespace EPlast.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
-                {
-                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
-                        .WithMany("Educations")
-                        .HasForeignKey("DegreeID");
-                });
-
             modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
                 {
                     b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
@@ -1369,9 +1359,13 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
                 {
+                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("DegreeId");
+
                     b.HasOne("EPlast.DataAccess.Entities.Education", "Education")
                         .WithMany("UsersProfiles")
-                        .HasForeignKey("EducationID");
+                        .HasForeignKey("EducationId");
 
                     b.HasOne("EPlast.DataAccess.Entities.Gender", "Gender")
                         .WithMany("UserProfiles")
@@ -1379,11 +1373,11 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.Nationality", "Nationality")
                         .WithMany("UserProfiles")
-                        .HasForeignKey("NationalityID");
+                        .HasForeignKey("NationalityId");
 
                     b.HasOne("EPlast.DataAccess.Entities.Religion", "Religion")
                         .WithMany("UserProfiles")
-                        .HasForeignKey("ReligionID");
+                        .HasForeignKey("ReligionId");
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithOne("UserProfile")
@@ -1392,7 +1386,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.Work", "Work")
                         .WithMany("UserProfiles")
-                        .HasForeignKey("WorkID");
+                        .HasForeignKey("WorkId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
