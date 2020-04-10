@@ -7,6 +7,11 @@ $(document).ready(() => {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         }
     });
+    $('#dtReadRaport').on('page.dt', function () {
+        $('html, body').animate({
+            scrollTop: 100
+        }, 200);
+    });
     $("tr.raport-click-row").dblclick(function () {
         const content = $(this).children().first().text();
         window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
@@ -53,7 +58,7 @@ $(document).ready(() => {
             },
             error() {
                 $("#CreateDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
+                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
             }
         });
     });
