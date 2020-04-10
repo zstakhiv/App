@@ -1,6 +1,7 @@
 ﻿using EPlast.BussinessLayer.Interfaces;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
+using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -29,13 +31,15 @@ namespace EPlast.Controllers
         private readonly ILogger _logger;
         private readonly IEmailConfirmation _emailConfirmation;
         private readonly IHostingEnvironment _env;
+        private readonly IUserAccessManager _userAccessManager;
 
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
             IRepositoryWrapper repoWrapper,
             ILogger<AccountController> logger,
             IEmailConfirmation emailConfirmation,
-            IHostingEnvironment env)
+            IHostingEnvironment env,
+            IUserAccessManager userAccessManager)
         {
             _logger = logger;
             _signInManager = signInManager;
@@ -43,6 +47,7 @@ namespace EPlast.Controllers
             _repoWrapper = repoWrapper;
             _emailConfirmation = emailConfirmation;
             _env = env;
+            _userAccessManager = userAccessManager;
         }
 
         [HttpGet]
@@ -67,7 +72,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -89,22 +94,6 @@ namespace EPlast.Controllers
         public IActionResult AccountLocked()
         {
             return View();
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var result = await _userManager.IsEmailConfirmedAsync(user);
-            if (result)
-            {
-                return View("ChangePassword");
-            }
-            else
-            {
-                return View("ChangePasswordNotAllowed");
-            }
         }
 
         [HttpPost]
@@ -142,7 +131,7 @@ namespace EPlast.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError("", "Пароль має містити щонайменше 8 символів, цифри та літери");
+                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повина складати 8");
                         return View("Register");
                     }
                     else
@@ -165,7 +154,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -239,7 +228,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -255,60 +244,75 @@ namespace EPlast.Controllers
 
         public IActionResult UserProfile(string userId)
         {
-            if(string.IsNullOrEmpty(userId))
+            try
             {
-                userId = _userManager.GetUserId(User);
-                _logger.Log(LogLevel.Information, "UserId is not null");
+                if (string.IsNullOrEmpty(userId))
+                {
+                    userId = _userManager.GetUserId(User);
+                    _logger.Log(LogLevel.Information, "UserId is not null");
+                }
+                var user = _repoWrapper.User.
+                FindByCondition(q => q.Id == userId).
+                    Include(i => i.UserProfile).
+                        ThenInclude(x => x.Nationality).
+                    Include(g => g.UserProfile).
+                    ThenInclude(g => g.Gender).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Education).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Degree).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Religion).
+                    Include(g => g.UserProfile).
+                        ThenInclude(g => g.Work).
+                    FirstOrDefault();
+                var userPositions = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.UserId == userId)
+                        .Include(ca => ca.AdminType)
+                        .Include(ca => ca.City);
+
+                var edit = Edit(userId);
+                if (edit == null)
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
+                }
+
+                if (user != null)
+                {
+                    var model = new UserViewModel
+                    {
+                        User = user,
+                        UserPositions = userPositions,
+                        HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
+                        EditView = edit
+                    };
+                    return View(model);
+                }
+                _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == userId).
-                Include(i => i.UserProfile).
-                    ThenInclude(x => x.Nationality).
-                Include(g => g.UserProfile).
-                ThenInclude(g => g.Gender).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Religion).
-                Include(g => g.UserProfile).
-                    ThenInclude(g => g.Work).
-                FirstOrDefault();
-            var userPositions = _repoWrapper.CityAdministration
-                .FindByCondition(ca => ca.UserId == userId)
-                    .Include(ca => ca.AdminType)
-                    .Include(ca => ca.City);
-            var model = new UserViewModel
-            { 
-                User = user,
-                UserPositions = userPositions
-            };
-            if (model != null)
+            catch
             {
-                return View(model);
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
-            return RedirectToAction("HandleError", "Error", new { code = 500 });
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Edit(string id)
+        private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
             {
+                _repoWrapper.Gender.Create(new Gender { Name = "Не обрано" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
             }
             //!!
-
             try
             {
                 if(!string.Equals(id, _userManager.GetUserId(User)))
                 {
                     _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return RedirectToAction("HandleError", "Error", new { code = 500 });
+                    return null;
                 }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
@@ -318,7 +322,8 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
-                        ThenInclude(q => q.Degree).
+                Include(g=>g.UserProfile).
+                    ThenInclude(g=>g.Degree).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
@@ -330,28 +335,36 @@ namespace EPlast.Controllers
                                        Text = item.Name,
                                        Value = item.ID.ToString()
                                    });
+                var placeOfStudyUnique = _repoWrapper.Education.FindAll().GroupBy(x => x.PlaceOfStudy).Select(x => x.FirstOrDefault()).ToList();
+                var specialityUnique = _repoWrapper.Education.FindAll().GroupBy(x => x.Speciality).Select(x => x.FirstOrDefault()).ToList();
+                var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
+                var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
+
+                var educView = new EducationViewModel { PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
                     Nationalities = _repoWrapper.Nationality.FindAll(),
                     Religions = _repoWrapper.Religion.FindAll(),
-                    Educations = _repoWrapper.Education.FindAll(),
+                    EducationView = educView,
+                    WorkView=workView,
                     Works = _repoWrapper.Work.FindAll(),
-                    Degrees = _repoWrapper.Degree.FindAll()
+                    Degrees = _repoWrapper.Degree.FindAll(),
                 };
 
-                return View(model);
+                return model;
             }
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return null;
             }
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Edit(UserViewModel model, IFormFile file)
+        public IActionResult Edit(EditUserViewModel model, IFormFile file)
         {
             try
             {
@@ -379,73 +392,105 @@ namespace EPlast.Controllers
                     model.User.ImagePath = oldImageName;
                 }
 
-                if (model.User.UserProfile.Nationality.ID == 0)
+                //Nationality
+                if(model.User.UserProfile.NationalityId==null)
                 {
-                    string name = model.User.UserProfile.Nationality.Name;
-                    if (string.IsNullOrEmpty(name))
+                    if(string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
                     {
                         model.User.UserProfile.Nationality = null;
                     }
-                    else
-                    {
-                        model.User.UserProfile.Nationality = new Nationality() { Name = name };
-                    }
+                }
+                else
+                {
+                    model.User.UserProfile.Nationality = null;
                 }
 
-                if (model.User.UserProfile.Religion.ID == 0)
+                //Religion
+                if (model.User.UserProfile.ReligionId == null)
                 {
-                    string name = model.User.UserProfile.Religion.Name;
-                    if (string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Religion.Name))
                     {
                         model.User.UserProfile.Religion = null;
                     }
-                    else
-                    {
-                        model.User.UserProfile.Religion = new Religion() { Name = name };
-                    }
+                }
+                else
+                {
+                    model.User.UserProfile.Religion = null;
                 }
 
-                Degree degree = model.User.UserProfile.Education.Degree;
-                if (model.User.UserProfile.Education.Degree.ID == 0)
+                //Degree
+                if (model.User.UserProfile.DegreeId == null)
                 {
-                    string name = model.User.UserProfile.Education.Degree.Name;
-                    if (string.IsNullOrEmpty(name))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Degree.Name))
                     {
-                        model.User.UserProfile.Education.Degree = null;
-                    }
-                    else
-                    {
-                        model.User.UserProfile.Education.Degree = new Degree() { Name = name };
+                        model.User.UserProfile.Degree = null;
                     }
                 }
-
-                if (model.User.UserProfile.Education.ID == 0)
+                else
                 {
-                    string placeOfStudy = model.User.UserProfile.Education.PlaceOfStudy;
-                    string speciality = model.User.UserProfile.Education.Speciality;
-                    if (string.IsNullOrEmpty(placeOfStudy) || string.IsNullOrEmpty(speciality))
+                    model.User.UserProfile.Degree = null;
+                }
+
+                //Education
+                if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
+                {
+                    model.User.UserProfile.EducationId = model.EducationView.SpecialityID;
+                }
+                else
+                {
+                    model.User.UserProfile.EducationId = null;
+                }
+
+                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId==0)
+                {
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) && string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    {
+                        model.User.UserProfile.Education = null;
+                        model.User.UserProfile.EducationId = null;
+                    }
+                }
+                else
+                {
+                    if(string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    {
+                        model.User.UserProfile.EducationId = null;
+                    }
+                    else
                     {
                         model.User.UserProfile.Education = null;
                     }
-                    else
-                    {
-                        model.User.UserProfile.Education = new Education() { PlaceOfStudy = placeOfStudy, Speciality = speciality, Degree = degree };
-                    }
                 }
 
-                if (model.User.UserProfile.Work.ID == 0)
+                //Work
+                if (model.WorkView.PositionID== model.WorkView.PlaceOfWorkID)
                 {
-                    string placeOfWork = model.User.UserProfile.Work.PlaceOfwork;
-                    string position = model.User.UserProfile.Work.Position;
-                    if (string.IsNullOrEmpty(placeOfWork) || string.IsNullOrEmpty(position))
+                    model.User.UserProfile.WorkId = model.WorkView.PositionID;
+                }
+                else
+                {
+                    model.User.UserProfile.WorkId = null;
+                }
+
+                if (model.User.UserProfile.WorkId == null || model.User.UserProfile.WorkId == 0)
+                {
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Work.PlaceOfwork) && string.IsNullOrEmpty(model.User.UserProfile.Work.Position))
+                    {
+                        model.User.UserProfile.Work = null;
+                        model.User.UserProfile.WorkId = null;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Work.PlaceOfwork) || string.IsNullOrEmpty(model.User.UserProfile.Work.Position))
+                    {
+                        model.User.UserProfile.WorkId = null;
+                    }
+                    else
                     {
                         model.User.UserProfile.Work = null;
                     }
-                    else
-                    {
-                        model.User.UserProfile.Work = new Work() { PlaceOfwork = placeOfWork, Position = position };
-                    }
                 }
+
 
                 _repoWrapper.User.Update(model.User);
                 _repoWrapper.UserProfile.Update(model.User.UserProfile);
@@ -498,7 +543,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -544,7 +589,55 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _userManager.IsEmailConfirmedAsync(user);
+            if (result)
+            {
+                return View("ChangePassword");
+            }
+            else
+            {
+                return View("ChangePasswordNotAllowed");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user == null)
+                    {
+                        return RedirectToAction("Login");
+                    }
+                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
+                        model.NewPassword);
+                    if (!result.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Проблема зі зміною пароля, можливо неправильно введений старий пароль");
+                        return View("ChangePassword");
+                    }
+                    await _signInManager.RefreshSignInAsync(user);
+                    return View("ChangePasswordConfirmation");
+                }
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
@@ -608,6 +701,8 @@ namespace EPlast.Controllers
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
+                                await _emailConfirmation.SendEmailAsync(user.Email, "Повідомлення про реєстрацію",
+                            "Ви зареєструвались в системі EPlast використовуючи свій Google-акаунт ", "Адміністрація сайту EPlast");
                             }
                             await _userManager.AddToRoleAsync(user, "Прихильник");
                             await _userManager.AddLoginAsync(user, info);
@@ -644,47 +739,14 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    if (user == null)
-                    {
-                        return RedirectToAction("Login");
-                    }
-                    var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword,
-                        model.NewPassword);
-                    if (!result.Succeeded)
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                        return View();
-                    }
-                    await _signInManager.RefreshSignInAsync(user);
-                    return View("ChangePasswordConfirmation");
-                }
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
-            }
-        }
+        
 
-        [Authorize(Roles = "Admin")]
-        public async Task<bool> DeletePosition(int id)
+        [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
+        public async Task<IActionResult> DeletePosition(int id)
         {
             try
             {
@@ -693,22 +755,27 @@ namespace EPlast.Controllers
                         .Include(ca => ca.AdminType)
                         .Include(ca => ca.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_userAccessManager.HasAccess(userId, cityAdministration.UserId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 if (cityAdministration.EndDate == null)
                 {
                     await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
                 }
                 _repoWrapper.CityAdministration.Delete(cityAdministration);
                 _repoWrapper.Save();
-                return true;
+                return Ok("Діловодство успішно видалено!");
             }
             catch
             {
-                return false;
+                return NotFound("Не вдалося видалити діловодство!");
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<bool> EndPosition(int id)
+        [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
+        public async Task<IActionResult> EndPosition(int id)
         {
             try
             {
@@ -717,15 +784,20 @@ namespace EPlast.Controllers
                         .Include(ca => ca.AdminType)
                         .Include(ca => ca.User)
                     .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_userAccessManager.HasAccess(userId, cityAdministration.UserId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
                 cityAdministration.EndDate = DateTime.Today;
                 _repoWrapper.CityAdministration.Update(cityAdministration);
                 _repoWrapper.Save();
                 await _userManager.RemoveFromRoleAsync(cityAdministration.User, cityAdministration.AdminType.AdminTypeName);
-                return true;
+                return Ok("Каденцію діловодства успішно завершено!");
             }
             catch
             {
-                return false;
+                return NotFound("Не вдалося завершити каденцію діловодства!");
             }
         }
     }

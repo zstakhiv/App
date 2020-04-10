@@ -9,7 +9,7 @@ namespace EPlast.ViewModels
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Введене поле не є правильним для електронної пошти")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле пароль є обов'язковим")]
@@ -23,12 +23,12 @@ namespace EPlast.ViewModels
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Поле ім'я є обов'язковим")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ']{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ']{1,20})*$",
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ']{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ']{1,20})*$",
             ErrorMessage = "Ім'я має містити тільки літери")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Поле прізвище є обов'язковим")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЇїҐґ']{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЇїҐґ']{1,20})*$", ErrorMessage = "Прізвище має містити тільки літери")]
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ']{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ']{1,20})*$", ErrorMessage = "Прізвище має містити тільки літери")]
         public string SurName { get; set; }
     }
 }

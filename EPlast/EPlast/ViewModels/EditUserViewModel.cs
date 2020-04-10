@@ -8,7 +8,9 @@ namespace EPlast.ViewModels
 {
     public class EditUserViewModel
     {
-        public User User { get; set; } 
+        public User User { get; set; }
+        public EducationViewModel EducationView { get; set; }
+        public WorkViewModel WorkView { get; set; }
         public IEnumerable<Nationality> Nationalities { get; set; }
         public IEnumerable<Gender> Genders { get; set; }
         public IEnumerable<Education> Educations{ get; set; }
