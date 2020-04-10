@@ -130,7 +130,8 @@ namespace EPlast.Controllers
         {
             try
             {
-                _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = 3, EventId = ID, UserId = _userManager.GetUserId(User) });
+                ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Розглядається").First();
+                _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = participantStatus.ID, EventId = ID, UserId = _userManager.GetUserId(User) });
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
@@ -164,8 +165,8 @@ namespace EPlast.Controllers
             {
                 int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
                 int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
-                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
-
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;              
+                bool isUserGlobalEventAdmin = User?.IsInRole("Адміністратор подій") ?? false;
                 EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
                        .Include(e => e.Participants)
                             .ThenInclude(p => p.User)
@@ -183,7 +184,7 @@ namespace EPlast.Controllers
                        {
                            Event = e,
                            EventParticipants = e.Participants,
-                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || User.IsInRole("Адміністратор подій"),
+                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || isUserGlobalEventAdmin,
                            IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
                            IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
                            IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
@@ -195,7 +196,7 @@ namespace EPlast.Controllers
                 {
                     eventModal.EventParticipants = eventModal.EventParticipants.Where(p => p.ParticipantStatusId == approvedStatus);
                 }
-                
+
                 return View(eventModal);
             }
             catch
