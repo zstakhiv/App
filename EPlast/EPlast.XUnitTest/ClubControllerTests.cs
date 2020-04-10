@@ -21,18 +21,49 @@ namespace EPlast.XUnitTest
 {
     public class ClubControllerTests
     {
+        private Mock<IRepositoryWrapper> repository;
+        private Mock<IUserStore<User>> store;
+        private Mock<UserManager<User>> usermanager;
+        private Mock<IHostingEnvironment> hostingEnvironment;
+        public ClubControllerTests()
+        {
+            //constructor
+            repository = new Mock<IRepositoryWrapper>();
+            store = new Mock<IUserStore<User>>();
+            usermanager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            hostingEnvironment = new Mock<IHostingEnvironment>();
+        }
         [Fact]
         public void ClubPageTest()
         {
-            //constructor
-            var repository = new Mock<IRepositoryWrapper>();
-            var store = new Mock<IUserStore<User>>();
-            var usermanager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
-
             //arrange
-            repository.Setup(c => c.Club.FindByCondition(It.IsAny<Expression<Func<Club, bool>>>())).Returns(
-                new List<Club>{
+            repository.Setup(c => c.Club.FindByCondition(It.IsAny<Expression<Func<Club, bool>>>())).Returns(GetTestClubs());
+
+            //action
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var result = controller.Club(1);
+
+            //assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<ClubViewModel>(viewResult.Model);
+        }
+        [Fact]
+        public void IndexTest()
+        {
+            //arrange
+            repository.Setup(c => c.Club.FindByCondition(It.IsAny<Expression<Func<Club, bool>>>())).Returns(GetTestClubs());
+
+            //action
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var result = controller.Index();
+
+            //assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsAssignableFrom<List<ClubViewModel>>(viewResult.Model);
+        }
+        private IQueryable<Club> GetTestClubs()
+        {
+            var club = new List<Club>{
                  new Club {
                      ID = 1,
                      Logo = "null",
@@ -83,25 +114,12 @@ namespace EPlast.XUnitTest
                      }
 
                  }
-            }.AsQueryable());
-            
-            //action
-            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
-            var result = controller.Club(1);
-            
-            //assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.IsAssignableFrom<ClubViewModel>(viewResult.Model);
+            }.AsQueryable();
+            return club;
         }
         [Fact]
         public void EditClubTest()
         {
-            //for constructor
-            var repository = new Mock<IRepositoryWrapper>();
-            var store = new Mock<IUserStore<User>>();
-            var usermanager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
-
             // arrange
             var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
             var mockFile = new Mock<IFormFile>();
@@ -115,8 +133,8 @@ namespace EPlast.XUnitTest
                 }.AsQueryable());
             var expected = new Club
             {
-               ClubName = "Club 2",
-               Description = "Some text"
+                ClubName = "Club 2",
+                Description = "Some text"
             };
             // action
             var viewModel = new ClubViewModel { Club = expected };
@@ -125,14 +143,52 @@ namespace EPlast.XUnitTest
             repository.Verify(r => r.Club.Update(It.IsAny<Club>()), Times.Once());
         }
         [Fact]
+        public void EditClubTestWithoutClubName()
+        {
+            // arrange
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var mockFile = new Mock<IFormFile>();
+            // action
+            var viewModel = new ClubViewModel();
+            var result = controller.EditClub(viewModel, mockFile.Object);
+            // assert
+            Assert.IsType<RedirectToActionResult>(result);
+        }
+        [Fact]
         public void ChangeIsApprovedStatusTest()
         {
-            //constructor
-            var repository = new Mock<IRepositoryWrapper>();
-            var store = new Mock<IUserStore<User>>();
-            var usermanager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
+            ChangeIsApprovedStatusRepositorySetup();
+            //action
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var result = controller.ChangeIsApprovedStatus(1, 1);
+            // assert
+            repository.Verify(r => r.ClubMembers.Update(It.IsAny<ClubMembers>()), Times.Once());
+        }
 
+        [Fact]
+        public void ChangeIsApprovedStatusClubTest()
+        {
+            ChangeIsApprovedStatusRepositorySetup();
+            //action
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var result = controller.ChangeIsApprovedStatusClub(1, 1);
+            // assert
+            repository.Verify(r => r.ClubMembers.Update(It.IsAny<ClubMembers>()), Times.Once());
+
+        }
+        [Fact]
+        public void ChangeIsApprovedStatusFollowersTest()
+        {
+            ChangeIsApprovedStatusRepositorySetup();
+            //action
+            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
+            var result = controller.ChangeIsApprovedStatusFollowers(1, 1);
+            // assert
+            repository.Verify(r => r.ClubMembers.Update(It.IsAny<ClubMembers>()), Times.Once());
+
+        }
+        private void ChangeIsApprovedStatusRepositorySetup()
+        {
             //arrange
             repository.Setup(c => c.Club.FindByCondition(It.IsAny<Expression<Func<Club, bool>>>())).Returns(
                 new List<Club>{
@@ -167,15 +223,6 @@ namespace EPlast.XUnitTest
                             }
                          }
            }.AsQueryable());
-
-            //action
-            var controller = new ClubController(repository.Object, usermanager.Object, hostingEnvironment.Object);
-            var result = controller.ChangeIsApprovedStatus(1, 1);
-            // assert
-            repository.Verify(r => r.ClubMembers.Update(It.IsAny<ClubMembers>()), Times.Once());
-
         }
-        
-
     }
 }

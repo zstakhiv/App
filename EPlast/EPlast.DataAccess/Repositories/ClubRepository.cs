@@ -12,5 +12,6 @@ namespace EPlast.DataAccess.Repositories
             : base(dbContext)
         {
         }
+    
     }
 }
