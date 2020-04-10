@@ -50,7 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EventWrapper\Interfaces\" />
     <Folder Include="wwwroot\bundles\css" />
     <Folder Include="wwwroot\bundles\js\" />
     <Folder Include="wwwroot\compiled\js\" />
