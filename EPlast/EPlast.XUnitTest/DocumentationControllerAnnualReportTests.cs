@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Linq.Expressions;
 using System.Collections.Generic;
@@ -539,6 +540,299 @@ namespace EPlast.XUnitTest
             var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
             var message = Assert.IsType<string>(notFoundRequest.Value);
             Assert.Equal("Не вдалося завантажити річний звіт!", message);
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectWithoutAdmins()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement() },
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
+            userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+            userManager.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectAdminOldNewAdminEmpty()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement() },
+            };
+            var cityOldAdmins = new List<CityAdministration>
+            {
+                new CityAdministration()
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(cityOldAdmins.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
+            userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+            userManager.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectAdminOldEqualNewAdmin()
+        {
+            // Arrange
+            var user = new User();
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement {  User = user } },
+            };
+            var cityOldAdmins = new List<CityAdministration>
+            {
+                new CityAdministration { User = user }
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(cityOldAdmins.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
+            userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+            userManager.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectChangeAdmin()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement {  UserId = "1", User = new User() } },
+            };
+            var cityOldAdmins = new List<CityAdministration>
+            {
+                new CityAdministration { UserId = "2" }
+            };
+            var adminTypes = new List<AdminType> { new AdminType() };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(cityOldAdmins.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
+                .Returns(adminTypes.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()));
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
+            userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()));
+            userManager.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()));
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectNewAdminOldAdminEmpty()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement {  UserId = "1", User = new User() } },
+            };
+            var adminTypes = new List<AdminType> { new AdminType() };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
+                .Returns(adminTypes.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
+            repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
+            userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
+            userManager.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()));
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectCityStatusOld()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement() },
+            };
+            var cityOldLegalStatuses = new List<CityLegalStatus>
+            {
+                new CityLegalStatus()
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(cityOldLegalStatuses.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()));
+            repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportCorrectCityStatusOldEmpty()
+        {
+            // Arrange
+            var city = new City { Name = "Золочів" };
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport() { City = city, Date = DateTime.Now, CityManagement = new CityManagement() },
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityAdministration.FindByCondition(It.IsAny<Expression<Func<CityAdministration, bool>>>()))
+                .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
+                .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()), Times.Never);
+            repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportIncorrectAnnualReportNotFound()
+        {
+            // Arrange
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
+            var message = Assert.IsType<string>(notFoundRequest.Value);
+            Assert.Equal("Не вдалося підтвердити річний звіт!", message);
+            userManager.Verify(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ConfirmAnnualReportIncorrectHasNoAccess()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport()
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(false);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = await controller.ConfirmAnnualReport(0);
+
+            // Assert
+            var resultRequest = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", resultRequest.ActionName);
+            Assert.Equal("Error", resultRequest.ControllerName);
+            Assert.Equal(403, resultRequest.RouteValues["code"]);
+            repositoryWrapper.Verify(rw => rw.AnnualReports.Update(It.IsAny<AnnualReport>()), Times.Never);
         }
     }
 }
