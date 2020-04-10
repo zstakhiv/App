@@ -473,5 +473,72 @@ namespace EPlast.XUnitTest
             Assert.Equal("Error", result.ControllerName);
             Assert.Equal(500, result.RouteValues["code"]);
         }
+
+        [Fact]
+        public void GetAnnualReportCorrect()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport { ID = 1, CityId = 1 },
+                new AnnualReport { ID = 1, CityId = 2 }
+            };
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.GetAnnualReport(1);
+
+            // Assert
+            var viewResult = Assert.IsType<PartialViewResult>(result);
+            Assert.Equal("_GetAnnualReport", viewResult.ViewName);
+            var actualViewModel = Assert.IsAssignableFrom<AnnualReport>(viewResult.Model);
+            Assert.Equal(JsonConvert.SerializeObject(annualReports[0]),
+                JsonConvert.SerializeObject(actualViewModel));
+        }
+
+        [Fact]
+        public void GetAnnualReportIncorrectHasNoAccess()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport { ID = 1, CityId = 1 },
+                new AnnualReport { ID = 1, CityId = 2 }
+            };
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(false);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.GetAnnualReport(1);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(403, result.RouteValues["code"]);
+        }
+
+        [Fact]
+        public void GetAnnualReportIncorrectAnnualReportsEmpty()
+        {
+            // Arrange
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.GetAnnualReport(1);
+
+            // Assert
+            var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
+            var message = Assert.IsType<string>(notFoundRequest.Value);
+            Assert.Equal("Не вдалося завантажити річний звіт!", message);
+        }
     }
 }
