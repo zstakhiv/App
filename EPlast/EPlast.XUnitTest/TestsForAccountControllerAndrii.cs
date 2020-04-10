@@ -203,7 +203,7 @@ namespace EPlast.XUnitTest
         public void TestResetPasswordGetReturnsResetPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = accountController.ResetPassword(GetTestCodeForResetPassword());
+            var result = accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail());
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ResetPassword", viewResult.ViewName);
             Assert.NotNull(viewResult);
@@ -316,7 +316,7 @@ namespace EPlast.XUnitTest
 
             mockUserManager
                 .Setup(i => i.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestCodeForResetPassword());
+                .ReturnsAsync(GetTestCodeForResetPasswordAndConfirmEmail());
 
             var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
             mockUrlHelper
@@ -393,7 +393,7 @@ namespace EPlast.XUnitTest
             //тут мож треба назвати по іншому код
             mockUserManager
                 .Setup(i => i.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestCodeForResetPassword());
+                .ReturnsAsync(GetTestCodeForResetPasswordAndConfirmEmail());
 
             var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
             mockUrlHelper
@@ -425,6 +425,56 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
+        [Fact]
+        public async Task TestConfirmEmailPostIncomingProblemsReturnsErrorView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = await accountController.ConfirmingEmail(GetBadFakeIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestConfirmEmailPostUserNullReturnsErrorView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+
+            mockUserManager
+                .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestConfirmEmailPostResultNotSuccededReturnsErrorView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+
+            mockUserManager
+                .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.ConfirmEmailAsync(GetTestUserWithAllFields(), GetTestCodeForResetPasswordAndConfirmEmail()))
+                .Returns(Task.FromResult(IdentityResult.Failed()));
+
+            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+
+
+
+
+
+
         //AccountLocked
         [Fact]
         public async Task TestAccountLockedGetReturnsAccountLockedView()
@@ -438,9 +488,28 @@ namespace EPlast.XUnitTest
 
 
 
-        private string GetTestCodeForResetPassword()
+
+
+
+        private string GetBadFakeCodeConfirmingEmail() {
+            string code = null;
+            return code;
+        }
+
+        private string GetBadFakeIdConfirmingEmail()
+        {
+            string userId = null;
+            return userId;
+        }
+
+        private string GetTestCodeForResetPasswordAndConfirmEmail()
         {
             return new string("500");
+        }
+
+        private string GetTestIdForConfirmingEmail()
+        {
+            return new string("asadasd3430234-2342");
         }
 
         private User GetTestUserWithNullFields()

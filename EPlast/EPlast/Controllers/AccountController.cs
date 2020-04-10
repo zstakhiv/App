@@ -51,12 +51,6 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
@@ -162,23 +156,33 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
+            try
             {
-                return View("Error");
-            }
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return View("Error");
-            }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+                if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
+                {
+                    return View("Error");
+                }
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return View("Error");
+                }
+                var result = await _userManager.ConfirmEmailAsync(user, code);
 
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ConfirmedEmail", "Account");
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ConfirmedEmail", "Account");
+                }
+                else
+                {
+                    return View("Error");
+                }
             }
-            else
-                return View("Error");
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
         }
 
         [HttpPost]
