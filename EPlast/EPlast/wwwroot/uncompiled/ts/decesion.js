@@ -21,6 +21,10 @@ $(document).ready(() => {
         e.stopPropagation();
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
+        if (files[0].size >= 10485760) {
+            alert("файл за великий (більше 10 Мб)");
+            return;
+        }
         var formData = new FormData();
         var decesionName = $("#Decesion-Name").val().toString();
         var decesionOrganizationId = $("#Decesion-Organization-ID option:selected").val().toString();
