@@ -93,8 +93,7 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(users.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CreateAnnualReport();
@@ -144,8 +143,7 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CreateAnnualReport();
@@ -164,7 +162,7 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>()))
                 .Returns(Enumerable.Empty<City>());
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReport();
@@ -192,7 +190,7 @@ namespace EPlast.XUnitTest
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CreateAnnualReportAsAdmin(cities[0].ID);
@@ -212,7 +210,7 @@ namespace EPlast.XUnitTest
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
@@ -234,7 +232,7 @@ namespace EPlast.XUnitTest
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
@@ -267,7 +265,7 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CreateAnnualReport(cities[0].ID, annualReport);
@@ -301,7 +299,7 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
             controller.ModelState.Clear();
 
             // Act
@@ -334,7 +332,7 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
             controller.ModelState.AddModelError("test", "test");
 
             // Act
@@ -354,7 +352,7 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(false);
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
@@ -376,7 +374,7 @@ namespace EPlast.XUnitTest
                 .Returns(true);
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
@@ -412,7 +410,7 @@ namespace EPlast.XUnitTest
                 .Returns(cities);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.ViewAnnualReports();
@@ -444,7 +442,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<City>());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.ViewAnnualReports();
@@ -464,7 +462,7 @@ namespace EPlast.XUnitTest
                 .Returns((IQueryable<City>)null);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.ViewAnnualReports();
@@ -488,7 +486,7 @@ namespace EPlast.XUnitTest
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.GetAnnualReport(1);
@@ -514,7 +512,7 @@ namespace EPlast.XUnitTest
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(false);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.GetAnnualReport(1);
@@ -531,7 +529,7 @@ namespace EPlast.XUnitTest
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.GetAnnualReport(1);
@@ -559,7 +557,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -596,7 +594,7 @@ namespace EPlast.XUnitTest
                 .Returns(cityOldAdmins.AsQueryable());
             repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -634,7 +632,7 @@ namespace EPlast.XUnitTest
                 .Returns(cityOldAdmins.AsQueryable());
             repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -674,7 +672,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -710,7 +708,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -747,7 +745,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
                 .Returns(cityOldLegalStatuses.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -778,7 +776,7 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityAdministration>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.CityLegalStatuses.FindByCondition(It.IsAny<Expression<Func<CityLegalStatus, bool>>>()))
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -798,7 +796,7 @@ namespace EPlast.XUnitTest
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -822,7 +820,7 @@ namespace EPlast.XUnitTest
                 .Returns(false);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = await controller.ConfirmAnnualReport(0);
@@ -851,7 +849,7 @@ namespace EPlast.XUnitTest
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CancelAnnualReport(0);
@@ -869,7 +867,7 @@ namespace EPlast.XUnitTest
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CancelAnnualReport(0);
@@ -893,7 +891,7 @@ namespace EPlast.XUnitTest
                 .Returns(false);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = (RedirectToActionResult)controller.CancelAnnualReport(0);

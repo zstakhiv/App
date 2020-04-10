@@ -26,11 +26,9 @@ namespace EPlast.XUnitTest
             var repository = new Mock<IRepositoryWrapper>();
             var store = new Mock<IUserStore<User>>();
             var userManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            var annualReportVmInitializer = new Mock<IAnnualReportVMInitializer>();
             var decisionVmInitializer = new Mock<IDecisionVMIitializer>();
             var pdfService = new Mock<IPDFService>();
             var hostingEnvironment = new Mock<IHostingEnvironment>();
-            var viewAnnualReportsVmInitializer = new Mock<IViewAnnualReportsVMInitializer>();
             var directoryManager = new Mock<IDirectoryManager>();
             var fileManager = new Mock<IFileManager>();
             var fileStreamManager = new Mock<IFileStreamManager>();
@@ -57,8 +55,8 @@ namespace EPlast.XUnitTest
             repository.Setup(rep => rep.Decesion.Include(x => x.DecesionTarget, x => x.Organization)).Returns(GetTestDecesion());
             repository.Setup(rep => rep.Save());
 
-            return new DocumentationController(repository.Object, userManager.Object, annualReportVmInitializer.Object, decisionVmInitializer.Object, pdfService.Object,
-                hostingEnvironment.Object, viewAnnualReportsVmInitializer.Object, directoryManager.Object, fileManager.Object, fileStreamManager.Object);
+            return new DocumentationController(repository.Object, userManager.Object, null, decisionVmInitializer.Object, pdfService.Object,
+                hostingEnvironment.Object, null, null, directoryManager.Object, fileManager.Object, fileStreamManager.Object);
         }
 
         private static IQueryable<Decesion> GetTestDecesion()
