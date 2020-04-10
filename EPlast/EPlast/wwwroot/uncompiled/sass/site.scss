@@ -41,6 +41,12 @@ html {
     }
 }
 
+@media(max-width:545px) {
+    .login-clean .form .reset p {
+        font-size: 17px;
+    }
+}
+
 @media(max-width:510px) {
     .login-clean .form .forgot-password-container p {
         font-size: 16px;
@@ -60,6 +66,12 @@ html {
 
     .form .login-register-switcher {
         margin-bottom: 30px;
+    }
+}
+
+@media(max-width:500px) {
+    .login-clean .form .reset p {
+        font-size: 15px;
     }
 }
 
@@ -89,8 +101,23 @@ html {
     }
 }
 
+@media(max-width:465px) {
+    .login-clean .form .reset p {
+        font-size: 13px;
+    }
+}
+
+@media(max-width:445px) {
+    .login-clean .form .reset p {
+        font-size: 12px;
+    }
+}
 
 @media(max-width:425px) {
+    .login-clean .form .reset p {
+        font-size: 10px;
+    }
+
     .login-clean .form .forgot-password-container p {
         font-size: 13px;
     }
@@ -117,6 +144,10 @@ html {
 }
 
 @media(max-width:412px) { /*тут з інпутами*/
+    .login-clean .form .reset p {
+        font-size: 9px;
+    }
+
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 10px;
     }
@@ -171,9 +202,19 @@ html {
     }
 }
 
+@media(max-width:385px) {
+    .login-clean .form .reset p {
+        font-size: 10px;
+    }
+}
+
 @media(max-width:350px) { /*тут з інпутами*/
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 14px;
+    }
+
+    .login-clean .form .reset p {
+        font-size: 8px;
     }
 
     .login-clean a {
@@ -181,7 +222,7 @@ html {
     }
 
     html {
-        font-size: 10px;
+        font-size: 8px;
     }
 
     .form .login-register-switcher {
