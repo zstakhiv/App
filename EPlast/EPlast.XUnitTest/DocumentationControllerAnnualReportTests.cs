@@ -834,5 +834,75 @@ namespace EPlast.XUnitTest
             Assert.Equal(403, resultRequest.RouteValues["code"]);
             repositoryWrapper.Verify(rw => rw.AnnualReports.Update(It.IsAny<AnnualReport>()), Times.Never);
         }
+
+        [Fact]
+        public void CancelAnnualReportCorrect()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport()
+                {
+                    City = new City { Name = "Золочів" },
+                    Date = DateTime.Today
+                }
+            };
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(true);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.CancelAnnualReport(0);
+
+            // Assert
+            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var message = Assert.IsType<string>(okRequest.Value);
+            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік скасовано!", message);
+            Assert.Equal(AnnualReportStatus.Canceled, annualReports[0].Status);
+        }
+
+        [Fact]
+        public void CancelAnnualReportIncorrectAnnualReportNotFound()
+        {
+            // Arrange
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = controller.CancelAnnualReport(0);
+
+            // Assert
+            var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
+            var message = Assert.IsType<string>(notFoundRequest.Value);
+            Assert.Equal("Не вдалося скасувати річний звіт!", message);
+            userManager.Verify(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()), Times.Never);
+        }
+
+        [Fact]
+        public void CancelAnnualReportIncorrectHasNoAccess()
+        {
+            // Arrange
+            var annualReports = new List<AnnualReport>
+            {
+                new AnnualReport()
+            };
+            cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(false);
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(annualReports.AsQueryable());
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object);
+
+            // Act
+            var result = (RedirectToActionResult)controller.CancelAnnualReport(0);
+
+            // Assert
+            Assert.Equal("HandleError", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal(403, result.RouteValues["code"]);
+            repositoryWrapper.Verify(rw => rw.AnnualReports.Update(It.IsAny<AnnualReport>()), Times.Never);
+        }
     }
 }
