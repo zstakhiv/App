@@ -367,5 +367,4 @@ EPlast/EPlast/wwwroot/bundles/css/*
 # Ignore documents
 EPlast/EPlast/wwwroot/documents/*
 
-# Ignore eventGallery
-EPlast/EPlast/wwwroot/images/EventsGallery/*
+
