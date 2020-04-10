@@ -1,6 +1,7 @@
 ﻿using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
+using EPlast.Wrapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,16 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _env;
+        private readonly IFileManager _fm;
 
 
-        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env)
+
+        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env, IFileManager fm)
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
             _env = env;
+            _fm = fm;
         }
 
         [Authorize]

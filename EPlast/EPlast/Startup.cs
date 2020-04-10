@@ -20,6 +20,7 @@ using EPlast.Models.ViewModelInitializations;
 using EPlast.BussinessLayer.Settings;
 using EPlast.BussinessLayer.AccessManagers;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
+using EPlast.Wrapper;
 
 namespace EPlast
 {
@@ -62,6 +63,7 @@ namespace EPlast
             services.AddScoped<ICityAccessManager, CityAccessManager>();
             services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();
             services.AddScoped<IUserAccessManager, UserAccessManager>();
+            services.AddScoped<IFileManager, FileManager>();
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
