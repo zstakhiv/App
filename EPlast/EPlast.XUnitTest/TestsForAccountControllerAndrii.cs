@@ -379,6 +379,7 @@ namespace EPlast.XUnitTest
             mockUserManager
                 .Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
+
             //тут мож треба назвати по іншому код
             mockUserManager
                 .Setup(i => i.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
@@ -397,10 +398,10 @@ namespace EPlast.XUnitTest
             accountController.Url = mockUrlHelper.Object;
             accountController.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            /*var result = await accountController.Register(GetTestRegisterViewModel());
+            var result = await accountController.Register(GetTestRegisterViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Register", viewResult.ViewName);
-            Assert.NotNull(viewResult);*/
+            Assert.Equal("AcceptingEmail", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
         private string GetTestCodeForResetPassword()
