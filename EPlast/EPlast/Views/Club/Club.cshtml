@@ -89,7 +89,7 @@
                             }
                             @if(Model.Members.Count == 0)
                             {
-                                <p>В цьому курені поки немає проводу!</p>
+                                <p class="no-followers-in-club">В цьому курені поки немає проводу!</p>
                             }
                         </div>
                         <a asp-controller="Club" asp-action="ClubMembers" asp-route-index="@Model.Club.ID" class="btn btn-primary btn-lg colors-for-club-buttons" role="button">Переглянути всіх</a>
@@ -126,7 +126,7 @@
                             }
                             @if (Model.Followers.Count == 0)
                             {
-                                <p>В цьому курені поки немає прихильників!</p>
+                                <p class="no-followers-in-club">В цьому курені поки немає прихильників!</p>
                             }
                         </div>
 
