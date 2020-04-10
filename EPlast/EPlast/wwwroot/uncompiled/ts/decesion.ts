@@ -25,7 +25,7 @@ $(document).ready(() => {
         e.stopPropagation();
         let input: HTMLInputElement = <HTMLInputElement>document.getElementById("CreateDecesionFormFile");
         var files = input.files;
-        if (files[0].size >= 10485760) {
+        if (files[0] != undefined && files[0].size >= 10485760) {
             alert("файл за великий (б≥льше 10 ћб)");
             return;
         }
