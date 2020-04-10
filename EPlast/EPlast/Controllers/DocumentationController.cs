@@ -30,11 +30,12 @@ namespace EPlast.Controllers
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
         private readonly IDirectoryManager _directoryManager;
         private readonly IFileManager _fileManager;
+        private readonly IFileStreamManager _fileStreamManager;
         private const string DecesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
-            IDirectoryManager directoryManager, IFileManager fileManager)
+            IDirectoryManager directoryManager, IFileManager fileManager, IFileStreamManager fileStreamManager)
 
         {
             _repoWrapper = repoWrapper;
@@ -46,6 +47,7 @@ namespace EPlast.Controllers
             _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
             _directoryManager = directoryManager;
             _fileManager = fileManager;
+            _fileStreamManager = fileStreamManager;
         }
 
         public IActionResult Index()
@@ -121,9 +123,9 @@ namespace EPlast.Controllers
                         {
                             path = Path.Combine(path, decesionViewModel.File.FileName);
 
-                            using (var stream = new FileStreamManager(path, FileMode.Create))
+                            using (var stream = _fileStreamManager.GenerateFileStreamManager(path, FileMode.Create))
                             {
-                                await decesionViewModel.File.CopyToAsync(stream.GetStream());
+                                await _fileStreamManager.CopyToAsync(decesionViewModel.File, stream.GetStream());
                                 if (!_fileManager.Exists(path))
                                 {
                                     throw new ArgumentException($"File was not created it '{path}' directory");
@@ -198,9 +200,10 @@ namespace EPlast.Controllers
                 }
                 path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
-                using (var stream = new FileStreamManager(path, FileMode.Open))
+                using (var stream = _fileStreamManager.GenerateFileStreamManager(path, FileMode.Open))
                 {
-                    await stream.CopyToAsync(memory);
+                    await _fileStreamManager.CopyToAsync(stream.GetStream(), memory);
+
                     if (memory.Length == 0)
                     {
                         throw new ArgumentException("memory length is 0");

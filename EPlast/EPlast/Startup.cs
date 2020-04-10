@@ -73,6 +73,7 @@ namespace EPlast
 
             services.AddScoped<IDirectoryManager, DirectoryManager>();
             services.AddScoped<IFileManager, FileManager>();
+            services.AddScoped<IFileStreamManager, FileStreamManager>();
 
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>

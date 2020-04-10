@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EPlast.Wrapper
 {
-    public class FileStreamManager : IDisposable
+    public class FileStreamManager : IFileStreamManager, IDisposable
     {
-        private readonly FileStream fileStream;
+        private FileStream fileStream;
+
+        public FileStreamManager()
+        {
+        }
 
         public FileStreamManager(string path, FileMode mode)
         {
@@ -28,6 +31,21 @@ namespace EPlast.Wrapper
         public async Task CopyToAsync(MemoryStream memory)
         {
             await fileStream.CopyToAsync(memory);
+        }
+
+        public FileStreamManager GenerateFileStreamManager(string path, FileMode mode)
+        {
+            return new FileStreamManager(path, mode);
+        }
+
+        public async Task CopyToAsync(IFormFile from, Stream memoryTo)
+        {
+            await from.CopyToAsync(memoryTo);
+        }
+
+        public async Task CopyToAsync(Stream from, Stream memoryTo)
+        {
+            await from.CopyToAsync(memoryTo);
         }
     }
 }
