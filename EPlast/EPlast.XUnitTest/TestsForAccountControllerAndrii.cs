@@ -92,7 +92,7 @@ namespace EPlast.XUnitTest
 
             //SignInManager does not mocked
             AccountController accountController = new AccountController(mockUserManager.Object, null,
-                mockRepositoryWrapper.Object, mockLogger.Object, mockEmailConfirmation.Object, mockHosting.Object, null);
+                mockRepositoryWrapper.Object, mockLogger.Object, mockEmailConfirmation.Object, mockHosting.Object);
 
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
@@ -176,7 +176,7 @@ namespace EPlast.XUnitTest
             mockUserManager
                 .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
-        
+
             mockSignInManager
                 .Setup(s => s.RefreshSignInAsync(It.IsAny<User>()))
                 .Verifiable();
@@ -303,7 +303,8 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task TestForgotPasswordPostReturnsForgotPasswordConfirmationView() {
+        public async Task TestForgotPasswordPostReturnsForgotPasswordConfirmationView()
+        {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
@@ -340,7 +341,8 @@ namespace EPlast.XUnitTest
             return new string("500");
         }
 
-        private User GetTestUserWithNullFields() {
+        private User GetTestUserWithNullFields()
+        {
             return null;
         }
 
@@ -362,7 +364,8 @@ namespace EPlast.XUnitTest
             return forgotPasswordViewModel;
         }
 
-        private User GetTestUserWithAllFields() {
+        private User GetTestUserWithAllFields()
+        {
             return new User()
             {
                 UserName = "andriishainoha@gmail.com",
@@ -370,7 +373,6 @@ namespace EPlast.XUnitTest
                 LastName = "Shainoha",
                 EmailConfirmed = true
             };
-
         }
 
         private ResetPasswordViewModel GetTestResetViewModel()
@@ -380,7 +382,7 @@ namespace EPlast.XUnitTest
                 Email = "andriishainoha@gmail.com",
                 Password = "andrii123",
                 ConfirmPassword = "andrii123",
-                Code  = "500"
+                Code = "500"
             };
             return resetPasswordViewModel;
         }

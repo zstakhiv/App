@@ -53,7 +53,7 @@ namespace EPlast.XUnitTest
             };
             var users = new List<User>
             {
-                new User { Id = "1", FirstName = "Роман", LastName = "Романенко", UserPlastDegrees = new List<UserPlastDegree> 
+                new User { Id = "1", FirstName = "Роман", LastName = "Романенко", UserPlastDegrees = new List<UserPlastDegree>
                     { new UserPlastDegree { UserPlastDegreeType = UserPlastDegreeType.SeniorPlastynSupporter } } },
                 new User { Id = "2", FirstName = "Петро", LastName = "Петренко", UserPlastDegrees = new List<UserPlastDegree>
                     { new UserPlastDegree { UserPlastDegreeType = UserPlastDegreeType.SeniorPlastynSupporter } } },
@@ -145,7 +145,7 @@ namespace EPlast.XUnitTest
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object);
+                null, cityAccessManager.Object, null, null, null);
 
             // Act
             var result = controller.CreateAnnualReport();
