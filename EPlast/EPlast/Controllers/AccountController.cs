@@ -235,7 +235,6 @@ namespace EPlast.Controllers
             return View("AccountLocked");
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -244,6 +243,7 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()

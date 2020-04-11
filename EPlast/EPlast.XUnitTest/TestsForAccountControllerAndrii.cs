@@ -532,6 +532,21 @@ namespace EPlast.XUnitTest
 
         //Login
 
+
+        //Logout
+        [Fact]
+        public async Task TestLogoutReturnsView()        //тут метод всьо добре просто треба настроїти signinmanager бо він null
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.SignOutAsync())
+                .Returns(Task.FromResult(default(object)));
+            
+            var result = await accountController.Logout() as RedirectToActionResult;
+            Assert.Equal("AccountLocked", result.ActionName);
+            Assert.NotNull(result);
+        }
+
         private string GetBadFakeCodeConfirmingEmail() {
             string code = null;
             return code;
