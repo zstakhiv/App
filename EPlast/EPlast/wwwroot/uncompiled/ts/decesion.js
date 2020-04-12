@@ -55,6 +55,13 @@ $(document).ready(() => {
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
+                    var file = "";
+                    if (files[0] != undefined) {
+                        file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
+                    }
+                    var elem = $("#dtReadRaport").DataTable().row.add([response.id, decesionDecesionStatusType, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                        .draw();
+                    $(elem).addClass("raport-click-row");
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");

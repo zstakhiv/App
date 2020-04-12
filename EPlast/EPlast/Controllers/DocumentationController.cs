@@ -141,7 +141,7 @@ namespace EPlast.Controllers
                         return Json(new { success = false });
                     }
                 }
-                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку." });
+                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку.", id = decesionViewModel.Decesion.ID });
             }
             catch
             {
