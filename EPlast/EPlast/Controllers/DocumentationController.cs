@@ -141,7 +141,13 @@ namespace EPlast.Controllers
                         return Json(new { success = false });
                     }
                 }
-                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку.", id = decesionViewModel.Decesion.ID });
+                return Json(new
+                {
+                    success = true,
+                    Text = "Рішення додано, обновіть сторінку.",
+                    id = decesionViewModel.Decesion.ID,
+                    decesionOrganization = _repoWrapper.Organization.FindByCondition(x => x.ID == decesionViewModel.Decesion.Organization.ID).Select(x => x.OrganizationName)
+                });
             }
             catch
             {

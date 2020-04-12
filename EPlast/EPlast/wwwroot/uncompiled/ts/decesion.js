@@ -1,4 +1,11 @@
-$(document).ready(() => {
+function initialise() {
+    $("tr.raport-click-row").dblclick(function () {
+        const content = $(this).children().first().text();
+        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
+    });
+}
+$(document).ready(function () {
+    initialise();
     $(() => {
         $("#datepicker").datepicker({ dateFormat: "yy/mm/dd" }).datepicker("setDate", "0");
     });
@@ -6,16 +13,15 @@ $(document).ready(() => {
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass("raport-click-row");
+        },
         responsive: true
     });
     $('#dtReadRaport').on('page.dt', function () {
         $('html, body').animate({
             scrollTop: 100
         }, 200);
-    });
-    $("tr.raport-click-row").dblclick(function () {
-        const content = $(this).children().first().text();
-        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
     });
     $("#CreateDecesionForm-submit").click((e) => {
         e.preventDefault();
@@ -59,9 +65,8 @@ $(document).ready(() => {
                     if (files[0] != undefined) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
                     }
-                    var elem = $("#dtReadRaport").DataTable().row.add([response.id, decesionDecesionStatusType, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadRaport").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
-                    $(elem).addClass("raport-click-row");
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
@@ -74,5 +79,8 @@ $(document).ready(() => {
             }
         });
     });
+});
+$(document).ajaxComplete(function () {
+    initialise();
 });
 //# sourceMappingURL=decesion.js.map
