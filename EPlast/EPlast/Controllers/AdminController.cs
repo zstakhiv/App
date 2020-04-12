@@ -114,6 +114,11 @@ namespace EPlast.Controllers
                 var removedRoles = userRoles.Except(roles);
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                if(currentRoles.Count==0)
+                {
+                    await _userManager.AddToRoleAsync(user, "Прихильник");
+                }
                 _logger.LogInformation("Successful role change for {0} {1}/{2}", user.FirstName, user.LastName, user.Id);
                 return RedirectToAction("UsersTable");
             }
