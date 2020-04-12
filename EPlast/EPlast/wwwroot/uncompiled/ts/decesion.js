@@ -9,14 +9,18 @@ $(document).ready(function () {
     $(() => {
         $("#datepicker").datepicker({ dateFormat: "yy/mm/dd" }).datepicker("setDate", "0");
     });
+    $(".show_hide").on('click', function () {
+        $(this).parent("td").children(".hidden").removeClass("hidden");
+        $(this).hide();
+    });
     $("#dtReadRaport").DataTable({
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
+        responsive: true,
         "createdRow": function (row, data, dataIndex) {
             $(row).addClass("raport-click-row");
-        },
-        responsive: true
+        }
     });
     $('#dtReadRaport').on('page.dt', function () {
         $('html, body').animate({
