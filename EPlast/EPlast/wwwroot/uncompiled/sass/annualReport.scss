@@ -1,6 +1,5 @@
 ﻿.annual-report-form {
     form {
-        min-width: 1000px;
         width: 100%;
         background-color: #ffffff;
         border: 1px solid #3C5438;
@@ -15,18 +14,20 @@
     }
 
     textarea {
-        min-height: 100px;
-        max-height: 260px;
+        min-height: 150px;
         padding-top: 10px;
         resize: none;
     }
+
+    @media (max-width: 767px) {
+        textarea {
+            min-height: 75px;
+        }
+    }
 }
-
-
 
 .view-annual-reports-form {
     form {
-        min-width: 1000px;
         width: 100%;
         background-color: #ffffff;
         border: 1px solid #3C5438;
