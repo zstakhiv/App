@@ -63,7 +63,6 @@ namespace EPlast
             services.AddScoped<ICityAccessManager, CityAccessManager>();
             services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();
             services.AddScoped<IUserAccessManager, UserAccessManager>();
-            services.AddScoped<IFileManager, FileManager>();
             services.Configure<EmailServiceSettings>(Configuration.GetSection("EmailServiceSettings"));
             services.Configure<IdentityOptions>(options =>
             {
