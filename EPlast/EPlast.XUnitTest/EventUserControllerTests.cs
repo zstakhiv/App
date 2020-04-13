@@ -59,7 +59,7 @@ namespace EPlast.XUnitTest
             var userStoreMock = new Mock<IUserStore<User>>();
             var usManager = new Mock<UserManager<User>>(userStoreMock.Object,
                null, null, null, null, null, null, null, null);
-            var controller = new EventUserController(usManager.Object, repository.Object);
+            var controller = new EventUserController(repository.Object, usManager.Object);
             // Act
             var events = new EventCreateViewModel { Event = expected };
             var result = controller.EventCreate(events);

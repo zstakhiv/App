@@ -1,135 +1,263 @@
-﻿@using EPlast.DataAccess.Repositories
-@using EPlast.DataAccess.Entities
+﻿@using EPlast.DataAccess.Entities
 @{
     ViewData["Title"] = "Event Create Page";
 }
 @model EPlast.ViewModels.Events.EventCreateViewModel;
-@Html.HiddenFor(model => model.Event.ID)
-@Html.HiddenFor(model => model.EventAdmin.EventID)
-<form asp-action="EventCreate" enctype="multipart/form-data">
-    <div class="eventCreate">
-        <div class="d-xl-flex justify-content-xl-center border shadow" style="width: 900px;height: 1320px;background-color: #ffffff;margin-top: 40px;">
-            <div class="col " style="height: 1000px;">
-                <div class="row">
-                    <div class="col">
-                        <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
-                            <h1 class="text-center">Нова подія</h1>
-                        </div>
+<div class="eventCreate">
+    <div class="d-xl-flex justify-content-xl-center border shadow card">
+        <div class="col " style="height: 1000px;">
+            <div class="row">
+                <div class="col">
+                    <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <h1 class="text-center">Нова подія</h1>
                     </div>
-                </div>
-                <div class="row border shadow" style="height: 55px;">
-                    @Html.HiddenFor(i => i.Event.EventType.EventTypeName, new { @id = "name" })
-                    @Html.HiddenFor(i => i.Event.EventTypeID, new { @id = "autocomplete_input_id_0" })
-
-                    @Html.HiddenFor(i => i.Event.EventStatus.EventStatusName, new { @id = "status" })
-                    @Html.HiddenFor(i => i.Event.EventStatusID, new { @id = "autocomplete_input_id_1" })
-
-                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Vyshkil"><button class="btn btn-primary" type="button" style="background-color: #3c5438; width:100px;">Вишкіл</button></div>
-                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Tabir"><button class="btn btn-primary" type="button" style="background-color: #3c5438; width:100px;">Табір</button></div>
-                    <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="Akcia"><button class="btn btn-primary" type="button" style="background-color: #3c5438;width:100px">Акція</button></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label" id="type">Катергорія</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        @Html.TextBoxFor(x => x.Event.EventCategory.EventCategoryName,
-                        new { @list = "EventCategory-value", @id = "autocomplete_input", @class = "form-control border", @style = "width: 370px;background-color: #eee;", @Value = "" })
-                        <datalist id="Eventcategory-value">
-                            @foreach (EventCategory item in Model.EventCategory)
-                            {
-                                <option data-value="@item.ID" value="@item.EventCategoryName"></option>
-                            }
-                        </datalist>
-                        @Html.HiddenFor(i => i.Event.EventCategory.ID, new { @id = "autocomplete_input_id_2" })
-                        <span asp-validation-for="Event.EventCategory.EventCategoryName" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Назва події</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventName" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Комендант</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdmin.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Заступник коменданта</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Бунчужний/на</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Писар</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="EventAdministration.User" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата початку</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventDateStart" class="border TextIinput form-control" style="width: 370px; padding: 6px;background-color: #eee;" placeholder="Виберіть..."><span class="ui-datepicker"></span></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Дата завершення</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.EventDateEnd" class="border TextIinput form-control" style="width: 370px; padding: 6px;background-color: #eee;" placeholder="Виберіть..."><span class="ui-datepicker"></span></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Форма проведення</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.FormOfHolding" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Локація</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.Eventlocation" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Призначений для</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.ForWhom" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow">
-                    <div class="col text-center d-xl-flex justify-content-xl-center"><label class="col-form-label">Приблизна кількість учасників</label></div>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><input asp-for="Event.NumberOfPartisipants" type="text" class="border TextIinput" style="width: 370px; padding: 6px;background-color: #eee;"></div>
-                </div>
-                <div class="row border shadow" style="height: 123px;">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col text-center">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
-                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Питання/побажання до булави&nbsp; &nbsp;</label></div>
-                                    <div class="col">
-                                        <div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input asp-for="Event.Questions" type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row border shadow" style="height: 123px;">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col text-center">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
-                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center"><label class="col-form-label">Які впрваджено зміни/додаки ?</label></div>
-                                    <div class="col">
-                                        <div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;"><input asp-for="Event.Description" type="text" class="border TextIinput" style="width: 97%;height: 90%;background-color: #eee;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center"><button class="btn btn-primary" type="submit" style="width: 298px;margin-top: 15px;background-color: #3c5438;">Створити подію</button></div>
                 </div>
             </div>
+            <form method="post" asp-action="EventCreate" asp-controller="EventUser">
+                <div id="block" class="row border shadow" style="height: 55px;">
+                    @foreach (EventType item in Model.EventTypes)
+                    {
+                        <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="@item.EventTypeName">
+                            <button class="btn btn-primary typebutton" id="@item.ID" type="button">@item.EventTypeName</button>
+                        </div>
+                    }
+                    <input type="hidden" id="name" asp-for="Event.EventTypeID" />
+                </div>
+                <span asp-validation-for="Event.EventType.EventTypeName" class="text-danger"></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label" id="type">Катергорія</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.Event.EventCategoryID,
+                        new
+                             {
+                                 @list = "Users-value",
+                                 @class = "border textBoxInput",
+                                 @Value = ""
+                             })
+                        <datalist id="Users-value">
+                            <option id=" select-admin" selected="selected" disabled="disabled" value=""></option>
+                            @foreach (EventCategory item in Model.EventCategories)
+                            {
+                                <option data-value="@item.ID" value="@item.ID">@item.EventCategoryName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="Event.EventCategoryID" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Назва події</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.EventName" type="text" class="border TextIinput infoInput">
+                    </div>
+                </div>
+                <span asp-validation-for="Event.EventName" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Комендант</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdmin.UserID,
+                        new
+                             {
+                                 @list = "Users-value",
+                                 @class = "border textBoxInput",
+                                 @Value = ""
+                             })
+                        <datalist id="Users-value">
+                            <option id=" select-admin" selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdmin.UserID" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Заступник коменданта</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdministration.UserID,
+                        new
+                             {
+                                 @list = "Users-value",
+                                 @class = "border textBoxInput",
+                                 @Value = ""
+                             })
+                        <datalist id="Users-value">
+                            <option id=" select-admin" selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Бунчужний/на</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdministration.UserID,
+                         new
+                              {
+                                  @list = "Users-value",
+                                  @class = "border textBoxInput",
+                                  @Value = ""
+                              })
+                        <datalist id="Users-value">
+                            <option selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Писар</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdministration.UserID,
+                        new
+                             {
+                                 @list = "Users-value",
+                                 @class = "border textBoxInput",
+                                 @Value = ""
+                             })
+                        <datalist id="Users-value">
+                            <option selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Дата початку</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.EventDateStart" class="border TextIinput form-control infoInput"
+                               placeholder="Виберіть...">
+                        <span class="ui-datepicker"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Event.EventDateStart" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Дата завершення</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.EventDateEnd" class="border TextIinput form-control infoInput"
+                               placeholder="Виберіть...">
+                        <span class="ui-datepicker"></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Event.EventDateEnd" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Форма проведення</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.FormOfHolding" type="text" class="border TextIinput infoInput">
+                    </div>
+                </div>
+                <span asp-validation-for="Event.FormOfHolding" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Локація</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.Eventlocation" type="text" class="border TextIinput infoInput">
+                    </div>
+                </div>
+                <span asp-validation-for="Event.Eventlocation" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Призначений для</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.ForWhom" type="text" class="border TextIinput infoInput">
+                    </div>
+                </div>
+                <span asp-validation-for="Event.ForWhom" class="text-danger "></span>
+                <div class="row border shadow">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Приблизна кількість учасників</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <input asp-for="Event.NumberOfPartisipants" type="text" class="border TextIinput infoInput">
+                    </div>
+                </div>
+                <span asp-validation-for="Event.NumberOfPartisipants" class="text-danger "></span>
+                <div class="row border shadow" style="height: 123px;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
+                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center">
+                                        <label class="col-form-label">Питання/побажання до булави&nbsp; &nbsp;</label>
+                                    </div>
+                                    <div class="col">
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
+                                    <input asp-for="Event.Questions" type="text" class="border TextIinput bigInput">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Event.Questions" class="text-danger "></span>
+                <div class="row border shadow" style="height: 123px;">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
+                                    <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center">
+                                        <label class="col-form-label">Які впрваджено зміни/додаки ?</label>
+                                    </div>
+                                    <div class="col">
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
+                                    <input asp-for="Event.Description" type="text" class="border TextIinput bigInput">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span asp-validation-for="Event.Description" class="text-danger "></span>
+                <div class="row">
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <button class="btn btn-primary submitButton" type="submit">Створити подію</button>
+                    </div>
+                </div>
+            </form>
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }
         </div>
     </div>
-</form>
+</div>
