@@ -34,25 +34,25 @@ namespace EPlast.XUnitTest
             _userManager = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
         }
 
-        //[Fact]
-        //public void DeletePictureSuccessTest()
-        //{
-        //    //Arrange
-        //    int testGalleryId = 2;
-        //    _repoWrapper.Setup(x => x.Gallary.FindByCondition(It.IsAny<Expression<Func<Gallary, bool>>>()))
-        //        .Returns(new List<Gallary> { new Gallary { ID = 2, GalaryFileName = "picture.jpj" } }.AsQueryable());
-        //    _fm.Setup(fm => fm.Exists(It.IsAny<string>())).Returns(false);
-        //    //Act
-        //    var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
-        //    var actionResult = actionsController.DeletePicture(testGalleryId);
-        //    var codeResult = actionResult as StatusCodeResult;
-        //    //Assert
-        //    Assert.NotNull(actionResult);
-        //    Assert.IsType<StatusCodeResult>(actionResult);
-        //    _repoWrapper.Verify(r => r.Gallary.Delete(It.IsAny<Gallary>()), Times.Once());
-        //    //_repoWrapper.Verify(r => r.Save(), Times.Once());
-        //    Assert.Equal(500, codeResult.StatusCode);
-        //}
+        [Fact]
+        public void DeletePictureSuccessTest()
+        {
+            //Arrange
+            int testGalleryId = 2;
+            _repoWrapper.Setup(x => x.Gallary.FindByCondition(It.IsAny<Expression<Func<Gallary, bool>>>()))
+                .Returns(new List<Gallary> { new Gallary { ID = 2, GalaryFileName = "picture.jpj" } }.AsQueryable());
+            _fm.Setup(fm => fm.Exists(It.IsAny<string>())).Returns(false);
+            //Act
+            var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
+            var actionResult = actionsController.DeletePicture(testGalleryId);
+            var codeResult = actionResult as StatusCodeResult;
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<StatusCodeResult>(actionResult);
+            _repoWrapper.Verify(r => r.Gallary.Delete(It.IsAny<Gallary>()), Times.Once());
+            //_repoWrapper.Verify(r => r.Save(), Times.Once());
+            Assert.Equal(500, codeResult.StatusCode);
+        }
 
         [Fact]
         public void DeleteEventSuccessTest()
@@ -96,6 +96,12 @@ namespace EPlast.XUnitTest
         {
             //Arrange
             int testParticipantId = 2;
+            _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(It.IsAny<Expression<Func<ParticipantStatus, bool>>>()))
+            .Returns(new List<ParticipantStatus>
+             {
+                    new ParticipantStatus{ID=2 ,ParticipantStatusName = "Розглядається"},
+             }.AsQueryable());
+
             _repoWrapper.Setup(x => x.Participant.FindByCondition(It.IsAny<Expression<Func<Participant, bool>>>()))
                 .Returns(new List<Participant>
                     {
