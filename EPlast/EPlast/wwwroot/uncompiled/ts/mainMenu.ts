@@ -29,11 +29,10 @@ let profileListing = [
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
         'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
-let buttonClone: Element; 
+let buttonClone: Element;
 let backdrop: Element;
 let mainWrapper: Element;
 let menuOpen: boolean = false;
