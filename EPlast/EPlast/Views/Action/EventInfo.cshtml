@@ -286,8 +286,8 @@
              {
                  <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
                      <form id="form" class="ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
-                         <label for="files">Додати фотографії:</label>
-                         <input type="file" id="files" name="files" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
+                         <label class="btn btn-success gallery-buttons" for="files">Додати фотографії:</label>
+                         <input type="file" id="files" name="files" class="event-invisible" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
                      </form>
                  </div>
              }
