@@ -48,6 +48,9 @@ namespace EPlast.Controllers
                 List<UserTableViewModel> userTableViewModels = new List<UserTableViewModel>();
                 foreach (var user in users)
                 {
+                    if (!user.EmailConfirmed)
+                        continue;
+
                     var roles = await _userManager.GetRolesAsync(user);
                     var cityName = cityMembers.Where(x => x.User.Id.Equals(user.Id) && x.EndDate == null)
                                               .Select(x => x.City.Name)
