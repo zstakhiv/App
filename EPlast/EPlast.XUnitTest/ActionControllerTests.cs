@@ -35,7 +35,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void DeletePictureSuccessTest()
+        public void DeletePictureFailTest()
         {
             //Arrange
             int testGalleryId = 2;
