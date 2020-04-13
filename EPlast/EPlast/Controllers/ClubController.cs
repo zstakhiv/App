@@ -79,7 +79,12 @@ namespace EPlast.Controllers
                     .ThenInclude(us => us.User)
                     .FirstOrDefault();
 
-                return View(new ClubViewModel { Club = club });
+                var clubAdmin = club.ClubAdministration
+                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Курінний")
+                    .Select(a => a.ClubMembers.User)
+                    .FirstOrDefault();
+                ViewBag.usermanager = _userManager;
+                return View(new ClubViewModel { Club = club, ClubAdmin = clubAdmin });
             }
             catch (Exception e)
             {
@@ -295,6 +300,40 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+        [HttpGet]
+        public IActionResult DeleteFromAdmins(int adminId, int clubIndex)
+        {
+            ClubAdministration admin = _repoWrapper.GetClubAdministration.FindByCondition(i => i.ID == adminId).FirstOrDefault();
+            if (admin != null)
+            {
+                _repoWrapper.GetClubAdministration.Delete(admin);
+                _repoWrapper.Save();
+                return RedirectToAction("ClubAdmins", new { index = clubIndex });
+            }
+            else
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        
+        [HttpGet]
+        public IActionResult SetEndDateFromAdmins(int adminId, int clubIndex, DateTime enddate)
+        {
+            try
+            {
+                ClubAdministration admin = _repoWrapper.GetClubAdministration.FindByCondition(i => i.ID == adminId).FirstOrDefault();
 
+                admin.EndDate = enddate;
+
+                _repoWrapper.GetClubAdministration.Update(admin);
+                _repoWrapper.Save();
+
+                return RedirectToAction("ClubAdmins", new { index = clubIndex });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
     }
 }

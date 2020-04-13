@@ -22,7 +22,16 @@
                         <th class="th-sm">
                             Час завершення терміну
                         </th>
-                    </tr>
+                        @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                        {
+                            <th>
+                                Вибрати дату завершення каденції
+                            </th>
+                            <th>
+                                Видалити з списку
+                            </th>
+                        }
+                        </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Club.ClubAdministration)
@@ -31,17 +40,41 @@
                         <td>@item.AdminType.AdminTypeName</td>
                         <td>
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.ClubMembers.User.Id" style="color:black">
-                                @item.ClubMembers.User.LastName @item.ClubMembers.User.FirstName @(item.ClubMembers.User.FatherName??"")
-                                </a>
+                                @item.ClubMembers.User.LastName @item.ClubMembers.User.FirstName @(item.ClubMembers.User.FatherName ?? "")
+                            </a>
                         </td>
                         <td>@item.StartDate.ToString("dd-MM-yyyy")</td>
                         @if (@item.EndDate.HasValue)
                         {
                             <td>@item.EndDate.Value.ToString("dd-MM-yyyy")</td>
+                            @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                            {
+                                <td>-</td>
+                            }
                         }
                         else
                         {
                             <td>-</td>
+                            @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                            {
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input asp-for="@item.EndDate" id="datepickerBirthday" class="form-control" placeholder="Виберіть..." asp-controller="Club" asp-action="SetEndDateFromAdmins" asp-route-enddate="@item.EndDate" asp-route-adminId="@item.ID" asp-route-clubIndex="@item.Club.ID">
+                                        <span class="ui-datepicker" asp-controller="Club" asp-action="SetEndDateFromAdmins" asp-route-enddate="@item.EndDate" asp-route-adminId="@item.ID" asp-route-clubIndex="@item.Club.ID"></span>
+                                        <a asp-controller="Club" asp-action="SetEndDateFromAdmins" asp-route-enddate="@item.EndDate" asp-route-adminId="@item.ID" asp-route-clubIndex="@item.Club.ID" style="color: #3c5438;"><i class="material-icons">delete</i></a>
+
+                                    </div>  
+                                </div>
+                                <td class="form-group">
+                                    <a class="modal-footer" data-dismiss="modal" style="color: #3c5438;"><i class="material-icons">clock</i></a>
+                                </td>
+                            }
+                        }
+                        @if (Model.ClubAdmin != null && (ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id || User.IsInRole("Admin")))
+                        {
+                            <td>
+                                <a asp-controller="Club" asp-action="DeleteFromAdmins" asp-route-adminId="@item.ID" asp-route-clubIndex="@item.Club.ID" style="color: #3c5438;"><i class="material-icons">delete</i></a>
+                            </td>
                         }
                     </tr>
                     }
