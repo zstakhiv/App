@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EPlast.Wrapper;
+using Microsoft.AspNetCore.Http;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast.Controllers
@@ -27,14 +29,16 @@ namespace EPlast.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly IViewAnnualReportsVMInitializer _viewAnnualReportsVMInitializer;
+        private readonly IDirectoryManager _directoryManager;
+        private readonly IFileManager _fileManager;
+        private readonly IFileStreamManager _fileStreamManager;
         private readonly ICityAccessManager _cityAccessManager;
 
         private const string DecesionsDocumentFolder = @"\documents\";
 
         public DocumentationController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, IAnnualReportVMInitializer annualReportVMCreator,
             IDecisionVMIitializer decisionVMCreator, IPDFService PDFService, IHostingEnvironment appEnvironment, IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer,
-            ICityAccessManager cityAccessManager)
-
+            ICityAccessManager cityAccessManager, IDirectoryManager directoryManager, IFileManager fileManager, IFileStreamManager fileStreamManager)
         {
             _repoWrapper = repoWrapper;
             _annualReportVMCreator = annualReportVMCreator;
@@ -43,6 +47,9 @@ namespace EPlast.Controllers
             _decisionVMCreator = decisionVMCreator;
             _appEnvironment = appEnvironment;
             _viewAnnualReportsVMInitializer = viewAnnualReportsVMInitializer;
+            _directoryManager = directoryManager;
+            _fileManager = fileManager;
+            _fileStreamManager = fileStreamManager;
             _cityAccessManager = cityAccessManager;
         }
 
@@ -52,7 +59,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public DecesionViewModel _CreateDecesion()
+        public DecesionViewModel CreateDecesion()
         {
             try
             {
@@ -84,6 +91,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                ModelState.Remove("Decesion.DecesionStatusType");
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
@@ -107,9 +115,9 @@ namespace EPlast.Controllers
                     try
                     {
                         string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesionViewModel.Decesion.ID;
-                        Directory.CreateDirectory(path);
+                        _directoryManager.CreateDirectory(path);
 
-                        if (!Directory.Exists(path))
+                        if (!_directoryManager.Exists(path))
                         {
                             throw new ArgumentException($"directory '{path}' is not exist");
                         }
@@ -117,10 +125,11 @@ namespace EPlast.Controllers
                         if (decesionViewModel.File != null)
                         {
                             path = Path.Combine(path, decesionViewModel.File.FileName);
-                            using (var fileStream = new FileStream(path, FileMode.Create))
+
+                            using (var stream = _fileStreamManager.GenerateFileStreamManager(path, FileMode.Create))
                             {
-                                await decesionViewModel.File.CopyToAsync(fileStream);
-                                if (!System.IO.File.Exists(path))
+                                await _fileStreamManager.CopyToAsync(decesionViewModel.File, stream.GetStream());
+                                if (!_fileManager.Exists(path))
                                 {
                                     throw new ArgumentException($"File was not created it '{path}' directory");
                                 }
@@ -157,11 +166,11 @@ namespace EPlast.Controllers
                 foreach (var decesion in decisions)
                 {
                     string path = _appEnvironment.WebRootPath + DecesionsDocumentFolder + decesion.Decesion.ID;
-                    if (!decesion.Decesion.HaveFile || !Directory.Exists(path))
+                    if (!decesion.Decesion.HaveFile || !_directoryManager.Exists(path))
                     {
                         continue;
                     }
-                    var files = Directory.GetFiles(path);
+                    var files = _directoryManager.GetFiles(path);
 
                     if (files.Length == 0)
                     {
@@ -170,7 +179,7 @@ namespace EPlast.Controllers
 
                     decesion.Filename = Path.GetFileName(files.First());
                 }
-                return View(Tuple.Create(_CreateDecesion(), decisions));
+                return View(Tuple.Create(CreateDecesion(), decisions));
             }
             catch
             {
@@ -188,15 +197,16 @@ namespace EPlast.Controllers
 
                 var path = Path.Combine(_appEnvironment.WebRootPath + DecesionsDocumentFolder, id);
 
-                if (!Directory.Exists(path) || Directory.GetFiles(path).Length == 0)
+                if (!_directoryManager.Exists(path) || _directoryManager.GetFiles(path).Length == 0)
                 {
                     throw new ArgumentException($"directory '{path}' is not exist");
                 }
                 path = Path.Combine(path, filename);
                 var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
+                using (var stream = _fileStreamManager.GenerateFileStreamManager(path, FileMode.Open))
                 {
-                    await stream.CopyToAsync(memory);
+                    await _fileStreamManager.CopyToAsync(stream.GetStream(), memory);
+
                     if (memory.Length == 0)
                     {
                         throw new ArgumentException("memory length is 0");

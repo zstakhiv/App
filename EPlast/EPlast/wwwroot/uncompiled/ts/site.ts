@@ -16,6 +16,11 @@ $(".login-text").click(loginClick);
 
 $("input#autocomplete_input").each(function (index) {
     $(this).change(function () {
-        $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
+        if ($(this).val() == "") {
+            $("#autocomplete_input_id_" + index).val(null);
+        }
+        else {
+            $("#autocomplete_input_id_" + index).val($('option[value="' + $(this).val() + '"]').data('value'));
+        }
     });
 });

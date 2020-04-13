@@ -4,14 +4,16 @@ using EPlast.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    partial class EPlastDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200408133150_Add-id-for-FK-in-UserProfile")]
+    partial class AddidforFKinUserProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -468,6 +470,8 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("DegreeId");
+
                     b.Property<string>("PlaceOfStudy")
                         .HasMaxLength(50);
 
@@ -475,6 +479,8 @@ namespace EPlast.DataAccess.Migrations
                         .HasMaxLength(50);
 
                     b.HasKey("ID");
+
+                    b.HasIndex("DegreeId");
 
                     b.ToTable("Educations");
                 });
@@ -857,8 +863,6 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<DateTime>("DateTime");
 
-                    b.Property<int?>("DegreeId");
-
                     b.Property<int?>("EducationId");
 
                     b.Property<int?>("GenderID");
@@ -872,8 +876,6 @@ namespace EPlast.DataAccess.Migrations
                     b.Property<int?>("WorkId");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DegreeId");
 
                     b.HasIndex("EducationId");
 
@@ -1239,6 +1241,13 @@ namespace EPlast.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("EPlast.DataAccess.Entities.Education", b =>
+                {
+                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
+                        .WithMany("Educations")
+                        .HasForeignKey("DegreeId");
+                });
+
             modelBuilder.Entity("EPlast.DataAccess.Entities.Event", b =>
                 {
                     b.HasOne("EPlast.DataAccess.Entities.EventCategory", "EventCategory")
@@ -1359,10 +1368,6 @@ namespace EPlast.DataAccess.Migrations
 
             modelBuilder.Entity("EPlast.DataAccess.Entities.UserProfile", b =>
                 {
-                    b.HasOne("EPlast.DataAccess.Entities.Degree", "Degree")
-                        .WithMany("UserProfiles")
-                        .HasForeignKey("DegreeId");
-
                     b.HasOne("EPlast.DataAccess.Entities.Education", "Education")
                         .WithMany("UsersProfiles")
                         .HasForeignKey("EducationId");

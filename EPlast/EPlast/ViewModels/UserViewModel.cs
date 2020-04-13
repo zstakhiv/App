@@ -8,5 +8,6 @@ namespace EPlast.ViewModels
         public User User { get; set; }
         public IEnumerable<CityAdministration> UserPositions { get; set; }
         public bool HasAccessToManageUserPositions { get; set; }
+        public EditUserViewModel EditView { get; set; }
     }
 }
