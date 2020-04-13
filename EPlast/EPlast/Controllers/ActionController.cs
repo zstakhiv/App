@@ -151,7 +151,13 @@ namespace EPlast.Controllers
         {
             try
             {
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
                 Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
+                if(participantToDelete.ParticipantStatusId == rejectedStatus)
+                {
+                    return StatusCode(409);
+
+                }
                 _repoWrapper.Participant.Delete(participantToDelete);
                 _repoWrapper.Save();
                 return StatusCode(200);
