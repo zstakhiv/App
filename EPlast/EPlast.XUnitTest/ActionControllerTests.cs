@@ -35,13 +35,14 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void DeletePictureFailTest()
+        public void DeletePictureSuccessTest()
         {
             //Arrange
             int testGalleryId = 2;
             _repoWrapper.Setup(x => x.Gallary.FindByCondition(It.IsAny<Expression<Func<Gallary, bool>>>()))
                 .Returns(new List<Gallary> { new Gallary { ID = 2, GalaryFileName = "picture.jpj" } }.AsQueryable());
-            _fm.Setup(fm => fm.Exists(It.IsAny<string>())).Returns(false);
+            _fm.Setup(fm => fm.Exists(It.IsAny<string>())).Returns(true);
+            _env.Setup(e => e.WebRootPath).Returns("Webroot\\");
             //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
             var actionResult = actionsController.DeletePicture(testGalleryId);
@@ -49,8 +50,24 @@ namespace EPlast.XUnitTest
             //Assert
             Assert.NotNull(actionResult);
             Assert.IsType<StatusCodeResult>(actionResult);
-            _repoWrapper.Verify(r => r.Gallary.Delete(It.IsAny<Gallary>()), Times.Once());
-            //_repoWrapper.Verify(r => r.Save(), Times.Once());
+            _repoWrapper.Verify(r => r.Save(), Times.Once());
+            Assert.Equal(200, codeResult.StatusCode);
+        }
+
+        [Fact]
+        public void DeletePictureFailTest()
+        {
+            //Arrange
+            int testGalleryId = 2;
+            _repoWrapper.Setup(x => x.Gallary.FindByCondition(It.IsAny<Expression<Func<Gallary, bool>>>()))
+                .Throws(new Exception());
+            //Act
+            var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
+            var actionResult = actionsController.DeletePicture(testGalleryId);
+            var codeResult = actionResult as StatusCodeResult;
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<StatusCodeResult>(actionResult);
             Assert.Equal(500, codeResult.StatusCode);
         }
 
