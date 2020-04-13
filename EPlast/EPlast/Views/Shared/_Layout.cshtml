@@ -47,14 +47,18 @@
                     <div class="nav-content">
                         <div class="menu-container">
 
-                            <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center" >
+                            <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center">
                                 <li class="menu-search"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;padding-left:25vw;">search</i></a></li>
                                 <li class="menu-notification"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
-                                <li class="menu-settings nav-item dropdown"><a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <i class="material-icons nav-logo" style="margin: 5px;">settings</i></a>
-                                                                            <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                                                <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword" style="color:#3c5438;">Змінити пароль</a>
-                                                                                <a class="dropdown-item" style="color:#3c5438;" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)" >Редагувати профіль</a></div></li>
+                                <li class="menu-settings nav-item dropdown">
+                                    <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons nav-logo" style="margin: 5px;">settings</i>
+                                    </a>
+                                    <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword" style="color:#3c5438;">Змінити пароль</a>
+                                        <a class="dropdown-item" style="color:#3c5438;" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">Редагувати профіль</a>
+                                    </div>
+                                </li>
                             </ul>
                             <div class="menu-search-container" style="width:25vw; right:0; left:0;">
                                 <div class="menu-search-input">
@@ -73,11 +77,11 @@
                                 <div class="search-sub-menu" style="margin-top:10px;">
                                     <h3>Швидкий доступ</h3>
                                     <ul>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" asp-action="UserProfile" asp-controller="Account">Профіль</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Акції</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" asp-action="Index" asp-controller="City">Станиці</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Округи</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Календар Подій</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" asp-action="UserProfile" asp-controller="Account">Профіль</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Акції</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" asp-action="Index" asp-controller="City">Станиці</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Округи</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Календар Подій</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -87,14 +91,14 @@
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">
-                            @if (@UserManager.GetUserAsync(User).Result != null)
-                            {
-                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
-                            }
-                            else
-                            {
-                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
-                            }
+                                @if (@UserManager.GetUserAsync(User).Result != null)
+                                {
+                                    <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                                }
+                                else
+                                {
+                                    <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                                }
                             </a>
                             @Html.Partial("_LoginPartial")
                         </div>
@@ -238,6 +242,7 @@
     <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
+    <script src="~/lib/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
     <script src="~/bundles/js/bundle-min.js"></script>
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     @*</environment>*@
