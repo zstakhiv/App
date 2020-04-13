@@ -9,7 +9,7 @@ $(document).ready(function () {
     initialise();
 
     $(() => {
-        $("#datepicker").datepicker({ dateFormat: "yy/mm/dd" }).datepicker("setDate", "0");
+        $("#datepicker").datepicker({ dateFormat: "dd-mm-yy" }).datepicker("setDate", "0");
     });
 
     $(".show_hide").on('click',function () {
