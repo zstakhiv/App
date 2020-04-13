@@ -96,13 +96,19 @@ namespace EPlast.Controllers
                     Event = createVM.Event,
                     UserID = createVM.EventAdmin.UserID
                 };
+                EventAdministration eventAdministration = new EventAdministration()
+                {
+                    Event = createVM.Event,
+                    AdministrationType = "Бунчужний/на",
+                    UserID = createVM.EventAdministration.UserID
+                };
                 if (ModelState.IsValid)
                 {
                     _repoWrapper.EventAdmin.Create(eventAdmin);
+                    _repoWrapper.EventAdministration.Create(eventAdministration);
                     _repoWrapper.Event.Create(createVM.Event);
                     _repoWrapper.Save();
-                    EventUserViewModel eventUser = new EventUserViewModel();
-                    return View();
+                    return RedirectToAction("SetAdministration", new { id = createVM.Event.ID});
                 }
                 else
                 {
@@ -119,6 +125,49 @@ namespace EPlast.Controllers
             catch
             {
                 return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
+        }
+        [HttpGet]
+        public IActionResult SetAdministration(int id)
+        {
+            Event events = _repoWrapper.Event.FindByCondition(i => i.ID == id).FirstOrDefault();
+            var model = new EventCreateViewModel()
+            {
+                Event = events,
+                Users = _repoWrapper.User.FindAll()
+            };
+            return View("EventAdministration",model);
+        }
+        [HttpPost]
+        public IActionResult SetAdministration(EventCreateViewModel createVM)
+        {
+            EventAdmin eventAdmin = new EventAdmin()
+            {
+                Event = createVM.Event,
+                UserID = createVM.EventAdmin.UserID
+            };
+            EventAdministration eventAdministration = new EventAdministration()
+            {
+                Event = createVM.Event,
+                AdministrationType = "Писар",
+                UserID = createVM.EventAdministration.UserID
+            };
+            if (ModelState.IsValid)
+            {
+                _repoWrapper.EventAdmin.Create(eventAdmin);
+                _repoWrapper.EventAdministration.Create(eventAdministration);
+                _repoWrapper.Save();
+                return View();
+            }
+            else
+            {
+                Event events = _repoWrapper.Event.FindByCondition(i => i.ID == createVM.Event.ID).FirstOrDefault();
+                var model = new EventCreateViewModel()
+                {
+                    Event = events,
+                    Users = _repoWrapper.User.FindAll()
+                };
+                return View(model);
             }
         }
     }
