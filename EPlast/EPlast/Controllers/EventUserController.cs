@@ -1,4 +1,5 @@
-﻿using EPlast.DataAccess.Entities;
+﻿
+using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
 using Microsoft.AspNetCore.Identity;
@@ -17,12 +18,14 @@ namespace EPlast.Controllers
     {
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
+        private readonly ICreateEventVMInitializer _createEventVMInitializer;
 
-        public EventUserController(IRepositoryWrapper repoWrapper, UserManager<User> userManager)
+        public EventUserController(IRepositoryWrapper repoWrapper, UserManager<User> userManager, ICreateEventVMInitializer createEventVMInitializer)
 
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
+            _createEventVMInitializer = createEventVMInitializer;
         }
 
         public IActionResult EventUser()
@@ -70,11 +73,12 @@ namespace EPlast.Controllers
         [HttpGet]
         public IActionResult EventCreate()
         {
+            var eventCategories = _repoWrapper.EventCategory.FindAll();
             var model = new EventCreateViewModel()
             {
                 Users = _repoWrapper.User.FindAll(),
                 EventTypes = _repoWrapper.EventType.FindAll(),
-                EventCategories = _repoWrapper.EventCategory.FindAll()
+                EventCategories = _createEventVMInitializer.GetEventCategories(eventCategories)
             };
             return View(model);
         }
@@ -98,7 +102,7 @@ namespace EPlast.Controllers
                     _repoWrapper.Event.Create(createVM.Event);
                     _repoWrapper.Save();
                     EventUserViewModel eventUser = new EventUserViewModel();
-                    return View("EventUser", eventUser);
+                    return View();
                 }
                 else
                 {
@@ -107,7 +111,7 @@ namespace EPlast.Controllers
                     {
                         Users = _repoWrapper.User.FindAll(),
                         EventTypes = _repoWrapper.EventType.FindAll(),
-                        EventCategories = _repoWrapper.EventCategory.FindAll()
+                        EventCategories = _createEventVMInitializer.GetEventCategories(eventCategories)
                     };
                     return View(model);
                 }

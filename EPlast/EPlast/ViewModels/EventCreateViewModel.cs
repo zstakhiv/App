@@ -14,7 +14,7 @@ namespace EPlast.ViewModels.Events
         public Event Event { get; set; }
         public EventAdmin EventAdmin { get; set; }
         public EventAdministration EventAdministration { get; set; }
-        public IEnumerable<EventCategory> EventCategories { get; set; }
+        public IEnumerable<SelectListItem> EventCategories { get; set; }
         public IEnumerable<EventType> EventTypes { get; set; }
         public IEnumerable<EventAdmin> EventAdmins { get; set; }
         public IEnumerable<EventAdministration> EventAdministrations { get; set; }
