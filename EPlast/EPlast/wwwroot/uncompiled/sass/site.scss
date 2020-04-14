@@ -209,6 +209,11 @@ html {
 }
 
 @media(max-width:350px) { /*тут з інпутами*/
+    .login-clean .form .reset {
+        height: 25px;
+        padding-bottom: 25px;
+    }
+
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 14px;
     }
@@ -326,7 +331,6 @@ button.accept-policy {
 
 /* Sticky footer styles
 -------------------------------------------------- */
-
 html {
     position: relative;
     min-height: 100%;
