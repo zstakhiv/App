@@ -106,4 +106,3 @@ $(document).ready(function () {
 $(document).ajaxComplete(function () {
     initialise();
 });
-//# sourceMappingURL=decesion.js.map
