@@ -12,7 +12,7 @@ jQuery(function ($) {
         dayNamesShort: ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
         dayNamesMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
         weekHeader: 'Ти',
-        dateFormat: 'yy.mm.dd',
+        dateFormat: 'dd-mm-yy',
         firstDay: 1,
         isRTL: false,
         showMonthAfterYear: false,
@@ -24,12 +24,12 @@ $(document).ready(function () {
     $("#phoneNumber").mask("+38(999)-999-99-99", { placeholder: "+38(___)-___-__-__" });
 });
 $("#datepickerBirthday").datepicker({
-    dateFormat: 'yy/mm/dd',
+    dateFormat: "dd-mm-yy",
     changeMonth: true,
     changeYear: true,
     yearRange: '-100y:c+nn',
     maxDate: '-1d'
-});
+}).datepicker("setDate", "0");
 $(function () {
     $.contextMenu({
         className: "admin-edit",

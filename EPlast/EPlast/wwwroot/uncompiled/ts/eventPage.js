@@ -175,6 +175,7 @@ $(document).ready(function () {
         DeletePicture(pictureToDelete, elementToDelete);
     });
     function DeletePicture(pictureToDelete, elementToDelete) {
+        $(elementToDelete).hide();
         $.ajax({
             type: "POST",
             url: "/Action/DeletePicture",
@@ -183,6 +184,7 @@ $(document).ready(function () {
                 $(elementToDelete).remove();
             },
             error: () => {
+                $(elementToDelete).show();
                 $("#FAIL").modal("show");
             },
         });
