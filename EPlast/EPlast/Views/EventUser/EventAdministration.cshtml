@@ -14,7 +14,7 @@
                 </div>
             </div>
             <form method="post" asp-action="SetAdministration" asp-controller="EventUser">
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Заступник Коменданта</label>
                     </div>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="EventAdmin.UserID" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Писар</label>
                     </div>
@@ -60,7 +60,7 @@
                 <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
                 <div class="row">
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <button class="btn btn-primary submitButton" asp-controller="EventUser" asp-action="EventUser" type="submit">
+                        <button class="btn submitButton" asp-controller="EventUser" asp-action="EventUser" type="submit">
                             Додати адміністрацію подію
                         </button>
                     </div>
