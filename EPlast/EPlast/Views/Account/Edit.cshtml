@@ -106,7 +106,7 @@
                         @Html.HiddenFor(i => i.User.UserProfile.DegreeId, new { @id = "autocomplete_input_id_4" })
                         <span asp-validation-for="User.UserProfile.Degree.Name" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group gender-wrapper">
                         <label asp-for="User.UserProfile.Gender.Name" class="control-label"></label>
                         @Html.DropDownListFor(x => x.User.UserProfile.GenderID, (IEnumerable<SelectListItem>)ViewBag.genders, "-- Виберіть стать... --", new { @placeholder = "Стать", @class = "form-control" })
                     </div>
