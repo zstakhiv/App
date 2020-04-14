@@ -12,7 +12,7 @@
         dayNamesShort: ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
         dayNamesMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
         weekHeader: 'Ти',
-        dateFormat: 'yy.mm.dd',
+        dateFormat: 'yy-mm-dd',
         firstDay: 1,
         isRTL: false,
         showMonthAfterYear: false,
@@ -26,12 +26,12 @@ $(document).ready(function () {
 });
 
 $("#datepickerBirthday").datepicker({
-    dateFormat: 'yy/mm/dd',
+    dateFormat: "dd-mm-yy",
     changeMonth: true,
     changeYear: true,
     yearRange: '-100y:c+nn',
     maxDate: '-1d'
-});
+}).datepicker("setDate", "0");
 
 $(function () {
 
