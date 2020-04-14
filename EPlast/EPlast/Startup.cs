@@ -62,7 +62,7 @@ namespace EPlast
             services.AddScoped<IDirectoryManager, DirectoryManager>();
             services.AddScoped<IFileManager, FileManager>();
             services.AddScoped<IFileStreamManager, FileStreamManager>();
-
+            services.AddScoped<ICreateEventVMInitializer, CreateEventVMInitializer>();
             services.AddScoped<ICityAccessManagerSettings, CityAccessManagerSettings>();
             services.AddScoped<ICityAccessManager, CityAccessManager>();
             services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();

@@ -118,13 +118,20 @@
 }
 
 .data-table-wrapper {
-    min-width: 1200px;
     margin: 100px 0px;
     background-color: #ffffff;
     padding: 40px;
     border-radius: 4px;
     color: #505e6c;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+
+    .show_hide {
+        cursor: pointer;
+    }
+
+    .hide {
+        visibility: hidden;
+    }
 
     button[data-toggle="modal"] {
         margin: 0 0 1rem 2rem;
@@ -147,30 +154,42 @@
         .sorting {
             &:after, &:before {
                 top: 18px;
+                right: 14px !important;
+            }
+        }
+
+        sorting_desc {
+            &:after, &:before {
+                right: 14px !important;
+                right: 14px !important;
             }
         }
 
         .sorting_asc {
             &:after, &:before {
                 top: 18px;
+                right: 14px !important;
             }
         }
 
         .sorting_asc_disabled {
             &:after, &:before {
                 top: 18px;
+                right: 14px !important;
             }
         }
 
         .sorting_desc {
             &:after, &:before {
                 top: 18px;
+                right: 14px !important;
             }
         }
 
         .sorting_desc_disabled {
             &:after, &:before {
                 top: 18px;
+                right: 14px !important;
             }
         }
     }

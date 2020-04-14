@@ -1,0 +1,74 @@
+﻿@using EPlast.DataAccess.Entities
+@{
+    ViewData["Title"] = "Event Administration Page";
+}
+@model EPlast.ViewModels.Events.EventCreateViewModel;
+<div class="eventCreate">
+    <div class="d-xl-flex justify-content-xl-center border shadow card">
+        <div class="col ">
+            <div class="row">
+                <div class="col">
+                    <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <h1 class="text-center">Останній крок</h1>
+                    </div>
+                </div>
+            </div>
+            <form method="post" asp-action="SetAdministration" asp-controller="EventUser">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Заступник Коменданта</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdmin.UserID,
+                        new
+                             {
+                                 @list = "Users-value",
+                                 @class = "border textBoxInput",
+                                 @Value = ""
+                             })
+                        <datalist id="Users-value">
+                            <option id=" select-admin" selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdmin.UserID" class="text-danger "></span>
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
+                    <div class="col text-center d-xl-flex justify-content-xl-center">
+                        <label class="col-form-label">Писар</label>
+                    </div>
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        @Html.TextBoxFor(x => x.EventAdministration.UserID,
+                         new
+                              {
+                                  @list = "Users-value",
+                                  @class = "border textBoxInput",
+                                  @Value = ""
+                              })
+                        <datalist id="Users-value">
+                            <option selected="selected" disabled="disabled" value=""></option>
+                            @foreach (User item in Model.Users)
+                            {
+                                <option data-value="@item.Id" value="@item.Id">@item.FirstName @item.LastName</option>
+                            }
+                        </datalist>
+                    </div>
+                </div>
+                <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
+                <div class="row">
+                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <button class="btn submitButton" asp-controller="EventUser" asp-action="EventUser" type="submit">
+                            Додати адміністрацію подію
+                        </button>
+                    </div>
+                </div>
+            </form>
+            @section Scripts {
+                @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+            }
+        </div>
+    </div>
+</div>
