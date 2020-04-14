@@ -9,7 +9,7 @@
         {
             <input hidden id="role" value="Admin" />
         }
-        <table id="dtReadRaport" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <table id="dtReadRaport" class="table table-striped table-bordered table-sm table-responsive" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th class="th-sm">
@@ -21,7 +21,7 @@
                     <th class="th-sm">
                         Стать
                     </th>
-                    <th class="th-sm">
+                    <th class="th-sm" data-sort="<%= my_date.strftime(" %Y%m%d%H%M%s") %>
                         День народження
                     </th>
                     <th class="th-sm">
