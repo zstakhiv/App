@@ -10,7 +10,13 @@ namespace EPlast.ViewModels.Events
     public class EventUserViewModel
     {
         public User User { get; set; }
-        public ICollection<Event> Events { get; set; }
+        public int CreatedEventCount { get; set; }
+        public int VisitedEventsCount { get; set; }
+        public int PlanedEventCount { get; set; }
+        public ICollection<EventAdmin> EventAdmins { get; set; }
+        public ICollection<Event> PlanedEvents { get; set; }
+        public ICollection<Event> CreatedEvents { get; set; }
+        public ICollection<Event> VisitedEvents { get; set; }
         public ICollection<Participant> Participants { get; set; }
     }
 }
