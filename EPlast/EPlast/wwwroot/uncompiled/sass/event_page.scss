@@ -147,6 +147,12 @@ input.event-page-wrapper.btn-collapse:hover {
         color: #ffffff;
     }
 
+    .carousel-control-next-icon,
+    .carousel-control-prev-icon {
+        filter: invert(0.25);
+    }
+
+
     .page-item.active .page-link {
         color: #000;
         background-color: #ffffff;
@@ -193,5 +199,9 @@ input.event-page-wrapper.btn-collapse:hover {
 
     .progress-cursor {
         cursor: progress;
+    }
+
+    .status-icon {
+        font-size: 15px;
     }
 }

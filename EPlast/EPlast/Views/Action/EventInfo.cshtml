@@ -281,9 +281,14 @@
                      </a>
                  </div>
              </div>
+         </div>
+     </div>
+   
+     <div class="col-md-12  mb-3">
+         @if (Model.IsUserEventAdmin)
+         {
+         <div class="row  justify-content-center">
 
-             @if (Model.IsUserEventAdmin)
-             {
              <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
                  <form id="form" class="d-flex flex-row align-items-baseline ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
                      <button id="spinnerGal" class="btn btn-success spinner-buttons event-invisible">
@@ -295,41 +300,34 @@
                      <input type="file" id="files" name="files" class="event-invisible" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
                  </form>
              </div>
-             }
-         </div>
-     </div>
-   
-     <div class="col-md-12  mb-3">
-         @if (Model.IsUserEventAdmin)
-         {
-             <div class="row  justify-content-center">
-                 <div class="col-md-8 ml-lg-1">
-                     <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
-                 </div>
-                 <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
-                     <div class="row event-page-wrapper overflow-auto picture-deleting">
-                         @foreach (var picture in Model.Event.EventGallarys)
-                         {
-                             <div class="col-md-4 my-1 picture-deleting">
-                                 <input type="hidden" value="@picture.GallaryID">
-                                 <div class="card text-center pointer">
-                                     <div class="card-header">
-                                         <div class="row justify-content-end">
-                                             <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
-                                                 <i class="far fa-trash-alt"></i>
-                                             </a>
-                                         </div>
-                                     </div>
-                                     <div class="pictureToDelete">
-                                         <img src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" class="img-fluid" alt="Cloudy Sky">
+
+             <div class="col-md-8 ml-lg-1">
+                 <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
+             </div>
+             <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
+                 <div class="row event-page-wrapper overflow-auto picture-deleting">
+                     @foreach (var picture in Model.Event.EventGallarys)
+                     {
+                         <div class="col-md-4 my-1 picture-deleting">
+                             <input type="hidden" value="@picture.GallaryID">
+                             <div class="card text-center pointer">
+                                 <div class="card-header">
+                                     <div class="row justify-content-end">
+                                         <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
+                                             <i class="far fa-trash-alt"></i>
+                                         </a>
                                      </div>
                                  </div>
+                                 <div class="pictureToDelete">
+                                     <img src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" class="img-fluid" alt="Cloudy Sky">
+                                 </div>
                              </div>
-                         }
-                     </div>
-                     <button id="backBut" type="button" class="btn btn-success gallery-buttons mt-3">Повернутися назад</button>
+                         </div>
+                     }
                  </div>
+                 <button id="backBut" type="button" class="btn btn-success gallery-buttons mt-3">Повернутися назад</button>
              </div>
+         </div>
          }
          </div>
  </div>
