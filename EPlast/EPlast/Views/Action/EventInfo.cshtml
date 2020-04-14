@@ -6,7 +6,7 @@
         @*Модальні вікна*@
         @await Html.PartialAsync("_EventModals")
         <input type="hidden" id="eventId" value=@Model.Event.ID>
-        <div class="row mt-2 shadow rounded">
+        <div class="row mt-2 shadowBlock shadow rounded">
             <div class="col-md-4 ">
                 <div class="row justify-content-center ">
                     <i class="far fa-handshake logo "></i>
@@ -179,7 +179,7 @@
                         <p class="event-header font-weight-bold">Дата початку:</p>
                     </div>
                     <div class="col-md-7 ml-lg-5 ml-sm-0">
-                        <p class="event-value ">@Model.Event.EventDateStart.ToString("dd/MM/yyyy")</p>
+                        <p class="event-value ">@Model.Event.EventDateStart.ToString("dd-MM-yyyy")</p>
                     </div>
                 </div>
 
@@ -188,7 +188,7 @@
                         <p class="event-header font-weight-bold">Дата завершення:</p>
                     </div>
                     <div class="col-md-7 ml-lg-5 ml-sm-0">
-                        <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd/MM/yyyy")</p>
+                        <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd-MM-yyyy")</p>
                     </div>
                 </div>
 
@@ -224,7 +224,7 @@
         <!-- Карусель -->
      @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
      {
- <div id="carouselContainer" class="row mt-3  justify-content-center  shadow rounded">
+ <div id="carouselContainer" class="row mt-3 shadowBlock  justify-content-center  shadow rounded">
      <div class="col-md-12 mt-3 text-center">
          <div class="row ">
              <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея</h2>
@@ -335,7 +335,7 @@
  </div>
      }
 
-        <div class="row mt-3 mb-5 justify-content-сenter  shadow rounded">
+        <div class="row mt-3 mb-5 shadowBlock justify-content-сenter  shadow rounded">
             <div class="row mt-3  col-md-12 justify-content-center mb-1">
                 <div class="col-md-8 text-center ">
                     <input type="button" id="btn-part" class="btn btn-success btn-md  btn-collapse" data-toggle="collapse" data-target="#myCollapsible" value="Потенційні учасники">
