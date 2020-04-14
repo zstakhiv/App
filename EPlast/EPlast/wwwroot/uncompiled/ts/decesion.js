@@ -6,6 +6,7 @@ function initialise() {
 }
 $(document).ready(function () {
     initialise();
+    var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description", "#autocomplete_input"];
     $(() => {
         $("#datepicker").datepicker({ dateFormat: "dd-mm-yy" }).datepicker("setDate", "0");
     });
@@ -27,9 +28,13 @@ $(document).ready(function () {
             scrollTop: 100
         }, 200);
     });
-    function checkFormData() {
+    function ClearFormData() {
+        arr.forEach(function (element) {
+            $(element).val("");
+        });
+    }
+    function CheckFormData() {
         var bool = true;
-        var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description"];
         arr.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
@@ -46,7 +51,7 @@ $(document).ready(function () {
     $("#CreateDecesionForm-submit").click((e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!checkFormData())
+        if (!CheckFormData())
             return;
         console.log('her');
         let input = document.getElementById("CreateDecesionFormFile");
@@ -55,6 +60,7 @@ $(document).ready(function () {
             alert("файл за великий (більше 10 Мб)");
             return;
         }
+        $("#CreateDecesionForm-submit").prop('disabled', true);
         var formData = new FormData();
         var decesionName = $("#Decesion-Name").val().toString();
         var decesionOrganizationId = $("#Decesion-Organization-ID option:selected").val().toString();
@@ -80,7 +86,9 @@ $(document).ready(function () {
             async: true,
             data: formData,
             success(response) {
+                $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
+                    ClearFormData();
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
@@ -97,6 +105,7 @@ $(document).ready(function () {
                 }
             },
             error() {
+                $("#CreateDecesionForm-submit").prop('disabled', false);
                 $("#CreateDecesionModal").modal("hide");
                 $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
             }
@@ -106,3 +115,4 @@ $(document).ready(function () {
 $(document).ajaxComplete(function () {
     initialise();
 });
+//# sourceMappingURL=decesion.js.map
