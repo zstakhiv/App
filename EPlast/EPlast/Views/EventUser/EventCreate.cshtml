@@ -5,7 +5,7 @@
 @model EPlast.ViewModels.Events.EventCreateViewModel;
 <div class="eventCreate">
     <div class="d-xl-flex justify-content-xl-center border shadow card">
-        <div class="col " style="height: 1000px;">
+        <div class="col ">
             <div class="row">
                 <div class="col">
                     <div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center">
@@ -14,26 +14,26 @@
                 </div>
             </div>
             <form method="post" asp-action="EventCreate" asp-controller="EventUser">
-                <div id="block" class="row border shadow" style="height: 55px;">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     @foreach (EventType item in Model.EventTypes)
                     {
-                        <div class="col d-flex d-xl-flex justify-content-xl-center align-items-xl-center" id="@item.EventTypeName">
-                            <button class="btn btn-primary typebutton" id="@item.ID" type="button">@item.EventTypeName</button>
+                        <div class="col justify-content-xl-center align-items-xl-center" id="block">
+                            <button class="btn typebutton" id="@item.ID" type="button">@item.EventTypeName</button>
                         </div>
                     }
                     <input type="hidden" id="name" asp-for="Event.EventTypeID" />
                 </div>
                 <span asp-validation-for="Event.EventType.EventTypeName" class="text-danger"></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label" id="type">Катергорія</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <select id="select" asp-for="Event.EventCategoryID" asp-items="Model.EventCategories" class=" border form-control"></select>
+                        <select id="select" asp-for="Event.EventCategoryID" asp-items="Model.EventCategories" class=" border TextIinput infoInput form-control"></select>
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventCategoryID" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Назва події</label>
                     </div>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventName" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Комендант</label>
                     </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="EventAdmin.UserID" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Бунчужний/на</label>
                     </div>
@@ -86,29 +86,29 @@
                     </div>
                 </div>
                 <span asp-validation-for="EventAdministration.UserID" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Дата початку</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <input asp-for="Event.EventDateStart" class="border TextIinput form-control infoInput"
+                        <input asp-for="Event.EventDateStart" class=" dateTime infoInput"
                                placeholder="Виберіть...">
                         <span class="ui-datepicker"></span>
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateStart" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Дата завершення</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <input asp-for="Event.EventDateEnd" class="border TextIinput form-control infoInput"
+                        <input asp-for="Event.EventDateEnd" class=" dateTime infoInput"
                                placeholder="Виберіть...">
                         <span class="ui-datepicker"></span>
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateEnd" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Форма проведення</label>
                     </div>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.FormOfHolding" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Локація</label>
                     </div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.Eventlocation" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Призначений для</label>
                     </div>
@@ -135,7 +135,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.ForWhom" class="text-danger "></span>
-                <div class="row border shadow">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center">
                     <div class="col text-center d-xl-flex justify-content-xl-center">
                         <label class="col-form-label">Приблизна кількість учасників</label>
                     </div>
@@ -144,13 +144,13 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.NumberOfPartisipants" class="text-danger "></span>
-                <div class="row border shadow" style="height: 123px;">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center" style="height: 123px;">
                     <div class="col">
                         <div class="row">
                             <div class="col text-center">
                                 <div class="d-xl-flex justify-content-xl-center align-items-xl-end" style="height: 38px;">
                                     <div class="col text-left d-xl-flex justify-content-xl-center align-items-xl-center">
-                                        <label class="col-form-label">Питання/побажання до булави&nbsp; &nbsp;</label>
+                                        <label class="col-form-label">Питання/побажання до булави</label>
                                     </div>
                                     <div class="col">
                                         <div></div>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
                 <span asp-validation-for="Event.Questions" class="text-danger "></span>
-                <div class="row border shadow" style="height: 123px;">
+                <div class="row border shadow text-center justify-content-xl-center align-items-xl-center" style="height: 123px;">
                     <div class="col">
                         <div class="row">
                             <div class="col text-center">
@@ -194,7 +194,7 @@
                 <span asp-validation-for="Event.Description" class="text-danger "></span>
                 <div class="row">
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <button class="btn btn-primary submitButton" type="submit">Створити подію</button>
+                        <button class="btn submitButton" type="submit">Створити подію</button>
                     </div>
                 </div>
             </form>
