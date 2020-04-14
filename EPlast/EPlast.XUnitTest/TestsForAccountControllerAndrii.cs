@@ -528,6 +528,12 @@ namespace EPlast.XUnitTest
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("AccountLocked", viewResult.ViewName);
             Assert.NotNull(viewResult);
+
+            //тут хуйня якась
+
+            /*mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(new List<AuthenticationScheme>());*/
         }
 
         //Login
