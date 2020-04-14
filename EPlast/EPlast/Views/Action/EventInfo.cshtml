@@ -284,12 +284,17 @@
 
              @if (Model.IsUserEventAdmin)
              {
-                 <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
-                     <form id="form" class="ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
-                         <label for="files">Додати фотографії:</label>
-                         <input type="file" id="files" name="files" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
-                     </form>
-                 </div>
+             <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
+                 <form id="form" class="d-flex flex-row align-items-baseline ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
+                     <button id="spinnerGal" class="btn btn-success spinner-buttons event-invisible">
+                         <span class="spinner-border spinner-border-sm"></span>
+                         Завантаження..
+                     </button>
+                     <label id="addPicturesLabel" class="btn btn-success gallery-buttons" for="files">Додати фотографії:</label>
+                     <h5 class="ml-2">Кількість вибраних файлів <span id="filesBadge" class="badge badge-secondary badge-pill">0</span></h5>
+                     <input type="file" id="files" name="files" class="event-invisible" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
+                 </form>
+             </div>
              }
          </div>
      </div>
@@ -298,7 +303,7 @@
          @if (Model.IsUserEventAdmin)
          {
              <div class="row  justify-content-center">
-                 <div class="col-md-8">
+                 <div class="col-md-8 ml-lg-1">
                      <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
                  </div>
                  <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
@@ -307,7 +312,7 @@
                          {
                              <div class="col-md-4 my-1 picture-deleting">
                                  <input type="hidden" value="@picture.GallaryID">
-                                 <div class="card text-center">
+                                 <div class="card text-center pointer">
                                      <div class="card-header">
                                          <div class="row justify-content-end">
                                              <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
