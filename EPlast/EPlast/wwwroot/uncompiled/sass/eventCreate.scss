@@ -11,20 +11,28 @@
 
     .TextIinput {
         border: 5px solid #3c5438;
+        width: 100%;
     }
 
     .body {
         background-color: #eee;
-        height: 1200px;
     }
 
     .typebutton {
         background-color: #3c5438;
-        width: 100px;
+        color: aliceblue;
+        margin: 10px;
+    }
+
+    .dateTime {
+        width: 85%;
+        border-radius: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 1px  #3c5438;
     }
 
     .infoInput {
-        width: 370px;
         padding: 6px;
         background-color: #eee;
     }
@@ -36,14 +44,13 @@
     }
 
     .submitButton {
-        width: 298px;
         margin-top: 15px;
+        margin-bottom: 15px;
         background-color: #3c5438;
+        color: aliceblue
     }
 
     .card {
-        width: 900px;
-        height: 1320px;
         background-color: #ffffff;
         margin-top: 40px;
     }
@@ -53,8 +60,8 @@
     }
 
     .textBoxInput {
-        width: 370px;
         padding: 6px;
+        width: 100%;
         background-color: #eee;
     }
 }
