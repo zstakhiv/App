@@ -18,5 +18,7 @@ namespace EPlast.DataAccess.Entities
 
         public int AdminTypeId { get; set; }
         public AdminType AdminType { get; set; }
+
+        public CityManagement CityManagement { get; set; }
     }
 }
