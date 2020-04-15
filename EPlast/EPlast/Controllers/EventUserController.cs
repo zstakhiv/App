@@ -158,7 +158,7 @@ namespace EPlast.Controllers
                 _repoWrapper.EventAdmin.Create(eventAdmin);
                 _repoWrapper.EventAdministration.Create(eventAdministration);
                 _repoWrapper.Save();
-                return RedirectToAction("EventUser", "EventUser");
+                return RedirectToAction("EventInfo", "Action", new { id = createVM.Event.ID});
             }
             else
             {
