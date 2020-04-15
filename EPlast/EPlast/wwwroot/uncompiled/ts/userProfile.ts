@@ -105,8 +105,8 @@
     $('#Upload-photo').click(function(e){
         let input: HTMLInputElement = <HTMLInputElement>document.getElementById("upload-file");
         var files = input.files;
-        if (files[0] != undefined && files[0].size >= 1) {
-            alert("файл за великий (більше 10 Мб)");
+        if (files[0] != undefined && files[0].size >= 3145728) {
+            alert("Фото не може займати більше ніж 3 Мб");
             e.preventDefault();
             e.stopPropagation();
             return;
