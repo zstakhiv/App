@@ -108,7 +108,7 @@ namespace EPlast.Controllers
                     _repoWrapper.EventAdministration.Create(eventAdministration);
                     _repoWrapper.Event.Create(createVM.Event);
                     _repoWrapper.Save();
-                    return RedirectToAction("SetAdministration", new {idu = createVM.EventAdmin.UserID, id = createVM.Event.ID});
+                    return RedirectToAction("SetAdministration", new {idUser = createVM.EventAdmin.UserID, id = createVM.Event.ID});
                 }
                 else
                 {
@@ -128,14 +128,14 @@ namespace EPlast.Controllers
             }
         }
         [HttpGet]
-        public IActionResult SetAdministration(string idu,int id)
+        public IActionResult SetAdministration(string idUser,int id)
         {
             var model = new EventCreateViewModel()
             {
                 Event = _repoWrapper.Event.
                 FindByCondition(i => i.ID == id).
                 FirstOrDefault(),
-                Users = _repoWrapper.User.FindByCondition(i=>i.Id != idu)
+                Users = _repoWrapper.User.FindByCondition(i=>i.Id != idUser)
             };
             return View(model);
         }
