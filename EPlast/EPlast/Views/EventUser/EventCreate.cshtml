@@ -96,7 +96,7 @@
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
                         @Html.TextBoxFor(x => x.Event.EventDateStart,
-                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtFromDate", @class = "form-control" })
+                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtFromDate", @class = "border textBoxInput" })
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateStart" class="text-danger "></span>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
                         @Html.TextBoxFor(x => x.Event.EventDateEnd,
-                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtToDate", @class = "form-control" })
+                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtToDate", @class = "border textBoxInput" })
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateEnd" class="text-danger "></span>
