@@ -6,9 +6,9 @@ jQuery(function ($) {
         currentText: 'Сьогодні',
         monthNames: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
             'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-        monthNamesShort: ['Лют', 'Січ', 'Бер', 'Квіт', 'Трав', 'Черв',
+        monthNamesShort: ['Січ', 'Лют', 'Бер', 'Квіт', 'Трав', 'Черв',
             'Лип', 'Серп', 'Вер', 'Жовт', 'Лист', 'Груд'],
-        dayNames: ['неділя', 'понеділок', 'вівторок', 'среда', 'четвер', 'п\'ятница', 'субота'],
+        dayNames: ['неділя', 'понеділок', 'вівторок', 'среда', 'четвер', 'п\'ятниця', 'субота'],
         dayNamesShort: ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
         dayNamesMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
         weekHeader: 'Ти',
@@ -29,7 +29,8 @@ $("#datepickerBirthday").datepicker({
     changeYear: true,
     yearRange: '-100y:c+nn',
     maxDate: '-1d'
-}).datepicker("setDate", "0");
+});
+$("#datepickerBirthday").datepicker("setDate", $("#dtOfBrthd").val());
 $(function () {
     $.contextMenu({
         className: "admin-edit",
