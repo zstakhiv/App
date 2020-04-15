@@ -98,6 +98,16 @@ $(document).ready(function () {
             }
         });
     });
+    $('#Upload-photo').click(function (e) {
+        let input = document.getElementById("upload-file");
+        var files = input.files;
+        if (files[0] != undefined && files[0].size >= 1) {
+            alert("файл за великий (більше 10 Мб)");
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+    });
 });
 function setRowSelected(tr, disabledElements) {
     setDisabled(disabledElements, true);
