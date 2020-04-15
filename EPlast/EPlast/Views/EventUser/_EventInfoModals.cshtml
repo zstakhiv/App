@@ -11,7 +11,9 @@
                 @foreach (var item in Model.VisitedEvents)
                 {
                     <p>@item.EventName</p>
-                    <p class="text-secondary"><small>Дата початку: @item.EventDateStart, дата завершення: @item.EventDateEnd</small></p>
+                    <p class="text-secondary">
+                        <small>Дата початку: @item.EventDateStart.ToString("dd-MM-yyyy"), дата завершення: @item.EventDateEnd.ToString("dd-MM-yyyy")</small>
+                    </p>
                     <a style="background-color:#3c5438" class="btn btn-success btn-lg" role="button"
                        asp-controller="Action" asp-action="EventInfo" asp-route-ID=@item.ID>Деталі</a>
                     <p>___________________________________________________________________________</p>
@@ -35,7 +37,9 @@
                 @foreach (var item in Model.PlanedEvents)
                 {
                     <p>@item.EventName</p>
-                    <p class="text-secondary"><small>Дата початку: @item.EventDateStart, дата завершення: @item.EventDateEnd</small></p>
+                    <p class="text-secondary">
+                        <small>Дата початку: @item.EventDateStart.ToString("dd-MM-yyyy"), дата завершення: @item.EventDateEnd.ToString("dd-MM-yyyy")</small>
+                    </p>
                     <a style="background-color:#3c5438" class="btn btn-success btn-lg" role="button"
                        asp-controller="Action" asp-action="EventInfo" asp-route-ID=@item.ID>Деталі</a>
                     <p>___________________________________________________________________________</p>
@@ -60,7 +64,9 @@
                 @foreach (var item in Model.CreatedEvents)
                 {
                     <p>@item.EventName</p>
-                    <p class="text-secondary"><small>Дата початку: @item.EventDateStart, дата завершення: @item.EventDateEnd</small></p>
+                    <p class="text-secondary">
+                        <small>Дата початку: @item.EventDateStart.ToString("dd-MM-yyyy"), дата завершення: @item.EventDateEnd.ToString("dd-MM-yyyy")</small>
+                    </p>
                     <a style="background-color:#3c5438" class="btn btn-success btn-lg" role="button"
                        asp-controller="Action" asp-action="EventInfo" asp-route-ID=@item.ID>Деталі</a>
                     <p>___________________________________________________________________________</p>
