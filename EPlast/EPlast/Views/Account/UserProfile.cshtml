@@ -109,6 +109,14 @@
                                         <p class="col-6 col-form-label">@Model.User.UserProfile.Religion.Name</p>
                                     </div>
                                 }
+
+                                @if (@Model.User.UserProfile.DateTime != null)
+                                {
+                                    <div class="form-group row">
+                                        <label class="col-6 col-form-label font-weight-bold">Дата народження:</label>
+                                        <p class="col-6 col-form-label">@Model.User.UserProfile.DateTime.ToShortDateString()</p>
+                                    </div>
+                                }
                                 @if (@Model.User.UserProfile.Gender != null)
                                 {
                                     <div class="form-group row">

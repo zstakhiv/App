@@ -43,3 +43,11 @@
 .rowEditPage {
     justify-content: center;
 }
+
+.gender-wrapper {
+    select {
+        padding-right: 25px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+}
