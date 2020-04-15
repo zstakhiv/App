@@ -6,6 +6,10 @@
 
     $('[data-toggle="tooltip"]').tooltip();
 
+    $("#conflictBut").click(function () {
+        location.reload(true);
+    });
+
     $("div.single-card").mouseleave(function () {
         if ($(this).find("div.events-unsubscribe").is(":visible")) {
             $(this).find("div.events-unsubscribe").hide();
@@ -39,16 +43,12 @@
                 data: { ID: value },
                 success: function () {
                     $("#myModal").modal('hide');
-                    $("#fail").hide();
-                    $("#success").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultSuccess").modal('show');
                     $(elementToDelete).parents("div.single-card").remove();
                 },
                 error: function () {
                     $("#myModal").modal('hide');
-                    $("#success").hide();
-                    $("#fail").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultFail").modal('show');
                 },
             });
         }
@@ -89,30 +89,19 @@
                     $(activeEvent).parents("div.events-operations").children("div.events-pen").show();
                     $("#modalUnSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalUnSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response: JQueryXHR) {
+                    if (response.status != 409) {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
     });
-
-    //$("a.delete-card").click(function () {
-    //    $(this).parents("div.single-card").remove();
-    //});
-
-    //$("div.events-unsubscribe").click(function () {
-
-    //    $(this).hide();
-    //    $(this).parents("div").first().children("div.events-part").hide();
-    //    $(this).parents("div").first().children("div.events-participants").hide();
-    //    $(this).parents("div").first().children("div.events-pen").show();
-    //});
-
-    //$("div.events-pen").click(function () {
-    //    $(this).hide();
-    //    $(this).parents("div").first().children("div.events-participants").show();
-    //});
 
     $("div.events-part").mouseenter(function () {
         status = 1;

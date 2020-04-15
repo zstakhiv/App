@@ -5,6 +5,7 @@
             'url': "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         }
     });
+
     $('.dataTables_length').addClass('bs-select');
     $('img').on("error", function () {
         $(this).attr('src', "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg");
@@ -54,9 +55,7 @@
                 },
                 error: function () {
                     $("#myModal").modal('hide');
-                    $("#success").hide();
-                    $("#fail").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultFail").modal('show');
                 },
             });
         }
@@ -77,9 +76,15 @@
                     $('#myTable').load(document.URL + ' #myTable');
                     $("#modalUnSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalUnSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response: JQueryXHR) {
+                    if (response.status != 409) {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
@@ -189,7 +194,8 @@
         DeletePicture(pictureToDelete,elementToDelete);
     });
 
-    function DeletePicture(pictureToDelete: string | number | string[],elementToDelete:HTMLElement) {
+    function DeletePicture(pictureToDelete: string | number | string[], elementToDelete: HTMLElement) {
+        $(elementToDelete).hide();
         $.ajax({
             type: "POST",
             url: "/Action/DeletePicture",
@@ -198,6 +204,7 @@
                 $(elementToDelete).remove();
             },
             error: () => {
+                $(elementToDelete).show();
                 $("#FAIL").modal("show");
             },
         });

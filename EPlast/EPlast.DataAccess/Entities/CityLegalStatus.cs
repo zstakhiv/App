@@ -11,5 +11,7 @@ namespace EPlast.DataAccess.Entities
 
         public int CityId { get; set; }
         public City City { get; set; }
+
+        public CityManagement CityManagement { get; set; }
     }
 }
