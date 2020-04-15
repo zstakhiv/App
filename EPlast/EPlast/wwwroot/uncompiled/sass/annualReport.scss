@@ -98,92 +98,6 @@
     }
 }
 
-.modal-success {
-    .modal-header {
-        background-color: #3c5438;
-
-        h4 {
-            color: #ffffff;
-        }
-    }
-
-    .modal-body {
-        i {
-            color: #3c5438;
-        }
-
-        p {
-            font-size: 18px;
-        }
-    }
-
-    .modal-footer {
-        .btn-success {
-            background-color: #3c5438;
-            width: 100px;
-        }
-    }
-}
-
-.modal-error {
-    .modal-header {
-        background-color: #d90d0d;
-
-        h4 {
-            color: #ffffff;
-        }
-    }
-
-    .modal-body {
-        i {
-            color: #d90d0d;
-        }
-
-        p {
-            font-size: 18px;
-        }
-    }
-
-    .modal-footer {
-        .btn-success {
-            background-color: #d90d0d;
-            width: 100px;
-        }
-    }
-}
-
-.modal-info {
-    .modal-dialog {
-        max-width: 550px;
-        width: 550px;
-    }
-
-    .modal-header {
-        background-color: #3c5438;
-
-        h4 {
-            color: #ffffff;
-        }
-    }
-
-    .modal-body {
-        i {
-            color: #3c5438;
-        }
-
-        p {
-            font-size: 16px;
-        }
-    }
-
-    .modal-footer {
-        .btn-success {
-            background-color: #3c5438;
-            width: 100px;
-        }
-    }
-}
-
 .btn-management {
     background-color: #3c5438 !important;
     min-width: 125px;
@@ -197,5 +111,11 @@
 .nav-tabs {
     a {
         color: #3c5438 !important;
+    }
+}
+
+.annual-report-info {
+    p {
+        font-size: 14px;
     }
 }
