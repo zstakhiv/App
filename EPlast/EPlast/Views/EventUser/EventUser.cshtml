@@ -47,7 +47,7 @@
                             <img class="img-fluid border rounded-circle imageSize" src="/images/Users/@Model.User.ImagePath">
                             <h4 class="personalInfo">@Model.User.FirstName @Model.User.LastName</h4>
                             <p>Пластун прихильник</p>
-                            <div class="d-lg-flex spliter" id="infoSplitSmall"></div>
+                            <div class="d-lg-flex spliter" id="infoSplit"></div>
                             <p> </p>
                             <a class="btn btn-primary btn-lg" role="button" asp-action="EventCreate" asp-controller="EventUser">
                                 Створити подію
@@ -63,7 +63,7 @@
                                 <div class="text-center justify-content-center box">
                                     @if (Model.VisitedEventsCount != 0)
                                     {
-                                        <h4 class=" visitEvent">
+                                        <h4 class="visitedMargin">
                                             <br>Відвідані події<br>
                                         </h4>
                                         <div class="d-lg-flex spliter" id="infoSplitSmall"></div>
@@ -73,7 +73,7 @@
                                     }
                                     else
                                     {
-                                        <h4 class=" visitEvent">Тут відображатимуться
+                                        <h4 class="visitedMargin">Тут відображатимуться
                                             <br>відвідані події<br>
                                         </h4>
                                         <div class="d-lg-flex spliter" id="infoSplitSmall"></div>
@@ -87,7 +87,7 @@
                                 <div class="text-center justify-content-center box">
                                     @if (Model.CreatedEventCount != 0)
                                     {
-                                        <h4 style="margin-top:30px; margin-bottom:30px;">Створені події</h4>
+                                        <h4 class="createdMargin">Створені події</h4>
                                         <div class="d-lg-flex spliter" id="infoSplitSmall"></div>
                                         <h3 class=" visitCount">@Model.CreatedEventCount</h3>
                                         <p class=" eventInfo">Події</p>
@@ -95,7 +95,7 @@
                                     }
                                     else
                                     {
-                                        <h4>Тут відображатимуться
+                                        <h4 class="notCreatedMargin">Тут відображатимуться
                                             <br>Створені події
                                         </h4>
                                         <div class="d-lg-flex spliter" id="infoSplitSmall"></div>
@@ -111,14 +111,14 @@
                                 @if (Model.PlanedEventCount != 0)
                                 {
                                     <h4 class=" planedEvent"><br>Заплановані події<br></h4>
-                                    <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
+                                    <div class="d-lg-flex bigSpliter"  id="infoSplit"></div>
                                     <h3 class="visitCount">@Model.PlanedEventCount</h3>
                                     <p class=" eventInfo">Події</p>
                                     <a id=" planedEvent" class="btn btn-primary btn-lg" role="button" data-toggle="modal" href="#planedModal">Список</a>
                                 }
                                 else
                                 {
-                                    <h4 class=" planedEvents"><br>Тут відображатимуться заплановані події<br></h4>
+                                    <h4 class="planedEvents"><br>Тут відображатимуться заплановані події<br></h4>
                                     <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
                                     <h5 class=" visitCount">На разі, ви не заплпнували жодної події</h5>
                                     <a style=" margin-top:20px" class="btn btn-primary btn-lg" role="button"

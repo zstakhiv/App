@@ -51,6 +51,7 @@
         top: 330px;
         background-color: #ffffff;
         margin: 20px;
+        margin-top: 36px
     }
 
     @media (max-width: 370px) {
@@ -171,11 +172,12 @@
 
     .planedEvent {
         margin-bottom: 9px;
+        margin-top: 34.3px;
     }
 
     #infoSplitSmall {
         background: #3C5438;
-        width: 256px;
+        width: 100%;
     }
 
     #infoSplit {
@@ -184,6 +186,20 @@
 
     .personalInfo {
         margin-top: 32px;
+    }
+
+    .visitedMargin {
+        margin-top: 35px;
+        margin-bottom: 9px;
+    }
+
+    .createdMargin {
+        margin-top: 58px;
+        margin-bottom: 9px;
+    }
+
+    .notcCreatedMargin {
+        margin-top: 35.5px;
     }
 
     .imageSize {
