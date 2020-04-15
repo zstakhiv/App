@@ -24,4 +24,17 @@
             $("#txtFromDate").datepicker("option", "maxDate", selected)
         }
     });
+
+    $("#visitedEvent").click(function () {
+        $("#visitedModal").modal('show');
+    });
+
+    $("#planedEvent").click(function () {
+        $("#planedModal").modal('show');
+    });
+
+    $("#createdEvent").click(function () {
+        $("#createdModal").modal('show');
+    });
+
 });
