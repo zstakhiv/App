@@ -53,7 +53,6 @@ $(document).ready(function () {
         e.stopPropagation();
         if (!CheckFormData())
             return;
-        console.log('her');
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
         if (files[0] != undefined && files[0].size >= 10485760) {
