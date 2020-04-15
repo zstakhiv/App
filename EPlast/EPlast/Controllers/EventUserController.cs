@@ -108,7 +108,7 @@ namespace EPlast.Controllers
                     _repoWrapper.EventAdministration.Create(eventAdministration);
                     _repoWrapper.Event.Create(createVM.Event);
                     _repoWrapper.Save();
-                    return RedirectToAction("SetAdministration", new { id = createVM.Event.ID});
+                    return RedirectToAction("SetAdministration", new {idUser = createVM.EventAdmin.UserID, id = createVM.Event.ID});
                 }
                 else
                 {
@@ -128,27 +128,28 @@ namespace EPlast.Controllers
             }
         }
         [HttpGet]
-        public IActionResult SetAdministration(int id)
+        public IActionResult SetAdministration(string idUser,int id)
         {
-            Event events = _repoWrapper.Event.FindByCondition(i => i.ID == id).FirstOrDefault();
             var model = new EventCreateViewModel()
             {
-                Event = events,
-                Users = _repoWrapper.User.FindAll()
+                Event = _repoWrapper.Event.
+                FindByCondition(i => i.ID == id).
+                FirstOrDefault(),
+                Users = _repoWrapper.User.FindByCondition(i=>i.Id != idUser)
             };
-            return View("EventAdministration",model);
+            return View(model);
         }
         [HttpPost]
         public IActionResult SetAdministration(EventCreateViewModel createVM)
         {
             EventAdmin eventAdmin = new EventAdmin()
             {
-                Event = createVM.Event,
+                EventID = createVM.Event.ID,
                 UserID = createVM.EventAdmin.UserID
             };
             EventAdministration eventAdministration = new EventAdministration()
             {
-                Event = createVM.Event,
+                EventID = createVM.Event.ID,
                 AdministrationType = "Писар",
                 UserID = createVM.EventAdministration.UserID
             };
@@ -157,7 +158,7 @@ namespace EPlast.Controllers
                 _repoWrapper.EventAdmin.Create(eventAdmin);
                 _repoWrapper.EventAdministration.Create(eventAdministration);
                 _repoWrapper.Save();
-                return View();
+                return RedirectToAction("EventUser", "EventUser");
             }
             else
             {

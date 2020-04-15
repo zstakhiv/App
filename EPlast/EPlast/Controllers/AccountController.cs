@@ -309,11 +309,6 @@ namespace EPlast.Controllers
             //!!
             try
             {
-                if(!string.Equals(id, _userManager.GetUserId(User)))
-                {
-                    _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return null;
-                }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
