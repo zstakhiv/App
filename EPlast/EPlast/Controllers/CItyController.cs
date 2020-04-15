@@ -74,5 +74,16 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+
+        public IActionResult CityMembers()
+        {
+            //List<CityViewModel> cities = new List<CityViewModel>(
+            //    _repoWrapper.City
+            //    .FindAll()
+            //    .Select(city => new CityViewModel { City = city })
+            //    .ToList());
+
+            return View("CityMembers");
+        }
     }
 }
