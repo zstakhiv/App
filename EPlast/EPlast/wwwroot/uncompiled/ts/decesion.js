@@ -93,7 +93,7 @@ $(document).ready(function () {
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
                 }
             },
             error() {
@@ -106,4 +106,3 @@ $(document).ready(function () {
 $(document).ajaxComplete(function () {
     initialise();
 });
-//# sourceMappingURL=decesion.js.map

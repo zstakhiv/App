@@ -46,9 +46,7 @@ $(document).ready(function () {
                 },
                 error: function () {
                     $("#myModal").modal('hide');
-                    $("#success").hide();
-                    $("#fail").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultFail").modal('show');
                 },
             });
         }
@@ -68,9 +66,15 @@ $(document).ready(function () {
                     $('#myTable').load(document.URL + ' #myTable');
                     $("#modalUnSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalUnSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response) {
+                    if (response.status != 409) {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
