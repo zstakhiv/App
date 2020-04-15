@@ -163,7 +163,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
-                                    <input asp-for="Event.Questions" type="text" class="border TextIinput bigInput">
+                                    <textarea class="border TextIinput bigInput" asp-for="Event.Questions" placeholder="Вкажіть питання.. "
+                                              cols="30" rows="7"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +188,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
-                                    <input asp-for="Event.Description" type="text" class="border TextIinput bigInput">
+                                    <textarea class="border TextIinput bigInput" asp-for="Event.Description" placeholder="Вкажіть зміни.. "
+                                              cols="30" rows="7"></textarea>
                                 </div>
                             </div>
                         </div>
