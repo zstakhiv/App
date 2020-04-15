@@ -63,9 +63,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="User.UserProfile.DateTime" class="control-label"></label>
-                        <input type="hidden" id="dtOfBrthd" value=@Model.User.UserProfile.DateTime.ToString("dd-MM-yyyy") />
+                        @if (@Model.User.UserProfile.DateTime != null)
+                        {
+                            <input type="hidden" id="dtOfBrthd" value=@Model.User.UserProfile.DateTime.Value.ToString("dd-MM-yyyy") />
+                        }
                         @Html.TextBoxFor(x => x.User.UserProfile.DateTime,
-                            new { @type = "datetime", @placeholder = "Виберіть дату...", @id = "datepickerBirthday", @class = "form-control" })
+                            new { @autocomplete = "off",@type = "datetime", @placeholder = "Виберіть дату...", @id = "datepickerBirthday", @class = "form-control" })
                         <span asp-validation-for="User.UserProfile.DateTime" />
                     </div>
                     <div class="form-group">

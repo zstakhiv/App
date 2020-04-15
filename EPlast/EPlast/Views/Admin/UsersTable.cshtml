@@ -56,7 +56,12 @@
                             else
                             {<Span>Жінка</Span>}
                         </td>
-                        <td>@item.User.UserProfile.DateTime.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            @if (@item.User.UserProfile.DateTime != null)
+                            {
+                                @item.User.UserProfile.DateTime.Value.ToString("dd-MM-yyyy")
+                            }
+                        </td>
                         <td>@item.UserPlastDegreeName</td>
                         <td>@item.User.Email</td>
                         <td>@item.RegionName</td>
