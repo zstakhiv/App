@@ -71,24 +71,30 @@ ul.context-menu-list.admin-edit.context-menu-root {
 }
 
 .data-table-wrapper {
-    #dtUsersTable {
-        button[data-toggle="modal"] {
-            margin: 0 0 3px 2rem;
-            border-color: #3c5438;
-        }
-
-        button[data-toggle="modal"]:focus {
-            box-shadow: 0 0 0 0.2rem #3c5438 !important;
-        }
-
-        button[data-toggle="modal"]:active {
-            border-color: #3c5438 !important;
-        }
-
+    #dtUsersTable_wrapper {
         table.dataTable thead {
             .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
                 &:after, &:before {
                     right: 14px !important;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .data-table-wrapper {
+        font-size: 18px;
+        text-align: center;
+        font-size: 9px;
+
+        #dtUsersTable_wrapper {
+            table.dataTable thead {
+                .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                    &:after, &:before {
+                        bottom: 9px;
+                        font-size: 12px;
+                    }
                 }
             }
         }
