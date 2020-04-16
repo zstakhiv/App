@@ -10,9 +10,6 @@ namespace EPlast.DataAccess.Entities
         [Description("Підтверджений")]
         Confirmed,
 
-        [Description("Скасований")]
-        Canceled,
-
         [Description("Збережений")]
         Saved
     }

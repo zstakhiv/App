@@ -12,22 +12,21 @@
     const AnnualReportStatus = {
         Unconfirmed: 'Непідтверджений',
         Confirmed: 'Підтверджений',
-        Canceled: 'Скасований',
         Saved: 'Збережений'
     }
 
     $('#AnnualReportsTable tbody tr').click(function () {
-        setDisabled([$('#reviewAnnualReport'), $('#confirmAnnualReport'), $('#cancelAnnualReport'), $('#getBackAnnualReport')], true);
+        setDisabled([$('#reviewAnnualReport'), $('#confirmAnnualReport'), $('#cancelAnnualReport'), $('#deleteAnnualReport')], true);
         var selected = $(this).hasClass('row-selected');
         $('#AnnualReportsTable tr').removeClass('row-selected');
         if (!selected) {
             $(this).addClass('row-selected');
             switch ($(this).find('td').eq(indexAnnualReportStatus).html()) {
                 case AnnualReportStatus.Unconfirmed:
-                    setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], false);
+                    setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport')], false);
                     break;
                 case AnnualReportStatus.Confirmed:
-                    setDisabled([$('#getBackAnnualReport')], false);
+                    setDisabled([$('#cancelAnnualReport')], false);
                     break;
             }
             setDisabled([$('#reviewAnnualReport')], false);
@@ -111,8 +110,9 @@
             cache: false,
             data: { id: annualReportId },
             success: function (message) {
-                $(tr).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Canceled);
-                setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], true);
+                $(tr).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Unconfirmed);
+                setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport')], false);
+                setDisabled([$('#cancelAnnualReport')], true);
                 showModalMessage($('#ModalSuccess'), message);
             },
             error: function (response) {
@@ -127,20 +127,20 @@
         });
     })
 
-    $('#getBackAnnualReport').click(function (e) {
+    $('#deleteAnnualReport').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         var tr = $('#AnnualReportsTable tr.row-selected:first');
         var annualReportId = $(tr).find('td').eq(indexAnnualReportId).html();
         $.ajax({
-            url: '/Documentation/GetBackAnnualReport',
+            url: '/Documentation/DeleteAnnualReport',
             type: 'GET',
             cache: false,
             data: { id: annualReportId },
             success: function (message) {
                 $(tr).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Unconfirmed);
-                setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], false);
-                setDisabled([$('#getBackAnnualReport')], true);
+                tr.click();
+                tr.remove();
                 showModalMessage($('#ModalSuccess'), message);
             },
             error: function (response) {

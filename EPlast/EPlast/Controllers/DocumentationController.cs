@@ -349,7 +349,7 @@ namespace EPlast.Controllers
                 if (ModelState.IsValid)
                 {
                     var annualReportCheck = _repoWrapper.AnnualReports
-                        .FindByCondition(ar => ar.CityId == cityId && ar.Date.Year == DateTime.Today.Year && ar.Status != AnnualReportStatus.Canceled)
+                        .FindByCondition(ar => ar.CityId == cityId && ar.Date.Year == DateTime.Today.Year)
                         .FirstOrDefault();
                     if (annualReportCheck == null)
                     {
@@ -543,32 +543,7 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin, Голова Округу")]
-        public IActionResult CancelAnnualReport(int id)
-        {
-            try
-            {
-                var annualReport = _repoWrapper.AnnualReports
-                    .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
-                    .Include(ar => ar.City)
-                    .First();
-                var userId = _userManager.GetUserId(User);
-                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
-                {
-                    return RedirectToAction("HandleError", "Error", new { code = 403 });
-                }
-                annualReport.Status = AnnualReportStatus.Canceled;
-                _repoWrapper.AnnualReports.Update(annualReport);
-                _repoWrapper.Save();
-                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік скасовано!");
-            }
-            catch
-            {
-                return NotFound("Не вдалося скасувати річний звіт!");
-            }
-        }
-
-        [Authorize(Roles = "Admin, Голова Округу")]
-        public async Task<IActionResult> GetBackAnnualReport(int id)
+        public async Task<IActionResult> CancelAnnualReport(int id)
         {
             try
             {
@@ -631,11 +606,35 @@ namespace EPlast.Controllers
                 {
                     await _userManager.AddToRoleAsync(annualReport.CityManagement.CityAdminOld.User, "Голова Станиці");
                 }
-                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік повернуто!");
+                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік скасовано!");
             }
             catch
             {
-                return NotFound("Не вдалося повернути річний звіт!");
+                return NotFound("Не вдалося скасувати річний звіт!");
+            }
+        }
+
+        [Authorize(Roles = "Admin, Голова Округу")]
+        public IActionResult DeleteAnnualReport(int id)
+        {
+            try
+            {
+                var annualReport = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
+                    .Include(ar => ar.City)
+                    .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
+                _repoWrapper.AnnualReports.Delete(annualReport);
+                _repoWrapper.Save();
+                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік видалено!");
+            }
+            catch
+            {
+                return NotFound("Не вдалося видалити річний звіт!");
             }
         }
     }
