@@ -92,6 +92,7 @@ namespace EPlast.Controllers
             try
             {
                 ModelState.Remove("Decesion.DecesionStatusType");
+                ModelState.Remove("Decesion.Date");
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");

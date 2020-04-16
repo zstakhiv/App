@@ -49,7 +49,7 @@
                         <td>@item.Decesion.DecesionStatusType.GetDescription()</td>
                         <td>@item.Decesion.DecesionTarget.TargetName</td>
                         <td>
-                            @if (item.Decesion.Description.Length > 50)
+                            @if (item.Decesion.Description.Length > 50 && item.Decesion.Description.Length - 50 > 15)
                             {
                                 @item.Decesion.Description.Substring(0, 50)<span class="show_hide"><strong> читати більше</strong></span>
                                 <p class="hidden">@item.Decesion.Description.Substring(51)</p>
