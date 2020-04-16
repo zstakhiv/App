@@ -95,9 +95,8 @@
                         <label class="col-form-label">Дата початку</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <input asp-for="Event.EventDateStart" class=" dateTime infoInput"
-                               placeholder="Виберіть...">
-                        <span class="ui-datepicker"></span>
+                        @Html.TextBoxFor(x => x.Event.EventDateStart,
+                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtFromDate", @class = "border textBoxInput" })
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateStart" class="text-danger "></span>
@@ -106,9 +105,8 @@
                         <label class="col-form-label">Дата завершення</label>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <input asp-for="Event.EventDateEnd" class=" dateTime infoInput"
-                               placeholder="Виберіть...">
-                        <span class="ui-datepicker"></span>
+                        @Html.TextBoxFor(x => x.Event.EventDateEnd,
+                            new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtToDate", @class = "border textBoxInput" })
                     </div>
                 </div>
                 <span asp-validation-for="Event.EventDateEnd" class="text-danger "></span>
@@ -165,7 +163,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
-                                    <input asp-for="Event.Questions" type="text" class="border TextIinput bigInput">
+                                    <textarea class="border TextIinput bigInput" asp-for="Event.Questions" 
+                                              placeholder="Вкажіть питання.. " cols="30" rows="7"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +188,8 @@
                         <div class="row">
                             <div class="col">
                                 <div class="d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 76px;">
-                                    <input asp-for="Event.Description" type="text" class="border TextIinput bigInput">
+                                    <textarea class="border TextIinput bigInput" asp-for="Event.Description" 
+                                              placeholder="Вкажіть зміни/додатки.. " cols="30" rows="7"></textarea>
                                 </div>
                             </div>
                         </div>

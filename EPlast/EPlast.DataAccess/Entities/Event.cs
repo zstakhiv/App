@@ -17,8 +17,10 @@ namespace EPlast.DataAccess.Entities
         [MaxLength(200, ErrorMessage = "Питання не можуть перевищувати 200 символів")]
         public string Questions { get; set; }
         [Required(ErrorMessage = "Вам потрібно обрати дату початку!")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EventDateStart { get; set; }
         [Required(ErrorMessage = "Вам потрібно обрати дату завершення!")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EventDateEnd { get; set; }
         [Required(ErrorMessage = "Вам потрібно обрати локацію!")]
         public string Eventlocation { get; set; }
