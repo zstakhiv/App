@@ -80,7 +80,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
-                return View();
+            return View();
         }
 
         [HttpGet]
@@ -240,7 +240,6 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
-        
 
         public IActionResult UserProfile(string userId)
         {
@@ -317,8 +316,8 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
-                Include(g=>g.UserProfile).
-                    ThenInclude(g=>g.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Degree).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
@@ -343,7 +342,7 @@ namespace EPlast.Controllers
                     Nationalities = _repoWrapper.Nationality.FindAll(),
                     Religions = _repoWrapper.Religion.FindAll(),
                     EducationView = educView,
-                    WorkView=workView,
+                    WorkView = workView,
                     Works = _repoWrapper.Work.FindAll(),
                     Degrees = _repoWrapper.Degree.FindAll(),
                 };
@@ -388,9 +387,9 @@ namespace EPlast.Controllers
                 }
 
                 //Nationality
-                if(model.User.UserProfile.NationalityId==null)
+                if (model.User.UserProfile.NationalityId == null)
                 {
-                    if(string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
                     {
                         model.User.UserProfile.Nationality = null;
                     }
@@ -436,7 +435,7 @@ namespace EPlast.Controllers
                     model.User.UserProfile.EducationId = null;
                 }
 
-                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId==0)
+                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId == 0)
                 {
                     if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) && string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
                     {
@@ -446,7 +445,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    if(string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
                     {
                         model.User.UserProfile.EducationId = null;
                     }
@@ -457,7 +456,7 @@ namespace EPlast.Controllers
                 }
 
                 //Work
-                if (model.WorkView.PositionID== model.WorkView.PlaceOfWorkID)
+                if (model.WorkView.PositionID == model.WorkView.PlaceOfWorkID)
                 {
                     model.User.UserProfile.WorkId = model.WorkView.PositionID;
                 }
@@ -485,7 +484,6 @@ namespace EPlast.Controllers
                         model.User.UserProfile.Work = null;
                     }
                 }
-
 
                 _repoWrapper.User.Update(model.User);
                 _repoWrapper.UserProfile.Update(model.User.UserProfile);
@@ -737,8 +735,6 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
-
-        
 
         [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         public async Task<IActionResult> DeletePosition(int id)

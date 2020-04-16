@@ -22,8 +22,7 @@ let profileListing = [
         'Геостатистика',
         'Статистика по роках',
         'Статистика (періоди)',
-        'Порівняти осередки',
-        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
+        'Порівняти осередки'
         'Статистичні звіти']
 ];
 let buttonClone: Element;

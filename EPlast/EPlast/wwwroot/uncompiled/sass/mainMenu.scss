@@ -244,7 +244,6 @@
             }
 
             .content {
-                flex-direction: column;
                 overflow: hidden;
 
                 .backdrop {
@@ -252,6 +251,7 @@
                     height: 100vh;
                     top: 0;
                     left: 0;
+                    min-width: 100%;
 
                     .slider {
                         width: 100%;

@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EPlast.Wrapper;
-using Microsoft.AspNetCore.Http;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast.Controllers
