@@ -1,4 +1,4 @@
-﻿.create-raport-form {
+﻿.Create-decesion-form {
     padding: 10px 0px 0px 0;
 
     form {
@@ -107,13 +107,6 @@
 }
 
 .data-table-wrapper {
-    margin: 100px 0px;
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 4px;
-    color: #505e6c;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-
     .decision-heading {
         text-align: center;
     }
@@ -126,108 +119,36 @@
         visibility: hidden;
     }
 
-    button[data-toggle="modal"] {
-        margin: 0 0 3px 2rem;
-        border-color: #3c5438;
-    }
+    #dtReadDecesion_wrapper {
+        #dtReadDecesion_filter {
+            label {
+                button[data-toggle="modal"] {
+                    margin: 0 0 3px 2rem;
+                    border-color: #3c5438 !important;
+                }
 
-    button[data-toggle="modal"]:focus {
-        box-shadow: 0 0 0 0.2rem #3c5438 !important;
-    }
+                button[data-toggle="modal"]:focus {
+                    box-shadow: 0 0 0 0.2rem #3c5438 !important;
+                }
 
-    button[data-toggle="modal"]:active {
-        border-color: #3c5438 !important;
-    }
-
-    table.dataTable thead {
-        .th-sm {
-            vertical-align: middle;
-        }
-
-        .sorting {
-            &:after, &:before {
-                top: 18px;
-                right: 14px !important;
+                button[data-toggle="modal"]:active {
+                    border-color: #3c5438 !important;
+                }
             }
         }
 
-        sorting_desc {
-            &:after, &:before {
-                right: 14px !important;
-                right: 14px !important;
-            }
-        }
-
-        .sorting_asc {
-            &:after, &:before {
-                top: 18px;
-                right: 14px !important;
-            }
-        }
-
-        .sorting_asc_disabled {
-            &:after, &:before {
-                top: 18px;
-                right: 14px !important;
-            }
-        }
-
-        .sorting_desc {
-            &:after, &:before {
-                top: 18px;
-                right: 14px !important;
-            }
-        }
-
-        .sorting_desc_disabled {
-            &:after, &:before {
-                top: 18px;
-                right: 14px !important;
-            }
-        }
-    }
-
-    table.dataTable tbody {
-        tr.context-menu-one {
-            td {
-                a {
-                    color: #212529;
+        table.dataTable thead {
+            .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                &:after, &:before {
+                    right: 14px !important;
                 }
             }
         }
     }
-
-    .page-item.active .page-link {
-        color: #000;
-        background-color: #ffffff;
-        border-color: none;
-        box-shadow: 0 0 0 0.2rem #3c5438;
-    }
-
-    .paginate_button.page-item {
-        .page-link {
-            background: #3c5438 !important;
-            color: #ffffff !important;
-        }
-
-        .page-link &:hover, &:active, &:focus {
-            background: #344a30 !important;
-            color: #fff !important;
-            border-color: #fff;
-        }
-    }
-
-    .page-item.disabled .page-link {
-        background: #2e402b !important;
-    }
-
-    .page-item.active .page-link {
-        border-color: #3c5438;
-    }
 }
 
 @media (max-width: 767px) {
-    .create-raport-form {
+    .Create-decesion-form {
         padding: 20px 0;
 
         form {
@@ -236,29 +157,31 @@
     }
 
     .data-table-wrapper {
-        margin: 20px 0px;
-        padding: 6px;
+        font-size: 18px;
+        text-align: center;
+        font-size: 9px;
 
         .decision-heading {
             font-size: 18px;
             text-align: center;
         }
 
-        #dtReadRaport_wrapper {
-            font-size: 9px;
-
-            #dtReadRaport_filter {
-                float: left;
-
-                label {
-                    #createDecesionButton {
-                        min-width: 85px !important;
-                    }
+        .dataTables_filter {
+            label {
+                #createDecesionButton {
+                    min-width: 85px !important;
                 }
             }
+        }
 
-            #dtReadRaport_length {
-                float: left
+        #dtReadDecesion_wrapper {
+            table.dataTable thead {
+                .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                    &:after, &:before {
+                        bottom: 9px;
+                        font-size: 12px;
+                    }
+                }
             }
         }
     }

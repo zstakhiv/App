@@ -69,3 +69,28 @@ ul.context-menu-list.admin-edit.context-menu-root {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
 }
+
+.data-table-wrapper {
+    #dtUsersTable {
+        button[data-toggle="modal"] {
+            margin: 0 0 3px 2rem;
+            border-color: #3c5438;
+        }
+
+        button[data-toggle="modal"]:focus {
+            box-shadow: 0 0 0 0.2rem #3c5438 !important;
+        }
+
+        button[data-toggle="modal"]:active {
+            border-color: #3c5438 !important;
+        }
+
+        table.dataTable thead {
+            .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                &:after, &:before {
+                    right: 14px !important;
+                }
+            }
+        }
+    }
+}

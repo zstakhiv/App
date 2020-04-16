@@ -1,30 +1,3 @@
-function initialise() {
-    $("tr.raport-click-row").dblclick(function () {
-        const content = $(this).children().first().text();
-        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
-    });
-}
-function createDecesionDataTable() {
-    //https://datatables.net/forums/discussion/42174/how-to-add-html-content-next-to-search-input-field
-    $("#dtReadRaport").one("preInit.dt", function () {
-        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
-        $("#dtReadRaport_filter label").append(button);
-    });
-    $("#dtReadRaport").DataTable({
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
-        },
-        responsive: true,
-        "createdRow": function (row, data, dataIndex) {
-            $(row).addClass("raport-click-row");
-        },
-    });
-    $('#dtReadRaport').on('page.dt', function () {
-        $('html, body').animate({
-            scrollTop: 100
-        }, 200);
-    });
-}
 $(document).ready(function () {
     initialise();
     var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description", "#autocomplete_input"];
@@ -103,7 +76,7 @@ $(document).ready(function () {
                     if (files[0] != undefined) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
                     }
-                    $("#dtReadRaport").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
                 }
                 else {
@@ -122,4 +95,30 @@ $(document).ready(function () {
 $(document).ajaxComplete(function () {
     initialise();
 });
+function initialise() {
+    $("tr.decesion-click-row").dblclick(function () {
+        const content = $(this).children().first().text();
+        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
+    });
+}
+function createDecesionDataTable() {
+    $("#dtReadDecesion").one("preInit.dt", function () {
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
+        $("#dtReadDecesion_filter label").append(button);
+    });
+    $("#dtReadDecesion").DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
+        },
+        responsive: true,
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass("decesion-click-row");
+        },
+    });
+    $('#dtReadDecesion').on('page.dt', function () {
+        $('html, body').animate({
+            scrollTop: 100
+        }, 200);
+    });
+}
 //# sourceMappingURL=decesion.js.map
