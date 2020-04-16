@@ -4,6 +4,27 @@ function initialise() {
         window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
     });
 }
+function createDecesionDataTable() {
+    //https://datatables.net/forums/discussion/42174/how-to-add-html-content-next-to-search-input-field
+    $("#dtReadRaport").one("preInit.dt", function () {
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
+        $("#dtReadRaport_filter label").append(button);
+    });
+    $("#dtReadRaport").DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
+        },
+        responsive: true,
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass("raport-click-row");
+        },
+    });
+    $('#dtReadRaport').on('page.dt', function () {
+        $('html, body').animate({
+            scrollTop: 100
+        }, 200);
+    });
+}
 $(document).ready(function () {
     initialise();
     var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description", "#autocomplete_input"];
@@ -14,20 +35,7 @@ $(document).ready(function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
         $(this).hide();
     });
-    $("#dtReadRaport").DataTable({
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
-        },
-        responsive: true,
-        "createdRow": function (row, data, dataIndex) {
-            $(row).addClass("raport-click-row");
-        }
-    });
-    $('#dtReadRaport').on('page.dt', function () {
-        $('html, body').animate({
-            scrollTop: 100
-        }, 200);
-    });
+    createDecesionDataTable();
     function ClearFormData() {
         arr.forEach(function (element) {
             $(element).val("");
