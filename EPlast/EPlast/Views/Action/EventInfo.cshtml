@@ -6,7 +6,7 @@
         @*Модальні вікна*@
         @await Html.PartialAsync("_EventModals")
         <input type="hidden" id="eventId" value=@Model.Event.ID>
-        <div class="row mt-2 shadow rounded">
+        <div class="row mt-2 shadowBlock shadow rounded">
             <div class="col-md-4 ">
                 <div class="row justify-content-center ">
                     <i class="far fa-handshake logo "></i>
@@ -179,7 +179,7 @@
                         <p class="event-header font-weight-bold">Дата початку:</p>
                     </div>
                     <div class="col-md-7 ml-lg-5 ml-sm-0">
-                        <p class="event-value ">@Model.Event.EventDateStart.ToString("dd/MM/yyyy")</p>
+                        <p class="event-value ">@Model.Event.EventDateStart.ToString("dd-MM-yyyy")</p>
                     </div>
                 </div>
 
@@ -188,7 +188,7 @@
                         <p class="event-header font-weight-bold">Дата завершення:</p>
                     </div>
                     <div class="col-md-7 ml-lg-5 ml-sm-0">
-                        <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd/MM/yyyy")</p>
+                        <p class="event-value ">@Model.Event.EventDateEnd.ToString("dd-MM-yyyy")</p>
                     </div>
                 </div>
 
@@ -224,7 +224,7 @@
         <!-- Карусель -->
      @if (Model.Event.EventGallarys.Count != 0 || Model.IsUserEventAdmin)
      {
- <div id="carouselContainer" class="row mt-3  justify-content-center  shadow rounded">
+ <div id="carouselContainer" class="row mt-3 shadowBlock  justify-content-center  shadow rounded">
      <div class="col-md-12 mt-3 text-center">
          <div class="row ">
              <h2 id="gallery" class="col-md-12 font-weight-bold plast-color">Галерея</h2>
@@ -281,56 +281,59 @@
                      </a>
                  </div>
              </div>
-
-             @if (Model.IsUserEventAdmin)
-             {
-                 <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
-                     <form id="form" class="ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
-                         <label for="files">Додати фотографії:</label>
-                         <input type="file" id="files" name="files" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
-                     </form>
-                 </div>
-             }
          </div>
      </div>
    
      <div class="col-md-12  mb-3">
          @if (Model.IsUserEventAdmin)
          {
-             <div class="row  justify-content-center">
-                 <div class="col-md-8">
-                     <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
-                 </div>
-                 <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
-                     <div class="row event-page-wrapper overflow-auto picture-deleting">
-                         @foreach (var picture in Model.Event.EventGallarys)
-                         {
-                             <div class="col-md-4 my-1 picture-deleting">
-                                 <input type="hidden" value="@picture.GallaryID">
-                                 <div class="card text-center">
-                                     <div class="card-header">
-                                         <div class="row justify-content-end">
-                                             <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
-                                                 <i class="far fa-trash-alt"></i>
-                                             </a>
-                                         </div>
-                                     </div>
-                                     <div class="pictureToDelete">
-                                         <img src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" class="img-fluid" alt="Cloudy Sky">
+         <div class="row  justify-content-center">
+
+             <div id="addPicture" class="col-md-8 mt-2 ml-lg-5">
+                 <form id="form" class="d-flex flex-row align-items-baseline ml-lg-4" name="form" asp-action="FillEventGallery" asp-controller="Action" enctype="multipart/form-data" method="post">
+                     <button id="spinnerGal" class="btn btn-success spinner-buttons event-invisible">
+                         <span class="spinner-border spinner-border-sm"></span>
+                         Завантаження..
+                     </button>
+                     <label id="addPicturesLabel" class="btn btn-success gallery-buttons" for="files">Додати фотографії:</label>
+                     <h5 class="ml-2">Кількість вибраних файлів <span id="filesBadge" class="badge badge-secondary badge-pill">0</span></h5>
+                     <input type="file" id="files" name="files" class="event-invisible" multiple accept=".jpg,.jpeg,.png" onchange="uploadFiles('files');">
+                 </form>
+             </div>
+
+             <div class="col-md-8 ml-lg-1">
+                 <button id="editGallery" type="button" class="btn btn-success mt-1 ml-lg-5 gallery-buttons">Редагувати галерею</button>
+             </div>
+             <div id="deletePicture" class="col-md-8 mt-2 event-invisible">
+                 <div class="row event-page-wrapper overflow-auto picture-deleting">
+                     @foreach (var picture in Model.Event.EventGallarys)
+                     {
+                         <div class="col-md-4 my-1 picture-deleting">
+                             <input type="hidden" value="@picture.GallaryID">
+                             <div class="card text-center pointer">
+                                 <div class="card-header">
+                                     <div class="row justify-content-end">
+                                         <a class="picture-remove ml-2" data-toggle="tooltip" data-placement="bottom" title="Натисніть, щоб видалити фотку">
+                                             <i class="far fa-trash-alt"></i>
+                                         </a>
                                      </div>
                                  </div>
+                                 <div class="pictureToDelete">
+                                     <img src="~/images/EventsGallery/@picture.Gallary.GalaryFileName" class="img-fluid" alt="Cloudy Sky">
+                                 </div>
                              </div>
-                         }
-                     </div>
-                     <button id="backBut" type="button" class="btn btn-success gallery-buttons mt-3">Повернутися назад</button>
+                         </div>
+                     }
                  </div>
+                 <button id="backBut" type="button" class="btn btn-success gallery-buttons mt-3">Повернутися назад</button>
              </div>
+         </div>
          }
          </div>
  </div>
      }
 
-        <div class="row mt-3 mb-5 justify-content-сenter  shadow rounded">
+        <div class="row mt-3 mb-5 shadowBlock justify-content-сenter  shadow rounded">
             <div class="row mt-3  col-md-12 justify-content-center mb-1">
                 <div class="col-md-8 text-center ">
                     <input type="button" id="btn-part" class="btn btn-success btn-md  btn-collapse" data-toggle="collapse" data-target="#myCollapsible" value="Потенційні учасники">

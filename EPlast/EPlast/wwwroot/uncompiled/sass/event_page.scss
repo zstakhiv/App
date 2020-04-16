@@ -147,10 +147,20 @@ input.event-page-wrapper.btn-collapse:hover {
         color: #ffffff;
     }
 
+    .carousel-control-next-icon,
+    .carousel-control-prev-icon {
+        filter: invert(0.25);
+    }
+
+
     .page-item.active .page-link {
         color: #000;
         background-color: #ffffff;
         border-color: none;
+    }
+
+    .shadowBlock {
+        background-color: #ffffff;
     }
 
     a.picture-remove {
@@ -171,7 +181,27 @@ input.event-page-wrapper.btn-collapse:hover {
         background-color: #3c5438;
     }
 
-    .pictureToDelete img{
-        height:150px;
+    .spinner-buttons {
+        background-color: #3c5438;
+    }
+
+    .spinner-buttons:hover {
+        background-color: #3c5438;
+    }
+
+    .pictureToDelete img {
+        height: 150px;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .progress-cursor {
+        cursor: progress;
+    }
+
+    .status-icon {
+        font-size: 15px;
     }
 }

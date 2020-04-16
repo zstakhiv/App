@@ -11,10 +11,59 @@
 
     .TextIinput {
         border: 5px solid #3c5438;
+        width: 100%;
     }
 
-    body {
+    .body {
         background-color: #eee;
-        height: 1200px;
+    }
+
+    .typebutton {
+        background-color: #3c5438;
+        color: aliceblue;
+        margin: 10px;
+    }
+
+    .dateTime {
+        width: 100%;
+        border-radius: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 1px  #3c5438;
+    }
+
+    .infoInput {
+        padding: 6px;
+        background-color: #eee;
+    }
+
+    .bigInput {
+        width: 97%;
+        height: 90%;
+        padding-left: 5px;
+        padding-right: 5px;
+        background-color: #eee;
+    }
+
+    .submitButton {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        background-color: #3c5438;
+        color: aliceblue
+    }
+
+    .card {
+        background-color: #ffffff;
+        margin-top: 40px;
+    }
+
+    .message {
+        padding-left: 15px;
+    }
+
+    .textBoxInput {
+        padding: 6px;
+        width: 100%;
+        background-color: #eee;
     }
 }
