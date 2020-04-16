@@ -249,6 +249,16 @@
 
             #dtReadRaport_filter {
                 float: left;
+
+                label {
+                    #createDecesionButton {
+                        min-width: 85px !important;
+                    }
+                }
+            }
+
+            #dtReadRaport_length {
+                float: left
             }
         }
     }
