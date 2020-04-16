@@ -124,7 +124,7 @@
                     </div>
 
                     <ul class="sidebar-ul text-center">
-                        @if (!User.IsInRole("Прихильник")) 
+                        @if (User.IsInRole("Admin")) 
                         {
                         <li class="sidebar-li text-center">
                             <a href="/Documentation/ReadDecesion">
