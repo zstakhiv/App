@@ -13,12 +13,14 @@
                 <button id="reviewAnnualReport" class="btn btn-sm btn-info btn-management" disabled>Переглянути</button>
                 <button id="confirmAnnualReport" class="btn btn-sm btn-success btn-management" disabled>Підтвердити</button>
                 <button id="cancelAnnualReport" class="btn btn-sm btn-danger btn-management" disabled>Скасувати</button>
+                <button id="getBackAnnualReport" class="btn btn-sm btn-danger btn-management" disabled>Повернути</button>
             </div>
             <div>
                 <table id="AnnualReportsTable" class="table table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th hidden></th>
+                            <th hidden></th>
                             <th>Станиця</th>
                             <th>Регіон</th>
                             <th>Подавач</th>
@@ -29,14 +31,15 @@
                     <tbody>
                         @foreach (var annualReport in Model.AnnualReports)
                         {
-                            <tr>
-                                <td>@annualReport.ID</td>
-                                <td>@annualReport.City.Name</td>
-                                <td>@annualReport.City.Region.RegionName</td>
-                                <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
-                                <td>@annualReport.Date.ToShortDateString()</td>
-                                <td>@annualReport.Status.GetDescription()</td>
-                            </tr>
+                        <tr>
+                            <td hidden>@annualReport.ID</td>
+                            <td hidden>@annualReport.CityId</td>
+                            <td>@annualReport.City.Name</td>
+                            <td>@annualReport.City.Region.RegionName</td>
+                            <td>@annualReport.User.FirstName @annualReport.User.LastName</td>
+                            <td>@annualReport.Date.ToString("dd-MM-yyyy")</td>
+                            <td>@annualReport.Status.GetDescription()</td>
+                        </tr>
                         }
                     </tbody>
                 </table>

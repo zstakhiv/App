@@ -443,7 +443,7 @@ namespace EPlast.Controllers
             {
                 bool whetherTheRoleShouldBeDeleted = false;
                 bool whetherTheRoleShouldBeAdded = false;
-                AnnualReport annualReport = _repoWrapper.AnnualReports
+                var annualReport = _repoWrapper.AnnualReports
                     .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
                     .Include(ar => ar.City)
                     .Include(ar => ar.CityManagement)
@@ -454,15 +454,26 @@ namespace EPlast.Controllers
                 {
                     return RedirectToAction("HandleError", "Error", new { code = 403 });
                 }
-                var adminType = _repoWrapper.AdminType
-                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
-                        .First();
+                var annualReportOld = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.CityId == annualReport.CityId && ar.Status == AnnualReportStatus.Confirmed)
+                    .Include(ar => ar.City)
+                    .Include(ar => ar.CityManagement)
+                        .ThenInclude(cm => cm.CityAdminNew)
+                    .FirstOrDefault();
 
                 // update annualReport status
+                if (annualReportOld != null)
+                {
+                    annualReportOld.Status = AnnualReportStatus.Saved;
+                    _repoWrapper.AnnualReports.Update(annualReportOld);
+                }
                 annualReport.Status = AnnualReportStatus.Confirmed;
                 _repoWrapper.AnnualReports.Update(annualReport);
 
                 // update oldCityAdmin EndDate
+                var adminType = _repoWrapper.AdminType
+                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                        .First();
                 CityAdministration cityAdminOld = _repoWrapper.CityAdministration
                         .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.AdminTypeId == adminType.ID)
                         .Include(ca => ca.User)
@@ -553,6 +564,78 @@ namespace EPlast.Controllers
             catch
             {
                 return NotFound("Не вдалося скасувати річний звіт!");
+            }
+        }
+
+        [Authorize(Roles = "Admin, Голова Округу")]
+        public async Task<IActionResult> GetBackAnnualReport(int id)
+        {
+            try
+            {
+                var annualReport = _repoWrapper.AnnualReports
+                    .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Confirmed)
+                    .Include(ar => ar.City)
+                    .Include(ar => ar.CityManagement)
+                        .ThenInclude(cm => cm.CityAdminOld)
+                            .ThenInclude(ca => ca.User)
+                    .Include(ar => ar.CityManagement)
+                        .ThenInclude(cm => cm.CityLegalStatusOld)
+                    .First();
+                var userId = _userManager.GetUserId(User);
+                if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 403 });
+                }
+                annualReport.Status = AnnualReportStatus.Unconfirmed;
+                annualReport.CityManagement.CityAdminOld = null;
+                annualReport.CityManagement.CityLegalStatusOld = null;
+                _repoWrapper.AnnualReports.Update(annualReport);
+
+                // cityAdmin revert
+                if (annualReport.CityManagement.CityAdminOld != null)
+                {
+                    annualReport.CityManagement.CityAdminOld.EndDate = null;
+                }
+                var adminType = _repoWrapper.AdminType
+                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                        .First();
+                var cityAdministrations = _repoWrapper.CityAdministration
+                    .FindByCondition(ca => ca.ID > annualReport.CityManagement.CityAdminOldId && ca.CityId == annualReport.CityId && ca.AdminTypeId == adminType.ID)
+                    .Include(ca => ca.User);
+                var deleteRoleUsers = new List<User>();
+                foreach (var cityAdministration in cityAdministrations)
+                {
+                    deleteRoleUsers.Add(cityAdministration.User);
+                    _repoWrapper.CityAdministration.Delete(cityAdministration);
+                }
+
+                // cityLegalStatus revert
+                if (annualReport.CityManagement.CityLegalStatusOld != null)
+                {
+                    annualReport.CityManagement.CityLegalStatusOld.DateFinish = null;
+                }
+                var cityLegalStatuses = _repoWrapper.CityLegalStatuses
+                    .FindByCondition(cls => cls.Id > annualReport.CityManagement.CityLegalStatusOldId);
+                foreach (var cityLegalStatus in cityLegalStatuses)
+                {
+                    _repoWrapper.CityLegalStatuses.Delete(cityLegalStatus);
+                }
+
+                // cityAdmin add/remove roles
+                _repoWrapper.Save();
+                foreach (var deleteRoleUser in deleteRoleUsers)
+                {
+                    await _userManager.RemoveFromRoleAsync(deleteRoleUser, "Голова Станиці");
+                }
+                if (annualReport.CityManagement.CityAdminOld != null)
+                {
+                    await _userManager.AddToRoleAsync(annualReport.CityManagement.CityAdminOld.User, "Голова Станиці");
+                }
+                return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік повернуто!");
+            }
+            catch
+            {
+                return NotFound("Не вдалося повернути річний звіт!");
             }
         }
     }
