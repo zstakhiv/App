@@ -55,16 +55,16 @@ namespace EPlast.Controllers
             foreach (var participant in model.Participants)
             {
                 if (participant.UserId == _userManager.GetUserId(User) &&
-                    participant.Event.EventDateStart <= DateTime.Now)
+                    participant.Event.EventDateStart >= DateTime.Now )
                 {
                     model.PlanedEvents.Add(participant.Event);
                     model.PlanedEventCount += 1;
                 }
                 else if (participant.UserId == _userManager.GetUserId(User) &&
-                    participant.Event.EventDateStart <= DateTime.Now)
+                    participant.Event.EventDateEnd < DateTime.Now)
                 {
-                    model.VisitedEventsCount = 0;
-                    model.VisitedEvents = new List<Event>();
+                    model.VisitedEventsCount += 1;
+                    model.VisitedEvents.Add(participant.Event);
                 }
             }
             return View(model);
