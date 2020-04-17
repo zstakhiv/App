@@ -75,15 +75,29 @@ namespace EPlast.Controllers
             }
         }
 
-        public IActionResult CityMembers()
+        public IActionResult CityMembers(int cityid)
         {
-            //List<CityViewModel> cities = new List<CityViewModel>(
-            //    _repoWrapper.City
-            //    .FindAll()
-            //    .Select(city => new CityViewModel { City = city })
-            //    .ToList());
+            try {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
 
-            return View("CityMembers");
+                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
+
+                return View(new CityViewModel { Members = members });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
         }
     }
 }
