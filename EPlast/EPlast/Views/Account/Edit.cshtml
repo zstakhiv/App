@@ -124,7 +124,7 @@
                         @Html.TextBoxFor(x => x.User.UserProfile.Work.PlaceOfwork,
                          new { @id = "autocomplete_input", @list = "WorkPlaceType-value", @class = "form-control", @Value = "" })
                         <datalist id="WorkPlaceType-value">
-                            @foreach (Work item in Model.Works)
+                            @foreach (Work item in Model.WorkView.PlaceOfWorkList)
                             {
                                 <option data-value="@item.ID" value="@item.PlaceOfwork"></option>
                             }
@@ -137,7 +137,7 @@
                         @Html.TextBoxFor(x => x.User.UserProfile.Work.Position,
                          new { @id = "autocomplete_input", @list = "WorkPositionType-value", @class = "form-control", @Value = "" })
                         <datalist id="WorkPositionType-value">
-                            @foreach (Work item in Model.Works)
+                            @foreach (Work item in Model.WorkView.PositionList)
                             {
                                 <option data-value="@item.ID" value="@item.Position"></option>
                             }
