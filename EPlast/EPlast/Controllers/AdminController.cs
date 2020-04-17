@@ -48,9 +48,6 @@ namespace EPlast.Controllers
                 List<UserTableViewModel> userTableViewModels = new List<UserTableViewModel>();
                 foreach (var user in users)
                 {
-                    if (!user.EmailConfirmed)
-                        continue;
-
                     var roles = await _userManager.GetRolesAsync(user);
                     var cityName = cityMembers.Where(x => x.User.Id.Equals(user.Id) && x.EndDate == null)
                                               .Select(x => x.City.Name)
@@ -118,7 +115,7 @@ namespace EPlast.Controllers
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
                 var currentRoles = await _userManager.GetRolesAsync(user);
-                if(currentRoles.Count==0)
+                if (currentRoles.Count == 0)
                 {
                     await _userManager.AddToRoleAsync(user, "Прихильник");
                 }
