@@ -176,7 +176,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminCorrect()
+        public void CreateAnnualReportLikeAdminCorrect()
         {
             // Arrange
             var cities = new List<City>
@@ -193,7 +193,7 @@ namespace EPlast.XUnitTest
                 null, null, cityAccessManager.Object, null, null, null);
 
             // Act
-            var result = controller.CreateAnnualReportAsAdmin(cities[0].ID);
+            var result = controller.CreateAnnualReportLikeAdmin(cities[0].ID);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -202,7 +202,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminIncorrectCityEmpty()
+        public void CreateAnnualReportLikeAdminIncorrectCityEmpty()
         {
             // Arrange
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
@@ -213,7 +213,7 @@ namespace EPlast.XUnitTest
                 null, null, cityAccessManager.Object, null, null, null);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+            var result = (RedirectToActionResult)controller.CreateAnnualReportLikeAdmin(0);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -224,7 +224,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminIncorrectHasNoAccess()
+        public void CreateAnnualReportLikeAdminIncorrectHasNoAccess()
         {
             // Arrange
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
@@ -235,7 +235,7 @@ namespace EPlast.XUnitTest
                 null, null, cityAccessManager.Object, null, null, null);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+            var result = (RedirectToActionResult)controller.CreateAnnualReportLikeAdmin(0);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);

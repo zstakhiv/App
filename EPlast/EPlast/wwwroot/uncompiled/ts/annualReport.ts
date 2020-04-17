@@ -16,14 +16,14 @@
     }
 
     $('#AnnualReportsTable tbody tr').click(function () {
-        setDisabled([$('#reviewAnnualReport'), $('#confirmAnnualReport'), $('#cancelAnnualReport'), $('#deleteAnnualReport')], true);
+        setDisabled([$('#reviewAnnualReport'), $('#confirmAnnualReport'), $('#cancelAnnualReport'), $('#editAnnualReport'), $('#deleteAnnualReport')], true);
         var selected = $(this).hasClass('row-selected');
         $('#AnnualReportsTable tr').removeClass('row-selected');
         if (!selected) {
             $(this).addClass('row-selected');
             switch ($(this).find('td').eq(indexAnnualReportStatus).html()) {
                 case AnnualReportStatus.Unconfirmed:
-                    setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport')], false);
+                    setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport'), $('#editAnnualReport')], false);
                     break;
                 case AnnualReportStatus.Confirmed:
                     setDisabled([$('#cancelAnnualReport')], false);
@@ -83,8 +83,8 @@
                         && $(this).find('td').eq(indexAnnualReportStatus).html() == AnnualReportStatus.Confirmed
                 }).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Saved);
                 $(tr).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Confirmed);
-                setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], true);
-                setDisabled([$('#getBackAnnualReport')], false);
+                setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport'), $('#editAnnualReport')], true);
+                setDisabled([$('#cancelAnnualReport')], false);
                 showModalMessage($('#ModalSuccess'), message);
             },
             error: function (response) {
@@ -111,8 +111,8 @@
             data: { id: annualReportId },
             success: function (message) {
                 $(tr).find('td').eq(indexAnnualReportStatus).html(AnnualReportStatus.Unconfirmed);
-                setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport')], false);
                 setDisabled([$('#cancelAnnualReport')], true);
+                setDisabled([$('#confirmAnnualReport'), $('#deleteAnnualReport'), $('#editAnnualReport')], false);
                 showModalMessage($('#ModalSuccess'), message);
             },
             error: function (response) {
@@ -125,6 +125,15 @@
                 }
             }
         });
+    })
+
+    $('#editAnnualReport').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var tr = $('#AnnualReportsTable tr.row-selected:first');
+        var annualReportId = $(tr).find('td').eq(indexAnnualReportId).html();
+        var strURL = '/Documentation/EditAnnualReport?id=' + annualReportId;
+        window.open(strURL, '_self');
     })
 
     $('#deleteAnnualReport').click(function (e) {
@@ -159,7 +168,7 @@
         e.preventDefault();
         e.stopPropagation();
         var cityId = $('#CitiesList option').filter(':selected').val();
-        var strURL = '/Documentation/CreateAnnualReportAsAdmin?cityId=' + cityId;
+        var strURL = '/Documentation/CreateAnnualReportLikeAdmin?cityId=' + cityId;
         window.open(strURL, '_self')
     })
 });
@@ -167,12 +176,10 @@
 $('#annual-report-form').ready(function () {
     if ($('#ModalSuccess .modal-body:first p:first strong:first').contents().length != 0) {
         $('#ModalSuccess').modal('show');
-        $('#CreateAnnualReport').prop('disabled', true);
     }
     else {
         if ($('#ModalError .modal-body:first p:first strong:first').contents().length != 0) {
             $('#ModalError').modal('show');
-            $('#CreateAnnualReport').prop('disabled', true);
         }
     }
 })
