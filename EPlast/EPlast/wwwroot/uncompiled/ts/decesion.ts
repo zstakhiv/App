@@ -52,6 +52,7 @@ $(document).ready(function () {
         var decesionOrganizationId = $("#Decesion-Organization-ID option:selected").val().toString();
         var decesionTargetName = $("#autocomplete_input").val().toString();
         var decesionTargetId = $("#autocomplete_input_id_0").val().toString();
+        //var decesionDate = $("#datepicker").datepicker().val().toString().split("-");
         var decesionDate = $("#datepicker").datepicker().val().toString();
         var decesionDescription = $("#Decesion-Description").val().toString()
         var decesionDecesionStatusType = $("#Decesion-DecesionStatusType option:selected").text();
@@ -60,7 +61,7 @@ $(document).ready(function () {
         formData.append("Decesion.Organization.ID", decesionOrganizationId);
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
-        formData.append("Decesion.Date", decesionDate);
+        formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
 
