@@ -30,57 +30,71 @@ namespace EPlast.Controllers
 
         public IActionResult EventUser()
         {
-            EventUserViewModel model = new EventUserViewModel();
-            var user = _repoWrapper.User.
-            FindByCondition(q => q.Id == _userManager.GetUserId(User)).First();
-            model.User = user;
-            model.EventAdmins = _repoWrapper.EventAdmin.FindByCondition(i => i.UserID == _userManager.GetUserId(User)).
-                            Include(i => i.Event).Include(i => i.User).ToList();
-            model.Participants = _repoWrapper.Participant.FindByCondition(i => i.UserId == _userManager.GetUserId(User)).
-                Include(i => i.Event).ToList();
-            model.CreatedEventCount = 0;
-            model.CreatedEvents = new List<Event>();
-            foreach (var eventAdmin in model.EventAdmins)
+            try
             {
-                if (eventAdmin.UserID == _userManager.GetUserId(User))
+                EventUserViewModel model = new EventUserViewModel();
+                var user = _repoWrapper.User.
+                FindByCondition(q => q.Id == _userManager.GetUserId(User)).First();
+                model.User = user;
+                model.EventAdmins = _repoWrapper.EventAdmin.FindByCondition(i => i.UserID == _userManager.GetUserId(User)).
+                                Include(i => i.Event).Include(i => i.User).ToList();
+                model.Participants = _repoWrapper.Participant.FindByCondition(i => i.UserId == _userManager.GetUserId(User)).
+                    Include(i => i.Event).ToList();
+                model.CreatedEventCount = 0;
+                model.CreatedEvents = new List<Event>();
+                foreach (var eventAdmin in model.EventAdmins)
                 {
-                    model.CreatedEvents.Add(eventAdmin.Event);
-                    model.CreatedEventCount += 1;
+                    if (eventAdmin.UserID == _userManager.GetUserId(User))
+                    {
+                        model.CreatedEvents.Add(eventAdmin.Event);
+                        model.CreatedEventCount += 1;
+                    }
                 }
+                model.PlanedEventCount = 0;
+                model.PlanedEvents = new List<Event>();
+                model.VisitedEventsCount = 0;
+                model.VisitedEvents = new List<Event>();
+                foreach (var participant in model.Participants)
+                {
+                    if (participant.UserId == _userManager.GetUserId(User) &&
+                        participant.Event.EventDateStart >= DateTime.Now)
+                    {
+                        model.PlanedEvents.Add(participant.Event);
+                        model.PlanedEventCount += 1;
+                    }
+                    else if (participant.UserId == _userManager.GetUserId(User) &&
+                        participant.Event.EventDateEnd < DateTime.Now)
+                    {
+                        model.VisitedEventsCount += 1;
+                        model.VisitedEvents.Add(participant.Event);
+                    }
+                }
+                return View(model);
             }
-            model.PlanedEventCount = 0;
-            model.PlanedEvents = new List<Event>();
-            model.VisitedEventsCount = 0;
-            model.VisitedEvents = new List<Event>();
-            foreach (var participant in model.Participants)
+            catch
             {
-                if (participant.UserId == _userManager.GetUserId(User) &&
-                    participant.Event.EventDateStart <= DateTime.Now)
-                {
-                    model.PlanedEvents.Add(participant.Event);
-                    model.PlanedEventCount += 1;
-                }
-                else if (participant.UserId == _userManager.GetUserId(User) &&
-                    participant.Event.EventDateStart <= DateTime.Now)
-                {
-                    model.VisitedEventsCount = 0;
-                    model.VisitedEvents = new List<Event>();
-                }
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-            return View(model);
         }
 
         [HttpGet]
         public IActionResult EventCreate()
         {
-            var eventCategories = _repoWrapper.EventCategory.FindAll();
-            var model = new EventCreateViewModel()
+            try
             {
-                Users = _repoWrapper.User.FindAll(),
-                EventTypes = _repoWrapper.EventType.FindAll(),
-                EventCategories = _createEventVMInitializer.GetEventCategories(eventCategories)
-            };
-            return View(model);
+                var eventCategories = _repoWrapper.EventCategory.FindAll();
+                var model = new EventCreateViewModel()
+                {
+                    Users = _repoWrapper.User.FindAll(),
+                    EventTypes = _repoWrapper.EventType.FindAll(),
+                    EventCategories = _createEventVMInitializer.GetEventCategories(eventCategories)
+                };
+                return View(model);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
         }
         [HttpPost]
         public IActionResult EventCreate(EventCreateViewModel createVM)
