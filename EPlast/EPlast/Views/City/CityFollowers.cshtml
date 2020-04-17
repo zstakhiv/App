@@ -6,14 +6,14 @@
 }
 <div class="main-wrapper" style="background-color:transparent;">
     <div class="d-flex flex-shrink-0 justify-content-center flex-wrap">
-        @foreach (var membrCity in Model.Members)
+        @foreach (var follCity in Model.Followers)
         {
             <div class="card border rounded shadow-none d-inline float-left" style="margin: 15px;width: 150px;height: 250px;">
                 <div class="float-left d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 30px;margin: -1px;"><a class="d-xl-flex justify-content-xl-end" style="padding-right: 95px;padding-left: 5px;color: #3c5438;"><i class="fa fa-gear" style="font-size: 24px;"></i></a><a class="float-none d-xl-flex" style="padding-right: 5px;padding-left: 5px;color: #3c5438;"><i class="fa fa-close" style="font-size: 24px;"></i></a></div>
-                <div class="border rounded-circle" style="height: 150px; background-image: url('../../images/Users/@membrCity.User.ImagePath'); background-size: cover; background-repeat: no-repeat; background-position: center; margin: 5px; margin-top: 20px; margin-bottom: 15px;"></div>
+                <div class="border rounded-circle" style="height: 150px; background-image: url('../../images/Users/@follCity.User.ImagePath'); background-size: cover; background-repeat: no-repeat; background-position: center; margin: 5px; margin-top: 20px; margin-bottom: 15px;"></div>
                 <div class="d-inline">
-                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@membrCity.User.FirstName</p>
-                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@membrCity.User.LastName</p>
+                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@follCity.User.FirstName</p>
+                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@follCity.User.LastName</p>
                 </div>
             </div>
         }

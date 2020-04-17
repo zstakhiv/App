@@ -99,5 +99,32 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+
+        public IActionResult CityFollowers(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
+
+                return View(new CityViewModel { Followers = followers });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
     }
 }
