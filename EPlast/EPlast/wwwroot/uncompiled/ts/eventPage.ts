@@ -194,7 +194,8 @@
         DeletePicture(pictureToDelete,elementToDelete);
     });
 
-    function DeletePicture(pictureToDelete: string | number | string[],elementToDelete:HTMLElement) {
+    function DeletePicture(pictureToDelete: string | number | string[], elementToDelete: HTMLElement) {
+        $(elementToDelete).hide();
         $.ajax({
             type: "POST",
             url: "/Action/DeletePicture",
@@ -203,6 +204,7 @@
                 $(elementToDelete).remove();
             },
             error: () => {
+                $(elementToDelete).show();
                 $("#FAIL").modal("show");
             },
         });
