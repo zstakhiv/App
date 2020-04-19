@@ -27,11 +27,6 @@ namespace EPlast.XUnitTest
     {
         public (Mock<SignInManager<User>>, Mock<UserManager<User>>, Mock<IEmailConfirmation>, AccountController) CreateAccountController()
         {
-            var testUser = new User
-            {
-                UserName = "andriishainoha@gmail.com"
-            };
-
             Mock<IUserPasswordStore<User>> userPasswordStore = new Mock<IUserPasswordStore<User>>();
             userPasswordStore.Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                  .Returns(Task.FromResult(IdentityResult.Success));
@@ -61,30 +56,20 @@ namespace EPlast.XUnitTest
             userStore.Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
 
-            var mockUserManager = new Mock<UserManager<User>>(userPasswordStore.Object,
+            var mockUserManager = new Mock<UserManager<User>>(userStore.Object,
                 options.Object, new PasswordHasher<User>(),
                 userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
                 new IdentityErrorDescriber(), null,
                 new Mock<ILogger<UserManager<User>>>().Object);
 
             mockUserManager
-                .Setup(s => s.FindByNameAsync(testUser.UserName.ToUpperInvariant()))
-                .Returns(Task.FromResult(testUser)).Verifiable();
-
-            mockUserManager
                 .Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
-
-            mockUserManager
-                .Setup(s => s.FindByIdAsync(testUser.Id))
-                .Returns(Task.FromResult(testUser)).Verifiable();
-
-            var applicationUser = GetTestUserWithEmailConfirmed();
 
             var _contextAccessor = new Mock<IHttpContextAccessor>();
             var _userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
             var mockSignInManager = new Mock<SignInManager<User>>(mockUserManager.Object,
-                           _contextAccessor.Object, _userPrincipalFactory.Object, null, null, null, null);
+                           _contextAccessor.Object, _userPrincipalFactory.Object, null, null, null);
 
             Mock<IRepositoryWrapper> mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
             Mock<ILogger<AccountController>> mockLogger = new Mock<ILogger<AccountController>>();
@@ -92,7 +77,7 @@ namespace EPlast.XUnitTest
             Mock<IHostingEnvironment> mockHosting = new Mock<IHostingEnvironment>();
 
             //SignInManager does not mocked
-            AccountController accountController = new AccountController(mockUserManager.Object, null,
+            AccountController accountController = new AccountController(mockUserManager.Object, mockSignInManager.Object,
                 mockRepositoryWrapper.Object, mockLogger.Object, mockEmailConfirmation.Object, mockHosting.Object, null);
 
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
@@ -539,9 +524,10 @@ namespace EPlast.XUnitTest
         //Login
 
 
+
         //Logout
         [Fact]
-        public async Task TestLogoutReturnsView()        //тут метод всьо добре просто треба настроїти signinmanager бо він null
+        public async Task TestLogoutReturnsView()       
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockSignInManager
@@ -549,7 +535,7 @@ namespace EPlast.XUnitTest
                 .Returns(Task.FromResult(default(object)));
             
             var result = await accountController.Logout() as RedirectToActionResult;
-            Assert.Equal("AccountLocked", result.ActionName);
+            Assert.Equal("Login", result.ActionName);
             Assert.NotNull(result);
         }
 

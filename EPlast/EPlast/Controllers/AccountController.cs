@@ -41,10 +41,10 @@ namespace EPlast.Controllers
             IHostingEnvironment env,
             IUserAccessManager userAccessManager)
         {
-            _logger = logger;
-            _signInManager = signInManager;
             _userManager = userManager;
+            _signInManager = signInManager;
             _repoWrapper = repoWrapper;
+            _logger = logger;
             _emailConfirmation = emailConfirmation;
             _env = env;
             _userAccessManager = userAccessManager;
