@@ -56,12 +56,12 @@ namespace EPlast.Controllers
         {
             try
             {
-                LoginViewModel model = new LoginViewModel
+                LoginViewModel loginmVM = new LoginViewModel
                 {
                     ReturnUrl = returnUrl,
                     ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
                 };
-                return View(model);
+                return View(loginmVM);
             }
             catch (Exception e)
             {
@@ -408,7 +408,7 @@ namespace EPlast.Controllers
                 if (remoteError != null)
                 {
                     ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
-                    return View("Login");
+                    return View("Login", loginViewModel);
                 }
                 var info = await _signInManager.GetExternalLoginInfoAsync();
                 if (info == null)

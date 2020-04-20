@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
@@ -513,30 +514,266 @@ namespace EPlast.XUnitTest
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("AccountLocked", viewResult.ViewName);
             Assert.NotNull(viewResult);
-
-            //тут хуйня якась
-
-            /*mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(new List<AuthenticationScheme>());*/
         }
-
-        //Login
-
-
 
         //Logout
         [Fact]
-        public async Task TestLogoutReturnsView()       
+        public async Task TestLogoutReturnsView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockSignInManager
                 .Setup(s => s.SignOutAsync())
                 .Returns(Task.FromResult(default(object)));
-            
+
             var result = await accountController.Logout() as RedirectToActionResult;
             Assert.Equal("Login", result.ActionName);
             Assert.NotNull(result);
+        }
+
+        //Login
+        [Fact]
+        public async Task TestLoginGetReturnsViewWithModel()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            var result = await accountController.Login(GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl); 
+            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);  плюс перевірити бо дає ерору
+            //Assert.Equal(GetTestLoginModelForLoginGet(), model);
+            Assert.NotNull(viewResult);
+
+            //І ТАК У ВСІХ МЕТОДАХ
+        }
+
+        [Fact]
+        public async Task TestLoginPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestLoginPostUserNullReturnsViewWithModel()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestLoginPostEmailConfReturnsViewWithModel()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(false);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestLoginPostReturnsViewAccountLocked()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(true);
+
+            mockSignInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.LockedOut);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
+            Assert.Equal("AccountLocked", result.ActionName);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task TestLoginPostReturnsViewUserProfile()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(true);
+
+            mockSignInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
+            Assert.Equal("UserProfile", result.ActionName);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task TestLoginPostReturnsViewPasswordInCorrect()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(true);
+
+            mockSignInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        //ExternalLoginCallBack
+        [Fact]
+        public async Task TestExternalLoginCallBackRemoteErrorNotNull()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            var result = await accountController.ExternalLoginCallBack(GetReturnUrl(), GetRemoteError());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestExternalLoginCallBackInfoNull()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockSignInManager
+                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()))
+                .ReturnsAsync((ExternalLoginInfo)null);
+
+
+            var result = await accountController.ExternalLoginCallBack(GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestExternalLoginCallBackRedirectReturnUrl()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockSignInManager
+                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetExternalLoginInfoFake());
+
+            mockSignInManager
+                .Setup(s => s.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+
+            var result = await accountController.ExternalLoginCallBack(GetReturnUrl()) as LocalRedirectResult;
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, result.Url);
+            Assert.NotNull(result);
+        }
+
+
+
+        
+
+
+        //Fakes
+        private ExternalLoginInfo GetExternalLoginInfoFake()
+        {
+            var info = new ExternalLoginInfo(null, "Google", "GoogleExample", "GoogleForDisplay");
+            return info;
+        }
+
+
+        private LoginViewModel GetTestLoginViewModel()
+        {
+            var loginViewModel = new LoginViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Password = "andrii123",
+                RememberMe = true,
+                ReturnUrl = "/google.com/",
+                ExternalLogins = (GetTestAuthenticationSchemes()).ToList()
+            };
+            return loginViewModel;
+        }
+
+        private IEnumerable<AuthenticationScheme> GetTestAuthenticationSchemes()
+        {
+            AuthenticationScheme[] authenticationScheme = new AuthenticationScheme[2];
+            authenticationScheme[0] = new AuthenticationScheme("GoogleExample", "Google", typeof(IAuthenticationHandler));
+            authenticationScheme[1] = new AuthenticationScheme("FacebookExample", "Facebook", typeof(IAuthenticationHandler));
+            return authenticationScheme;
         }
 
         private string GetBadFakeCodeConfirmingEmail() {
@@ -578,20 +815,14 @@ namespace EPlast.XUnitTest
             return registerViewModel;
         }
 
-        private LoginViewModel GetTestLoginViewModel()
-        {
-            var loginViewModel = new LoginViewModel
-            {
-                Email = "andriishainoha@gmail.com",
-                Password = "andrii123",
-                RememberMe = true
-            };
-            return loginViewModel;
-        }
-
         private string GetReturnUrl()
         {
             return new string("/google.com/");
+        }
+
+        private string GetRemoteError()
+        {
+            return new string("remoteErrorExample");
         }
 
         private ForgotPasswordViewModel GetTestForgotViewModel()
