@@ -742,9 +742,58 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public async Task TestExternalLoginCallBackRedirectReturnUrlAfterGoogleRegistering()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
 
+            mockSignInManager
+                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetExternalLoginInfoFake());
 
-        
+            mockSignInManager
+                .Setup(s => s.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+
+            /*mockSignInManager               тут дописати бо хз як з інфо
+                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()).Result.Principal.FindFirstValue(It.IsAny<string>()))
+                .Returns("ExampleEmail");
+
+            var result = await accountController.ExternalLoginCallBack(GetReturnUrl()) as LocalRedirectResult;
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, result.Url);
+            Assert.NotNull(result);*/
+        }
+
+        //ExternalLogin
+        [Fact]
+        public async Task TestExternalLoginReturnsChallengeResult()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            mockSignInManager
+                .Setup(s => s.ConfigureExternalAuthenticationProperties(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(GetAuthenticationProperties());
+
+            var result = accountController.ExternalLogin(GetProvider(), GetReturnUrl());
+            var challengeResult = Assert.IsType<ChallengeResult>(result);
+            Assert.Equal(GetProvider(), challengeResult.AuthenticationSchemes[0]);
+            Assert.NotNull(challengeResult);
+        }
 
 
         //Fakes
@@ -754,6 +803,15 @@ namespace EPlast.XUnitTest
             return info;
         }
 
+        private AuthenticationProperties GetAuthenticationProperties()
+        {
+            Dictionary<string, string> authenticationDictionary = new Dictionary<string, string>(3);
+            authenticationDictionary.Add("First", "Google");
+            authenticationDictionary.Add("Second", "Facebook");
+            authenticationDictionary.Add("Third", "Amazon");
+            var authProperties = new AuthenticationProperties(authenticationDictionary);
+            return authProperties;
+        }
 
         private LoginViewModel GetTestLoginViewModel()
         {
@@ -825,6 +883,11 @@ namespace EPlast.XUnitTest
             return new string("remoteErrorExample");
         }
 
+        private string GetProvider()
+        {
+            return new string("fakeProvider");
+        }
+
         private ForgotPasswordViewModel GetTestForgotViewModel()
         {
             var forgotPasswordViewModel = new ForgotPasswordViewModel
@@ -894,3 +957,4 @@ namespace EPlast.XUnitTest
         }
     }
 }
+ 
