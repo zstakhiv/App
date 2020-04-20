@@ -283,7 +283,11 @@ namespace EPlast.Controllers
 
                 var _canApprove = user.ConfirmedUsers.Count < 3 
                     && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
-                    && !(_currentUserId == userId);
+                    && !(_currentUserId == userId)
+                    && _userManager.IsInRoleAsync(user,"Пластун").Result;
+
+                var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
+                
                 if (user != null)
                 {
                     var model = new UserViewModel
@@ -292,7 +296,8 @@ namespace EPlast.Controllers
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
                         EditView = edit,
-                        canApprove=_canApprove
+                        canApprove=_canApprove,
+                        timeToJoinPlast=_timeToJoinPlast
                     };
                     return View(model);
                 }

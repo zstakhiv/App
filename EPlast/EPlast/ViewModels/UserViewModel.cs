@@ -1,4 +1,5 @@
 ﻿using EPlast.DataAccess.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace EPlast.ViewModels
@@ -16,6 +17,7 @@ namespace EPlast.ViewModels
         }
         public bool HasAccessToManageUserPositions { get; set; }
         public bool canApprove { get; set; }
+        public TimeSpan timeToJoinPlast { get; set; }
         public EditUserViewModel EditView { get; set; }
     }
 }

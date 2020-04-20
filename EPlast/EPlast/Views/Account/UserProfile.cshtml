@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @model EPlast.ViewModels.UserViewModel
 @inject UserManager<EPlast.DataAccess.Entities.User> _userManager
-@inject RoleManager<IdentityRole> _roles
 
 <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 user-profile">
     <ul class="nav nav-tabs">
@@ -35,7 +34,7 @@
         }
     </ul>
     <div class="tab-content">
-        <div id="userProfile" class="container tab-pane active">
+        <div id="userProfile" class="container tab-pane active UserProfileWrapper">
             <div class="col-md-12 mt-4 d-flex">
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet bordered">
@@ -43,8 +42,10 @@
                             <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
                         </div>
                         <div class="profile-usertitle">
-                            <div class="profile-usertitle-name">  </div>
-                            <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"></div>
+                            @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
+                            {
+                                <div class="mt-4 font-weight h5 text-success">@Model.timeToJoinPlast.Days ДНІ ДО ВСТУПУ В ПЛАСТ</div>
+                            }
                         </div>
                     </div>
                 </div>
