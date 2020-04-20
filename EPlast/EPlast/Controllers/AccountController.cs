@@ -246,9 +246,10 @@ namespace EPlast.Controllers
         {
             try
             {
+                var _currentUserId= _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    userId = _userManager.GetUserId(User);
+                    userId = _currentUserId;
                     _logger.Log(LogLevel.Information, "UserId is not null");
                 }
                 var user = _repoWrapper.User.
@@ -280,6 +281,9 @@ namespace EPlast.Controllers
                     return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
+                var _canApprove = user.ConfirmedUsers.Count < 3 
+                    && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
+                    && !(_currentUserId == userId);
                 if (user != null)
                 {
                     var model = new UserViewModel
@@ -287,7 +291,8 @@ namespace EPlast.Controllers
                         User = user,
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
-                        EditView = edit
+                        EditView = edit,
+                        canApprove=_canApprove
                     };
                     return View(model);
                 }
@@ -315,6 +320,21 @@ namespace EPlast.Controllers
                 return RedirectToAction("UserProfile", "Account", new { userId = userId });
             }
             return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        public IActionResult ApproverDelete(string userId)
+        {
+            var id = _userManager.GetUserId(User);
+            var user = _repoWrapper.User.FindByCondition(x => x.Id == userId).
+                Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
+                        FirstOrDefault();
+            var t=user.ConfirmedUsers;
+            var confUser = user.ConfirmedUsers.Where(x => x.Approver.UserID == id).FirstOrDefault();
+            _repoWrapper.ConfirmedUser.Delete(confUser);
+            _repoWrapper.Save();
+            return RedirectToAction("UserProfile", "Account", new { userId = userId });
         }
         private EditUserViewModel Edit(string id)
         {

@@ -15,6 +15,7 @@ namespace EPlast.ViewModels
             Approvers = new List<Approver>();
         }
         public bool HasAccessToManageUserPositions { get; set; }
+        public bool canApprove { get; set; }
         public EditUserViewModel EditView { get; set; }
     }
 }

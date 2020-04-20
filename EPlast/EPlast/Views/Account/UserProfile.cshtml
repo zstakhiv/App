@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @model EPlast.ViewModels.UserViewModel
 @inject UserManager<EPlast.DataAccess.Entities.User> _userManager
+@inject RoleManager<IdentityRole> _roles
 
 <div class="container bg-light m-5 pt-2 pb-5 pr-5 pl-5 user-profile">
     <ul class="nav nav-tabs">
@@ -281,21 +282,29 @@
                                                                         <div class="approversImg">
                                                                             <img class="card-img-top" src="/images/Users/@item.Approver.User.ImagePath" alt="Generic placeholder image" />
                                                                         </div>
-                                                                        
+
                                                                         <div class="card-body">
                                                                             <div class="card-text">
                                                                                 <h5>@item.Approver.User.FirstName @item.Approver.User.LastName</h5>
                                                                                 <p>@item.ConfirmDate.ToString("dd-MM-yyyy")</p>
                                                                             </div>
                                                                         </div>
+
+                                                                        
                                                                     </a>
+                                                                        @if (item.Approver.UserID == _userManager.GetUserId(User))
+                                                                        {
+                                                                            <div class="card-footer">
+                                                                                <a class="btn btn-danger" asp-action="ApproverDelete" asp-controller="Account" asp-route-userId="@Model.User.Id">Скасувати</a>
+                                                                            </div>
+                                                                        }
                                                                 </div>
                                                             </div>
                                                         }
 
 
                                                     }
-                                                    @if (Model.User.ConfirmedUsers.Count() < 3)
+                                                    @if (Model.canApprove && User.IsInRole("Пластун"))
                                                     {
                                                         <div class="col">
                                                             <div class="">
