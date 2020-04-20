@@ -796,8 +796,98 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);*/
         }
 
-        
+
         //Fakes
+        private LoginViewModel GetTestLoginViewModel()
+        {
+            var loginViewModel = new LoginViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Password = "andrii123",
+                RememberMe = true,
+                ReturnUrl = "/google.com/",
+                ExternalLogins = (GetTestAuthenticationSchemes()).ToList()
+            };
+            return loginViewModel;
+        }
+
+        private RegisterViewModel GetTestRegisterViewModel()
+        {
+            var registerViewModel = new RegisterViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Name = "Andrii",
+                SurName = "Shainoha",
+                Password = "andrii123",
+                ConfirmPassword = "andrii123"
+            };
+            return registerViewModel;
+        }
+
+        private ForgotPasswordViewModel GetTestForgotViewModel()
+        {
+            var forgotPasswordViewModel = new ForgotPasswordViewModel
+            {
+                Email = "andriishainoha@gmail.com"
+            };
+            return forgotPasswordViewModel;
+        }
+
+        private ResetPasswordViewModel GetTestResetViewModel()
+        {
+            var resetPasswordViewModel = new ResetPasswordViewModel
+            {
+                Email = "andriishainoha@gmail.com",
+                Password = "andrii123",
+                ConfirmPassword = "andrii123",
+                Code = "500"
+            };
+            return resetPasswordViewModel;
+        }
+
+        private ChangePasswordViewModel GetTestChangeViewModel()
+        {
+            var changePasswordViewModel = new ChangePasswordViewModel
+            {
+                CurrentPassword = "password123",
+                NewPassword = "newpassword123",
+                ConfirmPassword = "newpassword123"
+            };
+            return changePasswordViewModel;
+        }
+
+        private User GetTestUserWithAllFields()
+        {
+            return new User()
+            {
+                UserName = "andriishainoha@gmail.com",
+                FirstName = "Andrii",
+                LastName = "Shainoha",
+                EmailConfirmed = true
+            };
+        }
+
+        private User GetTestUserWithEmailConfirmed()
+        {
+            return new User()
+            {
+                EmailConfirmed = true
+            };
+        }
+
+        private User GetTestUserWithNotEmailConfirmed()
+        {
+            return new User()
+            {
+                EmailConfirmed = false
+            };
+        }
+
+        private User GetTestUserWithNullFields()
+        {
+            return null;
+        }
+
         private ExternalLoginInfo GetExternalLoginInfoFake()
         {
             var info = new ExternalLoginInfo(null, "Google", "GoogleExample", "GoogleForDisplay");
@@ -812,19 +902,6 @@ namespace EPlast.XUnitTest
             authenticationDictionary.Add("Third", "Amazon");
             var authProperties = new AuthenticationProperties(authenticationDictionary);
             return authProperties;
-        }
-
-        private LoginViewModel GetTestLoginViewModel()
-        {
-            var loginViewModel = new LoginViewModel
-            {
-                Email = "andriishainoha@gmail.com",
-                Password = "andrii123",
-                RememberMe = true,
-                ReturnUrl = "/google.com/",
-                ExternalLogins = (GetTestAuthenticationSchemes()).ToList()
-            };
-            return loginViewModel;
         }
 
         private IEnumerable<AuthenticationScheme> GetTestAuthenticationSchemes()
@@ -856,24 +933,6 @@ namespace EPlast.XUnitTest
             return new string("asadasd3430234-2342");
         }
 
-        private User GetTestUserWithNullFields()
-        {
-            return null;
-        }
-
-        private RegisterViewModel GetTestRegisterViewModel()
-        {
-            var registerViewModel = new RegisterViewModel
-            {
-                Email = "andriishainoha@gmail.com",
-                Name = "Andrii",
-                SurName = "Shainoha",
-                Password = "andrii123",
-                ConfirmPassword = "andrii123"
-            };
-            return registerViewModel;
-        }
-
         private string GetReturnUrl()
         {
             return new string("/google.com/");
@@ -887,74 +946,6 @@ namespace EPlast.XUnitTest
         private string GetProvider()
         {
             return new string("fakeProvider");
-        }
-
-        private ForgotPasswordViewModel GetTestForgotViewModel()
-        {
-            var forgotPasswordViewModel = new ForgotPasswordViewModel
-            {
-                Email = "andriishainoha@gmail.com"
-            };
-            return forgotPasswordViewModel;
-        }
-
-        private ForgotPasswordViewModel GetBadTestForgotViewModel()
-        {
-            var forgotPasswordViewModel = new ForgotPasswordViewModel
-            {
-                Email = "andr"
-            };
-            return forgotPasswordViewModel;
-        }
-
-        private User GetTestUserWithAllFields()
-        {
-            return new User()
-            {
-                UserName = "andriishainoha@gmail.com",
-                FirstName = "Andrii",
-                LastName = "Shainoha",
-                EmailConfirmed = true
-            };
-        }
-
-        private ResetPasswordViewModel GetTestResetViewModel()
-        {
-            var resetPasswordViewModel = new ResetPasswordViewModel
-            {
-                Email = "andriishainoha@gmail.com",
-                Password = "andrii123",
-                ConfirmPassword = "andrii123",
-                Code = "500"
-            };
-            return resetPasswordViewModel;
-        }
-
-        private ChangePasswordViewModel GetTestChangeViewModel()
-        {
-            var changePasswordViewModel = new ChangePasswordViewModel
-            {
-                CurrentPassword = "password123",
-                NewPassword = "newpassword123",
-                ConfirmPassword = "newpassword123"
-            };
-            return changePasswordViewModel;
-        }
-
-        private User GetTestUserWithEmailConfirmed()
-        {
-            return new User()
-            {
-                EmailConfirmed = true
-            };
-        }
-
-        private User GetTestUserWithNotEmailConfirmed()
-        {
-            return new User()
-            {
-                EmailConfirmed = false
-            };
         }
     }
 }
