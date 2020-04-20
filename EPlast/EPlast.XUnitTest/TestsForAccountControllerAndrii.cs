@@ -84,267 +84,161 @@ namespace EPlast.XUnitTest
             return (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController);
         }
 
-        //ChangePassword
+        //Login
         [Fact]
-        public async Task TestChangePasswordGetReturnsChangePasswordView()
+        public async Task TestLoginGetReturnsViewWithModel()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            var result = await accountController.Login(GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);  плюс перевірити бо дає ерору
+            //Assert.Equal(GetTestLoginModelForLoginGet(), model);
+            Assert.NotNull(viewResult);
+
+            //І ТАК У ВСІХ МЕТОДАХ
+        }
+
+        [Fact]
+        public async Task TestLoginPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestLoginPostUserNullReturnsViewWithModel()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
             mockUserManager
-                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .ReturnsAsync(GetTestUserWithEmailConfirmed());
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestLoginPostEmailConfReturnsViewWithModel()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
                 .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
+                .ReturnsAsync(false);
 
-            var result = await accountController.ChangePassword();
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ChangePassword", viewResult.ViewName);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
             Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public async Task TestChangePasswordGetReturnsChangePasswordNotAllowedView()
+        public async Task TestLoginPostReturnsViewAccountLocked()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+
             mockUserManager
-                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .ReturnsAsync(GetTestUserWithNotEmailConfirmed());
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
                 .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithNotEmailConfirmed().EmailConfirmed);
+                .ReturnsAsync(true);
 
-            var result = await accountController.ChangePassword();
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ChangePasswordNotAllowed", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
+            mockSignInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.LockedOut);
 
-        [Fact]
-        public async Task TestChangePasswordPostModelIsNotValid()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            accountController.ModelState.AddModelError("CurrentPassword", "Required");
-            var result = await accountController.ChangePassword(GetTestChangeViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ChangePassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestChangePasswordPostReturnsLoginRedirect()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(GetTestUserWithNullFields()));
-
-            var result = await accountController.ChangePassword(GetTestChangeViewModel()) as RedirectToActionResult;
-            Assert.Equal("Login", result.ActionName);
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
+            Assert.Equal("AccountLocked", result.ActionName);
             Assert.NotNull(result);
         }
 
         [Fact]
-        public async Task TestChangePasswordPostReturnsChangePasswordView()
+        public async Task TestLoginPostReturnsViewUserProfile()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(GetTestUserWithAllFields()));
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
 
             mockUserManager
-                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Failed(null)));
-
-            var result = await accountController.ChangePassword(GetTestChangeViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ChangePassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestChangePasswordPostReturnChangePasswordConfirmationView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(Task.FromResult(GetTestUserWithAllFields()));
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
-                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Success));
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(true);
 
             mockSignInManager
-                .Setup(s => s.RefreshSignInAsync(It.IsAny<User>()))
-                .Verifiable();
-            //треба налаштувати signInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
-            /*var result = await accountController.ChangePassword(GetTestChangeViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ChangePasswordConfirmation", viewResult.ViewName);
-            Assert.NotNull(viewResult);*/
-        }
-
-        //ResetPassword
-        [Fact]
-        public void TestResetPasswordGetReturnsErrorView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = accountController.ResetPassword();
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
-            Assert.NotNull(viewResult);
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
+            Assert.Equal("UserProfile", result.ActionName);
+            Assert.NotNull(result);
         }
 
         [Fact]
-        public void TestResetPasswordGetReturnsResetPasswordView()
+        public async Task TestLoginPostReturnsViewPasswordInCorrect()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
+            mockSignInManager
+                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
+                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
 
-        [Fact]
-        public async Task TestResetPasswordPostModelIsNotValid()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            accountController.ModelState.AddModelError("NameError", "Required");
-            var result = await accountController.ResetPassword(GetTestResetViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestResetPasswordPostReturnsResetPasswordView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync((User)null);
-
-            var result = await accountController.ResetPassword(GetTestResetViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestResetPasswordPostReturnsResetPasswordConfirmation()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetTestUserWithAllFields());
-
-            mockUserManager
-                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Success));
-
-            mockUserManager
-                .Setup(s => s.IsLockedOutAsync(It.IsAny<User>()))
-                .Returns(Task.FromResult(false));
-
-            var result = await accountController.ResetPassword(GetTestResetViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPasswordConfirmation", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestResetPasswordPostReturnsResultFailedResetPasswordView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetTestUserWithAllFields());
-
-            mockUserManager
-                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Failed(null)));
-
-            var result = await accountController.ResetPassword(GetTestResetViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        //ForgotPassword
-        [Fact]
-        public void TestForgotPasswordGetReturnsForgotPasswordView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var result = accountController.ForgotPassword();
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ForgotPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestForgotPasswordPostModelIsNotValid()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            accountController.ModelState.AddModelError("NameError", "Required");
-            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ForgotPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestForgotPasswordPostReturnsForgotPasswordView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync((User)null);
-
-            mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithAllFields().EmailConfirmed);
-
-            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ForgotPassword", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-
-        [Fact]
-        public async Task TestForgotPasswordPostReturnsForgotPasswordConfirmationView()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
                 .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
+                .ReturnsAsync(true);
 
-            mockUserManager
-                .Setup(i => i.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestCodeForResetPasswordAndConfirmEmail());
+            mockSignInManager
+                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
-            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
-            mockUrlHelper
-                .Setup(
-                    x => x.Action(
-                        It.IsAny<UrlActionContext>()
-                    )
-                )
-                .Returns("callbackUrl")
-                .Verifiable();
-
-            accountController.Url = mockUrlHelper.Object;
-            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
-            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
+            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ForgotPasswordConfirmation", viewResult.ViewName);
+            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
+            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
             Assert.NotNull(viewResult);
         }
+
         //Register
         [Fact]
         public async Task TestRegisterGetReturnsRegisterView()
@@ -530,159 +424,294 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
-        //Login
+        //ForgotPassword
         [Fact]
-        public async Task TestLoginGetReturnsViewWithModel()
+        public void TestForgotPasswordGetReturnsForgotPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
-
-            var result = await accountController.Login(GetReturnUrl());
+            var result = accountController.ForgotPassword();
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl); 
-            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);  плюс перевірити бо дає ерору
-            //Assert.Equal(GetTestLoginModelForLoginGet(), model);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
             Assert.NotNull(viewResult);
-
-            //І ТАК У ВСІХ МЕТОДАХ
         }
 
         [Fact]
-        public async Task TestLoginPostModelIsNotValid()
+        public async Task TestForgotPasswordPostModelIsNotValid()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
-
             accountController.ModelState.AddModelError("NameError", "Required");
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public async Task TestLoginPostUserNullReturnsViewWithModel()
+        public async Task TestForgotPasswordPostReturnsForgotPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
-
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync((User)null);
 
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestUserWithAllFields().EmailConfirmed);
+
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.Equal("ForgotPassword", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public async Task TestLoginPostEmailConfReturnsViewWithModel()
+        public async Task TestForgotPasswordPostReturnsForgotPasswordConfirmationView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
-
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
                 .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(false);
+                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
 
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            mockUserManager
+                .Setup(i => i.GeneratePasswordResetTokenAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestCodeForResetPasswordAndConfirmEmail());
+
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
+            var result = await accountController.ForgotPassword(GetTestForgotViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
+            Assert.Equal("ForgotPasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        //ResetPassword
+        [Fact]
+        public void TestResetPasswordGetReturnsErrorView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var result = accountController.ResetPassword();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public async Task TestLoginPostReturnsViewAccountLocked()
+        public void TestResetPasswordGetReturnsResetPasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+            var result = accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
 
+        [Fact]
+        public async Task TestResetPasswordPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            accountController.ModelState.AddModelError("NameError", "Required");
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestResetPasswordPostReturnsResetPasswordView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestResetPasswordPostReturnsResetPasswordConfirmation()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
+                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+
+            mockUserManager
+                .Setup(s => s.IsLockedOutAsync(It.IsAny<User>()))
+                .Returns(Task.FromResult(false));
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestResetPasswordPostReturnsResultFailedResetPasswordView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            mockUserManager
+                .Setup(s => s.ResetPasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+
+            var result = await accountController.ResetPassword(GetTestResetViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResetPassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        //ChangePassword
+        [Fact]
+        public async Task TestChangePasswordGetReturnsChangePasswordView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(GetTestUserWithEmailConfirmed());
+
+            mockUserManager
                 .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
 
-            mockSignInManager
-                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.LockedOut);
+            var result = await accountController.ChangePassword();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
 
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
-            Assert.Equal("AccountLocked", result.ActionName);
+        [Fact]
+        public async Task TestChangePasswordGetReturnsChangePasswordNotAllowedView()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .ReturnsAsync(GetTestUserWithNotEmailConfirmed());
+
+            mockUserManager
+                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
+                .ReturnsAsync(GetTestUserWithNotEmailConfirmed().EmailConfirmed);
+
+            var result = await accountController.ChangePassword();
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePasswordNotAllowed", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestChangePasswordPostModelIsNotValid()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            accountController.ModelState.AddModelError("CurrentPassword", "Required");
+            var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
+        }
+
+        [Fact]
+        public async Task TestChangePasswordPostReturnsLoginRedirect()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithNullFields()));
+
+            var result = await accountController.ChangePassword(GetTestChangeViewModel()) as RedirectToActionResult;
+            Assert.Equal("Login", result.ActionName);
             Assert.NotNull(result);
         }
 
         [Fact]
-        public async Task TestLoginPostReturnsViewUserProfile()
+        public async Task TestChangePasswordPostReturnsChangePasswordView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithAllFields()));
 
             mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetTestUserWithAllFields());
+                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
 
-            mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(true);
-
-            mockSignInManager
-                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl()) as RedirectToActionResult;
-            Assert.Equal("UserProfile", result.ActionName);
-            Assert.NotNull(result);
+            var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public async Task TestLoginPostReturnsViewPasswordInCorrect()
+        public async Task TestChangePasswordPostReturnChangePasswordConfirmationView()
         {
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
+            mockUserManager
+                .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(GetTestUserWithAllFields()));
 
             mockUserManager
-                .Setup(s => s.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetTestUserWithAllFields());
-
-            mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(true);
+                .Setup(s => s.ChangePasswordAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
 
             mockSignInManager
-                .Setup(s => s.PasswordSignInAsync(It.IsAny<User>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+                .Setup(s => s.RefreshSignInAsync(It.IsAny<User>()))
+                .Verifiable();
+            //треба налаштувати signInManager
 
-            var result = await accountController.Login(GetTestLoginViewModel(), GetReturnUrl());
+            /*var result = await accountController.ChangePassword(GetTestChangeViewModel());
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
-            Assert.NotNull(viewResult);
+            Assert.Equal("ChangePasswordConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);*/
+        }
+
+        //ExternalLogin
+        [Fact]
+        public async Task TestExternalLoginReturnsChallengeResult()
+        {
+            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
+
+            mockSignInManager
+                .Setup(s => s.ConfigureExternalAuthenticationProperties(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(GetAuthenticationProperties());
+
+            var result = accountController.ExternalLogin(GetProvider(), GetReturnUrl());
+            var challengeResult = Assert.IsType<ChallengeResult>(result);
+            Assert.Equal(GetProvider(), challengeResult.AuthenticationSchemes[0]);
+            Assert.NotNull(challengeResult);
         }
 
         //ExternalLoginCallBack
@@ -767,35 +796,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);*/
         }
 
-        //ExternalLogin
-        [Fact]
-        public async Task TestExternalLoginReturnsChallengeResult()
-        {
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
-            mockUrlHelper
-                .Setup(
-                    x => x.Action(
-                        It.IsAny<UrlActionContext>()
-                    )
-                )
-                .Returns("callbackUrl")
-                .Verifiable();
-
-            accountController.Url = mockUrlHelper.Object;
-            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
-
-            mockSignInManager
-                .Setup(s => s.ConfigureExternalAuthenticationProperties(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(GetAuthenticationProperties());
-
-            var result = accountController.ExternalLogin(GetProvider(), GetReturnUrl());
-            var challengeResult = Assert.IsType<ChallengeResult>(result);
-            Assert.Equal(GetProvider(), challengeResult.AuthenticationSchemes[0]);
-            Assert.NotNull(challengeResult);
-        }
-
-
+        
         //Fakes
         private ExternalLoginInfo GetExternalLoginInfoFake()
         {
