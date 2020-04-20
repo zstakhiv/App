@@ -32,6 +32,8 @@ namespace EPlast.Controllers
         private readonly IEmailConfirmation _emailConfirmation;
         private readonly IHostingEnvironment _env;
         private readonly IUserAccessManager _userAccessManager;
+        static DateTime dateTimeRegister;
+        static DateTime dateTimeConfirming;
 
         public AccountController(UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -179,6 +181,7 @@ namespace EPlast.Controllers
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
+                        dateTimeRegister = DateTime.Now; 
                         return View("AcceptingEmail");
                     }
                 }
@@ -201,24 +204,34 @@ namespace EPlast.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
-                {
-                    return View("Error");
-                }
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return View("Error");
-                }
-                var result = await _userManager.ConfirmEmailAsync(user, code);
+                dateTimeConfirming = DateTime.Now;
+                TimeSpan timeSpan = dateTimeConfirming.Subtract(dateTimeRegister);
 
-                if (result.Succeeded)
+                if (timeSpan.TotalMinutes < 30)
                 {
-                    return RedirectToAction("ConfirmedEmail", "Account");
+                    if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
+                    {
+                        return View("Error");
+                    }
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if (user == null)
+                    {
+                        return View("Error");
+                    }
+                    var result = await _userManager.ConfirmEmailAsync(user, code);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ConfirmedEmail", "Account");
+                    }
+                    else
+                    {
+                        return View("Error");
+                    }
                 }
                 else
                 {
-                    return View("Error");
+                    return View("AcceptingEmailNotAllowed");
                 }
             }
             catch (Exception e)
