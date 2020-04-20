@@ -939,7 +939,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
-        [Fact]
+        [Fact]            // отут проблема треба доробити оту штуку ОТУТ ПОВНІСТЮ ПЕРЕПИСУЮ
         public async Task TestExternalLoginCallBackRedirectReturnUrlAfterGoogleRegistering()
         {
             //Arrange
@@ -948,6 +948,7 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.GetExternalAuthenticationSchemesAsync())
                 .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
 
+            //отут переписую
             mockSignInManager
                 .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetExternalLoginInfoFake());
@@ -956,16 +957,28 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
-            /*mockSignInManager               тут дописати бо хз як з інфо
+            //тут дописати бо хз як з інфо
+            /*mockSignInManager
                 .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()).Result.Principal.FindFirstValue(It.IsAny<string>()))
-                .Returns("ExampleEmail");
+                .Returns(GetFakeClaimsPrincipal()));*/
 
-            var result = await accountController.ExternalLoginCallBack(GetReturnUrl()) as LocalRedirectResult;
+            var result = await accountController.ExternalLoginCallBack(GetTestReturnUrl()) as LocalRedirectResult;
             Assert.Equal(GetTestLoginViewModel().ReturnUrl, result.Url);
-            Assert.NotNull(result);*/
+            Assert.NotNull(result);
         }
 
         //Fakes
+        private ClaimsPrincipal GetFakeClaimsPrincipal()
+        {
+            return new ClaimsPrincipal();
+        }
+
+        private ExternalLoginInfo GetExternalLoginInfoFake()
+        {
+            var info = new ExternalLoginInfo(new ClaimsPrincipal(ClaimsIdentity.DefaultNameClaimType), "Google", "GoogleExample", "GoogleForDisplay");
+            return info;
+        }
+
         private LoginViewModel GetTestLoginViewModel()
         {
             var loginViewModel = new LoginViewModel
@@ -1056,11 +1069,7 @@ namespace EPlast.XUnitTest
             return null;
         }
 
-        private ExternalLoginInfo GetExternalLoginInfoFake()
-        {
-            var info = new ExternalLoginInfo(null, "Google", "GoogleExample", "GoogleForDisplay");
-            return info;
-        }
+        
 
         private AuthenticationProperties GetAuthenticationProperties()
         {
