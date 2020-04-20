@@ -2,7 +2,7 @@ let profileListing = [
     ['<a class="text-light nav-link p-0" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
         '<a class="text-light nav-link p-0" href="/Account/UserProfile">Діловодства</a>',
-        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Події</a>',
+        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Мої Події</a>',
         'Станиця',
         'Курінь',
         'З`їзди',
@@ -22,8 +22,7 @@ let profileListing = [
         'Геостатистика',
         'Статистика по роках',
         'Статистика (періоди)',
-        'Порівняти осередки',
-        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
+        'Порівняти осередки'
         'Статистичні звіти']
 ];
 let buttonClone: Element;
