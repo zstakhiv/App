@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EPlast.Views.City
 {
-    public class CityFollowersrModel : PageModel
+    public class CityEditMembersModel : PageModel
     {
         public void OnGet()
         {

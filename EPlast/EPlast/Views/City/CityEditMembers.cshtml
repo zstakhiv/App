@@ -1,0 +1,24 @@
+﻿@using EPlast.ViewModels
+@using Microsoft.AspNetCore.Identity
+@model CityViewModel
+@{
+    ViewData["Title"] = "Члени Станиці";
+}
+<div class="main-wrapper" style="background-color:transparent;">
+    <div class="d-flex flex-shrink-0 justify-content-center flex-wrap">
+        @foreach (var adminCity in Model.CityAdmins)
+        {
+            <div class="card border rounded shadow-none d-inline float-left" style="margin: 15px;width: 150px;height: 300px;">
+                <div class="border-primary d-flex d-xl-flex justify-content-center align-items-center justify-content-xl-center align-items-xl-center" style="height: 50px;margin: -1px;background-color: rgb(60,84,56);">
+                    <p class="text-center" style="color: rgb(255,255,255);font-size: 18px;margin-bottom: 0px;letter-spacing: 0px;line-height: 18px;padding: 2px;">@adminCity.AdminType.AdminTypeName</p>
+                </div>
+                <div class="float-left d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 30px;margin: -1px;margin-top: 3px;"><a class="d-xl-flex justify-content-xl-end" style="padding-right: 95px;padding-left: 5px;color: #3c5438;"><i class="fa fa-gear" style="font-size: 24px;"></i></a><a class="float-none d-xl-flex" style="padding-right: 5px;padding-left: 5px;color: #3c5438;"><i class="fa fa-close" style="font-size: 24px;"></i></a></div>
+                <div class="border rounded-circle" style="height: 150px;background-image: url('../../images/Users/@adminCity.User.ImagePath');background-size: cover;background-repeat: no-repeat;background-position: center;margin: 5px;margin-top: 20px;margin-bottom: 15px;"></div>
+                <div class="d-inline">
+                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@adminCity.User.FirstName</p>
+                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;width: 100%;font-size: 18px;">@adminCity.User.LastName</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
