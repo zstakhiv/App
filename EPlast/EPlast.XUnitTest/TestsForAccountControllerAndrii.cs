@@ -351,7 +351,6 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(IdentityResult.Success));
 
-            //тут мож треба назвати по іншому код
             mockUserManager
                 .Setup(i => i.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
                 .ReturnsAsync(GetTestCodeForResetPasswordAndConfirmEmail());
@@ -394,6 +393,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
+        //ConfirmingEmail
         [Fact]
         public async Task TestConfirmEmailPostIncomingProblemsReturnsErrorView()
         {
@@ -428,8 +428,8 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-        [Fact]       //доробити
-        public async Task TestConfirmEmailPostResultNotSuccededReturnsErrorView()
+        [Fact]   
+        public async Task TestConfirmEmailPostReturnsConfirmedEmail()
         {
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -439,13 +439,15 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
-                .Setup(s => s.ConfirmEmailAsync(GetTestUserWithAllFields(), GetTestCodeForResetPasswordAndConfirmEmail()))
-                .Returns(Task.FromResult(IdentityResult.Failed())); //тут поміняти тип поверненння вертає null
+                .Setup(s => s.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success)); 
 
-            /*var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
-            Assert.NotNull(viewResult);*/
+            //Act
+            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail()) as RedirectToActionResult;
+
+            //Assert
+            Assert.Equal("ConfirmedEmail", result.ActionName);
+            Assert.NotNull(result);
         }
 
         [Fact]       //доробити і дещо переробити
@@ -819,12 +821,14 @@ namespace EPlast.XUnitTest
             mockSignInManager
                 .Setup(s => s.RefreshSignInAsync(It.IsAny<User>()))
                 .Verifiable();
-            //треба налаштувати signInManager
 
-            /*var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            //Act
+            var result = await accountController.ChangePassword(GetTestChangeViewModel());
+            
+            //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ChangePasswordConfirmation", viewResult.ViewName);
-            Assert.NotNull(viewResult);*/
+            Assert.NotNull(viewResult);
         }
 
         //ExternalLogin
