@@ -451,8 +451,9 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]       //доробити і дещо переробити
-        public async Task TestConfirmEmailPostRes()
+        public async Task TestConfirmEmailPostReturnsErrorResultNotSucceded()
         {
+            //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
             mockUserManager
@@ -460,9 +461,16 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync(GetTestUserWithAllFields());
 
             mockUserManager
-                .Setup(s => s.ConfirmEmailAsync(GetTestUserWithAllFields(), GetTestCodeForResetPasswordAndConfirmEmail()))
-                .Returns(Task.FromResult(IdentityResult.Failed())); //тут поміняти тип поверненння вертає null
-            //має вертати result.Succeded
+                .Setup(s => s.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+
+            //Act
+            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Error", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
         //AccountLocked
