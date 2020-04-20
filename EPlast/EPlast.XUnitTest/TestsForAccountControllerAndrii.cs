@@ -450,7 +450,7 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
-        [Fact]       //доробити і дещо переробити
+        [Fact] 
         public async Task TestConfirmEmailPostReturnsErrorResultNotSucceded()
         {
             //Arrange
