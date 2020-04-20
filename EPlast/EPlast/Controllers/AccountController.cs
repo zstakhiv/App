@@ -240,7 +240,7 @@ namespace EPlast.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", "Account");
         }
-        
+
         [HttpGet]
         public IActionResult UserProfile(string userId)
         {
@@ -265,6 +265,9 @@ namespace EPlast.Controllers
                         ThenInclude(g => g.Religion).
                     Include(g => g.UserProfile).
                         ThenInclude(g => g.Work).
+                    Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
                     FirstOrDefault();
                 var userPositions = _repoWrapper.CityAdministration
                     .FindByCondition(ca => ca.UserId == userId)
@@ -297,6 +300,22 @@ namespace EPlast.Controllers
             }
         }
 
+        public IActionResult ApproveUser(string userId)
+        {
+            if (userId != null)
+            {
+                var id = _userManager.GetUserId(User);
+
+                var conUs = new ConfirmedUser { UserID = userId, ConfirmDate = DateTime.Now };
+                var appUs = new Approver { UserID = id, ConfirmedUser = conUs };
+                conUs.Approver = appUs;
+
+                _repoWrapper.ConfirmedUser.Create(conUs);
+                _repoWrapper.Save();
+                return RedirectToAction("UserProfile", "Account", new { userId = userId });
+            }
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
         private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
