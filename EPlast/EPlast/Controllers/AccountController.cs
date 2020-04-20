@@ -207,7 +207,7 @@ namespace EPlast.Controllers
                 dateTimeConfirming = DateTime.Now;
                 TimeSpan timeSpan = dateTimeConfirming.Subtract(dateTimeRegister);
 
-                if (timeSpan.TotalMinutes < 30)
+                if (timeSpan.TotalMinutes < 1)
                 {
                     if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                     {
