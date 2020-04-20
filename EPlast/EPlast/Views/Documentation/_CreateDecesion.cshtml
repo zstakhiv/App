@@ -3,15 +3,18 @@
 @{
     ViewData["Title"] = "Створення рішень";
 }
-<div class="create-raport-form">
-    <form enctype="multipart/form-data" method="post" asp-action="SaveDecesionAsync" asp-controller="Documentation">
+<div class="Create-decesion-form">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right: 50px;margin-top: 14px;font-size: 28px;">
+        <span aria-hidden="true">×</span>
+    </button>
+    <form id="CreateDecesionForm">
         <h2 class="text-center">Додати рішення пластового проводу<br></h2>
         <div class="form-group">
             <label>
                 <strong>Назва рішення</strong>
                 <br>
             </label>
-            @Html.TextBoxFor(x => x.Decesion.Name, new { @placeholder = "Назва рішення", @class = "form-control" })
+            @Html.TextBoxFor(x => x.Decesion.Name, new { @placeholder = "Назва рішення", @id = "Decesion-Name", @class = "form-control" })
             <span asp-validation-for="@Model.Decesion.Name" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
@@ -19,8 +22,8 @@
                 <strong>Рішення органу</strong>
                 <br>
             </label>
-            @Html.DropDownListFor(x => x.Decesion.Organization.ID, Model.OrganizationListItems, "Виберіть орган влади рішення"
-            , new { @class = "form-control" })
+            @Html.DropDownListFor(x => x.Decesion.Organization.ID, Model.OrganizationListItems
+            , new { @class = "form-control", @id = "Decesion-Organization-ID" })
         </div>
         <div class="form-group">
             <label>
@@ -36,6 +39,7 @@
                 }
             </datalist>
             @Html.HiddenFor(x => x.Decesion.DecesionTarget.ID, new { @id = "autocomplete_input_id_0", @Value = "0" })
+            <span asp-validation-for="@Model.Decesion.Date" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
             <label>
@@ -44,7 +48,7 @@
             </label>
             <br>
             @Html.TextBoxFor(x => x.Decesion.Date,
-            new { type = "datetime", @placeholder = "Назва рішення", @id = "datepicker", @class = "form-control" })
+            new { type = "datetime", @placeholder = "Дата рішення", @id = "datepicker", @class = "form-control" })
             <span asp-validation-for="@Model.Decesion.Date" style="color:#db0b3c;" />
         </div>
 
@@ -53,7 +57,7 @@
                 <strong>Текст рішення</strong>
                 <br>
             </label>
-            @Html.TextAreaFor(x => x.Decesion.Description, new { @placeholder = "Опис", @rows = "14", @class = "form-control" })
+            @Html.TextAreaFor(x => x.Decesion.Description, new { @id = "Decesion-Description", @placeholder = "Опис", @rows = "14", @class = "form-control" })
             <span asp-validation-for="@Model.Decesion.Description" style="color:#db0b3c;" />
         </div>
         <div class="form-group">
@@ -61,25 +65,26 @@
                 <strong>Статус рішення</strong>
                 <br>
             </label>
-            @Html.DropDownListFor(x => x.Decesion.DecesionStatusType, Model.DecesionStatusTypeListItems, "Виберіть статус рішення"
-            , new { @class = "form-control" })
-            <span asp-validation-for="@Model.Decesion.DecesionStatusType" style="color:#db0b3c;" />
+            @Html.DropDownListFor(x => x.Decesion.DecesionStatusType, Model.DecesionStatusTypeListItems
+            , new { @class = "form-control", @id = "Decesion-DecesionStatusType" })
         </div>
         <div class="form-group">
-            <label>
-                <strong>Додати файл</strong>
-                <br>
-            </label>
-            @Html.TextBoxFor(x => x.File, new
-            {
-                @placeholder = "прекріплення файлу",
-                @type = "file",
-                @class = "form-control",
-                @accept = $"application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*"
-            })
+
+            <br />
+            <div class="upload-btn-wrapper">
+                <button class="upload-btn">Прикріпити файл</button>
+                @Html.TextBoxFor(x => x.File, new
+           {
+               @placeholder = "прекріплення файлу",
+               @id = "CreateDecesionFormFile",
+               @type = "file",
+               @class = "form-control",
+               @accept = $"application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*"
+           })
+            </div>
         </div>
         <div class="form-group">
-            <button class="btn btn-primary" id="sbmt" type="submit">Опублікувати</button>
+            <button class="btn btn-primary" id="CreateDecesionForm-submit" type="submit">Опублікувати</button>
         </div>
     </form>
 </div>

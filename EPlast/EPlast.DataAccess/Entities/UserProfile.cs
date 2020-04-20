@@ -6,17 +6,20 @@ namespace EPlast.DataAccess.Entities
     public class UserProfile
     {
         public int ID { get; set; }
-        [Display(Name="Номер телефону")]
-        [DataType(DataType.PhoneNumber)]
-        [StringLength(10, MinimumLength = 6, ErrorMessage = "Номер телефону повинен складати від 6 до 10 цифр")]
-        public string PhoneNumber { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Дата народження")]
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
+        public int? EducationId { get; set; }
         public Education Education { get; set; }
+        public int? DegreeId { get; set; }
+        public Degree Degree { get; set; }
+        public int? NationalityId { get; set; }
         public Nationality Nationality { get; set; }
+        public int? ReligionId { get; set; }
         public Religion Religion { get; set; }
+        public int? WorkId { get; set; }
         public Work Work { get; set; }
         public int? GenderID { get; set; }
         public Gender Gender { get; set; }

@@ -1,9 +1,12 @@
 $(document).ready(function () {
     let status = 0;
     let value;
-    let elementTodelete;
+    let elementToDelete;
     let activeEvent;
     $('[data-toggle="tooltip"]').tooltip();
+    $("#conflictBut").click(function () {
+        location.reload(true);
+    });
     $("div.single-card").mouseleave(function () {
         if ($(this).find("div.events-unsubscribe").is(":visible")) {
             $(this).find("div.events-unsubscribe").hide();
@@ -12,7 +15,7 @@ $(document).ready(function () {
     });
     $('a.delete-card').click(function () {
         value = $(this).parents("div.single-card").children('input[type="hidden"]').val();
-        elementTodelete = this;
+        elementToDelete = this;
         $("#myModal").modal('show');
     });
     $('a.subscribe').click(function () {
@@ -33,16 +36,12 @@ $(document).ready(function () {
                 data: { ID: value },
                 success: function () {
                     $("#myModal").modal('hide');
-                    $("#fail").hide();
-                    $("#success").show();
-                    $("#deleteResult").modal('show');
-                    $(elementTodelete).parents("div.single-card").remove();
+                    $("#deleteResultSuccess").modal('show');
+                    $(elementToDelete).parents("div.single-card").remove();
                 },
                 error: function () {
                     $("#myModal").modal('hide');
-                    $("#success").hide();
-                    $("#fail").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultFail").modal('show');
                 },
             });
         }
@@ -81,26 +80,19 @@ $(document).ready(function () {
                     $(activeEvent).parents("div.events-operations").children("div.events-pen").show();
                     $("#modalUnSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalUnSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response) {
+                    if (response.status != 409) {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
     });
-    //$("a.delete-card").click(function () {
-    //    $(this).parents("div.single-card").remove();
-    //});
-    //$("div.events-unsubscribe").click(function () {
-    //    $(this).hide();
-    //    $(this).parents("div").first().children("div.events-part").hide();
-    //    $(this).parents("div").first().children("div.events-participants").hide();
-    //    $(this).parents("div").first().children("div.events-pen").show();
-    //});
-    //$("div.events-pen").click(function () {
-    //    $(this).hide();
-    //    $(this).parents("div").first().children("div.events-participants").show();
-    //});
     $("div.events-part").mouseenter(function () {
         status = 1;
         $(this).hide();

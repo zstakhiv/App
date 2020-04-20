@@ -1,5 +1,5 @@
-﻿.create-raport-form {
-    padding: 10px 0px 80px 0;
+﻿.Create-decesion-form {
+    padding: 10px 0px 0px 0;
 
     form {
         max-width: 480px;
@@ -9,7 +9,6 @@
         padding: 40px;
         border-radius: 4px;
         color: #505e6c;
-        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
@@ -25,6 +24,10 @@
     }
 
     form {
+        .form-group:last-of-type {
+            text-align: center;
+        }
+
         .form-control {
             background: #fff;
             border-radius: 2px;
@@ -74,82 +77,112 @@
             margin-top: 15px;
             color: #fff;
         }
-    }
-}
 
-@media (max-width: 767px) {
-    .create-raport-form {
-        padding: 20px 0;
-    }
+        .form-group {
+            .upload-btn-wrapper {
+                position: relative;
+                overflow: hidden;
+                display: inline-block;
+            }
 
-    .create-raport-form form {
-        padding: 30px;
+            .upload-btn {
+                border: 2px solid gray;
+                color: gray;
+                background-color: white;
+                padding: 8px 20px;
+                border-radius: 2px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            input[type=file] {
+                font-size: 100px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+            }
+        }
     }
 }
 
 .data-table-wrapper {
-    min-width: 1200px;
-    margin: 100px 0px;
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 4px;
-    color: #505e6c;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
-
-    table.dataTable thead {
-        .th-sm {
-            vertical-align: middle;
-        }
-
-        .sorting {
-            &:after, &:before {
-                bottom: .5em;
-            }
-        }
-
-        .sorting_asc {
-            &:after, &:before {
-                bottom: .5em;
-            }
-        }
-
-        .sorting_asc_disabled {
-            &:after, &:before {
-                bottom: .5em;
-            }
-        }
-
-        .sorting_desc {
-            &:after, &:before {
-                bottom: .5em;
-            }
-        }
-
-        .sorting_desc_disabled {
-            &:after, &:before {
-                bottom: .5em;
-            }
-        }
+    .decision-heading {
+        text-align: center;
     }
 
-    table.dataTable tbody {
-        tr.context-menu-one {
-            td {
-                a {
-                    color: #212529;
+    .show_hide {
+        cursor: pointer;
+    }
+
+    .hide {
+        visibility: hidden;
+    }
+
+    #dtReadDecesion_wrapper {
+        #dtReadDecesion_filter {
+            label {
+                button[data-toggle="modal"] {
+                    margin: 0 0 3px 2rem;
+                    border-color: #3c5438 !important;
+                }
+
+                button[data-toggle="modal"]:focus {
+                    box-shadow: 0 0 0 0.2rem #3c5438 !important;
+                }
+
+                button[data-toggle="modal"]:active {
+                    border-color: #3c5438 !important;
+                }
+            }
+        }
+
+        table.dataTable thead {
+            .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                &:after, &:before {
+                    right: 14px !important;
                 }
             }
         }
     }
+}
 
-    .page-item.disabled .page-link {
-        background-color: #3c5438;
-        color: #ffffff;
+@media (max-width: 767px) {
+    .Create-decesion-form {
+        padding: 20px 0;
+
+        form {
+            padding: 30px;
+        }
     }
 
-    .page-item.active .page-link {
-        color: #000;
-        background-color: #ffffff;
-        border-color: none;
+    .data-table-wrapper {
+        font-size: 18px;
+        text-align: center;
+        font-size: 9px;
+
+        .decision-heading {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .dataTables_filter {
+            label {
+                #createDecesionButton {
+                    min-width: 85px !important;
+                }
+            }
+        }
+
+        #dtReadDecesion_wrapper {
+            table.dataTable thead {
+                .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
+                    &:after, &:before {
+                        bottom: 9px;
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
     }
 }

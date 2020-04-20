@@ -11,7 +11,8 @@
         flex-basis: 50%;
         flex-grow: 1;
         width: 50%;
-        background-size: cover;
+        background-size: contain;
+        background-repeat: no-repeat;
         background-position: center center;
     }
 

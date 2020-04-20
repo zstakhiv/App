@@ -135,7 +135,7 @@
                 <p>Нові фотографії успішно додані до галереї.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
+                <button id="uploadRes" type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -158,32 +158,56 @@
     </div>
 </div>
 
-
-    <div id="deleteResult" class="modal fade" tabindex="-1">
-        <div id="" class="modal-dialog">
-            <div id="success" class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Вітаємо!</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>Подія успішно видалена.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
-                </div>
+<div id="conflictModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div id="success" class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Повідомлення!</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div id="fail" class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Упсс...</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p>Щось пішло не так при видаленні події. Спробуйте пізніше або напишіть у техпідтримку.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
-                </div>
+            <div class="modal-body">
+                <p>Не вдалося виконати дану дію, адже частина інформації на сторінці є застарілою.</p>
+                <p class="text-secondary"><small>Натисніть "OK" після чого сторінку буде оновлено.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="conflictBut" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
+</div>
+
+
+<div id="deleteResultSuccess" class="modal fade" tabindex="-1">
+    <div  class="modal-dialog">
+        <div id="success" class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Вітаємо!</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Подія успішно видалена.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deleteResultFail" class="modal fade" tabindex="-1">
+    <div  class="modal-dialog">
+        <div id="fail" class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Упсс...</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Щось пішло не так при видаленні події. Спробуйте пізніше або напишіть у техпідтримку.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success event-btn-modal" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -10,7 +10,7 @@ namespace EPlast.ViewModels
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Поле електронна пошта є обов'язковим")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Введене поле не є правильним для електронної пошти")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Поле пароль є обов'язковим")]

@@ -19,34 +19,32 @@
             type: 'GET',
             cache: false,
             data: { id: positionId },
-            success: function (result) {
-                if (result) {
-                    tr.click();
-                    tr.remove();
-                    var currentDate = new Date();
-                    var day = currentDate.getDate();
-                    var month = currentDate.getMonth() + 1;
-                    var year = currentDate.getFullYear();
-                    var strDate = (day < 10 ? '0' : '') + day + '.'
-                        + (month < 10 ? '0' : '') + month + '.'
-                        + year;
-                    tr.find('td:last').append(' - ' + strDate);
-                    tr.bind("click", function () {
-                        var buttons = [$('#deletePosition')];
-                        setRowSelected(tr, buttons);
-                    });
-                    $('#PositionsTable tbody').append(tr);
-                    $('#ModalSuccess .modal-body:first p:first strong:first').html('Каденцію діловодства успішно завершено!');
-                    $('#ModalSuccess').modal('show');
+            success: function (message) {
+                tr.click();
+                tr.remove();
+                var currentDate = new Date();
+                var day = currentDate.getDate();
+                var month = currentDate.getMonth() + 1;
+                var year = currentDate.getFullYear();
+                var strDate = (day < 10 ? '0' : '') + day + '.'
+                    + (month < 10 ? '0' : '') + month + '.'
+                    + year;
+                tr.find('td:last').append(' - ' + strDate);
+                tr.bind("click", function () {
+                    var buttons = [$('#deletePosition')];
+                    setRowSelected(tr, buttons);
+                });
+                $('#PositionsTable tbody').append(tr);
+                showModalMessage($('#ModalSuccess'), message);
+            },
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
                 }
                 else {
-                    $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося завершити каденцію діловодства!');
-                    $('#ModalError').modal('show');
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
                 }
-            },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося завершити каденцію діловодства!');
-                $('#ModalError').modal('show');
             }
         });
     })
@@ -61,21 +59,19 @@
             type: 'GET',
             cache: false,
             data: { id: positionId },
-            success: function (result) {
-                if (result) {
-                    tr.click();
-                    tr.remove();
-                    $('#ModalSuccess .modal-body:first p:first strong:first').html('Діловодство успішно видалено!');
-                    $('#ModalSuccess').modal('show');
+            success: function (message) {
+                tr.click();
+                tr.remove();
+                showModalMessage($('#ModalSuccess'), message);
+            },
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
                 }
                 else {
-                    $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося видалити діловодство!');
-                    $('#ModalError').modal('show');
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
                 }
-            },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося видалити діловодство!');
-                $('#ModalError').modal('show');
             }
         });
     })
@@ -90,24 +86,34 @@
             type: 'GET',
             cache: false,
             data: { id: positionId },
-            success: function (result) {
-                if (result) {
-                    tr.click();
-                    tr.remove();
-                    $('#ModalSuccess .modal-body:first p:first strong:first').html('Діловодство успішно видалено!');
-                    $('#ModalSuccess').modal('show');
+            success: function (message) {
+                tr.click();
+                tr.remove();
+                showModalMessage($('#ModalSuccess'), message);
+            },
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
                 }
                 else {
-                    $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося видалити діловодство!');
-                    $('#ModalError').modal('show');
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
                 }
-            },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося видалити діловодство!');
-                $('#ModalError').modal('show');
             }
         });
     })
+    $('#Upload-photo').click(function(e){
+        let input: HTMLInputElement = <HTMLInputElement>document.getElementById("upload-file");
+        var files = input.files;
+        if (files[0] != undefined && files[0].size >= 3145728) {
+            alert("Фото не може займати більше ніж 3 Мб");
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
+    });
+    
+
 })
 
 function setRowSelected(tr: JQuery<HTMLElement>, disabledElements: JQuery<HTMLElement>[]): void {

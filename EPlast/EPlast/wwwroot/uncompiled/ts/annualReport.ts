@@ -44,9 +44,14 @@
                 $('#ModalContent').html(result);
                 $('#AnnualReportModal').modal('show');
             },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося завантажити річний звіт!');
-                $('#ModalError').modal('show');
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
+                }
+                else {
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
+                }
             }
         });
     })
@@ -61,15 +66,19 @@
             type: 'GET',
             cache: false,
             data: { id: annualReportId },
-            success: function (result) {
+            success: function (message) {
                 tr.find(':last').html(AnnualReportStatus.Confirmed);
                 setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], true);
-                $('#ModalSuccess .modal-body:first p:first strong:first').html(result);
-                $('#ModalSuccess').modal('show');
+                showModalMessage($('#ModalSuccess'), message);
             },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося підтвердити річний звіт!');
-                $('#ModalError').modal('show');
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
+                }
+                else {
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
+                }
             }
         });
     })
@@ -84,15 +93,19 @@
             type: 'GET',
             cache: false,
             data: { id: annualReportId },
-            success: function (result) {
+            success: function (message) {
                 tr.find(':last').html(AnnualReportStatus.Canceled);
                 setDisabled([$('#confirmAnnualReport'), $('#cancelAnnualReport')], true);
-                $('#ModalSuccess .modal-body:first p:first strong:first').html(result);
-                $('#ModalSuccess').modal('show');
+                showModalMessage($('#ModalSuccess'), message);
             },
-            error: function () {
-                $('#ModalError .modal-body:first p:first strong:first').html('Не вдалося скасувати річний звіт!');
-                $('#ModalError').modal('show');
+            error: function (response) {
+                if (response.status === 404) {
+                    showModalMessage($('#ModalError'), response.responseText);
+                }
+                else {
+                    var strURL = '/Error/HandleError?code=' + response.status;
+                    window.open(strURL, '_self');
+                }
             }
         });
     })
@@ -122,4 +135,9 @@ $('#annual-report-form').ready(function () {
 function setDisabled(elements: JQuery<HTMLElement>[], disabled: boolean) {
     for (let el of elements)
         el.prop('disabled', disabled);
+}
+
+function showModalMessage(modalWindow: JQuery<HTMLElement>, message: string) {
+    modalWindow.find('.modal-body:first p:first strong:first').html(message);
+    modalWindow.modal('show');
 }

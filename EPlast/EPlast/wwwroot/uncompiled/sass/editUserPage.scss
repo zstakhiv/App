@@ -1,0 +1,53 @@
+﻿.photo-wrapper {
+    margin-top: 5%;
+    display: flex;
+
+    .Upload-photo {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .upload-btn {
+        border: 2px solid #3c5438;
+        color: gray;
+        background-color: white;
+        padding: 8px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    .row {
+        justify-content: center;
+    }
+
+    .accept {
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+    }
+
+    .btn {
+        border-radius: 0;
+    }
+}
+.rowEditPage {
+    justify-content: center;
+}
+
+.gender-wrapper {
+    select {
+        padding-right: 25px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+}

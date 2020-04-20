@@ -60,6 +60,14 @@
       "files": [
         "dist/jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-mask-plugin@1.14.16",
+      "destination": "wwwroot/lib/jquery-mask-plugin/",
+      "files": [
+        "dist/jquery.mask.min.js"
+      ]
     }
   ]
 }

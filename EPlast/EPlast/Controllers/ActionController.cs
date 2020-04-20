@@ -1,6 +1,7 @@
 ﻿using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels.Events;
+using EPlast.Wrapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,16 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _env;
+        private readonly IFileManager _fm;
 
 
-        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env)
+
+        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env, IFileManager fm)
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
             _env = env;
+            _fm = fm;
         }
 
         [Authorize]
@@ -90,7 +94,30 @@ namespace EPlast.Controllers
         {
             try
             {
-                _repoWrapper.Event.Delete(_repoWrapper.Event.FindByCondition(e => e.ID == ID).First());
+                Event objectToDelete = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                _repoWrapper.Event.Delete(objectToDelete);
+                _repoWrapper.Save();
+                return StatusCode(200);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeletePicture(int ID)
+        {
+            try
+            {
+                Gallary objectToDelete = _repoWrapper.Gallary.FindByCondition(g =>g.ID == ID).First();
+                _repoWrapper.Gallary.Delete(objectToDelete);
+                var picturePath = Path.Combine(_env.WebRootPath, "images\\EventsGallery", objectToDelete.GalaryFileName);
+                if (System.IO.File.Exists(picturePath))
+                {
+                    System.IO.File.Delete(picturePath);
+                }
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
@@ -107,7 +134,8 @@ namespace EPlast.Controllers
         {
             try
             {
-                _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = 3, EventId = ID, UserId = _userManager.GetUserId(User) });
+                ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Розглядається").First();
+                _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = participantStatus.ID, EventId = ID, UserId = _userManager.GetUserId(User) });
                 _repoWrapper.Save();
                 return StatusCode(200);
             }
@@ -123,7 +151,13 @@ namespace EPlast.Controllers
         {
             try
             {
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
                 Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
+                if(participantToDelete.ParticipantStatusId == rejectedStatus)
+                {
+                    return StatusCode(409);
+
+                }
                 _repoWrapper.Participant.Delete(participantToDelete);
                 _repoWrapper.Save();
                 return StatusCode(200);
@@ -141,8 +175,8 @@ namespace EPlast.Controllers
             {
                 int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
                 int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
-                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
-
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;              
+                bool isUserGlobalEventAdmin = User?.IsInRole("Адміністратор подій") ?? false;
                 EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
                        .Include(e => e.Participants)
                             .ThenInclude(p => p.User)
@@ -160,7 +194,7 @@ namespace EPlast.Controllers
                        {
                            Event = e,
                            EventParticipants = e.Participants,
-                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || User.IsInRole("Адміністратор подій"),
+                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || isUserGlobalEventAdmin,
                            IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
                            IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
                            IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
@@ -172,7 +206,7 @@ namespace EPlast.Controllers
                 {
                     eventModal.EventParticipants = eventModal.EventParticipants.Where(p => p.ParticipantStatusId == approvedStatus);
                 }
-                
+
                 return View(eventModal);
             }
             catch
