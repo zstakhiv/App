@@ -54,7 +54,7 @@ $(document).ready(function () {
         formData.append("Decesion.Organization.ID", decesionOrganizationId);
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
-        formData.append("Decesion.Date", decesionDate);
+        formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
         $.ajax({
