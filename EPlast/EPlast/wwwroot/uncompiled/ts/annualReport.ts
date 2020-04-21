@@ -1,6 +1,8 @@
 ﻿$('#view-annual-reports-form').ready(function () {
     var indexAnnualReportId = 0;
     var indexCityId = 1;
+    var indexCityName = 2;
+    var indexDate = 5;
     var indexAnnualReportStatus = 6;
 
     $('#AnnualReportsTable').DataTable({
@@ -69,6 +71,18 @@
         e.preventDefault();
         e.stopPropagation();
         var tr = $('#AnnualReportsTable tr.row-selected:first');
+        var cityName = $(tr).find('td').eq(indexCityName).html();
+        var date = $(tr).find('td').eq(indexDate).html();
+        var year = date.split('-').pop();
+        $('#Yes').bind('click', confirmAnnualReport);
+        showModalMessage($('#YesNoModal'), 'Ви дійсно хочете підтвердити річний звіт станиці ' + cityName +
+            ' за ' + year + ' рік?');
+    })
+
+    function confirmAnnualReport(): void {
+        $('#Yes').modal('hide');
+        $('#Yes').unbind();
+        var tr = $('#AnnualReportsTable tr.row-selected:first');
         var annualReportId = $(tr).find('td').eq(indexAnnualReportId).html();
         $.ajax({
             url: '/Documentation/ConfirmAnnualReport',
@@ -97,11 +111,23 @@
                 }
             }
         });
-    })
+    }
 
     $('#cancelAnnualReport').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+        var tr = $('#AnnualReportsTable tr.row-selected:first');
+        var cityName = $(tr).find('td').eq(indexCityName).html();
+        var date = $(tr).find('td').eq(indexDate).html();
+        var year = date.split('-').pop();
+        $('#Yes').bind('click', cancelAnnualReport);
+        showModalMessage($('#YesNoModal'), 'Ви дійсно хочете скасувати річний звіт станиці ' + cityName +
+            ' за ' + year + ' рік?');
+    })
+
+    function cancelAnnualReport(): void {
+        $('#Yes').modal('hide');
+        $('#Yes').unbind();
         var tr = $('#AnnualReportsTable tr.row-selected:first');
         var annualReportId = $(tr).find('td').eq(indexAnnualReportId).html();
         $.ajax({
@@ -125,7 +151,7 @@
                 }
             }
         });
-    })
+    }
 
     $('#editAnnualReport').click(function (e) {
         e.preventDefault();
@@ -139,6 +165,18 @@
     $('#deleteAnnualReport').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+        var tr = $('#AnnualReportsTable tr.row-selected:first');
+        var cityName = $(tr).find('td').eq(indexCityName).html();
+        var date = $(tr).find('td').eq(indexDate).html();
+        var year = date.split('-').pop();
+        $('#Yes').bind('click', deleteAnnualReport);
+        showModalMessage($('#YesNoModal'), 'Ви дійсно хочете видалити річний звіт станиці ' + cityName +
+            ' за ' + year + ' рік?');
+    })
+
+    function deleteAnnualReport(): void {
+        $('#Yes').modal('hide');
+        $('#Yes').unbind();
         var tr = $('#AnnualReportsTable tr.row-selected:first');
         var annualReportId = $(tr).find('td').eq(indexAnnualReportId).html();
         $.ajax({
@@ -162,9 +200,9 @@
                 }
             }
         });
-    })
+    }
 
-    $('#CreateAnnualReport').click(function (e) {
+    $('#CreateAnnualReportLikeAdmin').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         var cityId = $('#CitiesList option').filter(':selected').val();
@@ -185,8 +223,15 @@ $('#annual-report-form').ready(function () {
 })
 
 function setDisabled(elements: JQuery<HTMLElement>[], disabled: boolean) {
-    for (let el of elements)
+    for (let el of elements) {
         el.prop('disabled', disabled);
+        if (disabled) {
+            el.addClass('disabled');
+        }
+        else {
+            el.removeClass('disabled');
+        }
+    }
 }
 
 function showModalMessage(modalWindow: JQuery<HTMLElement>, message: string) {
