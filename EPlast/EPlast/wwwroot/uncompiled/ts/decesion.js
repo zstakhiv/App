@@ -33,7 +33,7 @@ $(document).ready(function () {
         arr.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
-                $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
+                $(element).parent("div").children(".field-validation-valid").text("�� ���� �� ���� ���������.");
                 bool = false;
             }
             else
@@ -52,7 +52,7 @@ $(document).ready(function () {
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
         if (files[0] != undefined && files[0].size >= 10485760) {
-            alert("файл за великий (більше 10 Мб)");
+            alert("���� �� ������� (����� 10 ��)");
             return;
         }
         var formData = new FormData();
@@ -93,12 +93,12 @@ $(document).ready(function () {
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
                 }
             },
             error() {
                 $("#CreateDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
+                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
             }
         });
     });
