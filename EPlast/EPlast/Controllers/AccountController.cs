@@ -286,8 +286,8 @@ namespace EPlast.Controllers
                     && !(_currentUserId == userId)
                     && _userManager.IsInRoleAsync(user,"Пластун").Result;
 
-                var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
-                
+                TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
+
                 if (user != null)
                 {
                     var model = new UserViewModel
@@ -299,6 +299,7 @@ namespace EPlast.Controllers
                         canApprove=_canApprove,
                         timeToJoinPlast=_timeToJoinPlast
                     };
+
                     return View(model);
                 }
                 _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
@@ -310,6 +311,25 @@ namespace EPlast.Controllers
             }
         }
 
+        private async Task<TimeSpan> CheckOrAddPlastunRole(User user)
+        {
+            try
+            {
+                var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
+                if (_timeToJoinPlast <= TimeSpan.Zero)
+                {
+                    var us=await _userManager.FindByIdAsync(user.Id);
+                    await _userManager.AddToRoleAsync(us, "Пластун");
+                    return TimeSpan.Zero;
+                }
+                return _timeToJoinPlast;
+            }
+            catch
+            {
+                return TimeSpan.Zero;
+            }
+
+        }
         public IActionResult ApproveUser(string userId)
         {
             if (userId != null)
