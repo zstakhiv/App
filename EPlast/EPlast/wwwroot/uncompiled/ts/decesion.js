@@ -1,8 +1,9 @@
 $(document).ready(function () {
-    initialise();
     var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description", "#autocomplete_input"];
     $(() => {
-        $("#datepicker").datepicker({ dateFormat: "dd-mm-yy" }).datepicker("setDate", "0");
+        $("#datepicker").datepicker({
+            dateFormat: "dd-mm-yy"
+        }).datepicker("setDate", "0");
     });
     $(".show_hide").on('click', function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
@@ -91,16 +92,29 @@ $(document).ready(function () {
             }
         });
     });
-});
-$(document).ajaxComplete(function () {
-    initialise();
-});
-function initialise() {
-    $("tr.decesion-click-row").dblclick(function () {
-        const content = $(this).children().first().text();
-        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
+    $.contextMenu({
+        selector: '.decesion-menu',
+        callback: function (key) {
+            switch (key) {
+                case "edit":
+                    break;
+                case "pdf":
+                    const content = $(this).children().first().text();
+                    window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
+                    break;
+            }
+            //$.get("/Admin/" + key + "?userid=" + $(this).data("id"), function (data) {
+            //    $('#dialogContent').html(data);
+            //    $('#modDialog').modal('show');
+            //});
+        },
+        items: {
+            "edit": { name: "Редагувати", icon: "far fa-edit" },
+            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" },
+            "quit": { name: "Закрити", icon: "fas fa-times" }
+        }
     });
-}
+});
 function createDecesionDataTable() {
     $("#dtReadDecesion").one("preInit.dt", function () {
         var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
@@ -112,7 +126,7 @@ function createDecesionDataTable() {
         },
         responsive: true,
         "createdRow": function (row, data, dataIndex) {
-            $(row).addClass("decesion-click-row");
+            $(row).addClass("decesion-menu");
         },
     });
     $('#dtReadDecesion').on('page.dt', function () {
