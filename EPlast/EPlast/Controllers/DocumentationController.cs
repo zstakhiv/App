@@ -85,6 +85,45 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public JsonResult GetDecesion(int id)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == id).First();
+                return Json(new { success = true, decesion });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public JsonResult ChangeDecesion(DecesionViewModel decesionViewModel)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == decesionViewModel.Decesion.ID).First();
+                decesion.Name = decesionViewModel.Decesion.Name;
+                decesion.Description = decesionViewModel.Decesion.Description;
+                _repoWrapper.Decesion.Update(decesion);
+                _repoWrapper.Save();
+                return Json(new
+                {
+                    success = true,
+                    text = "Зміни пройшли успішно!",
+                    decesion
+                });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<JsonResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
