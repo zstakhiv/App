@@ -290,18 +290,29 @@ namespace EPlast.Controllers
             {
                 var userId = _userManager.GetUserId(User);
                 var city = _cityAccessManager.GetCities(userId).First();
-                var cityMembers = _repoWrapper.User
+                var annualReportCheck = _repoWrapper.AnnualReports
+                        .FindByCondition(ar => ar.CityId == city.ID && ar.Date.Year == DateTime.Now.Year)
+                        .FirstOrDefault();
+                if (annualReportCheck == null)
+                {
+                    var cityMembers = _repoWrapper.User
                     .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == city.ID && cm.EndDate == null))
                     .Include(u => u.UserPlastDegrees);
-                var annualReportViewModel = new AnnualReportViewModel
+                    var annualReportViewModel = new AnnualReportViewModel
+                    {
+                        Operation = AnnualReportOperation.Creating,
+                        CityName = city.Name,
+                        CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
+                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
+                        AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
+                    };
+                    return View("CreateEditAnnualReport", annualReportViewModel);
+                }
+                else
                 {
-                    Operation = AnnualReportOperation.Creating,
-                    CityName = city.Name,
-                    CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
-                };
-                return View("CreateEditAnnualReport", annualReportViewModel);
+                    ViewData["ErrorMessage"] = $"Звіт станиці {city.Name} за {DateTime.Now.Year} рік вже існує!";
+                    return View("CreateEditAnnualReport");
+                }    
             }
             catch (Exception e)
             {
@@ -322,18 +333,29 @@ namespace EPlast.Controllers
                 var city = _repoWrapper.City
                     .FindByCondition(c => c.ID == cityId)
                     .First();
-                var cityMembers = _repoWrapper.User
-                    .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == cityId && cm.EndDate == null))
-                    .Include(u => u.UserPlastDegrees);
-                var annualReportViewModel = new AnnualReportViewModel
+                var annualReportCheck = _repoWrapper.AnnualReports
+                        .FindByCondition(ar => ar.CityId == city.ID && ar.Date.Year == DateTime.Now.Year)
+                        .FirstOrDefault();
+                if (annualReportCheck == null)
                 {
-                    Operation = AnnualReportOperation.Creating,
-                    CityName = city.Name,
-                    CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
-                    CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
-                    AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
-                };
-                return View("CreateEditAnnualReport", annualReportViewModel);
+                    var cityMembers = _repoWrapper.User
+                        .FindByCondition(u => u.CityMembers.Any(cm => cm.City.ID == cityId && cm.EndDate == null))
+                        .Include(u => u.UserPlastDegrees);
+                    var annualReportViewModel = new AnnualReportViewModel
+                    {
+                        Operation = AnnualReportOperation.Creating,
+                        CityName = city.Name,
+                        CityMembers = _annualReportVMCreator.GetCityMembers(cityMembers),
+                        CityLegalStatusTypes = _annualReportVMCreator.GetCityLegalStatusTypes(),
+                        AnnualReport = _annualReportVMCreator.GetAnnualReport(userId, city.ID, cityMembers)
+                    };
+                    return View("CreateEditAnnualReport", annualReportViewModel);
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = $"Звіт станиці {city.Name} за {DateTime.Now.Year} рік вже існує!";
+                    return View("CreateEditAnnualReport");
+                }
             }
             catch (Exception e)
             {
