@@ -184,5 +184,33 @@ namespace EPlast.Controllers
             }
         }
 
+        public IActionResult Create(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityAdmins = city.CityAdministration
+                                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                                    .ToList();
+
+                return View(new CityViewModel { City = city});
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
     }
 }
