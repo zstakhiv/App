@@ -80,6 +80,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
             });
 
             services.AddAuthentication()
@@ -93,6 +94,9 @@ namespace EPlast
                     options.AppId = Configuration.GetSection("FacebookAuthentication:FacebookAppId").Value;
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
+
+            services.Configure<DataProtectionTokenProviderOptions>(options => // тут працює ок
+                options.TokenLifespan = TimeSpan.FromMinutes(2));
 
             services.ConfigureApplicationCookie(options =>
             {

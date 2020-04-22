@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Account\CurrentMembership.cshtml" />
+    <Content Remove="Views\Account\Index.cshtml" />
     <Content Remove="Views\Account\LoginAndRegister.cshtml" />
     <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\adminUser.ts" />

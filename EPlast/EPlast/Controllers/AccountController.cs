@@ -110,7 +110,8 @@ namespace EPlast.Controllers
 
                 var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
-                {
+                {   // напевно перевірку по підтвердженню імейлу зробити, тіпа юзер є зареєстрований але не підтверджений, перевірте електронну пошту 
+                    // тут може вилізти проблема через гугл
                     ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
                     return View("Register");
                 }
@@ -146,6 +147,7 @@ namespace EPlast.Controllers
 
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
+                        user.EmailSended = DateTime.Now;
 
                         return View("AcceptingEmail");
                     }
@@ -162,23 +164,40 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
-            {
-                return View("Error");
-            }
+            //тут по суті треба взяти поточний час
+            // тут по суті додати перевірку якшо токен уже не валідний то час минув
+            //час всерівно треба засікати тому шо ніяк не мож перевірити на токен
+            // тут у функції ше подивитись чи все правильно по пріоритетах перевірок
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return View("Error");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
 
-            if (result.Succeeded)
+            DateTime dateTimeConfirming = DateTime.Now;
+            var totalTime = dateTimeConfirming.Subtract(user.EmailSended).TotalMinutes;
+            if(totalTime < 2)
             {
-                return RedirectToAction("ConfirmedEmail", "Account");
+                if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
+                {
+                    return View("Error");
+                }
+
+                var result = await _userManager.ConfirmEmailAsync(user, code);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ConfirmedEmail", "Account");
+                }
+                else   // ерор не працює треба перевірити чи вертає ту вюшку
+                {
+                    return View("Error");
+                }
             }
             else
-                return View("Error");
+            {
+                return View("ConfirmEmailNotAllowed");
+            }
         }
 
         [HttpPost]
