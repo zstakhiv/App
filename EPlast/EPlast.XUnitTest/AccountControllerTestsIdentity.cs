@@ -3,7 +3,6 @@ using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
 using EPlast.DataAccess.Repositories;
 using EPlast.ViewModels;
-using Ical.Net.DataTypes;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +24,7 @@ using Xunit;
 
 namespace EPlast.XUnitTest
 {
-    public class TestsForAccountControllerAndrii
+    public class AccountControllerTestsIdentity
     {
         public (Mock<SignInManager<User>>, Mock<UserManager<User>>, Mock<IEmailConfirmation>, AccountController) CreateAccountController()
         {
@@ -101,11 +100,9 @@ namespace EPlast.XUnitTest
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
             Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
-            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);  плюс перевірити бо дає ерору
+            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);
             //Assert.Equal(GetTestLoginModelForLoginGet(), model);
             Assert.NotNull(viewResult);
-
-            //І ТАК У ВСІХ МЕТОДАХ
         }
 
         [Fact]
@@ -401,11 +398,6 @@ namespace EPlast.XUnitTest
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
-            var mockDataHelper = new Mock<IDateTimeHelper>();
-            var fakeDateConfirming = new DateTime(2020, 05, 15, 1, 25, 4);   // тут напевно треба якось додати час
-            mockDataHelper.Setup(o => o.GetDateTimeNow()).Returns(fakeDateConfirming);
-            accountController.InitializeDateTimeFake(mockDataHelper.Object);
-
             //Act
             var result = await accountController.ConfirmingEmail(GetTestIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail());
             
@@ -414,7 +406,7 @@ namespace EPlast.XUnitTest
             Assert.Equal("Error", viewResult.ViewName);
             Assert.NotNull(viewResult);
         }
-        /*
+        
         [Fact]
         public async Task TestConfirmEmailPostUserNullReturnsErrorView()
         {
@@ -477,7 +469,7 @@ namespace EPlast.XUnitTest
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("Error", viewResult.ViewName);
             Assert.NotNull(viewResult);
-        }*/
+        }
 
         //AccountLocked
         [Fact]
@@ -945,34 +937,6 @@ namespace EPlast.XUnitTest
             Assert.NotNull(result);
         }
 
-        [Fact]            // отут проблема треба доробити оту штуку ОТУТ ПОВНІСТЮ ПЕРЕПИСУЮ
-        public async Task TestExternalLoginCallBackRedirectReturnUrlAfterGoogleRegistering()
-        {
-            //Arrange
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            mockSignInManager
-                .Setup(s => s.GetExternalAuthenticationSchemesAsync())
-                .Returns(Task.FromResult<IEnumerable<AuthenticationScheme>>(GetTestAuthenticationSchemes()));
-
-            //отут переписую
-            mockSignInManager
-                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetExternalLoginInfoFake());
-
-            mockSignInManager
-                .Setup(s => s.ExternalLoginSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
-
-            //тут дописати бо 
-            /*mockSignInManager
-                .Setup(s => s.GetExternalLoginInfoAsync(It.IsAny<string>()).Result.Principal.FindFirstValue(It.IsAny<string>()))
-                .Returns(GetFakeEmail());*/
-
-            /*var result = await accountController.ExternalLoginCallBack(GetTestReturnUrl()) as LocalRedirectResult;
-            Assert.Equal(GetTestLoginViewModel().ReturnUrl, result.Url);
-            Assert.NotNull(result);*/
-        }
-
         //Fakes
         private string GetFakeEmail()
         {
@@ -982,8 +946,6 @@ namespace EPlast.XUnitTest
         private ExternalLoginInfo GetExternalLoginInfoFake()
         {
             var claims = new List<ClaimsIdentity>();
-            //тут треба добавити
-            //claims.Add(new ClaimsIdentity(, "Adoanfadof"));
             var info = new ExternalLoginInfo(new ClaimsPrincipal(claims), "Google", "GoogleExample", "GoogleForDisplay");
             return info;
         }
