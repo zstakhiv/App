@@ -20,7 +20,8 @@ namespace EPlast.Wrapper
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
+            if (fileStream != null)
+                fileStream.Dispose();
         }
 
         public Stream GetStream()

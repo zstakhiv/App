@@ -489,9 +489,10 @@ namespace EPlast.Controllers
         {
             try
             {
+                var _currentUserId= _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    userId = _userManager.GetUserId(User);
+                    userId = _currentUserId;
                     _logger.Log(LogLevel.Information, "UserId is not null");
                 }
                 var user = _repoWrapper.User.
@@ -508,6 +509,9 @@ namespace EPlast.Controllers
                         ThenInclude(g => g.Religion).
                     Include(g => g.UserProfile).
                         ThenInclude(g => g.Work).
+                    Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
                     FirstOrDefault();
                 var userPositions = _repoWrapper.CityAdministration
                     .FindByCondition(ca => ca.UserId == userId)
@@ -520,6 +524,13 @@ namespace EPlast.Controllers
                     return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
+                var _canApprove = user.ConfirmedUsers.Count < 3 
+                    && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
+                    && !(_currentUserId == userId)
+                    && _userManager.IsInRoleAsync(user,"Пластун").Result;
+
+                TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
+
                 if (user != null)
                 {
                     var model = new UserViewModel
@@ -527,8 +538,11 @@ namespace EPlast.Controllers
                         User = user,
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
-                        EditView = edit
+                        EditView = edit,
+                        canApprove=_canApprove,
+                        timeToJoinPlast=_timeToJoinPlast
                     };
+
                     return View(model);
                 }
                 _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
@@ -540,6 +554,56 @@ namespace EPlast.Controllers
             }
         }
 
+        private async Task<TimeSpan> CheckOrAddPlastunRole(User user)
+        {
+            try
+            {
+                var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
+                if (_timeToJoinPlast <= TimeSpan.Zero)
+                {
+                    var us=await _userManager.FindByIdAsync(user.Id);
+                    await _userManager.AddToRoleAsync(us, "Пластун");
+                    return TimeSpan.Zero;
+                }
+                return _timeToJoinPlast;
+            }
+            catch
+            {
+                return TimeSpan.Zero;
+            }
+
+        }
+        public IActionResult ApproveUser(string userId)
+        {
+            if (userId != null)
+            {
+                var id = _userManager.GetUserId(User);
+
+                var conUs = new ConfirmedUser { UserID = userId, ConfirmDate = DateTime.Now };
+                var appUs = new Approver { UserID = id, ConfirmedUser = conUs };
+                conUs.Approver = appUs;
+
+                _repoWrapper.ConfirmedUser.Create(conUs);
+                _repoWrapper.Save();
+                return RedirectToAction("UserProfile", "Account", new { userId = userId });
+            }
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        public IActionResult ApproverDelete(string userId)
+        {
+            var id = _userManager.GetUserId(User);
+            var user = _repoWrapper.User.FindByCondition(x => x.Id == userId).
+                Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
+                        FirstOrDefault();
+            var t=user.ConfirmedUsers;
+            var confUser = user.ConfirmedUsers.Where(x => x.Approver.UserID == id).FirstOrDefault();
+            _repoWrapper.ConfirmedUser.Delete(confUser);
+            _repoWrapper.Save();
+            return RedirectToAction("UserProfile", "Account", new { userId = userId });
+        }
         private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
@@ -552,11 +616,6 @@ namespace EPlast.Controllers
             //!!
             try
             {
-                if(!string.Equals(id, _userManager.GetUserId(User)))
-                {
-                    _logger.Log(LogLevel.Error, "The user cannot change the user profile of another user");
-                    return null;
-                }
                 var user = _repoWrapper.User.
                 FindByCondition(q => q.Id == id).
                 Include(i => i.UserProfile).
@@ -565,8 +624,8 @@ namespace EPlast.Controllers
                     ThenInclude(g => g.Gender).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Education).
-                Include(g=>g.UserProfile).
-                    ThenInclude(g=>g.Degree).
+                Include(g => g.UserProfile).
+                    ThenInclude(g => g.Degree).
                 Include(g => g.UserProfile).
                     ThenInclude(g => g.Religion).
                 Include(g => g.UserProfile).
@@ -583,16 +642,15 @@ namespace EPlast.Controllers
                 var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
                 var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
 
-                var educView = new EducationViewModel { PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
-                var workView = new WorkViewModel { PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
+                var educView = new EducationViewModel {PlaceOfStudyID=user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkID=user.UserProfile.WorkId,PositionID=user.UserProfile.WorkId,PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
                     Nationalities = _repoWrapper.Nationality.FindAll(),
                     Religions = _repoWrapper.Religion.FindAll(),
                     EducationView = educView,
-                    WorkView=workView,
-                    Works = _repoWrapper.Work.FindAll(),
+                    WorkView = workView,
                     Degrees = _repoWrapper.Degree.FindAll(),
                 };
 
@@ -636,9 +694,9 @@ namespace EPlast.Controllers
                 }
 
                 //Nationality
-                if(model.User.UserProfile.NationalityId==null)
+                if (model.User.UserProfile.NationalityId == null)
                 {
-                    if(string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Nationality.Name))
                     {
                         model.User.UserProfile.Nationality = null;
                     }
@@ -674,6 +732,7 @@ namespace EPlast.Controllers
                     model.User.UserProfile.Degree = null;
                 }
 
+                
                 //Education
                 if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
                 {
@@ -681,10 +740,23 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    model.User.UserProfile.EducationId = null;
+                    var spec=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
+                    var placeStudy=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
+                    if (spec!=null && spec.PlaceOfStudy==model.User.UserProfile.Education.PlaceOfStudy )
+                    {
+                        model.User.UserProfile.EducationId = spec.ID;
+                    }
+                    else if(placeStudy!=null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
+                    {
+                        model.User.UserProfile.EducationId = placeStudy.ID;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.EducationId = null;
+                    }
                 }
 
-                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId==0)
+                if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId == 0)
                 {
                     if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) && string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
                     {
@@ -694,7 +766,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    if(string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
+                    if (string.IsNullOrEmpty(model.User.UserProfile.Education.PlaceOfStudy) || string.IsNullOrEmpty(model.User.UserProfile.Education.Speciality))
                     {
                         model.User.UserProfile.EducationId = null;
                     }
@@ -705,13 +777,26 @@ namespace EPlast.Controllers
                 }
 
                 //Work
-                if (model.WorkView.PositionID== model.WorkView.PlaceOfWorkID)
+                if (model.WorkView.PositionID == model.WorkView.PlaceOfWorkID)
                 {
                     model.User.UserProfile.WorkId = model.WorkView.PositionID;
                 }
                 else
                 {
-                    model.User.UserProfile.WorkId = null;
+                    var placeWork = _repoWrapper.Work.FindByCondition(x => x.ID == model.WorkView.PlaceOfWorkID).FirstOrDefault();
+                    var position = _repoWrapper.Work.FindByCondition(x => x.ID == model.WorkView.PositionID).FirstOrDefault();
+                    if (placeWork != null && placeWork.Position == model.User.UserProfile.Work.Position)
+                    {
+                        model.User.UserProfile.WorkId = placeWork.ID;
+                    }
+                    else if (position != null && position.PlaceOfwork == model.User.UserProfile.Work.PlaceOfwork)
+                    {
+                        model.User.UserProfile.WorkId = position.ID;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.WorkId = null;
+                    }
                 }
 
                 if (model.User.UserProfile.WorkId == null || model.User.UserProfile.WorkId == 0)
@@ -734,7 +819,6 @@ namespace EPlast.Controllers
                     }
                 }
 
-
                 _repoWrapper.User.Update(model.User);
                 _repoWrapper.UserProfile.Update(model.User.UserProfile);
                 _repoWrapper.Save();
@@ -747,6 +831,110 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
+                new { ReturnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
+        {
+            try
+            {
+                returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
+                LoginViewModel loginViewModel = new LoginViewModel
+                {
+                    ReturnUrl = returnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                };
+
+                if (remoteError != null)
+                {
+                    ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
+                    return View("Login");
+                }
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Error loading external login information");
+                    return View("Login", loginViewModel);
+                }
+
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                    info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                if (signInResult.Succeeded)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    if (info.LoginProvider.ToString() == "Google")
+                    {
+                        if (email != null)
+                        {
+                            var user = await _userManager.FindByEmailAsync(email);
+                            if (user == null)
+                            {
+                                user = new User
+                                {
+                                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                    ImagePath = "default.png",
+                                    UserProfile = new UserProfile()
+                                };
+                                await _userManager.CreateAsync(user);
+                                await _emailConfirmation.SendEmailAsync(user.Email, "Повідомлення про реєстрацію",
+                            "Ви зареєструвались в системі EPlast використовуючи свій Google-акаунт ", "Адміністрація сайту EPlast");
+                            }
+                            await _userManager.AddToRoleAsync(user, "Прихильник");
+                            await _userManager.AddLoginAsync(user, info);
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    else if (info.LoginProvider.ToString() == "Facebook")
+                    {
+                        var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var identifierForSearching = email ?? nameIdentifier;
+                        var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
+                        if (user == null)
+                        {
+                            user = new User
+                            {
+                                UserName = (email ?? nameIdentifier),
+                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                                Email = (email ?? "facebookdefaultmail@gmail.com"),
+                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                                ImagePath = "default.png",
+                                UserProfile = new UserProfile()
+                            };
+                            await _userManager.CreateAsync(user);
+                        }
+                        await _userManager.AddToRoleAsync(user, "Прихильник");
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    return View("Error");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Exception: {0}", e.Message);
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        
 
         [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         public async Task<IActionResult> DeletePosition(int id)

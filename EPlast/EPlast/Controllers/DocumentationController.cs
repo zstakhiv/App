@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EPlast.Wrapper;
-using Microsoft.AspNetCore.Http;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast.Controllers
@@ -86,6 +85,45 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public JsonResult GetDecesion(int id)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == id).First();
+                return Json(new { success = true, decesion });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public JsonResult ChangeDecesion(DecesionViewModel decesionViewModel)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == decesionViewModel.Decesion.ID).First();
+                decesion.Name = decesionViewModel.Decesion.Name;
+                decesion.Description = decesionViewModel.Decesion.Description;
+                _repoWrapper.Decesion.Update(decesion);
+                _repoWrapper.Save();
+                return Json(new
+                {
+                    success = true,
+                    text = "Зміни пройшли успішно!",
+                    decesion
+                });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<JsonResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
@@ -95,13 +133,13 @@ namespace EPlast.Controllers
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return Json(new { success = false });
+                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), model = decesionViewModel, modelstate = ModelState });
                 }
 
                 if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
-                    return Json(new { success = false });
+                    return Json(new { success = false, text = "file lenght > 10485760" });
                 }
 
                 decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
@@ -136,16 +174,26 @@ namespace EPlast.Controllers
                             }
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        return Json(new { success = false });
+                        return Json(new { success = false, text = e.Message });
                     }
                 }
-                return Json(new { success = true, Text = "Рішення додано, обновіть сторінку." });
+                return Json(new
+                {
+                    success = true,
+                    Text = "Рішення додано!",
+                    id = decesionViewModel.Decesion.ID,
+                    decesionOrganization = _repoWrapper.Organization.FindByCondition(x => x.ID == decesionViewModel.Decesion.Organization.ID).Select(x => x.OrganizationName)
+                });
             }
-            catch
+            catch (Exception e)
             {
-                return Json(new { success = false });
+                return Json(new
+                {
+                    success = false,
+                    text = e.Message
+                });
             }
         }
 
@@ -415,7 +463,7 @@ namespace EPlast.Controllers
                     .Include(ar => ar.City)
                     .Include(ar => ar.MembersStatistic)
                     .Include(ar => ar.CityManagement)
-                        .ThenInclude(cm => cm.User)
+                        .ThenInclude(cm => cm.CityAdminNew)
                     .First();
                 var userId = _userManager.GetUserId(User);
                 if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
@@ -441,13 +489,16 @@ namespace EPlast.Controllers
                     .FindByCondition(ar => ar.ID == id && ar.Status == AnnualReportStatus.Unconfirmed)
                     .Include(ar => ar.City)
                     .Include(ar => ar.CityManagement)
-                        .ThenInclude(cm => cm.User)
+                        .ThenInclude(cm => cm.CityAdminNew)
                     .First();
                 var userId = _userManager.GetUserId(User);
                 if (!_cityAccessManager.HasAccess(userId, annualReport.CityId))
                 {
                     return RedirectToAction("HandleError", "Error", new { code = 403 });
                 }
+                var adminType = _repoWrapper.AdminType
+                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
+                        .First();
 
                 // update annualReport status
                 annualReport.Status = AnnualReportStatus.Confirmed;
@@ -455,10 +506,12 @@ namespace EPlast.Controllers
 
                 // update oldCityAdmin EndDate
                 CityAdministration cityAdminOld = _repoWrapper.CityAdministration
-                        .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.EndDate == null)
+                        .FindByCondition(ca => ca.CityId == annualReport.CityId && ca.AdminTypeId == adminType.ID)
                         .Include(ca => ca.User)
-                        .FirstOrDefault();
-                if (cityAdminOld != null && annualReport.CityManagement.User != null && cityAdminOld.UserId != annualReport.CityManagement.UserId)
+                        .LastOrDefault();
+                annualReport.CityManagement.CityAdminOldId = cityAdminOld?.ID;
+                if (cityAdminOld != null && annualReport.CityManagement.CityAdminNew != null
+                    && annualReport.CityManagement.UserId != cityAdminOld.UserId && cityAdminOld.EndDate == null)
                 {
                     cityAdminOld.EndDate = DateTime.Today;
                     _repoWrapper.CityAdministration.Update(cityAdminOld);
@@ -466,11 +519,8 @@ namespace EPlast.Controllers
                 }
 
                 // create newCityAdmin
-                if (annualReport.CityManagement.User != null && (cityAdminOld == null || (cityAdminOld != null && cityAdminOld.EndDate != null)))
+                if ((cityAdminOld == null || cityAdminOld?.EndDate != null) && annualReport.CityManagement.CityAdminNew != null)
                 {
-                    AdminType adminType = _repoWrapper.AdminType
-                        .FindByCondition(at => at.AdminTypeName == "Голова станиці")
-                        .First();
                     CityAdministration cityAdminNew = new CityAdministration
                     {
                         UserId = annualReport.CityManagement.UserId,
@@ -484,34 +534,40 @@ namespace EPlast.Controllers
 
                 // update oldCityLegalStatus EndDate
                 CityLegalStatus cityLegalStatusOld = _repoWrapper.CityLegalStatuses
-                    .FindByCondition(cls => cls.CityId == annualReport.CityId && cls.DateFinish == null)
-                    .FirstOrDefault();
-                if (cityLegalStatusOld != null)
+                    .FindByCondition(cls => cls.CityId == annualReport.CityId)
+                    .LastOrDefault();
+                annualReport.CityManagement.CityLegalStatusOldId = cityLegalStatusOld?.Id;
+                if (cityLegalStatusOld != null && annualReport.CityManagement.CityLegalStatusNew != cityLegalStatusOld?.LegalStatusType
+                    && cityLegalStatusOld?.DateFinish == null)
                 {
                     cityLegalStatusOld.DateFinish = DateTime.Today;
                     _repoWrapper.CityLegalStatuses.Update(cityLegalStatusOld);
                 }
 
                 // create newCityLegalStatus
-                CityLegalStatus cityLegalStatusNew = new CityLegalStatus
+                if (cityLegalStatusOld == null || cityLegalStatusOld.DateFinish != null)
                 {
-                    CityId = annualReport.CityId,
-                    LegalStatusType = annualReport.CityManagement.CityLegalStatus,
-                    DateStart = DateTime.Today
-                };
-                _repoWrapper.CityLegalStatuses.Create(cityLegalStatusNew);
+                    CityLegalStatus cityLegalStatusNew = new CityLegalStatus
+                    {
+                        CityId = annualReport.CityId,
+                        LegalStatusType = annualReport.CityManagement.CityLegalStatusNew,
+                        DateStart = DateTime.Today
+                    };
+                    _repoWrapper.CityLegalStatuses.Create(cityLegalStatusNew);
+                }
                 _repoWrapper.Save();
+
                 if (whetherTheRoleShouldBeDeleted)
                 {
                     await _userManager.RemoveFromRoleAsync(cityAdminOld.User, "Голова Станиці");
                 }
                 if (whetherTheRoleShouldBeAdded)
                 {
-                    await _userManager.AddToRoleAsync(annualReport.CityManagement.User, "Голова Станиці");
+                    await _userManager.AddToRoleAsync(annualReport.CityManagement.CityAdminNew, "Голова Станиці");
                 }
                 return Ok($"Звіт станиці {annualReport.City.Name} за {annualReport.Date.Year} рік підтверджено!");
             }
-            catch
+            catch (Exception e)
             {
                 return NotFound("Не вдалося підтвердити річний звіт!");
             }

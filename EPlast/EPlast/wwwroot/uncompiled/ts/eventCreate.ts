@@ -1,17 +1,40 @@
 ﻿$(document).ready(function () {
-    $('#Vyshkil').click(function () {
-        $('#type').html("Категорія вишколу");
-        $('#name').val("Вишкіл");
-        $('#status').val("Не підтверджено");
+    $('#block button').click(function () {
+        $('#name').val(this.id);
     });
-    $('#Tabir').click(function () {
-        $('#type').html("Категорія табору");
-        $('#name').val("Табір");
-        $('#status').val("Не підтверджено");
+    
+    $("#txtFromDate").datepicker({
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: 'c-0:c+nn',
+        minDate: 'd',
+        onSelect: function (selected) {
+            $("#txtToDate").datepicker("option", "minDate", selected)
+        }
     });
-    $('#Akcia').click(function () {
-        $('#type').html("Категорія акції");
-        $('#name').val("Акція");
-        $('#status').val("Не підтверджено");
+
+    $("#txtToDate").datepicker({
+        dateFormat: "dd-mm-yy",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: 'c-0:c+nn',
+        minDate: 'd',
+        onSelect: function (selected) {
+            $("#txtFromDate").datepicker("option", "maxDate", selected)
+        }
     });
+
+    $("#visitedEvent").click(function () {
+        $("#visitedModal").modal('show');
+    });
+
+    $("#planedEvent").click(function () {
+        $("#planedModal").modal('show');
+    });
+
+    $("#createdEvent").click(function () {
+        $("#createdModal").modal('show');
+    });
+
 });

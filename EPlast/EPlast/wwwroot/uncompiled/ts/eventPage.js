@@ -46,9 +46,7 @@ $(document).ready(function () {
                 },
                 error: function () {
                     $("#myModal").modal('hide');
-                    $("#success").hide();
-                    $("#fail").show();
-                    $("#deleteResult").modal('show');
+                    $("#deleteResultFail").modal('show');
                 },
             });
         }
@@ -68,9 +66,15 @@ $(document).ready(function () {
                     $('#myTable').load(document.URL + ' #myTable');
                     $("#modalUnSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalUnSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response) {
+                    if (response.status != 409) {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalUnSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
@@ -90,9 +94,15 @@ $(document).ready(function () {
                     $('#myTable').load(document.URL + ' #myTable');
                     $("#modalSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response) {
+                    if (response.status != 409) {
+                        $("#modalSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
@@ -171,6 +181,7 @@ $(document).ready(function () {
         DeletePicture(pictureToDelete, elementToDelete);
     });
     function DeletePicture(pictureToDelete, elementToDelete) {
+        $(elementToDelete).hide();
         $.ajax({
             type: "POST",
             url: "/Action/DeletePicture",
@@ -179,6 +190,7 @@ $(document).ready(function () {
                 $(elementToDelete).remove();
             },
             error: () => {
+                $(elementToDelete).show();
                 $("#FAIL").modal("show");
             },
         });
