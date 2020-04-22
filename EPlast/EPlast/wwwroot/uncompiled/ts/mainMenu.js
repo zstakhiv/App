@@ -81,4 +81,23 @@ function closeMenu() {
         $(mainWrapper).removeClass('non-scrollable');
     }
 }
+$('#MenuOpener').click(function () {
+    document.getElementById("sideMenu").style.width = '110%';
+});
+$('#MenuCloser').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+});
+$('#sideMenu .opacityPart').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+});
+$('#sideMenu .sideMenuContent').mouseover(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'visible');
+    $(content).css('height', 'auto');
+});
+$('#sideMenu .sideMenuContent').mouseleave(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'hidden');
+    $(content).css('height', '0');
+});
 //# sourceMappingURL=mainMenu.js.map
