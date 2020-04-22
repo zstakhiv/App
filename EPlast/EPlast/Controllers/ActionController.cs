@@ -62,9 +62,7 @@ namespace EPlast.Controllers
                 int approvedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Затверджений(-на)").First().ID;
                 int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
                 int notApprovedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Не затверджені").First().ID;
-
                 CheckEventsStatuses(ID,actionID,finishedEvent);
-
                 List<GeneralEventViewModel> newEvents = _repoWrapper.Event
                  .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
                  .Include(e => e.EventAdmins)
@@ -100,6 +98,7 @@ namespace EPlast.Controllers
                 int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
                 int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
                 bool isUserGlobalEventAdmin = User?.IsInRole("Адміністратор подій") ?? false;
+                CheckEventStatus(ID,finishedEvent);
                 EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
                        .Include(e => e.Participants)
                             .ThenInclude(p => p.User)
@@ -153,6 +152,17 @@ namespace EPlast.Controllers
                 }
             }
             _repoWrapper.Save();
+        }
+
+        void CheckEventStatus(int ID, int finishedEvent)
+        {
+            var eventToCheck = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                if (eventToCheck.EventDateEnd.Date <= DateTime.Now.Date && eventToCheck.EventStatusID != finishedEvent)
+                {
+                    eventToCheck.EventStatusID = finishedEvent;
+                    _repoWrapper.Event.Update(eventToCheck);
+                    _repoWrapper.Save(); 
+                }
         }
 
         [HttpPost]
@@ -219,8 +229,10 @@ namespace EPlast.Controllers
             try
             {
                 int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                Event targetEvent = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
                 Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
-                if(participantToDelete.ParticipantStatusId == rejectedStatus)
+                if(participantToDelete.ParticipantStatusId == rejectedStatus || targetEvent.EventStatusID == finishedEvent)
                 {
                     return StatusCode(409);
 
