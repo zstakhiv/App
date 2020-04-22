@@ -130,11 +130,10 @@ namespace EPlast.Controllers
             try
             {
                 ModelState.Remove("Decesion.DecesionStatusType");
-                ModelState.Remove("Decesion.Date");
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), modelstate = ModelState });
+                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), model = decesionViewModel, modelstate = ModelState });
                 }
 
                 if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
