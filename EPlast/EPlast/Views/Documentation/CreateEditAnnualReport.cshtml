@@ -230,7 +230,7 @@
             @switch (Model?.Operation)
             {
                 case AnnualReportOperation.Creating:
-                    <button asp-action="CreateAnnualReport" class="btn btn-block text-light btn-lg" type="submit">Створити</button>
+                    <button id="CreateAnnualReport" asp-action="CreateAnnualReport" class="btn btn-block text-light btn-lg" type="submit">Створити</button>
                     break;
                 case AnnualReportOperation.Editing:
                     <button asp-action="EditAnnualReport" class="btn btn-block text-light btn-lg" type="submit">Редагувати</button>
@@ -239,5 +239,6 @@
         </div>
         <partial name="_SuccessModal" model="@ViewData["Message"]" />
         <partial name="_ErrorModal" model="@ViewData["ErrorMessage"]" />
+        <partial name="_YesNoModal" />
     </form>
 </div>

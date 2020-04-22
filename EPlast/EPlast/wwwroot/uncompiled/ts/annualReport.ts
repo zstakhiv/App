@@ -212,6 +212,8 @@
 });
 
 $('#annual-report-form').ready(function () {
+    var hasChanges = false;
+
     if ($('#ModalSuccess .modal-body:first p:first strong:first').contents().length != 0) {
         $('#ModalSuccess').modal('show');
     }
@@ -219,6 +221,35 @@ $('#annual-report-form').ready(function () {
         if ($('#ModalError .modal-body:first p:first strong:first').contents().length != 0) {
             $('#ModalError').modal('show');
         }
+    }
+
+    $('select').change(function () {
+        hasChanges = true;
+    })
+
+    $('input').change(function () {
+        hasChanges = true;
+    })
+
+    $('textarea').change(function () {
+        hasChanges = true;
+    })
+
+
+
+    $('#CreateAnnualReport').click(function (e) {
+        if (!hasChanges) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('#Yes').bind('click', createEmptyAnnualReport);
+            showModalMessage($('#YesNoModal'), 'Ви не внесли жодних даних! Чи дійсно створити такий звіт?');
+        }
+    })
+
+    function createEmptyAnnualReport(): void {
+        $('#Yes').unbind();
+        hasChanges = true;
+        $('#CreateAnnualReport').click();
     }
 })
 
