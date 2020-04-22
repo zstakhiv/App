@@ -241,13 +241,15 @@ namespace EPlast.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        [HttpGet]
         public IActionResult UserProfile(string userId)
         {
             try
             {
+                var _currentUserId= _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
-                    userId = _userManager.GetUserId(User);
+                    userId = _currentUserId;
                     _logger.Log(LogLevel.Information, "UserId is not null");
                 }
                 var user = _repoWrapper.User.
@@ -264,6 +266,9 @@ namespace EPlast.Controllers
                         ThenInclude(g => g.Religion).
                     Include(g => g.UserProfile).
                         ThenInclude(g => g.Work).
+                    Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
                     FirstOrDefault();
                 var userPositions = _repoWrapper.CityAdministration
                     .FindByCondition(ca => ca.UserId == userId)
@@ -276,6 +281,13 @@ namespace EPlast.Controllers
                     return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
+                var _canApprove = user.ConfirmedUsers.Count < 3 
+                    && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
+                    && !(_currentUserId == userId)
+                    && _userManager.IsInRoleAsync(user,"Пластун").Result;
+
+                TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
+
                 if (user != null)
                 {
                     var model = new UserViewModel
@@ -283,8 +295,11 @@ namespace EPlast.Controllers
                         User = user,
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
-                        EditView = edit
+                        EditView = edit,
+                        canApprove=_canApprove,
+                        timeToJoinPlast=_timeToJoinPlast
                     };
+
                     return View(model);
                 }
                 _logger.Log(LogLevel.Error, $"Can`t find this user:{userId}, or smth else");
@@ -296,6 +311,56 @@ namespace EPlast.Controllers
             }
         }
 
+        private async Task<TimeSpan> CheckOrAddPlastunRole(User user)
+        {
+            try
+            {
+                var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
+                if (_timeToJoinPlast <= TimeSpan.Zero)
+                {
+                    var us=await _userManager.FindByIdAsync(user.Id);
+                    await _userManager.AddToRoleAsync(us, "Пластун");
+                    return TimeSpan.Zero;
+                }
+                return _timeToJoinPlast;
+            }
+            catch
+            {
+                return TimeSpan.Zero;
+            }
+
+        }
+        public IActionResult ApproveUser(string userId)
+        {
+            if (userId != null)
+            {
+                var id = _userManager.GetUserId(User);
+
+                var conUs = new ConfirmedUser { UserID = userId, ConfirmDate = DateTime.Now };
+                var appUs = new Approver { UserID = id, ConfirmedUser = conUs };
+                conUs.Approver = appUs;
+
+                _repoWrapper.ConfirmedUser.Create(conUs);
+                _repoWrapper.Save();
+                return RedirectToAction("UserProfile", "Account", new { userId = userId });
+            }
+            return RedirectToAction("HandleError", "Error", new { code = 505 });
+        }
+
+        public IActionResult ApproverDelete(string userId)
+        {
+            var id = _userManager.GetUserId(User);
+            var user = _repoWrapper.User.FindByCondition(x => x.Id == userId).
+                Include(x => x.ConfirmedUsers).
+                        ThenInclude(q => (q as ConfirmedUser).Approver).
+                        ThenInclude(q => q.User).
+                        FirstOrDefault();
+            var t=user.ConfirmedUsers;
+            var confUser = user.ConfirmedUsers.Where(x => x.Approver.UserID == id).FirstOrDefault();
+            _repoWrapper.ConfirmedUser.Delete(confUser);
+            _repoWrapper.Save();
+            return RedirectToAction("UserProfile", "Account", new { userId = userId });
+        }
         private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
@@ -334,8 +399,8 @@ namespace EPlast.Controllers
                 var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
                 var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
 
-                var educView = new EducationViewModel { PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
-                var workView = new WorkViewModel { PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
+                var educView = new EducationViewModel {PlaceOfStudyID=user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkID=user.UserProfile.WorkId,PositionID=user.UserProfile.WorkId,PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
@@ -343,7 +408,6 @@ namespace EPlast.Controllers
                     Religions = _repoWrapper.Religion.FindAll(),
                     EducationView = educView,
                     WorkView = workView,
-                    Works = _repoWrapper.Work.FindAll(),
                     Degrees = _repoWrapper.Degree.FindAll(),
                 };
 
@@ -425,6 +489,7 @@ namespace EPlast.Controllers
                     model.User.UserProfile.Degree = null;
                 }
 
+                
                 //Education
                 if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
                 {
@@ -432,7 +497,20 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    model.User.UserProfile.EducationId = null;
+                    var spec=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
+                    var placeStudy=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
+                    if (spec!=null && spec.PlaceOfStudy==model.User.UserProfile.Education.PlaceOfStudy )
+                    {
+                        model.User.UserProfile.EducationId = spec.ID;
+                    }
+                    else if(placeStudy!=null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
+                    {
+                        model.User.UserProfile.EducationId = placeStudy.ID;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.EducationId = null;
+                    }
                 }
 
                 if (model.User.UserProfile.EducationId == null || model.User.UserProfile.EducationId == 0)
@@ -462,7 +540,20 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    model.User.UserProfile.WorkId = null;
+                    var placeWork = _repoWrapper.Work.FindByCondition(x => x.ID == model.WorkView.PlaceOfWorkID).FirstOrDefault();
+                    var position = _repoWrapper.Work.FindByCondition(x => x.ID == model.WorkView.PositionID).FirstOrDefault();
+                    if (placeWork != null && placeWork.Position == model.User.UserProfile.Work.Position)
+                    {
+                        model.User.UserProfile.WorkId = placeWork.ID;
+                    }
+                    else if (position != null && position.PlaceOfwork == model.User.UserProfile.Work.PlaceOfwork)
+                    {
+                        model.User.UserProfile.WorkId = position.ID;
+                    }
+                    else
+                    {
+                        model.User.UserProfile.WorkId = null;
+                    }
                 }
 
                 if (model.User.UserProfile.WorkId == null || model.User.UserProfile.WorkId == 0)
