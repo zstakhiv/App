@@ -136,7 +136,8 @@ namespace EPlast
                 LastName = "Admin",
                 EmailConfirmed = true,
                 ImagePath = "default.png",
-                UserProfile = new UserProfile()
+                UserProfile = new UserProfile(),
+                RegistredOn=DateTime.Now
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
