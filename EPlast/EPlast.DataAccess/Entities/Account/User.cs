@@ -8,23 +8,23 @@ namespace EPlast.DataAccess.Entities
     public class User : IdentityUser
     {
         [Display(Name = "Ім'я")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26})*$",
             ErrorMessage = "Ім'я має містити тільки літери")]
         [Required(ErrorMessage = "Поле ім'я є обовязковим")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Ім'я повинне складати від 2 до 25 символів")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Ім'я повинне складати від 2 до 25 символів")]
         public string FirstName { get; set; }
 
         [Display(Name = "Прізвище")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26})*$",
             ErrorMessage = "Прізвище має містити тільки літери")]
         [Required(ErrorMessage = "Поле прізвище є обовязковим")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Прізвище повинне складати від 2 до 25 символів")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Прізвище повинне складати від 2 до 25 символів")]
         public string LastName { get; set; }
 
         [Display(Name = "По-батькові")]
-        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,20})*$",
+        [RegularExpression(@"^[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26}((\s+|-)[a-zA-Zа-яА-ЯІіЄєЇїҐґ'.`]{1,26})*$",
             ErrorMessage = "По-батькові має містити тільки літери")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Поле по-батькові повинне складати від 2 до 25 символів")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Поле по-батькові повинне складати від 2 до 25 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
         public string ImagePath { get; set; }
