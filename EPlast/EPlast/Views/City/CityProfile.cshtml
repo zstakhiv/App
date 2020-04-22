@@ -57,8 +57,8 @@
                         <div class="d-flex mx-auto">
                             @foreach (var membrCity in Model.Members.Take(3))
                             {
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                <div class="mx-auto" style="width: 80px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
                                     <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
                                 </div>
                             }
@@ -66,14 +66,18 @@
                         <div class="d-flex mx-auto">
                             @foreach (var membrCity in Model.Members.Skip(3).Take(3))
                             {
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                <div class="mx-auto" style="width: 80px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
                                     <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
                                 </div>
                             }
                         </div>
                     </div>
-                    <a asp-action="CityMembers" asp-controller="City" asp-route-cityid="@Model.City.ID"><div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button"  style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button></div></a>
+                    <div>
+                        <a asp-action="CityMembers" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                            <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,10 +90,10 @@
                         <div class="d-flex mx-auto">
                             @foreach (var adminCity in Model.CityAdmins.Take(3))
                             {
-                                var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br/> @fullName</p>
+                                var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
+                                <div class="mx-auto" style="width: 80px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br /> @fullName</p>
                                 </div>
                             }
 
@@ -97,16 +101,20 @@
                         <div class="d-flex mx-auto">
                             @foreach (var adminCity in Model.CityAdmins.Skip(3).Take(3))
                             {
-                                var fullName = adminCity.User.FirstName+" "+ adminCity.User.LastName;
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
+                                <div class="mx-auto" style="width: 80px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
                                     <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br /> @fullName</p>
                                 </div>
                             }
 
                         </div>
                     </div>
-                    <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
+                    <div>
+                        <a asp-action="CityAdmins" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                            <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col" style="padding: 15px;padding-bottom: 0px;">
@@ -144,8 +152,8 @@
                         <div class="d-flex mx-auto">
                             @foreach (var membrCity in Model.Followers.Take(3))
                             {
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                <div class="mx-auto" style="width: 80px;">
+                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
                                     <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
                                 </div>
                             }
@@ -160,11 +168,12 @@
                             }
                         </div>
                     </div>
-                    <a asp-action="CityFollowers" asp-controller="City" asp-route-cityid="@Model.City.ID">
-                        <div>
+                    <div>
+                        <a asp-action="CityFollowers" asp-controller="City" asp-route-cityid="@Model.City.ID">
                             <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style=" height: 40px; width: 60%; padding: 0px; background-color: #3c5438;">Більше</button>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
+                    
                 </div>
             </div>
         </div>
