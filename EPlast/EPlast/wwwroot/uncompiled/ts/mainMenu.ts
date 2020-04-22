@@ -2,7 +2,7 @@ let profileListing = [
     ['<a class="text-light nav-link p-0" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
         '<a class="text-light nav-link p-0" href="/Account/UserProfile">Діловодства</a>',
-        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Події</a>',
+        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Мої Події</a>',
         'Станиця',
         'Курінь',
         'З`їзди',
@@ -23,7 +23,6 @@ let profileListing = [
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
         'Статистичні звіти']
 ];
 let buttonClone: Element;
@@ -83,3 +82,27 @@ function closeMenu() {
         $(mainWrapper).removeClass('non-scrollable');
     }
 }
+
+$('#MenuOpener').click(function () {
+    document.getElementById("sideMenu").style.width = '110%';
+})
+
+$('#MenuCloser').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+})
+
+$('#sideMenu .opacityPart').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+})
+
+$('#sideMenu .sideMenuContent').mouseover(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'visible');
+    $(content).css('height', 'auto');
+})
+
+$('#sideMenu .sideMenuContent').mouseleave(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'hidden');
+    $(content).css('height', '0');
+})

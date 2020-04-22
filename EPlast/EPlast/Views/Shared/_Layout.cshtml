@@ -38,6 +38,9 @@
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
                 <div class="container-header">
+                    <div class="d-block d-sm-none">
+                        <i id="MenuOpener" class="fas fa-bars fa-2x"></i>
+                    </div>
                     <div class="navbar-header">
                         <a href="/">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
@@ -91,7 +94,7 @@
                         </div>
                         <div class="profile">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
-                                This "If" will be deleted in the future*@
+                This "If" will be deleted in the future*@
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">
                                 @if (@UserManager.GetUserAsync(User).Result != null)
                                 {
@@ -109,7 +112,7 @@
             </nav>
 
             <div class="main-block">
-                <div class="sidebar">
+                <div class="sidebar d-none d-sm-block">
                     <div class="back-pic" onclick='onMenuHover(0)'>
                         <div class="back-pic-inner">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
@@ -125,11 +128,28 @@
                         </div>
                     </div>
 
-                    <ul class="sidebar-ul">
-                        <li class="sidebar-li"><a href="/Documentation/ReadDecesion"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo cabinet-icon" onclick='onMenuHover(4)'></div></a></li>
+                    <ul class="sidebar-ul text-center">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="sidebar-li text-center">
+                                <a href="/Documentation/ReadDecesion">
+                                    <div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div>
+                                </a>
+                                <a style="font-size:10px;">Рішення</a>
+                            </li>
+                        }
+                        <li class="sidebar-li text-center">
+                            <a>
+                                <div style="margin-left:7px;" class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div>
+                            </a>
+                            <a style="font-size: 10px;">Загальна<br>інформація</a>
+                        </li>
+                        <li class="sidebar-li text-center">
+                            <a>
+                                <div style="margin-left:5px;" class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div>
+                            </a>
+                            <a style="font-size: 10px;">Документи</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -183,6 +203,61 @@
                 </footer>
             </div>
         </main>
+        <div id="sideMenu" class="row sideMenu">
+            <div class="col mainPart">
+                <a id="MenuCloser" href="javascript:void(0)" class="closebtn">&times;</a>
+                <div class="sideMenuContent">
+                    <a>Профіль</a>
+                    <div class="sideMenuHiddenContent">
+                        <a href="/Account/UserProfile">Персональні дані</a>
+                        <a>Дійсне членство</a>
+                        <a href="/Account/UserProfile">Діловодства</a>
+                        <a href="/EventUser/Eventuser">Мої Події</a>
+                        <a>Станиця</a>
+                        <a>Курінь</a>
+                        <a>З'їзди</a>
+                        <a>Відзначення</a>
+                        <a>Бланки</a>
+                    </div>
+                </div>
+                <div class="sideMenuContent">
+                    <a href="/Documentation/ReadDecesion">Рішення</a>
+                </div>
+                <div class="sideMenuContent">
+                    <a>Загальна інформація</a>
+                    <div class="sideMenuHiddenContent">
+                        <a href="/Admin/UsersTable">Таблиця користувачів</a>
+                        <a href="/City/Index">Станиці</a>
+                        <a>Округи</a>
+                        <a href="/Action/GetAction">Події</a>
+                        <a href="/Club">Курені</a>
+                        <a>Відзначення</a>
+                        <a>Кадра Виховників</a>
+                    </div>
+                </div>
+                <div class="sideMenuContent">
+                    <a>Кабінет</a>
+                    <div class="sideMenuHiddenContent">
+                        @if (User.IsInRole("Голова Станиці"))
+                        {
+                            <a href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>
+                        }
+                        @if (User.IsInRole("Голова Округу") || User.IsInRole("Admin"))
+                        {
+                            <a href="/Documentation/ViewAnnualReports">Річні звіти</a>
+                        }
+                        <a href="/Admin/RegionsAdmins">Осередки та адміни</a>
+                        <a>Геостатистика</a>
+                        <a>Статистика по роках</a>
+                        <a>Статистика (періоди)</a>
+                        <a>Порівняти осередки</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col opacityPart">
+
+            </div>
+        </div>
     }
     else
     {

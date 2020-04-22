@@ -15,7 +15,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EPlast.Wrapper;
-using Microsoft.AspNetCore.Http;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 
 namespace EPlast.Controllers
@@ -95,13 +94,13 @@ namespace EPlast.Controllers
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return Json(new { success = false });
+                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), model = decesionViewModel, modelstate = ModelState });
                 }
 
                 if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)
                 {
                     ModelState.AddModelError("", "файл за великий (більше 10 Мб)");
-                    return Json(new { success = false });
+                    return Json(new { success = false, text = "file lenght > 10485760" });
                 }
 
                 decesionViewModel.Decesion.HaveFile = decesionViewModel.File != null ? true : false;
@@ -136,9 +135,9 @@ namespace EPlast.Controllers
                             }
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        return Json(new { success = false });
+                        return Json(new { success = false, text = e.Message });
                     }
                 }
                 return Json(new
@@ -149,9 +148,13 @@ namespace EPlast.Controllers
                     decesionOrganization = _repoWrapper.Organization.FindByCondition(x => x.ID == decesionViewModel.Decesion.Organization.ID).Select(x => x.OrganizationName)
                 });
             }
-            catch
+            catch (Exception e)
             {
-                return Json(new { success = false });
+                return Json(new
+                {
+                    success = false,
+                    text = e.Message
+                });
             }
         }
 
@@ -468,7 +471,7 @@ namespace EPlast.Controllers
                         .Include(ca => ca.User)
                         .LastOrDefault();
                 annualReport.CityManagement.CityAdminOldId = cityAdminOld?.ID;
-                if (cityAdminOld != null && annualReport.CityManagement.CityAdminNew != null 
+                if (cityAdminOld != null && annualReport.CityManagement.CityAdminNew != null
                     && annualReport.CityManagement.UserId != cityAdminOld.UserId && cityAdminOld.EndDate == null)
                 {
                     cityAdminOld.EndDate = DateTime.Today;

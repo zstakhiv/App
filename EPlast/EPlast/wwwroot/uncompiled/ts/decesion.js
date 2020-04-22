@@ -1,11 +1,6 @@
-function initialise() {
-    $("tr.raport-click-row").dblclick(function () {
-        const content = $(this).children().first().text();
-        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
-    });
-}
 $(document).ready(function () {
     initialise();
+    var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description", "#autocomplete_input"];
     $(() => {
         $("#datepicker").datepicker({ dateFormat: "dd-mm-yy" }).datepicker("setDate", "0");
     });
@@ -13,23 +8,14 @@ $(document).ready(function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
         $(this).hide();
     });
-    $("#dtReadRaport").DataTable({
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
-        },
-        responsive: true,
-        "createdRow": function (row, data, dataIndex) {
-            $(row).addClass("raport-click-row");
-        }
-    });
-    $('#dtReadRaport').on('page.dt', function () {
-        $('html, body').animate({
-            scrollTop: 100
-        }, 200);
-    });
-    function checkFormData() {
+    createDecesionDataTable();
+    function ClearFormData() {
+        arr.forEach(function (element) {
+            $(element).val("");
+        });
+    }
+    function CheckFormData() {
         var bool = true;
-        var arr = ["#Decesion-Name", "#datepicker", "#Decesion-Description"];
         arr.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
@@ -46,15 +32,15 @@ $(document).ready(function () {
     $("#CreateDecesionForm-submit").click((e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!checkFormData())
+        if (!CheckFormData())
             return;
-        console.log('her');
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
         if (files[0] != undefined && files[0].size >= 10485760) {
             alert("���� �� ������� (����� 10 ��)");
             return;
         }
+        $("#CreateDecesionForm-submit").prop('disabled', true);
         var formData = new FormData();
         var decesionName = $("#Decesion-Name").val().toString();
         var decesionOrganizationId = $("#Decesion-Organization-ID option:selected").val().toString();
@@ -68,7 +54,7 @@ $(document).ready(function () {
         formData.append("Decesion.Organization.ID", decesionOrganizationId);
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
-        formData.append("Decesion.Date", decesionDate);
+        formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
         $.ajax({
@@ -80,7 +66,9 @@ $(document).ready(function () {
             async: true,
             data: formData,
             success(response) {
+                $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
+                    ClearFormData();
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
@@ -88,7 +76,7 @@ $(document).ready(function () {
                     if (files[0] != undefined) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
                     }
-                    $("#dtReadRaport").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
                 }
                 else {
@@ -97,6 +85,7 @@ $(document).ready(function () {
                 }
             },
             error() {
+                $("#CreateDecesionForm-submit").prop('disabled', false);
                 $("#CreateDecesionModal").modal("hide");
                 $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
             }
@@ -106,4 +95,30 @@ $(document).ready(function () {
 $(document).ajaxComplete(function () {
     initialise();
 });
+function initialise() {
+    $("tr.decesion-click-row").dblclick(function () {
+        const content = $(this).children().first().text();
+        window.open(`/Documentation/CreatePDFAsync?objId=${content}`, "_blank");
+    });
+}
+function createDecesionDataTable() {
+    $("#dtReadDecesion").one("preInit.dt", function () {
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
+        $("#dtReadDecesion_filter label").append(button);
+    });
+    $("#dtReadDecesion").DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
+        },
+        responsive: true,
+        "createdRow": function (row, data, dataIndex) {
+            $(row).addClass("decesion-click-row");
+        },
+    });
+    $('#dtReadDecesion').on('page.dt', function () {
+        $('html, body').animate({
+            scrollTop: 100
+        }, 200);
+    });
+}
 //# sourceMappingURL=decesion.js.map

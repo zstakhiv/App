@@ -13,6 +13,7 @@ namespace EPlast.ViewModels.Events
         public int CreatedEventCount { get; set; }
         public int VisitedEventsCount { get; set; }
         public int PlanedEventCount { get; set; }
+        public ParticipantStatus ParticipantStatus { get; set; }
         public ICollection<EventAdmin> EventAdmins { get; set; }
         public ICollection<Event> PlanedEvents { get; set; }
         public ICollection<Event> CreatedEvents { get; set; }
