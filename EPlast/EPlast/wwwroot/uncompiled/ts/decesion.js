@@ -103,7 +103,7 @@ function initialise() {
 }
 function createDecesionDataTable() {
     $("#dtReadDecesion").one("preInit.dt", function () {
-        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">������ ���� ������</button>`);
         $("#dtReadDecesion_filter label").append(button);
     });
     $("#dtReadDecesion").DataTable({
