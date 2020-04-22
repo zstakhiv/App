@@ -832,110 +832,6 @@ namespace EPlast.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult ExternalLogin(string provider, string returnUrl)
-        {
-            var redirectUrl = Url.Action("ExternalLoginCallBack", "Account",
-                new { ReturnUrl = returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return new ChallengeResult(provider, properties);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallBack(string returnUrl = null, string remoteError = null)
-        {
-            try
-            {
-                returnUrl = returnUrl ?? Url.Content("~/Account/UserProfile");
-                LoginViewModel loginViewModel = new LoginViewModel
-                {
-                    ReturnUrl = returnUrl,
-                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-                };
-
-                if (remoteError != null)
-                {
-                    ModelState.AddModelError(string.Empty, $"Error from external provider : {remoteError}");
-                    return View("Login");
-                }
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Error loading external login information");
-                    return View("Login", loginViewModel);
-                }
-
-                var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                    info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-                if (signInResult.Succeeded)
-                {
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
-                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                    if (info.LoginProvider.ToString() == "Google")
-                    {
-                        if (email != null)
-                        {
-                            var user = await _userManager.FindByEmailAsync(email);
-                            if (user == null)
-                            {
-                                user = new User
-                                {
-                                    UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                                    Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                                    ImagePath = "default.png",
-                                    UserProfile = new UserProfile()
-                                };
-                                await _userManager.CreateAsync(user);
-                                await _emailConfirmation.SendEmailAsync(user.Email, "Повідомлення про реєстрацію",
-                            "Ви зареєструвались в системі EPlast використовуючи свій Google-акаунт ", "Адміністрація сайту EPlast");
-                            }
-                            await _userManager.AddToRoleAsync(user, "Прихильник");
-                            await _userManager.AddLoginAsync(user, info);
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
-                    }
-                    else if (info.LoginProvider.ToString() == "Facebook")
-                    {
-                        var nameIdentifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
-                        var identifierForSearching = email ?? nameIdentifier;
-                        var user = _userManager.Users.FirstOrDefault(u => u.UserName == identifierForSearching);
-                        if (user == null)
-                        {
-                            user = new User
-                            {
-                                UserName = (email ?? nameIdentifier),
-                                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                                Email = (email ?? "facebookdefaultmail@gmail.com"),
-                                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
-                                ImagePath = "default.png",
-                                UserProfile = new UserProfile()
-                            };
-                            await _userManager.CreateAsync(user);
-                        }
-                        await _userManager.AddToRoleAsync(user, "Прихильник");
-                        await _userManager.AddLoginAsync(user, info);
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
-                    return View("Error");
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
-            }
-        }
-
-        
-
         [Authorize(Roles = "Admin, Голова Округу, Голова Станиці")]
         public async Task<IActionResult> DeletePosition(int id)
         {
@@ -991,18 +887,6 @@ namespace EPlast.Controllers
                 return NotFound("Не вдалося завершити каденцію діловодства!");
             }
         }
-    }
-    public class DateTimeHelper : IDateTimeHelper
-    {
-        public DateTime GetDateTimeNow()
-        {
-            return DateTime.Now;
-        }
-    }
-
-    public interface IDateTimeHelper
-    {
-        DateTime GetDateTimeNow();
     }
 }
 
