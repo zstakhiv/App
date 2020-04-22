@@ -19,7 +19,7 @@ $(document).ready(function () {
         createDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
-                $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
+                $(element).parent("div").children(".field-validation-valid").text("�� ���� �� ���� ���������.");
                 bool = false;
             }
             else
@@ -37,7 +37,7 @@ $(document).ready(function () {
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
         if (files[0] != undefined && files[0].size >= 10485760) {
-            alert("файл за великий (більше 10 Мб)");
+            alert("���� �� ������� (����� 10 ��)");
             return;
         }
         $("#CreateDecesionForm-submit").prop('disabled', true);
@@ -81,13 +81,13 @@ $(document).ready(function () {
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
                 }
             },
             error() {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
                 $("#CreateDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
+                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
             }
         });
     });
@@ -101,7 +101,7 @@ $(document).ready(function () {
         editDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
-                $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
+                $(element).parent("div").children(".field-validation-valid").text("�� ���� �� ���� ���������.");
                 bool = false;
             }
             else
@@ -142,13 +142,13 @@ $(document).ready(function () {
                 }
                 else {
                     $("#EditDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ���������� ���!");
                 }
             },
             error() {
                 $("#EditDecesionForm-submit").prop('disabled', false);
                 $("#EditDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
+                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ���������� ���!");
             }
         });
     });
@@ -160,7 +160,7 @@ $(document).ready(function () {
                 case "edit":
                     $.get(`/Documentation/GetDecesion?id=${content}`, function (json) {
                         if (!json.success) {
-                            $("#ModalError.modal-body:first p:first strong:first").html("ID рішення немає в базі!");
+                            $("#ModalError.modal-body:first p:first strong:first").html("ID ������ ���� � ���!");
                             return;
                         }
                         $("#Edit-Decesion-ID").val(json.decesion.id);
@@ -175,15 +175,15 @@ $(document).ready(function () {
             }
         },
         items: {
-            "edit": { name: "Редагувати", icon: "far fa-edit" },
-            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" },
-            "quit": { name: "Закрити", icon: "fas fa-times" }
+            "edit": { name: "����������", icon: "far fa-edit" },
+            "pdf": { name: "������������ �� PDF", icon: "far fa-file-pdf" },
+            "quit": { name: "�������", icon: "fas fa-times" }
         }
     });
 });
 function createDecesionDataTable() {
     $("#dtReadDecesion").one("preInit.dt", function () {
-        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">������ ���� ������</button>`);
         $("#dtReadDecesion_filter label").append(button);
     });
     $("#dtReadDecesion").DataTable({
