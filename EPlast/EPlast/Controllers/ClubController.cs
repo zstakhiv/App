@@ -1,4 +1,5 @@
-﻿using EPlast.DataAccess.Entities;
+﻿using EPlast.DataAccess.DTO;
+using EPlast.DataAccess.Entities;
 using EPlast.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -317,13 +318,13 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public int AddEndDate(int adminId, int clubIndex, DateTime enddate)
+        public int AddEndDate([FromBody] AdminEndDateDTO adminEndDate)
         {
             try
             {
-                ClubAdministration admin = _repoWrapper.GetClubAdministration.FindByCondition(i => i.ID == adminId).FirstOrDefault();
+                ClubAdministration admin = _repoWrapper.GetClubAdministration.FindByCondition(i => i.ID == adminEndDate.adminId).FirstOrDefault();
 
-                admin.EndDate = enddate;
+                admin.EndDate = adminEndDate.enddate;
 
                 _repoWrapper.GetClubAdministration.Update(admin);
                 _repoWrapper.Save();

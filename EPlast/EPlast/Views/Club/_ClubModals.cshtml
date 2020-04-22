@@ -10,13 +10,13 @@
             <div class="modal-body">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center flex-row " style="display: flex;">
                     <p style="margin: 0; margin-right: 40px;">Оберіть дату завершення каденції:</p>
-                    @Html.TextBoxFor(x => x.Club,
-                        new { type = "datetime", @placeholder = "Виберіть дату...", @id = "txtToEndDate", @class = "border textBoxInput" })
+
+                    <input class="border textBoxInput" id="txtToEndDate" name="Club" placeholder="Виберіть дату..." type="date" value="">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger text-light" style="background-color: #3c5438; " data-dismiss="modal">
-                <a onclick="ChooseEndDate()" style="color:white;">Зберегти</a>
+                    <a onclick="ChooseEndDate()" style="color:white;">Зберегти</a>
                 </button>
             </div>
         </div>

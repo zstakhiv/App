@@ -9,28 +9,32 @@ $(document).ready(function () {
     });
     $('.changeEnddatebutton').click(function (event) {
         $('#changeEnddate').modal('show');
-        const button = event.target;
-        ClubAdminId = $(button).data('adminId');
+        const button = $(event.target).parent();
+        ClubAdminId = button.data('adminid');
+        console.log(ClubAdminId);
     });
 });
 
 function ChooseEndDate() {
     const input = <HTMLInputElement>$('#txtToEndDate')[0];
-    const date = input.valueAsDate;
-    console.log(input);
-    console.log(date);
-    console.log(ClubAdminId);
+    const date = input.value;
+    const longDate = date + ' 00:00:00';
 
+    const adminsData = {
+        adminId: ClubAdminId,
+        clubIndex: CurrentClub,
+        enddate: longDate,
+    };
 
     $.ajax({
         url: '/Club/AddEndDate',
-        method: 'POST',
-        data: JSON.stringify({ enddate: date, clubIndex: CurrentClub, adminId: ClubAdminId }),
+        type: 'POST',
+        data: JSON.stringify(adminsData),
         contentType: 'application/json; charset=utf-8',
         timeout: 5000
     }).done((result) => {
         if (result === 1) {
-            $('a[data-adminId="' + ClubAdminId + '"]').parent().siblings('.ClubAdminEndDate')[0].innerHTML = date.toLocaleDateString();
+            $('a[data-adminid="' + ClubAdminId + '"]').parent().siblings('.ClubAdminEndDate')[0].innerHTML = date;
         }
     });
 }
