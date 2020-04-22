@@ -212,6 +212,12 @@ namespace EPlast.Controllers
             try
             {
                 ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Розглядається").First();
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                Event targetEvent = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                if(targetEvent.EventStatusID == finishedEvent)
+                {
+                    return StatusCode(409);
+                }
                 _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = participantStatus.ID, EventId = ID, UserId = _userManager.GetUserId(User) });
                 _repoWrapper.Save();
                 return StatusCode(200);
@@ -235,7 +241,6 @@ namespace EPlast.Controllers
                 if(participantToDelete.ParticipantStatusId == rejectedStatus || targetEvent.EventStatusID == finishedEvent)
                 {
                     return StatusCode(409);
-
                 }
                 _repoWrapper.Participant.Delete(participantToDelete);
                 _repoWrapper.Save();
