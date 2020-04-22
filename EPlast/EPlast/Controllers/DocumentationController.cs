@@ -89,17 +89,55 @@ namespace EPlast.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public JsonResult GetDecesion(int id)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == id).First();
+                return Json(new { success = true, decesion });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public JsonResult ChangeDecesion(DecesionViewModel decesionViewModel)
+        {
+            try
+            {
+                var decesion = _repoWrapper.Decesion.FindByCondition(x => x.ID == decesionViewModel.Decesion.ID).First();
+                decesion.Name = decesionViewModel.Decesion.Name;
+                decesion.Description = decesionViewModel.Decesion.Description;
+                _repoWrapper.Decesion.Update(decesion);
+                _repoWrapper.Save();
+                return Json(new
+                {
+                    success = true,
+                    text = "Зміни пройшли успішно!",
+                    decesion
+                });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<JsonResult> SaveDecesionAsync(DecesionViewModel decesionViewModel)
         {
             try
             {
                 ModelState.Remove("Decesion.DecesionStatusType");
-                ModelState.Remove("Decesion.Date");
                 if (!ModelState.IsValid && decesionViewModel.Decesion.DecesionTarget.ID != 0 || decesionViewModel == null)
                 {
                     ModelState.AddModelError("", "Дані введені неправильно");
-                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), modelstate = ModelState });
+                    return Json(new { success = false, text = ModelState.Values.SelectMany(v => v.Errors), model = decesionViewModel, modelstate = ModelState });
                 }
 
                 if (decesionViewModel.File != null && decesionViewModel.File.Length > 10485760)

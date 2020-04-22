@@ -23,7 +23,7 @@
             <a class="nav-link" data-toggle="tab" href="#">Бланки</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#">Поручення</a>
+            <a class="nav-link" data-toggle="tab" href="#approvers">Поручення</a>
         </li>
         @if (_userManager.GetUserId(User) == Model.User.Id || User.IsInRole("Admin"))
         {
@@ -34,7 +34,7 @@
         }
     </ul>
     <div class="tab-content">
-        <div id="userProfile" class="container tab-pane active">
+        <div id="userProfile" class="container tab-pane active UserProfileWrapper">
             <div class="col-md-12 mt-4 d-flex">
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet bordered">
@@ -42,8 +42,10 @@
                             <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
                         </div>
                         <div class="profile-usertitle">
-                            <div class="profile-usertitle-name">  </div>
-                            <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"></div>
+                            @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
+                            {
+                                <div class="mt-4 font-weight h5 text-success">@Model.timeToJoinPlast.Days ДНІ ДО ВСТУПУ В ПЛАСТ</div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -241,6 +243,101 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="approvers" class="container tab-pane fade approversWrapper">
+            <div class="col-md-12 mt-4 d-flex">
+                <div class="col-md-4">
+                    <div class="portlet light profile-sidebar-portlet bordered">
+                        <div class="profile-userpic">
+                            <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+                    <div >
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>@Model.User.FirstName @Model.User.LastName</h4>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <h3 >
+                                        Поручення дійсних членів
+                                    </h3>
+                                    <div >
+                                        <div id="insideCard">
+                                            <div class="row">
+                                                <div class="card-group">
+                                                    @if (Model.User.ConfirmedUsers.Count() != 0)
+                                                    {
+                                                        @foreach (var item in Model.User.ConfirmedUsers.ToList())
+                                                        {
+                                                            <div class="col">
+                                                                <div class="card h-100">
+                                                                    <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@item.Approver.User.Id" class="btn">
+                                                                        <div class="approversImg">
+                                                                            <img class="card-img-top" src="/images/Users/@item.Approver.User.ImagePath" alt="Generic placeholder image" />
+                                                                        </div>
+
+                                                                        <div class="card-body">
+                                                                            <div class="card-text">
+                                                                                <h5>@item.Approver.User.FirstName @item.Approver.User.LastName</h5>
+                                                                                <p>@item.ConfirmDate.ToString("dd-MM-yyyy")</p>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        
+                                                                    </a>
+                                                                        @if (item.Approver.UserID == _userManager.GetUserId(User))
+                                                                        {
+                                                                            <div class="card-footer">
+                                                                                <a class="btn btn-danger" asp-action="ApproverDelete" asp-controller="Account" asp-route-userId="@Model.User.Id">Скасувати</a>
+                                                                            </div>
+                                                                        }
+                                                                </div>
+                                                            </div>
+                                                        }
+
+
+                                                    }
+                                                    @if (Model.canApprove && User.IsInRole("Пластун"))
+                                                    {
+                                                        <div class="col">
+                                                            <div class="">
+                                                                <a asp-action="ApproveUser" asp-route-userId="@Model.User.Id" class="btn">
+                                                                    <div class="approversImg">
+                                                                        <img class="card-img-top" src="/images/add_user.png" alt="Generic placeholder image" />
+                                                                    </div>
+                                                                    
+                                                                    <div class="card-body">
+                                                                        <div class="card-text">
+                                                                            <h5>Поручитись</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <partial name="_SuccessModal" model='""' />

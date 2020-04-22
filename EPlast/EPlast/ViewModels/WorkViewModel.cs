@@ -8,9 +8,9 @@ namespace EPlast.ViewModels
 {
     public class WorkViewModel
     {
-        public int PlaceOfWorkID { get; set; }
+        public int? PlaceOfWorkID { get; set; }
         public IEnumerable<Work> PlaceOfWorkList { get; set; }
-        public int PositionID { get; set; }
+        public int? PositionID { get; set; }
         public IEnumerable<Work> PositionList { get; set; }
     }
 }
