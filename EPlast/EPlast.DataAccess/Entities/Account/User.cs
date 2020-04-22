@@ -27,6 +27,7 @@ namespace EPlast.DataAccess.Entities
         [StringLength(25, MinimumLength = 2, ErrorMessage = "Поле по-батькові повинне складати від 2 до 25 символів")]
         public string FatherName { get; set; }
         public DateTime RegistredOn { get; set; }
+        public DateTime EmailSended { get; set; }
         public string ImagePath { get; set; }
         public UserProfile UserProfile { get; set; }
         public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
