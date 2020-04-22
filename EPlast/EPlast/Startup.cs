@@ -20,6 +20,7 @@ using EPlast.BussinessLayer.Settings;
 using EPlast.BussinessLayer.AccessManagers;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.Wrapper;
+using Microsoft.AspNetCore.Localization;
 
 namespace EPlast
 {
@@ -100,6 +101,12 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+            });
+            services.AddMvc();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
@@ -160,6 +167,8 @@ namespace EPlast
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseRequestLocalization();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
