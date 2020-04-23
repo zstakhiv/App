@@ -51,10 +51,10 @@
                         <td data-order="@item.User.LastName"><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.LastName</a></td>
                         <td data-order="@item.User.FatherName"><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.FirstName</a></td>
                         <td>
-                            @if (item.User.UserProfile.GenderID == 1)
-                            {<span>Чоловік</span>}
+                            @if (item.User.UserProfile.GenderID == null)
+                            {<span>Не обрано</span>}
                             else
-                            {<Span>Жінка</Span>}
+                            {<Span>@item.User.UserProfile.Gender.Name</Span>}
                         </td>
 
                         @if (@item.User.UserProfile.DateTime != null)

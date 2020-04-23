@@ -35,7 +35,7 @@ namespace EPlast.Controllers
             try
             {
                 var users = _repoWrapper.User
-                    .Include(x => x.UserProfile, x => x.UserPlastDegrees)
+                    .Include(x => x.UserProfile, x => x.UserPlastDegrees,x=>x.UserProfile.Gender)
                     .ToList();
 
                 var cities = _repoWrapper.City
