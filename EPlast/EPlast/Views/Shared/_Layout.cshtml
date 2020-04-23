@@ -93,8 +93,6 @@
 
                         </div>
                         <div class="profile">
-                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
-                This "If" will be deleted in the future*@
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">
                                 @if (@UserManager.GetUserAsync(User).Result != null)
                                 {

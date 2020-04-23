@@ -440,6 +440,7 @@ namespace EPlast.Controllers
                                     FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                     LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                     ImagePath = "default.png",
+                                    RegistredOn = DateTime.Now,
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
@@ -466,6 +467,7 @@ namespace EPlast.Controllers
                                 Email = (email ?? "facebookdefaultmail@gmail.com"),
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
+                                RegistredOn = DateTime.Now,
                                 UserProfile = new UserProfile()
                             };
                             await _userManager.CreateAsync(user);
@@ -608,7 +610,6 @@ namespace EPlast.Controllers
         {
             if (!_repoWrapper.Gender.FindAll().Any())
             {
-                _repoWrapper.Gender.Create(new Gender { Name = "Не обрано" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
