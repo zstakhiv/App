@@ -106,7 +106,7 @@ namespace EPlast.Controllers
                 if (registeredUser != null)
                 {   // напевно перевірку по підтвердженню імейлу зробити, тіпа юзер є зареєстрований але не підтверджений, перевірте електронну пошту 
                     // тут може вилізти проблема через гугл
-                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
+                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі. ");
                     return View("Register");
                 }
                 else
@@ -194,7 +194,7 @@ namespace EPlast.Controllers
 
             DateTime dateTimeConfirming = DateTime.Now;
             var totalTime = dateTimeConfirming.Subtract(user.EmailSendedAfterRegistration).TotalMinutes;
-            if(totalTime < 2)
+            if(totalTime < 1)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
