@@ -15,6 +15,7 @@ namespace EPlast.ViewModels.Events
         public bool IsUserApprovedParticipant { get; set; }
         public bool IsUserUndeterminedParticipant { get; set; }
         public bool IsUserRejectedParticipant { get; set; }
+        public bool IsEventFinished { get; set; }
         public IEnumerable<Participant> EventParticipants { get; set; }
 
     }
