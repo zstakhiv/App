@@ -142,9 +142,9 @@ namespace EPlast.Controllers
 
                 var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
-                {   // напевно перевірку по підтвердженню імейлу зробити, тіпа юзер є зареєстрований але не підтверджений, перевірте електронну пошту 
-                    // тут може вилізти проблема через гугл
-                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі. ");
+                {   
+                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі, " +
+                        "можливо він не підтвердив свою реєстрацію.");
                     return View("Register");
                 }
                 else
@@ -225,9 +225,6 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            //тут по суті треба взяти поточний час
-            // тут по суті додати перевірку якшо токен уже не валідний то час минув
-            //час всерівно треба засікати тому шо ніяк не мож перевірити на токен
             // тут у функції ше подивитись чи все правильно по пріоритетах перевірок
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -473,6 +470,7 @@ namespace EPlast.Controllers
                                     FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                     LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                     ImagePath = "default.png",
+                                    EmailConfirmed = true,
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
@@ -499,6 +497,7 @@ namespace EPlast.Controllers
                                 Email = (email ?? "facebookdefaultmail@gmail.com"),
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
+                                EmailConfirmed = true,
                                 UserProfile = new UserProfile()
                             };
                             await _userManager.CreateAsync(user);

@@ -29,6 +29,7 @@ namespace EPlast.DataAccess.Entities
         public DateTime RegistredOn { get; set; }
         public DateTime EmailSendedAfterRegistration { get; set; }
         public string ImagePath { get; set; }
+        public bool SocialNetworking { get; set; }
         public UserProfile UserProfile { get; set; }
         public ICollection<ConfirmedUser> ConfirmedUsers { get; set; }
         public ICollection<Approver> Approvers { get; set; }
