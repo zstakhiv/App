@@ -178,7 +178,7 @@ namespace EPlast.Controllers
                             new { code = code, userId = user.Id },
                             protocol: HttpContext.Request.Scheme);
 
-                        user.EmailSendedAfterRegistration = DateTime.Now;
+                        user.EmailSendedOnRegister = DateTime.Now;
                         await _userManager.UpdateAsync(user);
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
@@ -199,6 +199,7 @@ namespace EPlast.Controllers
         {
             return View("ConfirmedEmail");
         }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ResendEmailForRegistering(string userId)
@@ -206,7 +207,7 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View("Error");
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action(
@@ -215,7 +216,7 @@ namespace EPlast.Controllers
                 new { code = code, userId = user.Id },
                 protocol: HttpContext.Request.Scheme);
 
-            user.EmailSendedAfterRegistration = DateTime.Now;
+            user.EmailSendedOnRegister = DateTime.Now;
             await _userManager.UpdateAsync(user);
             await _emailConfirmation.SendEmailAsync(user.Email, "Підтвердження реєстрації ",
                 $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
@@ -230,16 +231,16 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View("Error");
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
 
             DateTime dateTimeConfirming = DateTime.Now;
-            var totalTime = dateTimeConfirming.Subtract(user.EmailSendedAfterRegistration).TotalMinutes;
-            if(totalTime < 1)
+            var totalTime = dateTimeConfirming.Subtract(user.EmailSendedOnRegister).TotalMinutes;
+            if (totalTime < 1)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
-                    return View("Error");
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
 
                 var result = await _userManager.ConfirmEmailAsync(user, code);
@@ -250,7 +251,7 @@ namespace EPlast.Controllers
                 }
                 else   // ерор не працює треба перевірити чи вертає ту вюшку
                 {
-                    return View("Error");
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
             }
             else
