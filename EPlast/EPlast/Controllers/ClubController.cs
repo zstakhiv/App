@@ -336,5 +336,24 @@ namespace EPlast.Controllers
                 return 0;
             }
         }
+        [HttpGet]
+        public IActionResult AddAsClubFollower(int clubIndex)
+        {
+            try
+            {
+                var newClubMember = new ClubMembers()
+                {
+                    UserId = _userManager.GetUserId(User),
+                    IsApproved = false
+                };
+                _repoWrapper.ClubMembers.Create(newClubMember);
+                _repoWrapper.Save();
+                return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User)});
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
     }
 }
