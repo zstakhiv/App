@@ -157,6 +157,7 @@ namespace EPlast.Controllers
                         FirstName = registerVM.Name,
                         RegistredOn = DateTime.Now,
                         ImagePath = "default.png",
+                        SocialNetworking = false,
                         UserProfile = new UserProfile()
                     };
 
@@ -367,8 +368,8 @@ namespace EPlast.Controllers
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _userManager.IsEmailConfirmedAsync(user);
-            if (result)
+            var result = user.SocialNetworking;
+            if (result != true)
             {
                 return View("ChangePassword");
             }
@@ -465,6 +466,7 @@ namespace EPlast.Controllers
                             {
                                 user = new User
                                 {
+                                    SocialNetworking = true,
                                     UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                                     Email = info.Principal.FindFirstValue(ClaimTypes.Email),
                                     FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
@@ -492,6 +494,7 @@ namespace EPlast.Controllers
                         {
                             user = new User
                             {
+                                SocialNetworking = true,
                                 UserName = (email ?? nameIdentifier),
                                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                 Email = (email ?? "facebookdefaultmail@gmail.com"),
