@@ -144,7 +144,7 @@ namespace EPlast.Controllers
                 if (registeredUser != null)
                 {   
                     ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі, " +
-                        "можливо він не підтвердив свою реєстрацію.");
+                        "можливо він не підтвердив свою реєстрацію");
                     return View("Register");
                 }
                 else
@@ -165,7 +165,7 @@ namespace EPlast.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повина складати 8");
+                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повинна складати 8");
                         return View("Register");
                     }
                     else
