@@ -82,9 +82,10 @@
 
     .plast-avatar {
         width: 40px;
+        object-fit: cover;
         height: 40px;
         background-image: url('https://galinfo.com.ua/media/gallery/full/p/l/plast1.jpg');
-    }
+    }  
 
     .main-block {
         display: flex;

@@ -111,7 +111,7 @@ namespace EPlast.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var addedRoles = roles.Except(userRoles);
-                var removedRoles = userRoles.Except(roles);
+                var removedRoles = userRoles.Except(roles).Except(new List<string> { "Admin"});
                 await _userManager.AddToRolesAsync(user, addedRoles);
                 await _userManager.RemoveFromRolesAsync(user, removedRoles);
                 var currentRoles = await _userManager.GetRolesAsync(user);

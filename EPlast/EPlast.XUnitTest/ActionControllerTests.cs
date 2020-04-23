@@ -126,6 +126,9 @@ namespace EPlast.XUnitTest
                       new Participant{ID=2,ParticipantStatusId=3,EventId=1,UserId="abc-2"},
                       new Participant{ID=3,ParticipantStatusId=1,EventId=1,UserId="abc-3"}
                     }.AsQueryable());
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+                .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
+            _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
             //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
             var actionResult = actionsController.UnSubscribeOnEvent(testParticipantId);
@@ -138,6 +141,35 @@ namespace EPlast.XUnitTest
             Assert.Equal(200, codeResult.StatusCode);
         }
 
+        [Fact]
+        public void UnsubscribeOnEventConflictTest()
+        {
+            //Arrange
+            int testParticipantId = 2;
+            _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(It.IsAny<Expression<Func<ParticipantStatus, bool>>>()))
+            .Returns(new List<ParticipantStatus>
+             {
+                    new ParticipantStatus{ID=3 ,ParticipantStatusName = "Розглядається"},
+             }.AsQueryable());
+            _repoWrapper.Setup(x => x.Participant.FindByCondition(It.IsAny<Expression<Func<Participant, bool>>>()))
+                .Returns(new List<Participant>
+                    {
+                      new Participant{ID=1,ParticipantStatusId=3,EventId=1,UserId="abc-1"},
+                      new Participant{ID=2,ParticipantStatusId=3,EventId=1,UserId="abc-2"},
+                      new Participant{ID=3,ParticipantStatusId=1,EventId=1,UserId="abc-3"}
+                    }.AsQueryable());
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+                .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
+            _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
+            //Act
+            var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
+            var actionResult = actionsController.UnSubscribeOnEvent(testParticipantId);
+            var codeResult = actionResult as StatusCodeResult;
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<StatusCodeResult>(actionResult);
+            Assert.Equal(409, codeResult.StatusCode);
+        }
 
         [Fact]
         public void UnsubscribeOnEventFailTest()
@@ -169,6 +201,10 @@ namespace EPlast.XUnitTest
                     new ParticipantStatus{ID=3 ,ParticipantStatusName = "Розглядається"},
                 }.AsQueryable());
              _repoWrapper.Setup(x => x.Participant.Create((It.IsAny<Participant>())));
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+                .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
+            _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
+
             //Act  
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
             var actionResult = actionsController.SubscribeOnEvent(testEventId);
@@ -179,6 +215,32 @@ namespace EPlast.XUnitTest
             _repoWrapper.Verify(r => r.Participant.Create(It.IsAny<Participant>()), Times.Once());
             _repoWrapper.Verify(r => r.Save(), Times.Once());
             Assert.Equal(200, codeResult.StatusCode);
+        }
+
+        [Fact]
+        public void SubscribeOnEventConflictTest()
+        {
+            //Arrange
+            int testEventId = 2;
+            string expectedID = "abc-1";
+            _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expectedID);
+            _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(It.IsAny<Expression<Func<ParticipantStatus, bool>>>()))
+                .Returns(new List<ParticipantStatus>
+                {
+                    new ParticipantStatus{ID=3 ,ParticipantStatusName = "Розглядається"},
+                }.AsQueryable());
+            _repoWrapper.Setup(x => x.Participant.Create((It.IsAny<Participant>())));
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+                .Returns(new List<EventStatus> { new EventStatus { ID = 2 } }.AsQueryable());
+            _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
+            //Act  
+            var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
+            var actionResult = actionsController.SubscribeOnEvent(testEventId);
+            var codeResult = actionResult as StatusCodeResult;
+            //Assert
+            Assert.NotNull(actionResult);
+            Assert.IsType<StatusCodeResult>(actionResult);
+            Assert.Equal(409, codeResult.StatusCode);
         }
 
         [Fact]
@@ -396,6 +458,9 @@ namespace EPlast.XUnitTest
             string expectedID = "abc-1";
             _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expectedID);
             _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+                .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
+
             //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
             var actionResult = actionsController.EventInfo(eventID);
@@ -417,6 +482,8 @@ namespace EPlast.XUnitTest
             string expectedID = "abc-2";
             _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expectedID);
             _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
+            _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
+             .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
             //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object, _fm.Object);
             var actionResult = actionsController.EventInfo(eventID);
@@ -484,8 +551,6 @@ namespace EPlast.XUnitTest
             _repoWrapper.Setup(x => x.EventStatus.FindByCondition(st => st.EventStatusName == "Не затверджені")).Returns(new List<EventStatus> { new EventStatus { ID = 2 } }.AsQueryable());
             int eventCategoryID = 3;
             string expectedID = "abc-1";
-            //var mockEventsSet= GetMockDbSet(GetEvents().AsQueryable());
-            //mockEventsSet.Setup(m=>m.Include("Participants")).Returns(mockEventsSet.Object);
             _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expectedID);
             _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
             //Act
