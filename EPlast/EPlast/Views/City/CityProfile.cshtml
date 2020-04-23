@@ -5,178 +5,177 @@
     ViewData["Title"] = "City";
 }
 
-<div class="main-wrapper" style="width:100%; margin-bottom:20px;">
-    <div class="container">
-        <div class="row d-inline d-xl-flex mx-auto" style="height: 400px;width: 100%;padding-bottom: 15px;">
-            <div class="col-md-12 col-xl-8" style="padding: 15px;padding-bottom: 0px;padding-top: 15px;">
-                <div class="d-flex justify-content-center" style="width: 100%;height: 100%;background-color: #ffffff;">
-                    <div class="d-sm-inline-block d-xl-inline-block" style="width: 50%;min-width: 250px;">
-                        <div class="d-flex">
-                            <p class="text-center d-inline-block d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця @Model.City.Name</p>
-                            <p class="text-center d-flex d-sm-flex align-items-center align-items-sm-center justify-content-xl-center" style="margin: 0px;max-width: 30px;height: 45px; color:white;"><a asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID"><i class="fa fa-edit d-xl-flex justify-content-xl-center align-items-xl-center" style="font-size: 18px;"></i></a></p>
-                        </div>
-                        <div class="d-flex d-lg-inline-flex justify-content-center align-items-center justify-content-md-center align-items-md-center" style="height: 75%;width: 100%;">
-                            @if (Model.City.Logo != null)
-                            {
-                                <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('../../Cities/@Model.City.Logo');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
-                            }
-                            else
-                            {
-                                <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('../../Cities/default.jpg');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
-                            }
-                            <div class="d-none d-lg-block mx-auto" style="padding: 10px;width: 60%;">
-                                <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Наша Web-сторінка</p>
-                                <p style="font-size: 18px;">
-                                    @if (@Model.City.CityURL != null)
-                                    {
-                                        @Model.City.CityURL
-                                    }
-                                    <br />
-                                </p>
-                                <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Станичний</p>
-                                <div>
-                                    @if (Model.CityHead != null)
-                                    {
-                                        <p style="margin: 0px;font-size: 18px;">@Model.CityHead.User.FirstName @Model.CityHead.User.LastName<br />@Model.CityHead.StartDate.Year</p>
-                                    }
-                                    else
-                                    {
-                                        <p style="margin: 0px;font-size: 18px;"><br /></p>
-                                    }
+    <div class="main-wrapper" style="width:100%; margin-bottom:20px;">
+        <div class="container" style="padding: 15px;">
+            <div class="row d-inline d-xl-flex mx-auto" style="height: 400px;width: 100%;padding-bottom: 15px;">
+                <div class="col-md-12 col-xl-8" style="padding: 15px;padding-bottom: 0px;padding-top: 15px;">
+                    <div class="border rounded d-flex justify-content-center" style="width: 100%;height: 100%;background-color: #ffffff;min-height: 374px;">
+                        <div class="d-sm-inline-block d-xl-inline-block" style="width: 50%;min-width: 250px;">
+                            <div class="d-flex">
+                                <p class="text-center d-table d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця Львів</p>
+                                <p class="text-center d-flex d-sm-flex align-items-center align-items-sm-center justify-content-xl-center" style="margin: 0px;max-width: 30px;height: 45px;"><a asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID" style="color: rgb(0,0,0);"><i class="fa fa-edit d-xl-flex justify-content-xl-center align-items-xl-center" style="font-size: 18px;"></i></a></p>
+                            </div>
+                            <div class="d-flex d-lg-inline-flex justify-content-center align-items-center justify-content-md-center align-items-md-center" style="height: 75%;width: 100%;">
+                                <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Coat_of_arms_of_Lviv.svg/135px-Coat_of_arms_of_Lviv.svg.png');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
+                                <div class="d-none d-lg-block mx-auto" style="padding: 10px;width: 60%;">
+                                    <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Наша Web-сторінка</p>
+                                    <a class="" href="#" style="color: rgb(0,0,0);">
+                                        @if (@Model.City.CityURL != null)
+                                        {
+                                            @Model.City.CityURL
+                                        }<br />
+                                    </a>
+                                    <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Станичний</p>
+                                    <div>
+                                        @if (Model.CityHead != null)
+                                        {
+                                        <p style="margin: 0px;font-size: 18px;">@Model.CityHead.User.FirstName @Model.CityHead.User.LastName<br />@Model.CityHead.StartDate.Year - @if (Model.CityHead.EndDate != null) 
+                                        {@Model.CityHead.EndDate.Value.Year}
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                            <p style="margin: 0px;font-size: 18px;"><br /></p>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                             <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
                         </div>
-                        <div class="d-none d-sm-flex d-xl-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="width: 50%;"><iframe class="d-sm-flex d-xl-flex my-auto justify-content-xl-center align-items-xl-center" allowfullscreen frameborder="0" src="https://cdn.bootstrapstudio.io/placeholders/map.html" width="100%" height="400" style="width: 90%;height: 90%;"></iframe></div>
-                    </div>
-            </div>
-            <div class="col" style="padding: 15px;padding-bottom: 0px;">
-                <div style="width: 100%;height: 100%;background-color: #ffffff;">
-                    <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Члени станиці</p>
-                    <div style="height: 75%;">
-                        <div class="d-flex mx-auto">
-                            @foreach (var membrCity in Model.Members.Take(3))
-                            {
-                                <div class="mx-auto" style="width: 80px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
-                                </div>
-                            }
-                        </div>
-                        <div class="d-flex mx-auto">
-                            @foreach (var membrCity in Model.Members.Skip(3).Take(3))
-                            {
-                                <div class="mx-auto" style="width: 80px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <a asp-action="CityMembers" asp-controller="City" asp-route-cityid="@Model.City.ID">
-                            <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button>
-                        </a>
+                        <div class="d-none d-sm-flex d-xl-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="width: 50%;"><iframe allowfullscreen frameborder="0" src="https://cdn.bootstrapstudio.io/placeholders/map.html" class="d-sm-flex d-xl-flex my-auto justify-content-xl-center align-items-xl-center" width="100%" height="400" style="width: 90%;height: 90%;"></iframe></div>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="col" style="padding: 15px;padding-bottom: 0px;">
+                    <div class="border rounded" style="width: 100%;background-color: #ffffff;height: 100%;min-height: 375px;">
+                        <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Члени станиці</p>
+                        <div style="height: 75%;min-height: 280px;">
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
+                                @foreach (var membrCity in Model.Members.Take(3))
+                                {
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@membrCity.User.FirstName.ToString()</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@membrCity.User.LastName.ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
 
-        <div class="row d-inline float-none d-lg-flex d-xl-flex mx-auto" style="width: 100%;height: 400px;padding: 0px;padding-bottom: 15px;">
-            <div class="col" style="padding: 15px;padding-bottom: 0px;">
-                <div style="width: 100%;height: 100%;background-color: #ffffff;">
-                    <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Діловоди станиці</p>
-                    <div style="height: 75%;">
-                        <div class="d-flex mx-auto">
-                            @foreach (var adminCity in Model.CityAdmins.Take(3))
-                            {
-                                var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
-                                <div class="mx-auto" style="width: 80px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br /> @fullName</p>
-                                </div>
-                            }
-
+                                @foreach (var membrCity in Model.Members.Skip(3).Take(3))
+                                {
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@membrCity.User.FirstName.ToString()</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@membrCity.User.LastName.ToString()</p>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                        <div class="d-flex mx-auto">
-                            @foreach (var adminCity in Model.CityAdmins.Skip(3).Take(3))
-                            {
-                                var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
-                                <div class="mx-auto" style="width: 80px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName <br /> @fullName</p>
-                                </div>
-                            }
-
+                        <div>
+                            <a asp-action="CityMembers" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                                <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Більше</button>
+                            </a>
                         </div>
-                    </div>
-                    <div>
-                        <a asp-action="CityAdmins" asp-controller="City" asp-route-cityid="@Model.City.ID">
-                            <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
-                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col" style="padding: 15px;padding-bottom: 0px;">
-                <div style="width: 100%;height: 100%;background-color: #ffffff;">
-                    <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Документообіг станиці</p>
-                    <div style="height: 75%;">
-                        <div class="d-flex mx-auto">
-                            @foreach (var doc in Model.CityDoc.Take(2))
-                            {
-                                var documentname = doc.CityDocumentType.Name + " " + doc.SubmitDate.ToString();
-                                <div class="mx-auto" style="width: 120px;">
-                                    <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@documentname<br /></p>
+            <div class="row d-inline float-none d-lg-flex d-xl-flex mx-auto" style="width: 100%;height: 400px;padding: 0px;padding-bottom: 15px;">
+                <div class="col" style="padding: 15px;padding-bottom: 0px;">
+                    <div class="border rounded" style="width: 100%;height: 100%;background-color: #ffffff;min-height: 375px;">
+                        <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Діловоди станиці</p>
+                        <div style="height: 75%;">
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
+                                @foreach (var adminCity in Model.CityAdmins.Take(3))
+                                {
+                                    var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@fullName</p>
+                                    </div>
+                                }
                                 </div>
-                            }
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
+                                @foreach (var adminCity in Model.CityAdmins.Skip(3).Take(3))
+                                {
+                                    var fullName = adminCity.User.FirstName + " " + adminCity.User.LastName;
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@adminCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@adminCity.AdminType.AdminTypeName</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@fullName</p>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                        <div class="d-flex mx-auto">
-                            @foreach (var doc in Model.CityDoc.Skip(2).Take(2))
-                            {
-                                var documentname = doc.CityDocumentType.Name + " " + doc.SubmitDate.ToString();
-                                <div class="mx-auto" style="width: 120px;">
-                                    <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 90px;height: 90px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
-                                    <p class="text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@documentname<br /></p>
-                                </div>
-                            }
+                        <div>
+                            <a asp-action="CityAdmins" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                                <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                            </a>
                         </div>
                     </div>
-                    <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
+                </div>
+                <div class="col" style="padding: 15px;padding-bottom: 0px;">
+                    <div class="border rounded" style="width: 100%;height: 100%;background-color: #ffffff;min-height: 375px;">
+                        <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Документообіг станиці</p>
+                        <div style="height: 75%;">
+                            <div class="d-flex mx-auto" style="min-height: 140px;">
+                                @foreach (var doc in Model.CityDoc.Take(2))
+                                {
+                                    <div class="mx-auto" style="width: 120px;">
+                                        <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 75px;height: 80px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png"/></div>
+                                        <p class="text-truncate text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@doc.CityDocumentType.Name</p>
+                                        <p class="text-truncate text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@doc.SubmitDate.Value.ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="d-flex mx-auto" style="height: 140px;">
+                                @foreach (var doc in Model.CityDoc.Skip(2).Take(2))
+                                {
+                                    <div class="mx-auto" style="width: 120px;">
+                                        <div class="d-flex justify-content-center align-items-center"><img class="align-items-center" style="width: 75px;height: 80px;" src="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/512/document-icon.png" /></div>
+                                        <p class="text-truncate text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@doc.CityDocumentType.Name</p>
+                                        <p class="text-truncate text-center d-xl-flex justify-content-xl-center" style="margin: 0px;margin-bottom: 5px; font-size:0.9rem;">@doc.SubmitDate.Value.ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                        <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="padding: 15px;padding-bottom: 0px;">
+                    <div class="border rounded" style="width: 100%;height: 100%;background-color: #ffffff;min-height: 375px;">
+                        <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Прихильники станиці</p>
+                        <div style="height: 75%;">
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
+                                @foreach (var membrCity in Model.Followers.Take(3))
+                                {
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px;">@membrCity.User.FirstName.ToString()</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px;">@membrCity.User.LastName.ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="d-flex mx-auto" style="height: 50%;min-height: 140px;">
+                                @foreach (var membrCity in Model.Followers.Skip(3).Take(3))
+                                {
+                                    <div class="mx-auto" style="width: 80px;">
+                                        <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px;">@membrCity.User.FirstName.ToString()</p>
+                                        <p class="text-truncate text-center" style="margin: 0px;margin-bottom: 5px;">@membrCity.User.LastName.ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <a asp-action="CityFollowers" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                                <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style=" height: 40px; width: 60%; padding: 0px; background-color: #3c5438;">Більше</button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col" style="padding: 15px;padding-bottom: 0px;">
-                <div style="width: 100%;height: 100%;background-color: #ffffff;">
-                    <p class="text-center d-xl-flex justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Прихильники станиці</p>
-                    <div style="height: 75%;">
-                        <div class="d-flex mx-auto">
-                            @foreach (var membrCity in Model.Followers.Take(3))
-                            {
-                                <div class="mx-auto" style="width: 80px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 80px;height: 80px;" src="/images/Users/@membrCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
-                                </div>
-                            }
-                        </div>
-                        <div class="d-flex mx-auto">
-                            @foreach (var membrCity in Model.Followers.Skip(3).Take(3))
-                            {
-                                <div class="mx-auto" style="width: 85px;">
-                                    <img class="border rounded-circle align-items-center" style="width: 85px;height: 85px;" src="/images/Users/@membrCity.User.ImagePath" />
-                                    <p class="text-center" style="margin: 0px;margin-bottom: 5px;font-size:0.9rem;">@membrCity.User.FirstName.ToString() @membrCity.User.LastName.ToString()</p>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <a asp-action="CityFollowers" asp-controller="City" asp-route-cityid="@Model.City.ID">
-                            <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style=" height: 40px; width: 60%; padding: 0px; background-color: #3c5438;">Більше</button>
-                        </a>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
+        </div>   
     </div>
-</div>
