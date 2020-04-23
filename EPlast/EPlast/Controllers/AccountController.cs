@@ -47,7 +47,7 @@ namespace EPlast.Controllers
             _logger = logger;
             _emailConfirmation = emailConfirmation;
             _env = env;
-            _userAccessManager = userAccessManager;            
+            _userAccessManager = userAccessManager;
         }
 
         [HttpGet]
@@ -142,7 +142,7 @@ namespace EPlast.Controllers
 
                 var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
-                {   
+                {
                     ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі, " +
                         "можливо він не підтвердив свою реєстрацію");
                     return View("Register");
@@ -182,7 +182,7 @@ namespace EPlast.Controllers
                         await _userManager.UpdateAsync(user);
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
-                        
+
                         return View("AcceptingEmail");
                     }
                 }
@@ -283,6 +283,7 @@ namespace EPlast.Controllers
             return View("ForgotPassword");
         }
 
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -305,6 +306,9 @@ namespace EPlast.Controllers
                         "Account",
                         new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                         protocol: HttpContext.Request.Scheme);
+
+                    user.EmailSendedOnForgotPassword = DateTime.Now;
+                    await _userManager.UpdateAsync(user);
                     await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
                         $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                     return View("ForgotPasswordConfirmation");
@@ -320,9 +324,55 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public async Task<IActionResult> ResendEmailForResetingPassword(string userId)
         {
-            return code == null ? View("Error") : View("ResetPassword");
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var resetingPasswordLink = Url.Action(
+                nameof(ResetPassword),
+                "Account",
+                new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
+                protocol: HttpContext.Request.Scheme);
+
+            user.EmailSendedOnForgotPassword = DateTime.Now;
+            await _userManager.UpdateAsync(user);
+            await _emailConfirmation.SendEmailAsync(user.Email, "Скидування пароля",
+                        $"Для скидування пароля перейдіть за : <a href='{resetingPasswordLink}'>посиланням</a>", "Адміністрація сайту EPlast");
+            return View("ResendResetingPassword");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string userId, string code = null)
+        {
+            // ерор не працює треба перевірити чи вертає ту вюшку
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+
+            DateTime dateTimeResetingPassword = DateTime.Now;
+            var totalTime = dateTimeResetingPassword.Subtract(user.EmailSendedOnForgotPassword).TotalMinutes;
+            if (totalTime < 1)
+            {
+                if (string.IsNullOrWhiteSpace(code))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                }
+                else
+                {
+                    return View("ResetPassword");
+                }
+            }
+            else
+            {
+                return View("ResetPasswordNotAllowed", user);
+            }
         }
 
         [HttpPost]
@@ -330,7 +380,7 @@ namespace EPlast.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
         {
-            try
+            try                //не валідний токен
             {
                 if (!ModelState.IsValid)
                 {
