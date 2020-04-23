@@ -70,7 +70,9 @@ namespace EPlast.Models.ViewModelInitializations
             {
                 UserId = userId,
                 CityId = cityId,
-                MembersStatistic = membersStatistic
+                MembersStatistic = membersStatistic,
+                Status = AnnualReportStatus.Unconfirmed,
+                Date = DateTime.Now
             };
             return annualReport;
         }
