@@ -95,8 +95,8 @@ namespace EPlast
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
-            services.Configure<DataProtectionTokenProviderOptions>(options => // тут працює ок
-                options.TokenLifespan = TimeSpan.FromMinutes(2));
+            services.Configure<DataProtectionTokenProviderOptions>(options => 
+                options.TokenLifespan = TimeSpan.FromHours(3));
 
             services.ConfigureApplicationCookie(options =>
             {

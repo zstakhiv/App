@@ -227,7 +227,6 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            // тут у функції ше подивитись чи все правильно по пріоритетах перевірок 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -236,7 +235,7 @@ namespace EPlast.Controllers
 
             DateTime dateTimeConfirming = DateTime.Now;
             var totalTime = dateTimeConfirming.Subtract(user.EmailSendedOnRegister).TotalMinutes;
-            if (totalTime < 1)
+            if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
@@ -249,7 +248,7 @@ namespace EPlast.Controllers
                 {
                     return RedirectToAction("ConfirmedEmail", "Account");
                 }
-                else   // ерор не працює треба перевірити чи вертає ту вюшку
+                else 
                 {
                     return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
@@ -326,7 +325,6 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(string userId, string code = null)
         {
-            // ерор не працює треба перевірити чи вертає ту вюшку
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -335,7 +333,7 @@ namespace EPlast.Controllers
 
             DateTime dateTimeResetingPassword = DateTime.Now;
             var totalTime = dateTimeResetingPassword.Subtract(user.EmailSendedOnForgotPassword).TotalMinutes;
-            if (totalTime < 1)
+            if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(code))
                 {
