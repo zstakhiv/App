@@ -282,7 +282,6 @@ namespace EPlast.Controllers
             return View("ForgotPassword");
         }
 
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

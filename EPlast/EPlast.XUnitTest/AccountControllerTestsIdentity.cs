@@ -391,24 +391,9 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-        //ConfirmingEmail
+        //ResendEmailForRegistering
         [Fact]
-        public async Task TestConfirmEmailPostIncomingProblemsReturnsErrorView()
-        {
-            //Arrange
-            var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-
-            //Act
-            var result = await accountController.ConfirmingEmail(GetTestIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail());
-            
-            //Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
-            Assert.NotNull(viewResult);
-        }
-        
-        [Fact]
-        public async Task TestConfirmEmailPostUserNullReturnsErrorView()
+        public async Task TestResendEmailForRegisteringUserIsNull()
         {
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
@@ -418,58 +403,70 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync((User)null);
 
             //Act
-            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
-            
+            var result = await accountController.ResendEmailForRegistering(GetTestIdForConfirmingEmail());
+
             //Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
             Assert.NotNull(viewResult);
         }
 
-        [Fact]   
-        public async Task TestConfirmEmailPostReturnsConfirmedEmail()
+        [Fact]
+        public async Task TestResendEmailForRegisteringReturnsViewConfirmation()
         {
-            //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
             mockUserManager
                 .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
+            var mockUrlHelper = new Mock<IUrlHelper>(MockBehavior.Strict);
+            mockUrlHelper
+                .Setup(
+                    x => x.Action(
+                        It.IsAny<UrlActionContext>()
+                    )
+                )
+                .Returns("callbackUrl")
+                .Verifiable();
+
+            accountController.Url = mockUrlHelper.Object;
+            accountController.ControllerContext.HttpContext = new DefaultHttpContext();
+
             mockUserManager
-                .Setup(s => s.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Success)); 
+                .Setup(s => s.UpdateAsync(It.IsAny<User>()))
+                .ReturnsAsync(IdentityResult.Success);
 
-            //Act
-            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail()) as RedirectToActionResult;
+            var result = await accountController.ResendEmailForRegistering(GetTestIdForConfirmingEmail());
 
-            //Assert
-            Assert.Equal("ConfirmedEmail", result.ActionName);
-            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ResendEmailConfirmation", viewResult.ViewName);
+            Assert.NotNull(viewResult);
         }
 
-        [Fact] 
-        public async Task TestConfirmEmailPostReturnsErrorResultNotSucceded()
+        //ConfirmingEmail
+        [Fact]
+        public async Task TestConfirmEmailPostUserNull()
         {
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
             mockUserManager
                 .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(GetTestUserWithAllFields());
-
-            mockUserManager
-                .Setup(s => s.ConfirmEmailAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(IdentityResult.Failed(null)));
+                .ReturnsAsync((User)null);
 
             //Act
-            var result = await accountController.ConfirmingEmail(GetTestIdForConfirmingEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+            var result = await accountController.ConfirmingEmail(GetTestIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail());
 
             //Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
             Assert.NotNull(viewResult);
         }
+        
+        //тут ще треба дописати 4тести для confirming email хз як мокнути дату
 
         //AccountLocked
         [Fact]
@@ -606,12 +603,12 @@ namespace EPlast.XUnitTest
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             
             //Act
-            var result = accountController.ResetPassword();
+            //var result = accountController.ResetPassword();     переправити метод
             
             //Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("Error", viewResult.ViewName);
-            Assert.NotNull(viewResult);
+            //var viewResult = Assert.IsType<ViewResult>(result);
+            //Assert.Equal("Error", viewResult.ViewName);
+            //Assert.NotNull(viewResult);
         }
 
         [Fact]
@@ -1039,8 +1036,6 @@ namespace EPlast.XUnitTest
         {
             return null;
         }
-
-        
 
         private AuthenticationProperties GetAuthenticationProperties()
         {
