@@ -5,7 +5,7 @@
     ViewData["Title"] = "City";
 }
 
-    <div class="main-wrapper" style="width:100%; margin-bottom:20px;">
+    <div class="main-wrapper" style="width:100%; margin-top:0px; margin-bottom:20px;">
         <div class="container" style="padding: 15px;">
             <div class="row d-inline d-xl-flex mx-auto" style="height: 400px;width: 100%;padding-bottom: 15px;">
                 <div class="col-md-12 col-xl-8" style="padding: 15px;padding-bottom: 0px;padding-top: 15px;">
@@ -13,7 +13,7 @@
                         <div class="d-sm-inline-block d-xl-inline-block" style="width: 50%;min-width: 250px;">
                             <div class="d-flex">
                                 <p class="text-center d-table d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця Львів</p>
-                                <p class="text-center d-flex d-sm-flex align-items-center align-items-sm-center justify-content-xl-center" style="margin: 0px;max-width: 30px;height: 45px;"><a asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID" style="color: rgb(0,0,0);"><i class="fa fa-edit d-xl-flex justify-content-xl-center align-items-xl-center" style="font-size: 18px;"></i></a></p>
+                                <p class="text-center d-flex d-sm-flex align-items-center align-items-sm-center justify-content-xl-center" style="margin: 0px;max-width: 30px;height: 45px;"><a asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID" class="navbar-link" style="color: rgb(0,0,0);"><i class="fa fa-edit d-xl-flex justify-content-xl-center align-items-xl-center" style="font-size: 18px;"></i></a></p>
                             </div>
                             <div class="d-flex d-lg-inline-flex justify-content-center align-items-center justify-content-md-center align-items-md-center" style="height: 75%;width: 100%;">
                                 <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Coat_of_arms_of_Lviv.svg/135px-Coat_of_arms_of_Lviv.svg.png');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
@@ -40,7 +40,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div><button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button></div>
+                            <div>
+                                <a asp-action="Details" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                                    <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                                </a>
+                            </div>
                         </div>
                         <div class="d-none d-sm-flex d-xl-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="width: 50%;"><iframe allowfullscreen frameborder="0" src="https://cdn.bootstrapstudio.io/placeholders/map.html" class="d-sm-flex d-xl-flex my-auto justify-content-xl-center align-items-xl-center" width="100%" height="400" style="width: 90%;height: 90%;"></iframe></div>
                     </div>
@@ -140,7 +144,9 @@
                             </div>
                         </div>
                         <div>
-                        <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                            <a asp-action="CityDocuments" asp-controller="City" asp-route-cityid="@Model.City.ID">
+                                <button class="btn btn-primary btn-block btn-lg text-center border-dark shadow-sm mx-auto" type="button" style="height: 40px;width: 60%;padding: 0px;background-color: #3c5438;">Деталі</button>
+                            </a>
                         </div>
                     </div>
                 </div>

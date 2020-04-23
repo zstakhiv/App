@@ -184,7 +184,12 @@ namespace EPlast.Controllers
             }
         }
 
-        public IActionResult Create(int cityid)
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+
+        public IActionResult Details(int cityid)
         {
             try
             {
@@ -204,7 +209,33 @@ namespace EPlast.Controllers
                                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
                                     .ToList();
 
-                return View(new CityViewModel { City = city});
+                return View(new CityViewModel { City = city });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult CityDocuments(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityDoc = city.CityDocuments.ToList();
+
+                return View(new CityViewModel { City = city });
             }
             catch (Exception e)
             {

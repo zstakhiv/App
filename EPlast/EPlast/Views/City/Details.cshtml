@@ -1,11 +1,13 @@
-﻿
+﻿@using EPlast.ViewModels
+@using Microsoft.AspNetCore.Identity
+@model CityViewModel
 @{
-    ViewData["Title"] = "Створення Станиці";
+    ViewData["Title"] = "Index";
 }
 <div class="main-wrapper" style="margin-left:-5vw;">
     <div class="container content-wrapper" style="margin-left:-2px;">
         <div class="data-table-wrapper-club club-wrappers-radius data-table-wrapper" style="margin-bottom:0;">
-            <h1 class="grid-header">Створення Станиці"</h1>
+            <h1 class="grid-header">Інформація про Станицю - "@Model.City.Name"</h1>
         </div>
     </div>
 </div>
