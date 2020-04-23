@@ -33,5 +33,12 @@
     "jquery-ui-dist": "^1.12.1",
     "mdbootstrap": "4.14.0",
     "rimraf": "3.0.2"
-  }
+  },
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "description": ""
 }

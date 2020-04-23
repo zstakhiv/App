@@ -61,3 +61,43 @@
         }
     }
 }
+
+.modal-yesno {
+    .modal-content {
+        width: 80%;
+    }
+
+    .modal-header {
+        background-color: #3c5438;
+
+        h4 {
+            color: #ffffff;
+        }
+    }
+
+    .modal-body {
+        i {
+            color: #3c5438;
+        }
+
+        .p-modal-success {
+            font-size: 18px;
+        }
+    }
+
+    .modal-footer {
+        .row {
+            width: 100%;
+        }
+
+        .btn {
+            background-color: #3c5438;
+            width: 100px;
+            min-width: 100px;
+        }
+
+        .btn:focus {
+            border-color: #3c5438;
+        }
+    }
+}
