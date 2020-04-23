@@ -1,7 +1,7 @@
 ﻿@using EPlast.DataAccess.Repositories
 @using EPlast.DataAccess.Entities
 @model EPlast.ViewModels.EditUserViewModel
-        <form class="container bg-light mt-4" style="background-color:white" asp-action="Edit" enctype="multipart/form-data">
+        <form class="container bg-light mt-4 editPage" style="background-color:white" asp-action="Edit" enctype="multipart/form-data">
             
             <div class="row">
                 <div class="col-md-4">
@@ -88,7 +88,7 @@
                         {
                             <input type="hidden" id="dtOfBrthd" value=@Model.User.UserProfile.DateTime.Value.ToString("dd-MM-yyyy") />
                         }
-                        @Html.TextBoxFor(x => x.User.UserProfile.DateTime,
+                        @Html.TextBoxFor(x => x.Birthday,
                             new { @autocomplete = "off", @type = "datetime", @placeholder = "Виберіть дату...", @id = "datepickerBirthday", @class = "form-control" })
                         <span asp-validation-for="User.UserProfile.DateTime" />
                     </div>
