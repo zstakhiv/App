@@ -88,7 +88,7 @@
                         {
                             <input type="hidden" id="dtOfBrthd" value=@Model.User.UserProfile.DateTime.Value.ToString("dd-MM-yyyy") />
                         }
-                        @Html.TextBoxFor(x => x.User.UserProfile.DateTime,
+                        @Html.TextBoxFor(x => x.Birthday,
                             new { @autocomplete = "off", @type = "datetime", @placeholder = "Виберіть дату...", @id = "datepickerBirthday", @class = "form-control" })
                         <span asp-validation-for="User.UserProfile.DateTime" />
                     </div>

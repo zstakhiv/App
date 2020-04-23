@@ -670,6 +670,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                model.User.UserProfile.DateTime = DateTime.ParseExact(model.Birthday, "dd-MM-yyyy",null);
                 var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
                 if (file != null && file.Length > 0)
                 {
