@@ -23,7 +23,7 @@ $(document).ready(function () {
 
         createDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
-                console.log($(element).val().toString().length);
+                console.log($(element).val().toString().replace(" ", "").length);
                 $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
                 bool = false;
             } else
@@ -75,6 +75,7 @@ $(document).ready(function () {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
                     ClearCreateFormData();
+                    $("#CreateDecesionFormFile").val("");
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
