@@ -1,8 +1,12 @@
-﻿<div class="main-wrapper">
+﻿@model EPlast.DataAccess.Entities.User;
+<div class="main-wrapper">
     <div class="row font-weight-bold" style="margin-left:200px;">
         <div class="col-md-9 mt-2">
             <div class="universal-container">
-                <h3 class="mt-2">Час на підтвердження акаунта вичерпаний. Повторно вислати лист з підтвердженням тут</h3>
+                <h3 class="mt-2">
+                    Час на підтвердження акаунта вичерпаний. Повторно вислати лист з підтвердженням
+                    <a asp-controller="Account" asp-action="ResendEmailForRegistering" asp-route-userId="@Model.Id">клікни тут</a>
+                </h3>
             </div>
         </div>
     </div>

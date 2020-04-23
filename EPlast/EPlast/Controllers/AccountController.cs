@@ -51,12 +51,6 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
         {
@@ -145,10 +139,11 @@ namespace EPlast.Controllers
                             new { code = code, userId = user.Id },
                             protocol: HttpContext.Request.Scheme);
 
+                        user.EmailSendedAfterRegistration = DateTime.Now;
+                        await _userManager.UpdateAsync(user);
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
-                        user.EmailSended = DateTime.Now;
-
+                        
                         return View("AcceptingEmail");
                     }
                 }
@@ -158,6 +153,29 @@ namespace EPlast.Controllers
                 _logger.LogError("Exception: {0}", e.Message);
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
+        }
+
+        [HttpGet]
+        //[AllowAnonymous] ще подивитись
+        public async Task<IActionResult> ResendEmailForRegistering(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(
+                nameof(ConfirmingEmail),
+                "Account",
+                new { code = code, userId = user.Id },
+                protocol: HttpContext.Request.Scheme);
+
+            user.EmailSendedAfterRegistration = DateTime.Now;
+            await _userManager.UpdateAsync(user);
+            await _emailConfirmation.SendEmailAsync(user.Email, "Підтвердження реєстрації ",
+                $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
+            return View("ResendEmailConfirmation");
         }
 
         [HttpGet]
@@ -175,7 +193,7 @@ namespace EPlast.Controllers
             }
 
             DateTime dateTimeConfirming = DateTime.Now;
-            var totalTime = dateTimeConfirming.Subtract(user.EmailSended).TotalMinutes;
+            var totalTime = dateTimeConfirming.Subtract(user.EmailSendedAfterRegistration).TotalMinutes;
             if(totalTime < 2)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
@@ -196,7 +214,7 @@ namespace EPlast.Controllers
             }
             else
             {
-                return View("ConfirmEmailNotAllowed");
+                return View("ConfirmEmailNotAllowed", user);
             }
         }
 
