@@ -324,29 +324,6 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ResendEmailForResetingPassword(string userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
-            }
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var resetingPasswordLink = Url.Action(
-                nameof(ResetPassword),
-                "Account",
-                new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
-                protocol: HttpContext.Request.Scheme);
-
-            user.EmailSendedOnForgotPassword = DateTime.Now;
-            await _userManager.UpdateAsync(user);
-            await _emailConfirmation.SendEmailAsync(user.Email, "Скидування пароля",
-                        $"Для скидування пароля перейдіть за : <a href='{resetingPasswordLink}'>посиланням</a>", "Адміністрація сайту EPlast");
-            return View("ResendResetingPassword");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(string userId, string code = null)
         {
             // ерор не працює треба перевірити чи вертає ту вюшку
@@ -380,7 +357,7 @@ namespace EPlast.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
         {
-            try                //не валідний токен
+            try                
             {
                 if (!ModelState.IsValid)
                 {
