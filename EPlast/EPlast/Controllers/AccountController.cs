@@ -227,7 +227,7 @@ namespace EPlast.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            // тут у функції ше подивитись чи все правильно по пріоритетах перевірок
+            // тут у функції ше подивитись чи все правильно по пріоритетах перевірок 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
