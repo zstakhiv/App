@@ -156,7 +156,7 @@ namespace EPlast.Controllers
         }
 
         [HttpGet]
-        //[AllowAnonymous] ще подивитись
+        [AllowAnonymous]
         public async Task<IActionResult> ResendEmailForRegistering(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
