@@ -11,7 +11,10 @@ $(document).ready(function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
         $(this).hide();
     });
-
+    $(".hide_show").on('click', function () {
+        $(this).parent("p").addClass("hidden");
+        $(this).parent("p").parent("td").children(".show_hide").show();
+    });
     function ClearCreateFormData() {
         createDecisionForm.forEach(function (element) {
             $(element).val("");
@@ -185,8 +188,7 @@ $(document).ready(function () {
         },
         items: {
             "edit": { name: "Редагувати", icon: "far fa-edit" },
-            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" },
-            "quit": { name: "Закрити", icon: "fas fa-times" }
+            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" }
         }
     });
 });
@@ -202,9 +204,33 @@ function createDecesionDataTable() {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
         responsive: true,
+        "autoWidth": false,
         "createdRow": function (row, data, dataIndex) {
             $(row).addClass("decesion-menu");
         },
+        "columnDefs": [
+            { "width": "10px", "targets": 0 },
+            { "width": "1%", "targets": 1 },
+            { "width": "2%", "targets": 2 },
+            { "width": "7%", "targets": 3 },
+            { "width": "10%", "targets": 4 },
+            { "width": "8%", "targets": 6 },
+            { "width": "4%", "targets": 7 }
+        ],
+        columns: [
+            null,
+            null,
+            null,
+            null,
+            {
+                "render": function (data, type, row) {
+                    return data.replace(/(.{16})/g, "$1</br>")
+                }
+            },
+            null,
+            null,
+            null
+        ]
     });
 
     $('#dtReadDecesion').on('page.dt', function () {
