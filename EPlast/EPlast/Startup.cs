@@ -21,6 +21,7 @@ using EPlast.BussinessLayer.AccessManagers;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.Wrapper;
 using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace EPlast
 {
@@ -168,11 +169,23 @@ namespace EPlast
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
+            var supportedCultures = new[]
+{
+                new CultureInfo("uk-UA")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("uk-UA"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            app.UseRequestLocalization();
 
             app.UseMvc(routes =>
             {
