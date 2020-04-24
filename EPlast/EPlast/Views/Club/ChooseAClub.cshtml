@@ -9,9 +9,9 @@
             <div class="club-list">
                 @foreach (var item in Model)
                 {
-                    <form method="post" class="club-block-wrapper" action='~/Club/AddAsClubFollower'>
+                    <a method="post" class="club-block-wrapper" asp-controller="Club" asp-action="AddAsClubFollower" asp-route-clubIndex="@item.Club.ID">
                         <span class="club-block club-wrappers-radius">
-                            <button type="submit" class="club-block-submit rounded ">
+                            <div class="club-block-submit rounded ">
                                 <div class="club-img-wrapper">
                                     @if (item.Club.Logo != null)
                                     {
@@ -24,9 +24,9 @@
                                 </div>
                                     <p class="club-name">@item.Club.ClubName</p>
                                 <input value="@item.Club.ID" type="hidden" name="index" id="clubId" />
-                            </button>
+                            </div>
                         </span>
-                    </form>
+                    </a>
                 }
             </div>
         </div>

@@ -357,12 +357,22 @@ namespace EPlast.Controllers
                 };
                 _repoWrapper.ClubMembers.Create(newClubMember);
                 _repoWrapper.Save();
-                return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User)});
+                return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User) });
             }
             catch
             {
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
+        }
+        public IActionResult ChooseAClub()
+        {
+            List<ClubViewModel> clubs = new List<ClubViewModel>(
+                _repoWrapper.Club
+                .FindAll()
+                .Select(club => new ClubViewModel { Club = club })
+                .ToList());
+
+            return View(clubs);
         }
     }
 }
