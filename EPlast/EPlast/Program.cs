@@ -21,29 +21,7 @@ namespace EPlast
                 logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                 logging.AddNLog();
             })
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                if (context.HostingEnvironment.IsProduction())
-                {
-                    var builtConfig = config.Build();
-
-                    using (var store = new X509Store(StoreLocation.CurrentUser))
-                    {
-                        store.Open(OpenFlags.ReadOnly);
-                        var certs = store.Certificates
-                            .Find(X509FindType.FindByThumbprint,
-                                builtConfig["AzureADCertThumbprint"], false);
-
-                        config.AddAzureKeyVault(
-                            $"https://{builtConfig["ep-kv-dev"]}.vault.azure.net/",
-                            builtConfig["AzureADApplicationId"],
-                            certs.OfType<X509Certificate2>().Single());
-
-                        store.Close();
-                    }
-                }
-            })
-                .UseStartup<Startup>();
+            .UseStartup<Startup>();
 
     }
 }
