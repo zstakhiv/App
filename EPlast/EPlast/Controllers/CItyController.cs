@@ -74,5 +74,174 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
+
+        public IActionResult CityMembers(int cityid)
+        {
+            try {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
+
+                return View(new CityViewModel { City = city, Members = members });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult CityFollowers(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
+
+                return View(new CityViewModel { City = city, Followers = followers });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult CityAdmins(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityAdmins = city.CityAdministration
+                                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                                    .ToList();
+
+                return View(new CityViewModel { City = city, CityAdmins = cityAdmins });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult Edit(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityAdmins = city.CityAdministration
+                                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                                    .ToList();
+                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
+                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
+
+                return View(new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+
+        public IActionResult Details(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityAdmins = city.CityAdministration
+                                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                                    .ToList();
+
+                return View(new CityViewModel { City = city });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        public IActionResult CityDocuments(int cityid)
+        {
+            try
+            {
+                var city = _repoWrapper.City
+                    .FindByCondition(q => q.ID == cityid)
+                    .Include(c => c.CityAdministration)
+                    .ThenInclude(t => t.AdminType)
+                    .Include(k => k.CityAdministration)
+                    .ThenInclude(a => a.User)
+                    .Include(m => m.CityMembers)
+                    .ThenInclude(u => u.User)
+                    .Include(l => l.CityDocuments)
+                    .ThenInclude(d => d.CityDocumentType)
+                    .FirstOrDefault();
+
+                var cityDoc = city.CityDocuments.ToList();
+
+                return View(new CityViewModel { City = city });
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
     }
 }

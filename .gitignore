@@ -372,3 +372,6 @@ EPlast/EPlast/wwwroot/images/EventsGallery/*
 
 # Ignore UsersPhoto
 EPlast/EPlast/wwwroot/images/Users/*
+
+# don't checkin azurekeyvault.json
+**/azurekeyvault.json

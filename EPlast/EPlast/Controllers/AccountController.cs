@@ -19,6 +19,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Ical.Net.DataTypes;
 
 namespace EPlast.Controllers
 {
@@ -47,7 +48,7 @@ namespace EPlast.Controllers
             _logger = logger;
             _emailConfirmation = emailConfirmation;
             _env = env;
-            _userAccessManager = userAccessManager;            
+            _userAccessManager = userAccessManager;
         }
 
         [HttpGet]
@@ -143,7 +144,8 @@ namespace EPlast.Controllers
                 var registeredUser = await _userManager.FindByEmailAsync(registerVM.Email);
                 if (registeredUser != null)
                 {
-                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі");
+                    ModelState.AddModelError("", "Користувач з введеною електронною поштою вже зареєстрований в системі, " +
+                        "можливо він не підтвердив свою реєстрацію");
                     return View("Register");
                 }
                 else
@@ -156,6 +158,7 @@ namespace EPlast.Controllers
                         FirstName = registerVM.Name,
                         RegistredOn = DateTime.Now,
                         ImagePath = "default.png",
+                        SocialNetworking = false,
                         UserProfile = new UserProfile()
                     };
 
@@ -163,7 +166,7 @@ namespace EPlast.Controllers
 
                     if (!result.Succeeded)
                     {
-                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повина складати 8");
+                        ModelState.AddModelError("", "Пароль має містити цифри та літери, мінімальна довжина повинна складати 8");
                         return View("Register");
                     }
                     else
@@ -176,6 +179,8 @@ namespace EPlast.Controllers
                             new { code = code, userId = user.Id },
                             protocol: HttpContext.Request.Scheme);
 
+                        user.EmailSendedOnRegister = DateTime.Now;
+                        await _userManager.UpdateAsync(user);
                         await _emailConfirmation.SendEmailAsync(registerVM.Email, "Підтвердження реєстрації ",
                             $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
 
@@ -195,21 +200,49 @@ namespace EPlast.Controllers
         {
             return View("ConfirmedEmail");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResendEmailForRegistering(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(
+                nameof(ConfirmingEmail),
+                "Account",
+                new { code = code, userId = user.Id },
+                protocol: HttpContext.Request.Scheme);
+
+            user.EmailSendedOnRegister = DateTime.Now;
+            await _userManager.UpdateAsync(user);
+            await _emailConfirmation.SendEmailAsync(user.Email, "Підтвердження реєстрації ",
+                $"Підтвердіть реєстрацію, перейшовши за :  <a href='{confirmationLink}'>посиланням</a> ", "Адміністрація сайту EPlast");
+            return View("ResendEmailConfirmation");
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmingEmail(string userId, string code)
         {
-            try
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+
+            IDateTime dateTimeConfirming = new DateTimeHelper();
+            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalMinutes;
+            if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
-                    return View("Error");
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return View("Error");
-                }
+
                 var result = await _userManager.ConfirmEmailAsync(user, code);
 
                 if (result.Succeeded)
@@ -218,13 +251,12 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    return View("Error");
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return View("ConfirmEmailNotAllowed", user);
             }
         }
 
@@ -273,6 +305,9 @@ namespace EPlast.Controllers
                         "Account",
                         new { userId = user.Id, code = HttpUtility.UrlEncode(code) },
                         protocol: HttpContext.Request.Scheme);
+
+                    user.EmailSendedOnForgotPassword = DateTime.Now;
+                    await _userManager.UpdateAsync(user);
                     await _emailConfirmation.SendEmailAsync(forgotpasswordVM.Email, "Скидування пароля",
                         $"Для скидування пароля перейдіть за : <a href='{callbackUrl}'>посиланням</a>", "Адміністрація сайту EPlast");
                     return View("ForgotPasswordConfirmation");
@@ -288,9 +323,32 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public async Task<IActionResult> ResetPassword(string userId, string code = null)  
         {
-            return code == null ? View("Error") : View("ResetPassword");
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+
+            IDateTime dateTimeResetingPassword = new DateTimeHelper();
+            dateTimeResetingPassword.GetCurrentTime();
+            var totalTime = dateTimeResetingPassword.GetCurrentTime().Subtract(user.EmailSendedOnForgotPassword).TotalMinutes;
+            if (totalTime < 180)
+            {
+                if (string.IsNullOrWhiteSpace(code))
+                {
+                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                }
+                else
+                {
+                    return View("ResetPassword");
+                }
+            }
+            else
+            {
+                return View("ResetPasswordNotAllowed", user);
+            }
         }
 
         [HttpPost]
@@ -337,8 +395,8 @@ namespace EPlast.Controllers
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _userManager.IsEmailConfirmedAsync(user);
-            if (result)
+            var result = user.SocialNetworking;
+            if (result != true)
             {
                 return View("ChangePassword");
             }
@@ -435,11 +493,14 @@ namespace EPlast.Controllers
                             {
                                 user = new User
                                 {
+                                    SocialNetworking = true,
                                     UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                                     Email = info.Principal.FindFirstValue(ClaimTypes.Email),
                                     FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                     LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                     ImagePath = "default.png",
+                                    EmailConfirmed = true,
+                                    RegistredOn = DateTime.Now,
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
@@ -461,11 +522,14 @@ namespace EPlast.Controllers
                         {
                             user = new User
                             {
+                                SocialNetworking = true,
                                 UserName = (email ?? nameIdentifier),
                                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                                 Email = (email ?? "facebookdefaultmail@gmail.com"),
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
+                                EmailConfirmed = true,
+                                RegistredOn = DateTime.Now,
                                 UserProfile = new UserProfile()
                             };
                             await _userManager.CreateAsync(user);
@@ -489,7 +553,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                var _currentUserId= _userManager.GetUserId(User);
+                var _currentUserId = _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     userId = _currentUserId;
@@ -524,10 +588,10 @@ namespace EPlast.Controllers
                     return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
-                var _canApprove = user.ConfirmedUsers.Count < 3 
+                var _canApprove = user.ConfirmedUsers.Count < 3
                     && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
                     && !(_currentUserId == userId)
-                    && _userManager.IsInRoleAsync(user,"Пластун").Result;
+                    && _userManager.IsInRoleAsync(user, "Пластун").Result;
 
                 TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
 
@@ -539,8 +603,8 @@ namespace EPlast.Controllers
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
                         EditView = edit,
-                        canApprove=_canApprove,
-                        timeToJoinPlast=_timeToJoinPlast
+                        canApprove = _canApprove,
+                        timeToJoinPlast = _timeToJoinPlast
                     };
 
                     return View(model);
@@ -561,7 +625,7 @@ namespace EPlast.Controllers
                 var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
                 if (_timeToJoinPlast <= TimeSpan.Zero)
                 {
-                    var us=await _userManager.FindByIdAsync(user.Id);
+                    var us = await _userManager.FindByIdAsync(user.Id);
                     await _userManager.AddToRoleAsync(us, "Пластун");
                     return TimeSpan.Zero;
                 }
@@ -598,7 +662,7 @@ namespace EPlast.Controllers
                         ThenInclude(q => (q as ConfirmedUser).Approver).
                         ThenInclude(q => q.User).
                         FirstOrDefault();
-            var t=user.ConfirmedUsers;
+            var t = user.ConfirmedUsers;
             var confUser = user.ConfirmedUsers.Where(x => x.Approver.UserID == id).FirstOrDefault();
             _repoWrapper.ConfirmedUser.Delete(confUser);
             _repoWrapper.Save();
@@ -608,7 +672,6 @@ namespace EPlast.Controllers
         {
             if (!_repoWrapper.Gender.FindAll().Any())
             {
-                _repoWrapper.Gender.Create(new Gender { Name = "Не обрано" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
@@ -642,8 +705,8 @@ namespace EPlast.Controllers
                 var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
                 var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
 
-                var educView = new EducationViewModel {PlaceOfStudyID=user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
-                var workView = new WorkViewModel { PlaceOfWorkID=user.UserProfile.WorkId,PositionID=user.UserProfile.WorkId,PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
+                var educView = new EducationViewModel { PlaceOfStudyID = user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkID = user.UserProfile.WorkId, PositionID = user.UserProfile.WorkId, PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
@@ -669,6 +732,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                model.User.UserProfile.DateTime = DateTime.ParseExact(model.Birthday, "dd-MM-yyyy",null);
                 var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
                 if (file != null && file.Length > 0)
                 {
@@ -732,7 +796,7 @@ namespace EPlast.Controllers
                     model.User.UserProfile.Degree = null;
                 }
 
-                
+
                 //Education
                 if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
                 {
@@ -740,13 +804,13 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    var spec=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
-                    var placeStudy=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
-                    if (spec!=null && spec.PlaceOfStudy==model.User.UserProfile.Education.PlaceOfStudy )
+                    var spec = _repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
+                    var placeStudy = _repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
+                    if (spec != null && spec.PlaceOfStudy == model.User.UserProfile.Education.PlaceOfStudy)
                     {
                         model.User.UserProfile.EducationId = spec.ID;
                     }
-                    else if(placeStudy!=null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
+                    else if (placeStudy != null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
                     {
                         model.User.UserProfile.EducationId = placeStudy.ID;
                     }
@@ -886,6 +950,18 @@ namespace EPlast.Controllers
             {
                 return NotFound("Не вдалося завершити каденцію діловодства!");
             }
+        }
+    }
+
+    public interface IDateTime
+    {
+        DateTime GetCurrentTime();
+    }
+    public class DateTimeHelper : IDateTime 
+    {
+        DateTime IDateTime.GetCurrentTime()
+        {
+            return DateTime.Now;
         }
     }
 }

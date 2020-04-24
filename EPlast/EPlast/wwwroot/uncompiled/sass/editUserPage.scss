@@ -51,48 +51,42 @@
     }
 }
 
-@media (max-width: 767px) {
-    .photo-wrapper .upload-btn {
-        font-size: 10px;
-        width: 75px;
+.editPage {
+    @media (max-width: 767px) {
+        .photo-wrapper .upload-btn {
+            font-size: 10px;
+            width: 75px;
+        }
+
+        form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
+            background-color: #fff;
+            width: 150px;
+        }
+
+        .photo-wrapper .Upload-photo {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            width: 75px;
+        }
     }
 
-    form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
-        background-color: #fff;
-        width: 150px;
-    }
+    @media (max-width: 576px) {
+        .photo-wrapper .upload-btn {
+            font-size: 10px;
+            width: 75px;
+        }
 
-    .form-group.gender-wrapper {
-        width: 150px;
-    }
+        form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
+            background-color: #fff;
+            width: 150px;
+        }
 
-    .photo-wrapper .Upload-photo {
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        width: 75px;
-    }
-}
-
-@media (max-width: 576px) {
-    .photo-wrapper .upload-btn {
-        font-size: 10px;
-        width: 75px;
-    }
-
-    form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
-        background-color: #fff;
-        width: 150px;
-    }
-
-    .form-group.gender-wrapper {
-        width: 150px;
-    }
-
-    .photo-wrapper .Upload-photo {
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        width: 75px;
+        .photo-wrapper .Upload-photo {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            width: 75px;
+        }
     }
 }
