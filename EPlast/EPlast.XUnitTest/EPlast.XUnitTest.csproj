@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="AccountControllerTests.cs" />
+    <Compile Remove="ActionControllerTests.cs" />
     <Compile Remove="AdminControllerTests.cs" />
     <Compile Remove="CityControllerTests.cs" />
     <Compile Remove="ClubControllerTests.cs" />
