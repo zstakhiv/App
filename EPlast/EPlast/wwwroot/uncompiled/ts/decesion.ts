@@ -86,7 +86,7 @@ $(document).ready(function () {
                     if (files[0] != undefined) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`
                     }
-                    $("#dtReadDecesion").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([response.id, response.name, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
                 } else {
                     $("#CreateDecesionModal").modal("hide");
