@@ -19,6 +19,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Ical.Net.DataTypes;
 
 namespace EPlast.Controllers
 {
@@ -233,8 +234,8 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
 
-            DateTime dateTimeConfirming = DateTime.Now;
-            var totalTime = dateTimeConfirming.Subtract(user.EmailSendedOnRegister).TotalMinutes;
+            IDateTime dateTimeConfirming = new DateTimeHelper();
+            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalMinutes;
             if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
@@ -248,7 +249,7 @@ namespace EPlast.Controllers
                 {
                     return RedirectToAction("ConfirmedEmail", "Account");
                 }
-                else 
+                else
                 {
                     return RedirectToAction("HandleError", "Error", new { code = 505 });
                 }
@@ -322,7 +323,7 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(string userId, string code = null)
+        public async Task<IActionResult> ResetPassword(string userId, string code = null)  
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -330,8 +331,9 @@ namespace EPlast.Controllers
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
 
-            DateTime dateTimeResetingPassword = DateTime.Now;
-            var totalTime = dateTimeResetingPassword.Subtract(user.EmailSendedOnForgotPassword).TotalMinutes;
+            IDateTime dateTimeResetingPassword = new DateTimeHelper();
+            dateTimeResetingPassword.GetCurrentTime();
+            var totalTime = dateTimeResetingPassword.GetCurrentTime().Subtract(user.EmailSendedOnForgotPassword).TotalMinutes;
             if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(code))
@@ -354,7 +356,7 @@ namespace EPlast.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetpasswordVM)
         {
-            try                
+            try
             {
                 if (!ModelState.IsValid)
                 {
@@ -549,7 +551,7 @@ namespace EPlast.Controllers
         {
             try
             {
-                var _currentUserId= _userManager.GetUserId(User);
+                var _currentUserId = _userManager.GetUserId(User);
                 if (string.IsNullOrEmpty(userId))
                 {
                     userId = _currentUserId;
@@ -584,10 +586,10 @@ namespace EPlast.Controllers
                     return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
-                var _canApprove = user.ConfirmedUsers.Count < 3 
+                var _canApprove = user.ConfirmedUsers.Count < 3
                     && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
                     && !(_currentUserId == userId)
-                    && _userManager.IsInRoleAsync(user,"Пластун").Result;
+                    && _userManager.IsInRoleAsync(user, "Пластун").Result;
 
                 TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
 
@@ -599,8 +601,8 @@ namespace EPlast.Controllers
                         UserPositions = userPositions,
                         HasAccessToManageUserPositions = _userAccessManager.HasAccess(_userManager.GetUserId(User), userId),
                         EditView = edit,
-                        canApprove=_canApprove,
-                        timeToJoinPlast=_timeToJoinPlast
+                        canApprove = _canApprove,
+                        timeToJoinPlast = _timeToJoinPlast
                     };
 
                     return View(model);
@@ -621,7 +623,7 @@ namespace EPlast.Controllers
                 var _timeToJoinPlast = user.RegistredOn.AddYears(1) - DateTime.Now;
                 if (_timeToJoinPlast <= TimeSpan.Zero)
                 {
-                    var us=await _userManager.FindByIdAsync(user.Id);
+                    var us = await _userManager.FindByIdAsync(user.Id);
                     await _userManager.AddToRoleAsync(us, "Пластун");
                     return TimeSpan.Zero;
                 }
@@ -658,7 +660,7 @@ namespace EPlast.Controllers
                         ThenInclude(q => (q as ConfirmedUser).Approver).
                         ThenInclude(q => q.User).
                         FirstOrDefault();
-            var t=user.ConfirmedUsers;
+            var t = user.ConfirmedUsers;
             var confUser = user.ConfirmedUsers.Where(x => x.Approver.UserID == id).FirstOrDefault();
             _repoWrapper.ConfirmedUser.Delete(confUser);
             _repoWrapper.Save();
@@ -702,8 +704,8 @@ namespace EPlast.Controllers
                 var placeOfWorkUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.PlaceOfwork).Select(x => x.FirstOrDefault()).ToList();
                 var positionUnique = _repoWrapper.Work.FindAll().GroupBy(x => x.Position).Select(x => x.FirstOrDefault()).ToList();
 
-                var educView = new EducationViewModel {PlaceOfStudyID=user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
-                var workView = new WorkViewModel { PlaceOfWorkID=user.UserProfile.WorkId,PositionID=user.UserProfile.WorkId,PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
+                var educView = new EducationViewModel { PlaceOfStudyID = user.UserProfile.EducationId, SpecialityID = user.UserProfile.EducationId, PlaceOfStudyList = placeOfStudyUnique, SpecialityList = specialityUnique };
+                var workView = new WorkViewModel { PlaceOfWorkID = user.UserProfile.WorkId, PositionID = user.UserProfile.WorkId, PlaceOfWorkList = placeOfWorkUnique, PositionList = positionUnique };
                 var model = new EditUserViewModel()
                 {
                     User = user,
@@ -792,7 +794,7 @@ namespace EPlast.Controllers
                     model.User.UserProfile.Degree = null;
                 }
 
-                
+
                 //Education
                 if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
                 {
@@ -800,13 +802,13 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    var spec=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
-                    var placeStudy=_repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
-                    if (spec!=null && spec.PlaceOfStudy==model.User.UserProfile.Education.PlaceOfStudy )
+                    var spec = _repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.SpecialityID).FirstOrDefault();
+                    var placeStudy = _repoWrapper.Education.FindByCondition(x => x.ID == model.EducationView.PlaceOfStudyID).FirstOrDefault();
+                    if (spec != null && spec.PlaceOfStudy == model.User.UserProfile.Education.PlaceOfStudy)
                     {
                         model.User.UserProfile.EducationId = spec.ID;
                     }
-                    else if(placeStudy!=null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
+                    else if (placeStudy != null && placeStudy.Speciality == model.User.UserProfile.Education.Speciality)
                     {
                         model.User.UserProfile.EducationId = placeStudy.ID;
                     }
@@ -946,6 +948,18 @@ namespace EPlast.Controllers
             {
                 return NotFound("Не вдалося завершити каденцію діловодства!");
             }
+        }
+    }
+
+    public interface IDateTime
+    {
+        DateTime GetCurrentTime();
+    }
+    public class DateTimeHelper : IDateTime 
+    {
+        DateTime IDateTime.GetCurrentTime()
+        {
+            return DateTime.Now;
         }
     }
 }

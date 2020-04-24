@@ -100,8 +100,6 @@ namespace EPlast.XUnitTest
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsType<LoginViewModel>(viewResult.ViewData.Model);
             Assert.Equal(GetTestLoginViewModel().ReturnUrl, model.ReturnUrl);
-            //Assert.Equal(GetTestLoginModelForLoginGet().ExternalLogins, model.ExternalLogins);
-            //Assert.Equal(GetTestLoginModelForLoginGet(), model);
             Assert.NotNull(viewResult);
         }
 
@@ -415,6 +413,7 @@ namespace EPlast.XUnitTest
         [Fact]
         public async Task TestResendEmailForRegisteringReturnsViewConfirmation()
         {
+            //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
 
             mockUserManager
@@ -438,8 +437,10 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.UpdateAsync(It.IsAny<User>()))
                 .ReturnsAsync(IdentityResult.Success);
 
+            //Act
             var result = await accountController.ResendEmailForRegistering(GetTestIdForConfirmingEmail());
 
+            //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.Equal("ResendEmailConfirmation", viewResult.ViewName);
             Assert.NotNull(viewResult);
@@ -465,8 +466,6 @@ namespace EPlast.XUnitTest
             Assert.Equal("Error", viewResult.ControllerName);
             Assert.NotNull(viewResult);
         }
-        
-        //тут ще треба дописати 4тести для confirming email хз як мокнути дату
 
         //AccountLocked
         [Fact]
@@ -595,34 +594,49 @@ namespace EPlast.XUnitTest
             Assert.NotNull(viewResult);
         }
 
-        //ResetPassword
+        //ResetPassword  
         [Fact]
-        public void TestResetPasswordGetReturnsErrorView()
+        public async Task TestResetPasswordGetReturnsHandleError()
         {
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            
+
+            mockUserManager
+                .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((User)null);
+
             //Act
-            //var result = accountController.ResetPassword();     переправити метод
-            
+            var result = await accountController.ResetPassword(GetTestIdConfirmingEmail());
+
             //Assert
-            //var viewResult = Assert.IsType<ViewResult>(result);
-            //Assert.Equal("Error", viewResult.ViewName);
-            //Assert.NotNull(viewResult);
+            var viewResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("HandleError", viewResult.ActionName);
+            Assert.Equal("Error", viewResult.ControllerName);
+            Assert.NotNull(viewResult);
         }
 
         [Fact]
-        public void TestResetPasswordGetReturnsResetPasswordView()
+        public async Task TestResetPasswordGetReturnsResetPasswordNotAllowedView()
         {
             //Arrange
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
-            
+
+            mockUserManager
+                .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(GetTestUserWithAllFields());
+
+            var mockDateTime = new Mock<IDateTime>();
+            mockDateTime.Setup(fake => fake.GetCurrentTime())
+                .Returns(new DateTime(1,1,1,4,0,0));
+
             //Act
-            var result = accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail());
-            
+            var result = await accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
+
             //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal("ResetPassword", viewResult.ViewName);
+            var model = Assert.IsType<User>(viewResult.ViewData.Model);
+            Assert.Equal("ResetPasswordNotAllowed", viewResult.ViewName);
+            Assert.NotNull(model);
             Assert.NotNull(viewResult);
         }
 
@@ -718,10 +732,6 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                 .ReturnsAsync(GetTestUserWithEmailConfirmed());
 
-            mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithEmailConfirmed().EmailConfirmed);
-
             //Act
             var result = await accountController.ChangePassword();
             
@@ -738,11 +748,7 @@ namespace EPlast.XUnitTest
             var (mockSignInManager, mockUserManager, mockEmailConfirmation, accountController) = CreateAccountController();
             mockUserManager
                 .Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .ReturnsAsync(GetTestUserWithNotEmailConfirmed());
-
-            mockUserManager
-                .Setup(s => s.IsEmailConfirmedAsync(It.IsAny<User>()))
-                .ReturnsAsync(GetTestUserWithNotEmailConfirmed().EmailConfirmed);
+                .ReturnsAsync(GetTestUserWithAllFields());
 
             //Act
             var result = await accountController.ChangePassword();
@@ -1012,7 +1018,8 @@ namespace EPlast.XUnitTest
                 UserName = "andriishainoha@gmail.com",
                 FirstName = "Andrii",
                 LastName = "Shainoha",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                SocialNetworking = true
             };
         }
 
