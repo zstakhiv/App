@@ -500,6 +500,7 @@ namespace EPlast.Controllers
                                     LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                     ImagePath = "default.png",
                                     EmailConfirmed = true,
+                                    RegistredOn = DateTime.Now,
                                     UserProfile = new UserProfile()
                                 };
                                 await _userManager.CreateAsync(user);
@@ -528,6 +529,7 @@ namespace EPlast.Controllers
                                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                                 ImagePath = "default.png",
                                 EmailConfirmed = true,
+                                RegistredOn = DateTime.Now,
                                 UserProfile = new UserProfile()
                             };
                             await _userManager.CreateAsync(user);
@@ -670,7 +672,6 @@ namespace EPlast.Controllers
         {
             if (!_repoWrapper.Gender.FindAll().Any())
             {
-                _repoWrapper.Gender.Create(new Gender { Name = "Не обрано" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Чоловік" });
                 _repoWrapper.Gender.Create(new Gender { Name = "Жінка" });
                 _repoWrapper.Save();
@@ -731,6 +732,7 @@ namespace EPlast.Controllers
         {
             try
             {
+                model.User.UserProfile.DateTime = DateTime.ParseExact(model.Birthday, "dd-MM-yyyy",null);
                 var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
                 if (file != null && file.Length > 0)
                 {
