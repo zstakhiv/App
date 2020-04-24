@@ -336,5 +336,43 @@ namespace EPlast.Controllers
                 return 0;
             }
         }
+        [HttpGet]
+        public IActionResult AddAsClubFollower(int clubIndex)
+        {
+            try
+            {
+                var oldClubMembership = _repoWrapper.ClubMembers
+                    .FindByCondition(i => i.UserId == _userManager.GetUserId(User)).FirstOrDefault();
+                if(oldClubMembership != null)
+                {
+                    _repoWrapper.ClubMembers.Delete(oldClubMembership);
+                    _repoWrapper.Save();
+                }
+
+                var newClubMember = new ClubMembers()
+                {
+                    UserId = _userManager.GetUserId(User),
+                    IsApproved = false,
+                    ClubId = clubIndex
+                };
+                _repoWrapper.ClubMembers.Create(newClubMember);
+                _repoWrapper.Save();
+                return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User) });
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        public IActionResult ChooseAClub()
+        {
+            List<ClubViewModel> clubs = new List<ClubViewModel>(
+                _repoWrapper.Club
+                .FindAll()
+                .Select(club => new ClubViewModel { Club = club })
+                .ToList());
+
+            return View(clubs);
+        }
     }
 }
