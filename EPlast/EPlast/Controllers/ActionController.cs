@@ -62,7 +62,7 @@ namespace EPlast.Controllers
                 int approvedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Затверджений(-на)").First().ID;
                 int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
                 int notApprovedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Не затверджені").First().ID;
-
+                CheckEventsStatuses(ID,actionID,finishedEvent);
                 List<GeneralEventViewModel> newEvents = _repoWrapper.Event
                  .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID)
                  .Include(e => e.EventAdmins)
@@ -85,7 +85,84 @@ namespace EPlast.Controllers
             {
                 return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
+        }
 
+
+        [Authorize]
+        public IActionResult EventInfo(int ID)
+        {
+            try
+            {
+                int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
+                int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
+                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                bool isUserGlobalEventAdmin = User?.IsInRole("Адміністратор подій") ?? false;
+                CheckEventStatus(ID,finishedEvent);
+                EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
+                       .Include(e => e.Participants)
+                            .ThenInclude(p => p.User)
+                       .Include(e => e.Participants)
+                            .ThenInclude(p => p.ParticipantStatus)
+                       .Include(e => e.EventAdmins)
+                       .ThenInclude(evAdm => evAdm.User)
+                       .Include(e => e.EventStatus)
+                       .Include(e => e.EventAdministrations)
+                       .Include(e => e.EventType)
+                       .Include(e => e.EventCategory)
+                       .Include(e => e.EventGallarys)
+                            .ThenInclude(eg => eg.Gallary)
+                       .Select(e => new EventViewModel()
+                       {
+                           Event = e,
+                           EventParticipants = e.Participants,
+                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || isUserGlobalEventAdmin,
+                           IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
+                           IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
+                           IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
+                           IsUserRejectedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == rejectedStatus),
+                           IsEventFinished = e.EventStatusID == finishedEvent
+                       })
+                       .First();
+
+                if (!eventModal.IsUserEventAdmin)
+                {
+                    eventModal.EventParticipants = eventModal.EventParticipants.Where(p => p.ParticipantStatusId == approvedStatus);
+                }
+
+                return View(eventModal);
+            }
+            catch
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
+            }
+        }
+
+
+        void CheckEventsStatuses(int ID, int actionID, int finishedEvent)
+        {
+            var eventsToCheck = _repoWrapper.Event
+                 .FindByCondition(e => e.EventCategoryID == ID && e.EventTypeID == actionID);
+            foreach( var eventToCheck in eventsToCheck)
+            {
+                if (eventToCheck.EventDateEnd.Date <= DateTime.Now.Date && eventToCheck.EventStatusID != finishedEvent)
+                {
+                    eventToCheck.EventStatusID = finishedEvent;
+                    _repoWrapper.Event.Update(eventToCheck);
+                }
+            }
+            _repoWrapper.Save();
+        }
+
+        void CheckEventStatus(int ID, int finishedEvent)
+        {
+            var eventToCheck = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                if (eventToCheck.EventDateEnd.Date <= DateTime.Now.Date && eventToCheck.EventStatusID != finishedEvent)
+                {
+                    eventToCheck.EventStatusID = finishedEvent;
+                    _repoWrapper.Event.Update(eventToCheck);
+                    _repoWrapper.Save(); 
+                }
         }
 
         [HttpPost]
@@ -135,6 +212,12 @@ namespace EPlast.Controllers
             try
             {
                 ParticipantStatus participantStatus = _repoWrapper.ParticipantStatus.FindByCondition(ps => ps.ParticipantStatusName == "Розглядається").First();
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                Event targetEvent = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
+                if(targetEvent.EventStatusID == finishedEvent)
+                {
+                    return StatusCode(409);
+                }
                 _repoWrapper.Participant.Create(new Participant() { ParticipantStatusId = participantStatus.ID, EventId = ID, UserId = _userManager.GetUserId(User) });
                 _repoWrapper.Save();
                 return StatusCode(200);
@@ -152,11 +235,12 @@ namespace EPlast.Controllers
             try
             {
                 int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;
+                int finishedEvent = _repoWrapper.EventStatus.FindByCondition(st => st.EventStatusName == "Завершений(-на)").First().ID;
+                Event targetEvent = _repoWrapper.Event.FindByCondition(e => e.ID == ID).First();
                 Participant participantToDelete = _repoWrapper.Participant.FindByCondition(p => p.EventId == ID && p.UserId == _userManager.GetUserId(User)).First();
-                if(participantToDelete.ParticipantStatusId == rejectedStatus)
+                if(participantToDelete.ParticipantStatusId == rejectedStatus || targetEvent.EventStatusID == finishedEvent)
                 {
                     return StatusCode(409);
-
                 }
                 _repoWrapper.Participant.Delete(participantToDelete);
                 _repoWrapper.Save();
@@ -168,52 +252,6 @@ namespace EPlast.Controllers
             }
         }
 
-        [Authorize]
-        public IActionResult EventInfo(int ID)
-        {
-            try 
-            {
-                int approvedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник").First().ID;
-                int undeterminedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається").First().ID;
-                int rejectedStatus = _repoWrapper.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено").First().ID;              
-                bool isUserGlobalEventAdmin = User?.IsInRole("Адміністратор подій") ?? false;
-                EventViewModel eventModal = _repoWrapper.Event.FindByCondition(e => e.ID == ID)
-                       .Include(e => e.Participants)
-                            .ThenInclude(p => p.User)
-                       .Include(e => e.Participants)
-                            .ThenInclude(p => p.ParticipantStatus)
-                       .Include(e => e.EventAdmins)
-                       .ThenInclude(evAdm => evAdm.User)
-                       .Include(e => e.EventStatus)
-                       .Include(e => e.EventAdministrations)
-                       .Include(e => e.EventType)
-                       .Include(e => e.EventCategory)
-                       .Include(e => e.EventGallarys)
-                            .ThenInclude(eg => eg.Gallary)
-                       .Select(e => new EventViewModel()
-                       {
-                           Event = e,
-                           EventParticipants = e.Participants,
-                           IsUserEventAdmin = (e.EventAdmins.Any(evAdm => evAdm.UserID == _userManager.GetUserId(User))) || isUserGlobalEventAdmin,
-                           IsUserParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User)),
-                           IsUserApprovedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == approvedStatus),
-                           IsUserUndeterminedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == undeterminedStatus),
-                           IsUserRejectedParticipant = e.Participants.Any(p => p.UserId == _userManager.GetUserId(User) && p.ParticipantStatusId == rejectedStatus)
-                       })
-                       .First();
-
-                if (!eventModal.IsUserEventAdmin)
-                {
-                    eventModal.EventParticipants = eventModal.EventParticipants.Where(p => p.ParticipantStatusId == approvedStatus);
-                }
-
-                return View(eventModal);
-            }
-            catch
-            {
-                return RedirectToAction("HandleError", "Error", new { code = 500 });
-            }
-        }
 
         [Authorize]
         public IActionResult ApproveParticipant(int ID)

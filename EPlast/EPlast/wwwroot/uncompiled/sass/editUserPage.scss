@@ -2,23 +2,24 @@
     margin-top: 5%;
     display: flex;
 
+
+
     .Upload-photo {
         position: relative;
         overflow: hidden;
-        display: inline-block;
+        display: grid;
+        width: 100px;
     }
 
     .upload-btn {
         border: 2px solid #3c5438;
         color: gray;
         background-color: white;
-        padding: 8px 20px;
-        font-size: 16px;
+        padding: 2px;
         cursor: pointer;
     }
 
     input[type=file] {
-        font-size: 100px;
         position: absolute;
         left: 0;
         top: 0;
@@ -32,8 +33,6 @@
     .accept {
         text-align: center;
         position: relative;
-        overflow: hidden;
-        display: grid;
     }
 
     .btn {
@@ -49,5 +48,45 @@
         padding-right: 25px;
         -webkit-appearance: none;
         -moz-appearance: none;
+    }
+}
+
+.editPage {
+    @media (max-width: 767px) {
+        .photo-wrapper .upload-btn {
+            font-size: 10px;
+            width: 75px;
+        }
+
+        form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
+            background-color: #fff;
+            width: 150px;
+        }
+
+        .photo-wrapper .Upload-photo {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            width: 75px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .photo-wrapper .upload-btn {
+            font-size: 10px;
+            width: 75px;
+        }
+
+        form input[type=email].form-control, form input[type=password].form-control, form input[type=text].form-control {
+            background-color: #fff;
+            width: 150px;
+        }
+
+        .photo-wrapper .Upload-photo {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            width: 75px;
+        }
     }
 }

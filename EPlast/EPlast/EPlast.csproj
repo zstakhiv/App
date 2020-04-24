@@ -18,6 +18,7 @@
     <Content Remove="Views\Account\_UserLayout.cshtml" />
     <Content Remove="wwwroot\uncompiled\ts\adminUser.ts" />
     <Content Remove="wwwroot\uncompiled\ts\decesion.ts" />
+    <Content Remove="wwwroot\uncompiled\ts\editClub.ts" />
     <Content Remove="wwwroot\uncompiled\ts\eventGallery.ts" />
     <Content Remove="wwwroot\uncompiled\ts\eventCreate.ts" />
     <Content Remove="wwwroot\uncompiled\ts\eventPage.ts" />

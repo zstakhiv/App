@@ -59,9 +59,15 @@ $(document).ready(function () {
                     $(activeEvent).parents("div.events-operations").children("div.events-participants").show();
                     $("#modalSubscribeSuccess").modal('show');
                 },
-                error: function () {
-                    $("#modalSubscribe").modal('hide');
-                    $("#FAIL").modal('show');
+                error: function (response) {
+                    if (response.status != 409) {
+                        $("#modalSubscribe").modal('hide');
+                        $("#FAIL").modal('show');
+                    }
+                    else {
+                        $("#modalSubscribe").modal('hide');
+                        $("#conflictModal").modal('show');
+                    }
                 },
             });
         }
