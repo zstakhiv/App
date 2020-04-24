@@ -42,9 +42,11 @@
                         <i id="MenuOpener" class="fas fa-bars fa-2x"></i>
                     </div>
                     <div class="navbar-header">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
+                        <a href="/">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
+                        </a>
 
-                        <a class="navbar-brand page-header-title" href="#">ePlast</a>
+                        <a class="navbar-brand page-header-title" href="/">ePlast</a>
                     </div>
 
                     <div class="nav-content">
@@ -91,8 +93,6 @@
 
                         </div>
                         <div class="profile">
-                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
-                This "If" will be deleted in the future*@
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">
                                 @if (@UserManager.GetUserAsync(User).Result != null)
                                 {

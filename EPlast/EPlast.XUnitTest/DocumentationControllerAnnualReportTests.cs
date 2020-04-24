@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 using EPlast.ViewModels;
 using EPlast.Controllers;
 using EPlast.DataAccess.Entities;
@@ -28,6 +29,7 @@ namespace EPlast.XUnitTest
         private readonly IAnnualReportVMInitializer annualReportVMInitializer;
         private readonly IViewAnnualReportsVMInitializer viewAnnualReportsVMInitializer;
         private readonly Mock<ICityAccessManager> cityAccessManager;
+        private readonly Mock<ILogger<DocumentationController>> logger;
 
         public DocumentationControllerAnnualReportTests()
         {
@@ -37,6 +39,7 @@ namespace EPlast.XUnitTest
             annualReportVMInitializer = new AnnualReportVMInitializer();
             viewAnnualReportsVMInitializer = new ViewAnnualReportsVMInitializer();
             cityAccessManager = new Mock<ICityAccessManager>();
+            logger = new Mock<ILogger<DocumentationController>>();
         }
 
         [Fact]
@@ -62,7 +65,7 @@ namespace EPlast.XUnitTest
             };
             var expectedViewModel = new AnnualReportViewModel
             {
-                CityName = cities[0].Name,
+                CityName = cities.First().Name,
                 CityMembers = new List<SelectListItem>
                 {
                     new SelectListItem { Text = "" },
@@ -81,7 +84,7 @@ namespace EPlast.XUnitTest
                 AnnualReport = new AnnualReport
                 {
                     UserId = user.Id,
-                    CityId = cities[0].ID,
+                    CityId = cities.First().ID,
                     MembersStatistic = new MembersStatistic
                     {
                         NumberOfSeniorPlastynSupporters = 2,
@@ -93,7 +96,8 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(users.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = controller.CreateAnnualReport();
@@ -101,6 +105,7 @@ namespace EPlast.XUnitTest
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var actualViewModel = Assert.IsAssignableFrom<AnnualReportViewModel>(viewResult.Model);
+            expectedViewModel.AnnualReport.Date = actualViewModel.AnnualReport.Date;
             Assert.Equal(JsonConvert.SerializeObject(expectedViewModel),
                 JsonConvert.SerializeObject(actualViewModel));
         }
@@ -119,7 +124,7 @@ namespace EPlast.XUnitTest
             };
             var expectedViewModel = new AnnualReportViewModel
             {
-                CityName = cities[0].Name,
+                CityName = cities.First().Name,
                 CityMembers = new List<SelectListItem>
                 {
                     new SelectListItem { Text = "" }
@@ -135,7 +140,7 @@ namespace EPlast.XUnitTest
                 AnnualReport = new AnnualReport
                 {
                     UserId = user.Id,
-                    CityId = cities[0].ID,
+                    CityId = cities.First().ID,
                     MembersStatistic = new MembersStatistic()
                 }
             };
@@ -143,7 +148,8 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = controller.CreateAnnualReport();
@@ -151,6 +157,7 @@ namespace EPlast.XUnitTest
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var actualViewModel = Assert.IsAssignableFrom<AnnualReportViewModel>(viewResult.Model);
+            expectedViewModel.AnnualReport.Date = actualViewModel.AnnualReport.Date;
             Assert.Equal(JsonConvert.SerializeObject(expectedViewModel),
                 JsonConvert.SerializeObject(actualViewModel));
         }
@@ -161,8 +168,8 @@ namespace EPlast.XUnitTest
             // Arrange
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>()))
                 .Returns(Enumerable.Empty<City>());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = (RedirectToActionResult)controller.CreateAnnualReport();
@@ -176,7 +183,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminCorrect()
+        public void CreateAnnualReportLikeAdminCorrect()
         {
             // Arrange
             var cities = new List<City>
@@ -189,11 +196,11 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.CreateAnnualReportAsAdmin(cities[0].ID);
+            var result = controller.CreateAnnualReportLikeAdmin(cities.First().ID);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -202,18 +209,18 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminIncorrectCityEmpty()
+        public void CreateAnnualReportLikeAdminIncorrectCityEmpty()
         {
             // Arrange
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+            var result = (RedirectToActionResult)controller.CreateAnnualReportLikeAdmin(It.IsAny<int>());
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -224,18 +231,18 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CreateAnnualReportAsAdminIncorrectHasNoAccess()
+        public void CreateAnnualReportLikeAdminIncorrectHasNoAccess()
         {
             // Arrange
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(false);
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReportAsAdmin(0);
+            var result = (RedirectToActionResult)controller.CreateAnnualReportLikeAdmin(It.IsAny<int>());
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -265,10 +272,11 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.CreateAnnualReport(cities[0].ID, annualReport);
+            var result = controller.CreateAnnualReport(annualReport);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -299,15 +307,16 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
             controller.ModelState.Clear();
 
             // Act
-            var result = controller.CreateAnnualReport(cities[0].ID, annualReports[0]);
+            var result = controller.CreateAnnualReport(annualReports.First());
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal($"Звіт станиці {cities[0].Name} за {annualReports[0].Date.Year} рік вже існує!", viewResult.ViewData["ErrorMessage"]);
+            Assert.Equal($"Звіт станиці {cities.First().Name} за {annualReports.First().Date.Year} рік вже існує!", viewResult.ViewData["ErrorMessage"]);
         }
 
         [Fact]
@@ -321,8 +330,7 @@ namespace EPlast.XUnitTest
             var annualReport = new AnnualReport()
             {
                 CityManagement = new CityManagement(),
-                MembersStatistic = new MembersStatistic(),
-                NumberOfAdministrators = -1
+                MembersStatistic = new MembersStatistic()
             };
             userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
                 .Returns(string.Empty);
@@ -332,16 +340,18 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
             controller.ModelState.AddModelError("test", "test");
 
             // Act
-            var result = controller.CreateAnnualReport(cities[0].ID, annualReport);
+            var result = controller.CreateAnnualReport(annualReport);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var viewModel = Assert.IsAssignableFrom<AnnualReportViewModel>(viewResult.Model);
             Assert.NotNull(viewModel);
+            Assert.Equal($"Звіт заповнений некоректно!", viewResult.ViewData["ErrorMessage"]);
             repositoryWrapper.Verify(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()));
         }
 
@@ -349,13 +359,14 @@ namespace EPlast.XUnitTest
         public void CreateAnnualReportHttpPostIncorrectHasNoAccess()
         {
             // Arrange
+            var annualReport = new AnnualReport();
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(false);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null,
-                null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
+            var result = (RedirectToActionResult)controller.CreateAnnualReport(annualReport);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -368,16 +379,18 @@ namespace EPlast.XUnitTest
         public void CreateAnnualReportHttpPostIncorrectCitiesEmpty()
         {
             // Arrange
+            var annualReport = new AnnualReport();
             userManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
                 .Returns(string.Empty);
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
             repositoryWrapper.Setup(rw => rw.City.FindByCondition(It.IsAny<Expression<Func<City, bool>>>()))
                 .Returns(Enumerable.Empty<City>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.CreateAnnualReport(0, null);
+            var result = (RedirectToActionResult)controller.CreateAnnualReport(annualReport);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -410,7 +423,8 @@ namespace EPlast.XUnitTest
                 .Returns(cities);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = controller.ViewAnnualReports();
@@ -442,7 +456,8 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<City>());
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = controller.ViewAnnualReports();
@@ -462,7 +477,8 @@ namespace EPlast.XUnitTest
                 .Returns((IQueryable<City>)null);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindAll())
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, viewAnnualReportsVMInitializer,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
             var result = (RedirectToActionResult)controller.ViewAnnualReports();
@@ -480,22 +496,23 @@ namespace EPlast.XUnitTest
             var annualReports = new List<AnnualReport>
             {
                 new AnnualReport { ID = 1, CityId = 1 },
-                new AnnualReport { ID = 1, CityId = 2 }
+                new AnnualReport { ID = 2, CityId = 2 }
             };
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.GetAnnualReport(1);
+            var result = controller.GetAnnualReport(annualReports.First().ID);
 
             // Assert
             var viewResult = Assert.IsType<PartialViewResult>(result);
             Assert.Equal("_GetAnnualReport", viewResult.ViewName);
             var actualViewModel = Assert.IsAssignableFrom<AnnualReport>(viewResult.Model);
-            Assert.Equal(JsonConvert.SerializeObject(annualReports[0]),
+            Assert.Equal(JsonConvert.SerializeObject(annualReports.First()),
                 JsonConvert.SerializeObject(actualViewModel));
         }
 
@@ -506,16 +523,17 @@ namespace EPlast.XUnitTest
             var annualReports = new List<AnnualReport>
             {
                 new AnnualReport { ID = 1, CityId = 1 },
-                new AnnualReport { ID = 1, CityId = 2 }
+                new AnnualReport { ID = 2, CityId = 2 }
             };
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(false);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.GetAnnualReport(1);
+            var result = (RedirectToActionResult)controller.GetAnnualReport(annualReports.First().ID);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
@@ -529,10 +547,11 @@ namespace EPlast.XUnitTest
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.GetAnnualReport(1);
+            var result = controller.GetAnnualReport(It.IsAny<int>());
 
             // Assert
             var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
@@ -541,7 +560,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldNullAdminNewNull()
+        public void ConfirmAnnualReportCorrectAdminOldNullAdminNewNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -563,15 +582,16 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
             Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
@@ -580,7 +600,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewNull()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -606,16 +626,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -623,7 +644,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewNull()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -649,16 +670,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -666,7 +688,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldNullAdminNew()
+        public void ConfirmAnnualReportCorrectAdminOldNullAdminNew()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -692,16 +714,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -709,7 +732,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewNotEqual()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewNotEqual()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -740,16 +763,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -757,7 +781,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewEqual()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNotNullAdminNewEqual()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -788,16 +812,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -805,7 +830,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewNotEqual()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewNotEqual()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -836,16 +861,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()));
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()));
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()));
@@ -853,7 +879,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewEqual()
+        public void ConfirmAnnualReportCorrectAdminOldEndDateNullAdminNewEqual()
         {
             // Arrange
             var user = new User();
@@ -884,16 +910,17 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Update(It.IsAny<CityAdministration>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityAdministration.Create(It.IsAny<CityAdministration>()), Times.Never);
             userManager.Verify(um => um.RemoveFromRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Never);
@@ -901,7 +928,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectCityLegalStatusOldNull()
+        public void ConfirmAnnualReportCorrectCityLegalStatusOldNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -927,22 +954,23 @@ namespace EPlast.XUnitTest
                 .Returns(Enumerable.Empty<CityLegalStatus>().AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectCityLegalStatusOldNotEqualEndDateNotNull()
+        public void ConfirmAnnualReportCorrectCityLegalStatusOldNotEqualEndDateNotNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -976,22 +1004,23 @@ namespace EPlast.XUnitTest
                 .Returns(cityLegalStatuses.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectCityLegalStatusOldEqualEndDateNotNull()
+        public void ConfirmAnnualReportCorrectCityLegalStatusOldEqualEndDateNotNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -1025,22 +1054,23 @@ namespace EPlast.XUnitTest
                 .Returns(cityLegalStatuses.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectCityLegalStatusOldNotEqualEndDateNull()
+        public void ConfirmAnnualReportCorrectCityLegalStatusOldNotEqualEndDateNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -1073,22 +1103,23 @@ namespace EPlast.XUnitTest
                 .Returns(cityLegalStatuses.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()));
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()));
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportCorrectCityLegalStatusOldEqualEndDateNull()
+        public void ConfirmAnnualReportCorrectCityLegalStatusOldEqualEndDateNull()
         {
             // Arrange
             var adminTypes = new List<AdminType>
@@ -1121,40 +1152,42 @@ namespace EPlast.XUnitTest
                 .Returns(cityLegalStatuses.AsQueryable());
             repositoryWrapper.Setup(rw => rw.AdminType.FindByCondition(It.IsAny<Expression<Func<AdminType, bool>>>()))
                 .Returns(adminTypes.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var okRequest = Assert.IsType<OkObjectResult>(result);
+            var okRequest = Assert.IsType<OkObjectResult>(result.Result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік підтверджено!", message);
-            Assert.Equal(AnnualReportStatus.Confirmed, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік підтверджено!", message);
+            Assert.Equal(AnnualReportStatus.Confirmed, annualReports.First().Status);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Update(It.IsAny<CityLegalStatus>()), Times.Never);
             repositoryWrapper.Verify(rw => rw.CityLegalStatuses.Create(It.IsAny<CityLegalStatus>()), Times.Never);
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportIncorrectAnnualReportNotFound()
+        public void ConfirmAnnualReportIncorrectAnnualReportNotFound()
         {
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(It.IsAny<int>());
 
             // Assert
-            var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
+            var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result.Result);
             var message = Assert.IsType<string>(notFoundRequest.Value);
             Assert.Equal("Не вдалося підтвердити річний звіт!", message);
             userManager.Verify(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()), Times.Never);
         }
 
         [Fact]
-        public async Task ConfirmAnnualReportIncorrectHasNoAccess()
+        public void ConfirmAnnualReportIncorrectHasNoAccess()
         {
             // Arrange
             var annualReports = new List<AnnualReport>
@@ -1165,13 +1198,14 @@ namespace EPlast.XUnitTest
                 .Returns(false);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = await controller.ConfirmAnnualReport(0);
+            var result = controller.ConfirmAnnualReport(annualReports.First().ID);
 
             // Assert
-            var resultRequest = Assert.IsType<RedirectToActionResult>(result);
+            var resultRequest = Assert.IsType<RedirectToActionResult>(result.Result);
             Assert.Equal("HandleError", resultRequest.ActionName);
             Assert.Equal("Error", resultRequest.ControllerName);
             Assert.Equal(403, resultRequest.RouteValues["code"]);
@@ -1179,7 +1213,7 @@ namespace EPlast.XUnitTest
         }
 
         [Fact]
-        public void CancelAnnualReportCorrect()
+        public void DeleteAnnualReportCorrect()
         {
             // Arrange
             var annualReports = new List<AnnualReport>
@@ -1194,38 +1228,39 @@ namespace EPlast.XUnitTest
                 .Returns(annualReports.AsQueryable());
             cityAccessManager.Setup(cam => cam.HasAccess(It.IsAny<string>(), It.IsAny<int>()))
                 .Returns(true);
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.CancelAnnualReport(0);
+            var result = controller.DeleteAnnualReport(annualReports.First().ID);
 
             // Assert
             var okRequest = Assert.IsType<OkObjectResult>(result);
             var message = Assert.IsType<string>(okRequest.Value);
-            Assert.Equal($"Звіт станиці {annualReports[0].City.Name} за {annualReports[0].Date.Year} рік скасовано!", message);
-            Assert.Equal(AnnualReportStatus.Canceled, annualReports[0].Status);
+            Assert.Equal($"Звіт станиці {annualReports.First().City.Name} за {annualReports.First().Date.Year} рік видалено!", message);
         }
 
         [Fact]
-        public void CancelAnnualReportIncorrectAnnualReportNotFound()
+        public void DeleteAnnualReportIncorrectAnnualReportNotFound()
         {
             // Arrange
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(Enumerable.Empty<AnnualReport>().AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = controller.CancelAnnualReport(0);
+            var result = controller.DeleteAnnualReport(It.IsAny<int>());
 
             // Assert
             var notFoundRequest = Assert.IsType<NotFoundObjectResult>(result);
             var message = Assert.IsType<string>(notFoundRequest.Value);
-            Assert.Equal("Не вдалося скасувати річний звіт!", message);
+            Assert.Equal("Не вдалося видалити річний звіт!", message);
             userManager.Verify(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()), Times.Never);
         }
 
         [Fact]
-        public void CancelAnnualReportIncorrectHasNoAccess()
+        public void DeleteAnnualReportIncorrectHasNoAccess()
         {
             // Arrange
             var annualReports = new List<AnnualReport>
@@ -1236,10 +1271,11 @@ namespace EPlast.XUnitTest
                 .Returns(false);
             repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
                 .Returns(annualReports.AsQueryable());
-            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null, cityAccessManager.Object, null, null, null);
+            var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, null, null, null, null, null,
+                cityAccessManager.Object, null, null, null, logger.Object);
 
             // Act
-            var result = (RedirectToActionResult)controller.CancelAnnualReport(0);
+            var result = (RedirectToActionResult)controller.DeleteAnnualReport(annualReports.First().ID);
 
             // Assert
             Assert.Equal("HandleError", result.ActionName);
