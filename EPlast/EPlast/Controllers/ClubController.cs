@@ -341,10 +341,19 @@ namespace EPlast.Controllers
         {
             try
             {
+                var oldClubMembership = _repoWrapper.ClubMembers
+                    .FindByCondition(i => i.UserId == _userManager.GetUserId(User)).FirstOrDefault();
+                if(oldClubMembership != null)
+                {
+                    _repoWrapper.ClubMembers.Delete(oldClubMembership);
+                    _repoWrapper.Save();
+                }
+
                 var newClubMember = new ClubMembers()
                 {
                     UserId = _userManager.GetUserId(User),
-                    IsApproved = false
+                    IsApproved = false,
+                    ClubId = clubIndex
                 };
                 _repoWrapper.ClubMembers.Create(newClubMember);
                 _repoWrapper.Save();
