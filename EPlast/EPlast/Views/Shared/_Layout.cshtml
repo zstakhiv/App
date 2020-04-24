@@ -115,7 +115,7 @@
                         <div class="back-pic-inner">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
-                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            @if(@UserManager.GetUserAsync(User).Result != null)
                             {
                                 <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle" alt="Cinque Terre">
                             }
