@@ -83,7 +83,7 @@ $(document).ready(function () {
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     var file = "";
-                    if (files[0] != undefined) {
+                    if (response.file) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`
                     }
                     $("#dtReadDecesion").DataTable().row.add([response.id, response.name, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
@@ -149,7 +149,8 @@ $(document).ready(function () {
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     let currectRow = $(`#dtReadDecesion tbody tr td:contains(${response.decesion.id})`).parent();
-                    currectRow.children().eq(4).text(response.decesion.description);
+                    currectRow.children().eq(5).text(response.decesion.description);
+                    currectRow.children().eq(1).text(response.decesion.name);
                 } else {
                     $("#EditDecesionModal").modal("hide");
                     $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
