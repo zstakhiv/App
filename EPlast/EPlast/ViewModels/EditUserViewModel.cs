@@ -13,9 +13,8 @@ namespace EPlast.ViewModels
         public WorkViewModel WorkView { get; set; }
         public IEnumerable<Nationality> Nationalities { get; set; }
         public IEnumerable<Gender> Genders { get; set; }
-        public IEnumerable<Religion> Religions{ get; set; }
+        public IEnumerable<Religion> Religions { get; set; }
         public IEnumerable<Degree> Degrees { get; set; }
-        public string Birthday { get; set; }
-
+        public DateTime Birthday { get; set; }
     }
 }
