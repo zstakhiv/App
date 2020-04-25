@@ -1,7 +1,7 @@
 ﻿@model EPlast.DataAccess.Entities.AnnualReport
 @using EPlast.BussinessLayer.ExtensionMethods
 
-<div class="modal modal-info" id="AnnualReportModal">
+<div class="modal modal-success" id="AnnualReportModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,18 +14,18 @@
                 </div>
                 <div class="form-group p-3 m-2 border shadow-sm">
                     <h3>Голова новообраної Старшини</h3>
-                    @if (Model.CityManagement.User == null)
+                    @if (Model.CityManagement.CityAdminNew == null)
                     {
                         <p>Відсутній.</p>
                     }
                     else
                     {
-                        <p>@Model.CityManagement.User.FirstName @Model.CityManagement.User.LastName</p>
+                        <p>@Model.CityManagement.CityAdminNew.FirstName @Model.CityManagement.CityAdminNew.LastName</p>
                     }
                 </div>
                 <div class="form-group p-3 m-2 border shadow-sm">
                     <h3>Правовий статус осередку</h3>
-                    <p>@Model.CityManagement.CityLegalStatus.GetDescription()</p>
+                    <p>@Model.CityManagement.CityLegalStatusNew.GetDescription()</p>
                 </div>
                 <div class="form-group p-3 m-2 border shadow-sm">
                     <h3>УПП</h3>
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-block text-light" data-dismiss="modal">Закрити</button>
             </div>
         </div>
     </div>

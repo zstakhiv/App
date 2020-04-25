@@ -20,6 +20,7 @@ using EPlast.BussinessLayer.Settings;
 using EPlast.BussinessLayer.AccessManagers;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.Wrapper;
+using Microsoft.AspNetCore.Localization;
 
 namespace EPlast
 {
@@ -62,7 +63,7 @@ namespace EPlast
             services.AddScoped<IDirectoryManager, DirectoryManager>();
             services.AddScoped<IFileManager, FileManager>();
             services.AddScoped<IFileStreamManager, FileStreamManager>();
-
+            services.AddScoped<ICreateEventVMInitializer, CreateEventVMInitializer>();
             services.AddScoped<ICityAccessManagerSettings, CityAccessManagerSettings>();
             services.AddScoped<ICityAccessManager, CityAccessManager>();
             services.AddScoped<IUserAccessManagerSettings, UserAccessManagerSettings>();
@@ -79,6 +80,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
             });
 
             services.AddAuthentication()
@@ -93,6 +95,9 @@ namespace EPlast
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                options.TokenLifespan = TimeSpan.FromHours(3));
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
@@ -100,6 +105,12 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+            });
+            services.AddMvc();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
@@ -129,7 +140,8 @@ namespace EPlast
                 LastName = "Admin",
                 EmailConfirmed = true,
                 ImagePath = "default.png",
-                UserProfile = new UserProfile()
+                UserProfile = new UserProfile(),
+                RegistredOn = DateTime.Now
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
@@ -160,13 +172,15 @@ namespace EPlast
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseRequestLocalization();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            CreateRoles(services).Wait();
+            CreateRoles(services);
         }
     }
 }

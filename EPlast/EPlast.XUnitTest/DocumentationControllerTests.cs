@@ -56,7 +56,7 @@ namespace EPlast.XUnitTest
             repository.Setup(rep => rep.Save());
 
             return new DocumentationController(repository.Object, userManager.Object, null, decisionVmInitializer.Object, pdfService.Object,
-                hostingEnvironment.Object, null, null, directoryManager.Object, fileManager.Object, fileStreamManager.Object);
+                hostingEnvironment.Object, null, null, directoryManager.Object, fileManager.Object, fileStreamManager.Object, null);
         }
 
         private static IQueryable<Decesion> GetTestDecesion()

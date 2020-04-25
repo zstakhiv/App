@@ -38,34 +38,43 @@
         <main class="main-wrapper">
             <nav class="navbar navbar-light justify-content-between plast-header">
                 <div class="container-header">
+                    <div class="d-block d-sm-none">
+                        <i id="MenuOpener" class="fas fa-bars fa-2x"></i>
+                    </div>
                     <div class="navbar-header">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
+                        <a href="/">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
+                        </a>
 
-                        <a class="navbar-brand page-header-title" href="#">ePlast</a>
+                        <a class="navbar-brand page-header-title" href="/">ePlast</a>
                     </div>
 
                     <div class="nav-content">
                         <div class="menu-container">
 
-                            <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center" >
-                                <li class="menu-search"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;padding-left:25vw;">search</i></a></li>
+                            <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center">
+                                <li class="menu-search"><a href="#"><i class="fa fa-search nav-logo" style="margin: 5px;padding-left:25vw; font-size:20px;"></i></a></li>
                                 <li class="menu-notification"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
-                                <li class="menu-settings nav-item dropdown"><a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <i class="material-icons nav-logo" style="margin: 5px;">settings</i></a>
-                                                                            <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                                                <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword" style="color:#3c5438;">Змінити пароль</a>
-                                                                                <a class="dropdown-item" style="color:#3c5438;" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)" >Редагувати профіль</a></div></li>
+                                <li class="menu-settings nav-item dropdown">
+                                    <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons nav-logo" style="margin: 5px;">settings</i>
+                                    </a>
+                                    <div id="layout-gear" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword" style="color:#3c5438;">Змінити пароль</a>
+                                        <a class="dropdown-item" style="color:#3c5438;" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">Редагувати профіль</a>
+                                    </div>
+                                </li>
                             </ul>
                             <div class="menu-search-container" style="width:25vw; right:0; left:0;">
                                 <div class="menu-search-input">
                                     <form method="post" asp-action="Search" asp-controller="Home">
                                         <a asp-action="Search" asp-controller="Home">
-                                            <i class="fa fa-search" aria-hidden="true" style="color:aliceblue;"></i>
+                                            <i class="fa fa-search" aria-hidden="true" style="color:aliceblue;margin-top:8px; font-size:20px;"></i>
                                         </a>
-                                        <input class="menu-search-input" style="background-color:rgba(255,255,255,0.15); height:30px;" type="text" name="search" id="serchName" aria-controls="" aria-label="Search ePlast"
+                                        <input class="menu-search-input" style="background-color:rgba(255,255,255,0.15); margin-top:5px; height:26px;" type="text" name="search" id="serchName" aria-controls="" aria-label="Search ePlast"
                                                placeholder="Шукай на ePlast" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false">
                                         <a class="menu-search-close" href="#" style="left:25vw; right:0;">
-                                            <i class="fa fa-close" aria-hidden="true" style="color:aliceblue; padding-top:5px;"></i>
+                                            <i class="fa fa-close" aria-hidden="true" style="color:aliceblue; padding-top:7px; font-size:22px; font-weight:100; font-stretch:normal;"></i>
                                         </a>
 
                                     </form>
@@ -73,28 +82,26 @@
                                 <div class="search-sub-menu" style="margin-top:10px;">
                                     <h3>Швидкий доступ</h3>
                                     <ul>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" asp-action="UserProfile" asp-controller="Account">Профіль</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Акції</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" asp-action="Index" asp-controller="City">Станиці</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Округи</a></li>
-                                            <li style="color:#3c5438;"><a class="dropdown-item" href="#">Календар Подій</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" asp-action="UserProfile" asp-controller="Account">Профіль</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Акції</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" asp-action="Index" asp-controller="City">Станиці</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Округи</a></li>
+                                        <li style="color:#3c5438;"><a class="dropdown-item" href="#">Календар Подій</a></li>
                                     </ul>
                                 </div>
                             </div>
 
                         </div>
                         <div class="profile">
-                            @*This "if need,because we would like to drop database.But user saved in your browser by cookie
-                                This "If" will be deleted in the future*@
                             <a asp-action="UserProfile" asp-controller="Account" asp-route-userId="@UserManager.GetUserAsync(User).Result.Id">
-                            @if (@UserManager.GetUserAsync(User).Result != null)
-                            {
-                                <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
-                            }
-                            else
-                            {
-                                <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
-                            }
+                                @if (@UserManager.GetUserAsync(User).Result != null)
+                                {
+                                    <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                                }
+                                else
+                                {
+                                    <img src="/images/Users/default.png" class="plast-avatar rounded-circle white-border" alt="Cinque Terre">
+                                }
                             </a>
                             @Html.Partial("_LoginPartial")
                         </div>
@@ -103,12 +110,12 @@
             </nav>
 
             <div class="main-block">
-                <div class="sidebar">
+                <div class="sidebar d-none d-sm-block">
                     <div class="back-pic" onclick='onMenuHover(0)'>
                         <div class="back-pic-inner">
                             @*This "if need,because we would like to drop database.But user saved in your browser by cookie
                                 This "If" will be deleted in the future*@
-                            @if (@UserManager.GetUserAsync(User).Result != null)
+                            @if(@UserManager.GetUserAsync(User).Result != null)
                             {
                                 <img src="/images/Users/@UserManager.GetUserAsync(User).Result.ImagePath" class="plast-avatar rounded-circle" alt="Cinque Terre">
                             }
@@ -119,11 +126,28 @@
                         </div>
                     </div>
 
-                    <ul class="sidebar-ul">
-                        <li class="sidebar-li"><a href="/Documentation/ReadDecesion"><div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div></a></li>
-                        <li class="sidebar-li"><a><div class="sidebar-logo cabinet-icon" onclick='onMenuHover(4)'></div></a></li>
+                    <ul class="sidebar-ul text-center">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="sidebar-li text-center">
+                                <a href="/Documentation/ReadDecesion">
+                                    <div class="sidebar-logo decision-icon" onclick='onMenuHover(1)'></div>
+                                </a>
+                                <a style="font-size:10px;">Рішення</a>
+                            </li>
+                        }
+                        <li class="sidebar-li text-center">
+                            <a>
+                                <div style="margin-left:7px;" class="sidebar-logo dictionary-icon" onclick='onMenuHover(2)'></div>
+                            </a>
+                            <a style="font-size: 10px;">Загальна<br>інформація</a>
+                        </li>
+                        <li class="sidebar-li text-center">
+                            <a>
+                                <div style="margin-left:5px;" class="sidebar-logo admin-icon" onclick='onMenuHover(3)'></div>
+                            </a>
+                            <a style="font-size: 10px;">Документи</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -177,6 +201,61 @@
                 </footer>
             </div>
         </main>
+        <div id="sideMenu" class="row sideMenu">
+            <div class="col mainPart">
+                <a id="MenuCloser" href="javascript:void(0)" class="closebtn">&times;</a>
+                <div class="sideMenuContent">
+                    <a>Профіль</a>
+                    <div class="sideMenuHiddenContent">
+                        <a href="/Account/UserProfile">Персональні дані</a>
+                        <a>Дійсне членство</a>
+                        <a href="/Account/UserProfile">Діловодства</a>
+                        <a href="/EventUser/Eventuser">Мої Події</a>
+                        <a>Станиця</a>
+                        <a>Курінь</a>
+                        <a>З'їзди</a>
+                        <a>Відзначення</a>
+                        <a>Бланки</a>
+                    </div>
+                </div>
+                <div class="sideMenuContent">
+                    <a href="/Documentation/ReadDecesion">Рішення</a>
+                </div>
+                <div class="sideMenuContent">
+                    <a>Загальна інформація</a>
+                    <div class="sideMenuHiddenContent">
+                        <a href="/Admin/UsersTable">Таблиця користувачів</a>
+                        <a href="/City/Index">Станиці</a>
+                        <a>Округи</a>
+                        <a href="/Action/GetAction">Події</a>
+                        <a href="/Club">Курені</a>
+                        <a>Відзначення</a>
+                        <a>Кадра Виховників</a>
+                    </div>
+                </div>
+                <div class="sideMenuContent">
+                    <a>Кабінет</a>
+                    <div class="sideMenuHiddenContent">
+                        @if (User.IsInRole("Голова Станиці"))
+                        {
+                            <a href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>
+                        }
+                        @if (User.IsInRole("Голова Округу") || User.IsInRole("Admin"))
+                        {
+                            <a href="/Documentation/ViewAnnualReports">Річні звіти</a>
+                        }
+                        <a href="/Admin/RegionsAdmins">Осередки та адміни</a>
+                        <a>Геостатистика</a>
+                        <a>Статистика по роках</a>
+                        <a>Статистика (періоди)</a>
+                        <a>Порівняти осередки</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col opacityPart">
+
+            </div>
+        </div>
     }
     else
     {
@@ -184,7 +263,7 @@
             <div class="homelayout">
                 <nav class=" navbar homepage-navbar navbar-light navbar-expand-xl fixed-top sticky-top " style=" background-color:#3c5438; padding-top:0;padding-bottom:0;">
                     <div class="container">
-                        <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
+                        <a class="nav-link text-light" asp-action="Index" asp-controller="Home" style="font-size: 1.1em; color:white;"><img src="~/images/homepage/ePlastLogotype.png" width="35" style="margin:0;" alt="PlastLogo"><p style="display:inline-block; margin: 10px 0px 0px 5px; font-size:1.1em;"> ePlast</p></a>
                         <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="navbar-toggler-icon" style="color:#ffffff;"></span>
@@ -238,6 +317,7 @@
     <script src="~/lib/jquery-ui-dist/jquery-ui.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.contextMenu.min.js"></script>
     <script src="~/lib/jquery-contextmenu/dist/jquery.ui.position.min.js"></script>
+    <script src="~/lib/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
     <script src="~/bundles/js/bundle-min.js"></script>
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     @*</environment>*@

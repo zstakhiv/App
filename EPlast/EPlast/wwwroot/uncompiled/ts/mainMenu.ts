@@ -2,38 +2,30 @@ let profileListing = [
     ['<a class="text-light nav-link p-0" href="/Account/UserProfile">Персональні дані</a>',
         'Дійсне членство',
         '<a class="text-light nav-link p-0" href="/Account/UserProfile">Діловодства</a>',
-        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Вишколи</a>',
-        'З`їзд',
+        '<a class="text-light nav-link p-0" href="/EventUser/Eventuser">Мої Події</a>',
+        'Станиця',
+        'Курінь',
+        'З`їзди',
+        'Відзначення',
         'Бланки'],
     [],
-    ['Користувачі',
+    ['<a class="text-light nav-link p-0" href="/Admin/UsersTable">Таблиця користувачів</a>',
         '<a class="text-light nav-link p-0" href="/City/Index">Станиці</a>',
         'Округи',
-        '<a class="text-light nav-link p-0" href="/Action/GetAction">Акції</a>',
+        '<a class="text-light nav-link p-0" href="/Action/GetAction">Події</a>',
         '<a class="text-light nav-link p-0" href="/Club">Курені</a>',
         'Відзначення',
         'Кадра Виховників'],
-    ['Користувачі',
-        'Станиця',
-        'Курінь',
-        'Кваліфікаційні Вишколи',
-        'Акції/Табори',
-        'Відзначення'],
     ['<a class="text-light nav-link p-0" href="/Documentation/CreateAnnualReport">Подати річний звіт станиці</a>',
-        '<a class="text-light nav-link p-0" href="/Admin/UsersTable">Таблиця користувачів</a>',
-        'Зголосити вишкіл',
         '<a class="text-light nav-link p-0" href="/Documentation/ViewAnnualReports">Річні звіти</a>',
         '<a class="text-light nav-link p-0" href="/Admin/RegionsAdmins">Осередки та адміни</a>',
-        'Зголошення вишколів',
         'Геостатистика',
         'Статистика по роках',
         'Статистика (періоди)',
         'Порівняти осередки',
-        '<a class="text-light nav-link p-0" href="/Documentation/CreateDecesion">Додати рішення керівних органів</a>',
-        'Зголошені на КПЗ2018',
         'Статистичні звіти']
 ];
-let buttonClone: Element; 
+let buttonClone: Element;
 let backdrop: Element;
 let mainWrapper: Element;
 let menuOpen: boolean = false;
@@ -90,3 +82,27 @@ function closeMenu() {
         $(mainWrapper).removeClass('non-scrollable');
     }
 }
+
+$('#MenuOpener').click(function () {
+    document.getElementById("sideMenu").style.width = '110%';
+})
+
+$('#MenuCloser').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+})
+
+$('#sideMenu .opacityPart').click(function () {
+    document.getElementById("sideMenu").style.width = '0';
+})
+
+$('#sideMenu .sideMenuContent').mouseover(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'visible');
+    $(content).css('height', 'auto');
+})
+
+$('#sideMenu .sideMenuContent').mouseleave(function () {
+    var content = this.getElementsByClassName('sideMenuHiddenContent').item(0);
+    $(content).css('visibility', 'hidden');
+    $(content).css('height', '0');
+})

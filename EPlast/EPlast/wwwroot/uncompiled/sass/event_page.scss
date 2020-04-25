@@ -147,10 +147,20 @@ input.event-page-wrapper.btn-collapse:hover {
         color: #ffffff;
     }
 
+    .carousel-control-next-icon,
+    .carousel-control-prev-icon {
+        filter: invert(0.25);
+    }
+
+
     .page-item.active .page-link {
         color: #000;
         background-color: #ffffff;
         border-color: none;
+    }
+
+    .shadowBlock {
+        background-color: #ffffff;
     }
 
     a.picture-remove {
@@ -171,7 +181,55 @@ input.event-page-wrapper.btn-collapse:hover {
         background-color: #3c5438;
     }
 
-    .pictureToDelete img{
-        height:150px;
+    .spinner-buttons {
+        background-color: #3c5438;
+    }
+
+    .spinner-buttons:hover {
+        background-color: #3c5438;
+    }
+
+    .pictureToDelete img {
+        height: 150px;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .progress-cursor {
+        cursor: progress;
+    }
+
+    .status-icon {
+        font-size: 15px;
+    }
+
+    .page-item.active .page-link {
+        color: #000;
+        background-color: #ffffff;
+        border-color: none;
+        box-shadow: 0 0 0 0.2rem #3c5438;
+    }
+
+    .paginate_button.page-item {
+        .page-link {
+            background: #3c5438 !important;
+            color: #ffffff !important;
+        }
+
+        .page-link &:hover, &:active, &:focus {
+            background: #344a30 !important;
+            color: #fff !important;
+            border-color: #fff;
+        }
+    }
+
+    .page-item.disabled .page-link {
+        background: #2e402b !important;
+    }
+
+    .page-item.active .page-link {
+        border-color: #73bd79;
     }
 }

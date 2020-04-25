@@ -82,9 +82,10 @@
 
     .plast-avatar {
         width: 40px;
+        object-fit: cover;
         height: 40px;
         background-image: url('https://galinfo.com.ua/media/gallery/full/p/l/plast1.jpg');
-    }
+    }  
 
     .main-block {
         display: flex;
@@ -244,7 +245,6 @@
             }
 
             .content {
-                flex-direction: column;
                 overflow: hidden;
 
                 .backdrop {
@@ -252,6 +252,7 @@
                     height: 100vh;
                     top: 0;
                     left: 0;
+                    min-width: 100%;
 
                     .slider {
                         width: 100%;
@@ -264,5 +265,83 @@
     .non-scrollable {
         overflow: hidden;
         height: 100vh;
+    }
+}
+
+.sideMenu {
+    position: absolute;
+    height: 100%;
+    width: 0;
+    z-index: 666;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+
+    .mainPart {
+        width: 250px;
+        padding-top: 60px;
+        background-color: #3c5438;
+    }
+
+    .opacityPart {
+        background-color: rgba(0,0,0,0.6);
+    }
+
+    .sideMenuContent {
+        margin: 0px 0px 10px 32px;
+
+        a {
+            cursor: default;
+            text-decoration: none;
+            font-size: 25px;
+            color: #f1f1f1;
+            display: block;
+        }
+
+        a:hover {
+            color: #f1f1f1;
+        }
+    }
+
+    .closebtn {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #f1f1f1;
+        display: block;
+        transition: 0.3s;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    .sideMenuHiddenContent {
+        height: 0;
+        visibility: hidden;
+
+        a {
+            cursor: default;
+            text-decoration: none;
+            font-size: 15px;
+            color: #818181;
+            display: block;
+        }
+
+        a:hover {
+            color: #f1f1f1;
+        }
+    }
+}
+
+@media screen and (max-height: 450px) {
+    .sideMenu {
+        padding-top: 15px;
+    }
+
+    .sideMenu a {
+        font-size: 18px;
     }
 }

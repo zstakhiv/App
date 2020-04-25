@@ -10,12 +10,15 @@
         "js/bootstrap.min.js",
         "js/jquery.min.js",
         "js/mdb.min.js",
+        "js/mdb.min.js.map",
         "js/popper.min.js",
         "js/addons/datatables.min.js",
+        "js/addons/datatables.min.js.map",
         "css/bootstrap.min.css",
         "css/mdb.min.css",
         "css/style.css",
-        "css/addons/datatables.min.css"
+        "css/addons/datatables.min.css",
+        "css/addons/datatables.min.css.map"
       ]
     },
     {
@@ -41,8 +44,10 @@
       "destination": "wwwroot/lib/jquery-contextmenu/",
       "files": [
         "dist/jquery.contextMenu.min.css",
+        "dist/jquery.contextMenu.min.css.map",
         "dist/jquery.ui.position.min.js",
-        "dist/jquery.contextMenu.min.js"
+        "dist/jquery.contextMenu.min.js",
+        "dist/jquery.contextMenu.min.js.map"
       ]
     },
     {
@@ -59,6 +64,14 @@
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
       "files": [
         "dist/jquery.validate.unobtrusive.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery-mask-plugin@1.14.16",
+      "destination": "wwwroot/lib/jquery-mask-plugin/",
+      "files": [
+        "dist/jquery.mask.min.js"
       ]
     }
   ]
