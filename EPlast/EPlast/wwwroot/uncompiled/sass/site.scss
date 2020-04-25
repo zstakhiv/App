@@ -329,8 +329,6 @@ button.accept-policy {
     line-height: inherit;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
 html {
     position: relative;
     min-height: 100%;
@@ -367,8 +365,6 @@ table.dataTable thead {
         }
     }
 }
-
-/*css from LoginAndRegister.cshtml*/
 
 body {
     font-family: "SourceSansPro";
@@ -506,6 +502,7 @@ form input {
 
 .login-clean {
     margin-top: 45px;
+    background-color: rgb(245, 245, 245);
 
     .form {
         max-width: 520px;
@@ -685,3 +682,34 @@ form input {
     margin-left: 170px;
 }
 
+
+.login-form .form-group {
+    button[type=submit] {
+        background-color: #3c5438;
+    }
+}
+
+.login-form .form-group{
+    input[type=checkbox] {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+.login-form .form-group {
+    .remember-me {
+        margin-left: 15px;
+    }
+}
+
+.register-form .form-group {
+    button[type=submit] {
+        background-color: #3c5438;
+    }
+}
+
+.login-form .form-group {
+    .resetp-email{
+        margin-top:15px;
+    }
+}
