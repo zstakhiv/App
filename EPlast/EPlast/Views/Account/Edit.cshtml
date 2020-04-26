@@ -1,7 +1,7 @@
 ﻿@using EPlast.DataAccess.Repositories
 @using EPlast.DataAccess.Entities
 @model EPlast.ViewModels.EditUserViewModel
-        <form class="container bg-light mt-4 editPage" style="background-color:white" asp-action="Edit" enctype="multipart/form-data">
+        <form class="bg-light mt-4 editPage" style="background-color:white" asp-action="Edit" enctype="multipart/form-data">
             
             <div class="row">
                 <div class="col-md-4">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-8  col-sm-8 col-lg-8 col-md-8">
+                <div class="col-8  col-sm-12 col-lg-8 col-md-12">
                     @Html.HiddenFor(model => model.User.Id)
                     @Html.HiddenFor(model => model.User.UserProfile.ID)
                     @Html.HiddenFor(model => model.User.UserProfile.UserID)
