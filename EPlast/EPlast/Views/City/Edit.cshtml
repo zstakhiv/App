@@ -8,85 +8,71 @@
         <div class="container content-wrapper" style="margin-left:-2px;">
             <div class="data-table-wrapper-club club-wrappers-radius data-table-wrapper" style="margin-bottom:0;">
                 <h1 class="grid-header">Редагування Станиці - "@Model.City.Name"</h1>
-                <form class="container mt-4" style="background-color: transparent;" asp-action="Edit" enctype="multipart/form-data">
+                <form class="container mt-4" style="background-color: transparent;" asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-7">
                             @Html.HiddenFor(model => model.City.ID)
                             <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="form-group">
-                                <label asp-for="City.Name" class="control-label"></label>
+                                <label asp-for="City.Name" class="control-label">Назва</label>
                                 <input asp-for="City.Name" class="form-control">
                                 <span asp-validation-for="City.Name" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="City.Description" class="control-label"></label>
+                                <label asp-for="City.Description" class="control-label">Опис</label>
                                 <input asp-for="City.Description" class="form-control">
                                 <span asp-validation-for="City.Description" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="City.CityURL" class="control-label"></label>
-                                <input asp-for="City.CityURL" class="form-control">
+                                <label asp-for="City.CityURL" class="control-label">Посилання</label>
+                                <input asp-for="City.CityURL" type="url" class="form-control">
                                 <span asp-validation-for="City.CityURL" class="text-danger"></span>
                             </div>
-                            <div class="form-group">
-                                <label asp-for="City.Region.RegionName" class="control-label"></label>
-                                @Html.TextBoxFor(x => x.City.Region.RegionName,
-                                new { @list = "Region-value", @id = "autocomplete_input", @class = "form-control", @Value = "" })
-                                <datalist id="Region-value">
-                                    @*@foreach (Region item in Model.Regions)
-                            {
-                                <option data-value="@item.ID" value="@item.Name"></option>
-
-                            }*@
-                                </datalist>
-
-                                @Html.HiddenFor(i => i.City.Region.ID, new { @id = "autocomplete_input_id_0" })
-                                <span asp-validation-for="City.Region.RegionName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Номер телефону</label>
-                                <input asp-for="City.PhoneNumber" id="phoneNumber" class="form-control" />
-                                <span asp-validation-for="City.PhoneNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="City.Street" class="control-label"></label>
-                                <input asp-for="City.Street" class="form-control" />
-                                <span asp-validation-for="City.Street" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="City.HouseNumber" class="control-label"></label>
-                                <input asp-for="City.HouseNumber" class="form-control" />
-                                <span asp-validation-for="City.HouseNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="City.OfficeNumber" class="control-label"></label>
-                                <input asp-for="City.OfficeNumber" class="form-control" />
-                                <span asp-validation-for="City.OfficeNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="City.PostIndex" class="control-label"></label>
-                                <input asp-for="City.PostIndex" class="form-control" />
-                                <span asp-validation-for="City.PostIndex" class="text-danger"></span>
-                            </div>
-                            <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
+                            
+                        <div class="form-group">
+                            <label class="control-label">Номер телефону</label>
+                            <input asp-for="City.PhoneNumber" id="phoneNumber" class="form-control" />
+                            <span asp-validation-for="City.PhoneNumber" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="City.Street" class="control-label">Вулиця</label>
+                            <input asp-for="City.Street" class="form-control" />
+                            <span asp-validation-for="City.Street" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="City.HouseNumber" class="control-label">Номер Будинку</label>
+                            <input asp-for="City.HouseNumber" class="form-control" />
+                            <span asp-validation-for="City.HouseNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="City.OfficeNumber" class="control-label">Номер Офісу\Квартири</label>
+                            <input asp-for="City.OfficeNumber" class="form-control" />
+                            <span asp-validation-for="City.OfficeNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="City.PostIndex" class="control-label">Поштовий Індекс</label>
+                            <input asp-for="City.PostIndex" class="form-control" />
+                            <span asp-validation-for="City.PostIndex" class="text-danger"></span>
+                        </div>
+                        <button type="submit" value="Save" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
+                    </div>
                         <div class="col">
                             <div class="form-group row">
                                 <div class="col">
                                     <img src="/images/Cities/@Model.City.Logo" class="img-thumbnail rounded mx-auto d-block" id="img" alt="your image" />
 
-                                    @*<div class="row rowEditPage">
+                                    <div class="row rowEditPage">
                                         <div id="photo-wrapper" class="photo-wrapper">
                                             <div class="Upload-photo">
-                                                <button id="upload-btn" class="upload-btn">Вибрати фотографію...</button>
+                                                <button id="upload-btn" class="upload-btn">Вибрати...</button>
                                                 <input type="file" class="custom-file-input" id="upload-file" accept=".jpg,.jpeg,.png" name="file" onchange="document.getElementById('img').src = window.URL.createObjectURL(this.files[0])">
                                             </div>
                                             <div class="accept">
                                                 <button type="submit" value="Save" id="Upload-photo" class="btn " style="background-color:#3c5438; color:white;">Підтвердити</button>
                                             </div>
                                         </div>
-                                    </div>*@
+                                    </div>
 
                                 </div>
                             </div>
