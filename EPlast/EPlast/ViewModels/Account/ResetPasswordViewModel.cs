@@ -13,7 +13,7 @@ namespace EPlast.ViewModels
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Пароль має вміщати мінімум 8 символів")]
-        [StringLength(100, ErrorMessage = "Пароль має вміщати мінімум 8 символів", MinimumLength = 8)]
+        [StringLength(100, ErrorMessage = "Пароль має містити цифри та літери, мінімальна довжина повинна складати 8", MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

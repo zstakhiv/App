@@ -80,6 +80,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
             });
 
             services.AddAuthentication()
@@ -93,6 +94,9 @@ namespace EPlast
                     options.AppId = Configuration.GetSection("FacebookAuthentication:FacebookAppId").Value;
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                options.TokenLifespan = TimeSpan.FromHours(3));
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -137,7 +141,7 @@ namespace EPlast
                 EmailConfirmed = true,
                 ImagePath = "default.png",
                 UserProfile = new UserProfile(),
-                RegistredOn=DateTime.Now
+                RegistredOn = DateTime.Now
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
@@ -176,7 +180,7 @@ namespace EPlast
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            CreateRoles(services).Wait();
+            CreateRoles(services);
         }
     }
 }
