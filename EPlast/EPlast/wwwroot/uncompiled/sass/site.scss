@@ -653,7 +653,8 @@ form input {
 }
 
 .outer-block-container {
-    margin-left: 170px;
+    display: flex;
+    justify-content: center;
 }
 
 
