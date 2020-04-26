@@ -550,12 +550,19 @@ form input {
     color: #fff;
     border-radius: 3px;
     height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.forgot-password-container {
+    .inner {
+        text-align: center;
+    }
 }
 
 .forgot-password-container p {
     font-size: 20px;
-    margin-top: 10px;
-    margin-left: 30px;
+    margin-top: 9px;
 }
 
 .universal-container {
