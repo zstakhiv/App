@@ -23,7 +23,6 @@ namespace EPlast
                 logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                 logging.AddNLog();
             })
-
             .UseStartup<Startup>();
     }
 }

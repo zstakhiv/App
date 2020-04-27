@@ -190,7 +190,7 @@ namespace EPlast
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            CreateRoles(services);
+            CreateRoles(services).Wait();
         }
     }
 }
