@@ -34,7 +34,7 @@ namespace EPlast
                              azureServiceTokenProvider.KeyVaultTokenCallback));
 
                      config.AddAzureKeyVault(
-                         $"https://{builtConfig["KeuVaultName"]}.vault.azure.net/",
+                         $"https://{builtConfig["KeyVaultName"]}.vault.azure.net/",
                          keyVaultClient,
                          new DefaultKeyVaultSecretManager());
                  }
