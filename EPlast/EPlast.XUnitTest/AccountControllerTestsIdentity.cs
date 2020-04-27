@@ -625,10 +625,6 @@ namespace EPlast.XUnitTest
                 .Setup(s => s.FindByIdAsync(It.IsAny<string>()))
                 .ReturnsAsync(GetTestUserWithAllFields());
 
-            var mockDateTime = new Mock<IDateTime>();
-            mockDateTime.Setup(fake => fake.GetCurrentTime())
-                .Returns(new DateTime(1,1,1,4,0,0));
-
             //Act
             var result = await accountController.ResetPassword(GetTestCodeForResetPasswordAndConfirmEmail(), GetTestCodeForResetPasswordAndConfirmEmail());
 

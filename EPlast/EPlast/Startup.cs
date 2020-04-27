@@ -81,7 +81,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
+                
             });
 
             services.AddAuthentication()
@@ -96,6 +96,9 @@ namespace EPlast
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                options.TokenLifespan = TimeSpan.FromMinutes(1));
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
@@ -103,8 +106,6 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
-            services.Configure<DataProtectionTokenProviderOptions>(options =>
-             options.TokenLifespan = TimeSpan.FromHours(3));
 
             services.AddMvc();
         }
