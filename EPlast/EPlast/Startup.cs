@@ -97,7 +97,7 @@ namespace EPlast
                 });
 
             services.Configure<DataProtectionTokenProviderOptions>(options =>
-                options.TokenLifespan = TimeSpan.FromSeconds(30));
+                options.TokenLifespan = TimeSpan.FromMinutes(1));
 
             services.ConfigureApplicationCookie(options =>
             {
