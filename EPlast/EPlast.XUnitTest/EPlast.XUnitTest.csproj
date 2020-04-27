@@ -1,22 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="AccountControllerTests.cs" />
-    <Compile Remove="ActionControllerTests.cs" />
-    <Compile Remove="AdminControllerTests.cs" />
-    <Compile Remove="CityControllerTests.cs" />
-    <Compile Remove="ClubControllerTests.cs" />
-    <Compile Remove="DocumentationControllerAnnualReportTests.cs" />
-    <Compile Remove="DocumentationControllerTests.cs" />
-    <Compile Remove="EventUserControllerTests.cs" />
-    <Compile Remove="HomeControllerTests.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Ical.Net" Version="4.1.11" />
