@@ -33,6 +33,7 @@ namespace EPlast.Controllers
                 .FindAll()
                 .Select(club => new ClubViewModel { Club = club })
                 .ToList());
+            ViewBag.usermanager = _userManager;
 
             return View(clubs);
         }
