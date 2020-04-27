@@ -708,7 +708,8 @@ namespace EPlast.XUnitTest
         public static IList<IFormFile> FakeFiles()
         {
             var fileMock = new Mock<IFormFile>();
-            var content = Image.FromFile("D:/Capture.png");
+            Icon icon1 = new Icon(SystemIcons.Exclamation, 40, 40);
+            var content = icon1.ToBitmap();
             var fileName = "picture.png";
             var ms = new MemoryStream();
             content.Save(ms, ImageFormat.Png);
