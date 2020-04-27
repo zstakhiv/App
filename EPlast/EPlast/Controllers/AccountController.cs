@@ -233,10 +233,9 @@ namespace EPlast.Controllers
             {
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
-
             IDateTime dateTimeConfirming = new DateTimeHelper();
-            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalMinutes;
-            if (totalTime < 180)
+            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalSeconds;
+            if (totalTime < 30)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {

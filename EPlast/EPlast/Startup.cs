@@ -80,7 +80,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
+                
             });
 
             services.AddAuthentication()
@@ -96,7 +96,7 @@ namespace EPlast
                 });
 
             services.Configure<DataProtectionTokenProviderOptions>(options =>
-                options.TokenLifespan = TimeSpan.FromHours(3));
+                options.TokenLifespan = TimeSpan.FromSeconds(30));
 
             services.ConfigureApplicationCookie(options =>
             {
