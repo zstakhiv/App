@@ -22,16 +22,12 @@ namespace EPlast.Controllers
         private readonly IRepositoryWrapper _repoWrapper;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _env;
-        private readonly IFileManager _fm;
 
-
-
-        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env, IFileManager fm)
+        public ActionController(UserManager<User> userManager, IRepositoryWrapper repoWrapper, IHostingEnvironment env)
         {
             _userManager = userManager;
             _repoWrapper = repoWrapper;
             _env = env;
-            _fm = fm;
         }
 
         [Authorize]
