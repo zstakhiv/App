@@ -33,6 +33,7 @@ namespace EPlast.Controllers
                 .FindAll()
                 .Select(club => new ClubViewModel { Club = club })
                 .ToList());
+            ViewBag.usermanager = _userManager;
 
             return View(clubs);
         }
@@ -337,42 +338,45 @@ namespace EPlast.Controllers
             }
         }
         [HttpGet]
-        public IActionResult AddAsClubFollower(int clubIndex)
+        public IActionResult CreateClub()
         {
             try
             {
-                var oldClubMembership = _repoWrapper.ClubMembers
-                    .FindByCondition(i => i.UserId == _userManager.GetUserId(User)).FirstOrDefault();
-                if(oldClubMembership != null)
-                {
-                    _repoWrapper.ClubMembers.Delete(oldClubMembership);
-                    _repoWrapper.Save();
-                }
-
-                var newClubMember = new ClubMembers()
-                {
-                    UserId = _userManager.GetUserId(User),
-                    IsApproved = false,
-                    ClubId = clubIndex
-                };
-                _repoWrapper.ClubMembers.Create(newClubMember);
-                _repoWrapper.Save();
-                return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User) });
+                return View(new ClubViewModel());
             }
-            catch
+            catch (Exception e)
             {
                 return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
-        public IActionResult ChooseAClub()
+        [HttpPost]
+        public IActionResult CreateClub(ClubViewModel model, IFormFile file)
         {
-            List<ClubViewModel> clubs = new List<ClubViewModel>(
-                _repoWrapper.Club
-                .FindAll()
-                .Select(club => new ClubViewModel { Club = club })
-                .ToList());
+            try
+            {
+                if (file != null && file.Length > 0)
+                {
+                    var img = Image.FromStream(file.OpenReadStream());
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Club");
 
-            return View(clubs);
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    img.Save(filePath);
+                    model.Club.Logo = fileName;
+                }
+                else
+                {
+                    model.Club.Logo = null;
+                }
+                _repoWrapper.Club.Create(model.Club);
+                _repoWrapper.Save();
+                return RedirectToAction("Club", new { index = model.Club.ID });
+            }
+            catch (Exception e)
+            {
+
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
         }
     }
 }

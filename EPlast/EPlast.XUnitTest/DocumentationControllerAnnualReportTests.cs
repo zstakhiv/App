@@ -96,6 +96,8 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(users.AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable);
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
                 cityAccessManager.Object, null, null, null, logger.Object);
 
@@ -148,6 +150,8 @@ namespace EPlast.XUnitTest
             cityAccessManager.Setup(cam => cam.GetCities(It.IsAny<string>())).Returns(cities);
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable);
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
                 cityAccessManager.Object, null, null, null, logger.Object);
 
@@ -196,6 +200,8 @@ namespace EPlast.XUnitTest
                 .Returns(cities.AsQueryable());
             repositoryWrapper.Setup(rw => rw.User.FindByCondition(It.IsAny<Expression<Func<User, bool>>>()))
                 .Returns(Enumerable.Empty<User>().AsQueryable());
+            repositoryWrapper.Setup(rw => rw.AnnualReports.FindByCondition(It.IsAny<Expression<Func<AnnualReport, bool>>>()))
+                .Returns(Enumerable.Empty<AnnualReport>().AsQueryable);
             var controller = new DocumentationController(repositoryWrapper.Object, userManager.Object, annualReportVMInitializer, null, null, null, null,
                 cityAccessManager.Object, null, null, null, logger.Object);
 
