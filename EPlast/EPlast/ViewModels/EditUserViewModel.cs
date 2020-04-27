@@ -15,6 +15,6 @@ namespace EPlast.ViewModels
         public IEnumerable<Gender> Genders { get; set; }
         public IEnumerable<Religion> Religions { get; set; }
         public IEnumerable<Degree> Degrees { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { get; set; }
     }
 }

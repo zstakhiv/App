@@ -104,10 +104,6 @@ namespace EPlast
                 options.LogoutPath = "/Account/Logout";
             });
 
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture("en-US");
-            });
             services.AddMvc();
         }
 
