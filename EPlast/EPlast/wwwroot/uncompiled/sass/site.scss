@@ -8,14 +8,15 @@ html {
     font-size: 14px;
 }
 
-/*.form .login-register-switcher{
-        height:80%;
-шоб не було великого проміжку
-}*/
-
 @media(max-width:1200px) {
     .form .login-register-switcher {
         margin-bottom: 30px;
+    }
+}
+
+@media(max-width:768px) {
+    .login-register-swithcer {
+        width: 100px;
     }
 }
 
@@ -143,7 +144,7 @@ html {
     }
 }
 
-@media(max-width:412px) { /*тут з інпутами*/
+@media(max-width:412px) {
     .login-clean .form .reset p {
         font-size: 9px;
     }
@@ -164,15 +165,6 @@ html {
         margin-bottom: 20px;
     }
 
-    .form .login-register-switcher .circle-wrapper .login-circle {
-        width: 55px;
-        height: 55px;
-    }
-
-    .form .login-register-switcher .login-rectangle {
-        height: 36px;
-    }
-
     .register-form .form-group {
         input[type="email"],
         input[type="password"],
@@ -180,17 +172,20 @@ html {
             height: 30px;
         }
     }
-    //тут треба дописувати висоту і ширину для чекбокса
+
     .login-form .form-group {
         input[type="email"],
         input[type="password"] {
             height: 30px;
         }
     }
-    //для чекбокс треба трохи поміняти висоту і ширину
+
+    .login-buttons .loginBtn {
+        font-size: 14px;
+    }
 }
 
-@media(max-width:412px) { /*тут з інпутами*/
+@media(max-width:412px) {
     .login-clean .form .forgot-password-container p {
         font-size: 10px;
     }
@@ -198,6 +193,12 @@ html {
     .form .form-control {
         input[type="email"] {
             height: 28px;
+        }
+    }
+
+    .login-form .form-group {
+        input[type=checkbox] {
+            transform: scale(0.85);
         }
     }
 }
@@ -208,7 +209,20 @@ html {
     }
 }
 
-@media(max-width:350px) { /*тут з інпутами*/
+@media(max-width:350px) {
+    .login-form .form-group {
+        .remember-me {
+            margin-left: 15px;
+            margin-top: 5px;
+            margin-right: 25px;
+        }
+    }
+
+    .login-clean .form .reset {
+        height: 25px;
+        padding-bottom: 25px;
+    }
+
     .form .login-register-switcher .circle-wrapper .login-circle p {
         font-size: 14px;
     }
@@ -218,7 +232,7 @@ html {
     }
 
     .login-clean a {
-        font-size: 9px;
+        font-size: 7px;
     }
 
     html {
@@ -229,20 +243,6 @@ html {
         margin-bottom: 20px;
     }
 
-    .form .login-register-switcher .circle-wrapper .login-circle {
-        width: 50px;
-        height: 50px;
-    }
-
-    .form .login-register-switcher .login-rectangle {
-        height: 32px;
-    }
-
-    //тут для інпута стилі
-    /*.login-clean .form.form-control input[type="email"]{
-        height:28px;   
-    }*/
-    // тут пофіксив проблему зі  стилями
     .register-form .form-group {
         input[type="email"],
         input[type="password"],
@@ -259,9 +259,8 @@ html {
     }
 
     .login-form .form-group {
-        input[type="checkbox"] {
-            height: 10px;
-            width: 10px;
+        input[type=checkbox] {
+            transform: scale(0.75);
         }
     }
 
@@ -269,28 +268,6 @@ html {
         height: 10px;
     }
 
-    .login-buttons .loginBtn-container {
-        button[type="submit"] {
-            width: 40px;
-            height: 20px;
-            font-size: 8px;
-        }
-    }
-
-    .login-buttons .loginBtn-container {
-        .loginBtn:before {
-            width: 30px;
-        }
-    }
-
-    .login-buttons .loginBtn-container {
-        .loginBtn--google:before {
-            width: 0px;
-            height: 0px;
-        }
-    }
-
-    //забули пароль
     .login-form .form-group {
         a {
             font-size: 10px;
@@ -299,7 +276,6 @@ html {
         }
     }
 
-    //тут треба поміняти спеціально під ту штуку
     .login-button .loginBtn-container {
         button[type="submit"]::before {
             font-size: 20px;
@@ -323,9 +299,6 @@ button.accept-policy {
     font-size: 1rem;
     line-height: inherit;
 }
-
-/* Sticky footer styles
--------------------------------------------------- */
 
 html {
     position: relative;
@@ -364,8 +337,6 @@ table.dataTable thead {
     }
 }
 
-/*css from LoginAndRegister.cshtml*/
-
 body {
     font-family: "SourceSansPro";
     background-color: rgb(245, 245, 245);
@@ -391,11 +362,7 @@ form input {
     overflow: hidden;
 }
 
-@media(max-width:768px) {
-    .login-register-swithcer {
-        width: 100px;
-    }
-}
+
 
 .circle-wrapper {
     position: absolute;
@@ -502,6 +469,7 @@ form input {
 
 .login-clean {
     margin-top: 45px;
+    background-color: rgb(245, 245, 245);
 
     .form {
         max-width: 520px;
@@ -577,18 +545,24 @@ form input {
     margin: 0 auto;
 }
 
-
 .forgot-password-container {
     background-color: #3c5438;
     color: #fff;
     border-radius: 3px;
     height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.forgot-password-container {
+    .inner {
+        text-align: center;
+    }
 }
 
 .forgot-password-container p {
     font-size: 20px;
-    margin-top: 10px;
-    margin-left: 30px;
+    margin-top: 9px;
 }
 
 .universal-container {
@@ -661,11 +635,12 @@ form input {
 }
 
 .loginBtn-container {
+    display: flex;
     justify-content: space-between;
 }
 
 .login-buttons {
-    width: 440px;
+    max-width: 440px;
 }
 
 .user-profile {
@@ -673,11 +648,44 @@ form input {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.user-page-ident{
-    height:397px;
+.user-page-ident {
+    height: 120px;
+    text-align: center;
 }
 
-.outer-block-container{
-    margin-left: 170px;
+.outer-block-container {
+    display: flex;
+    justify-content: center;
 }
 
+
+.login-form .form-group {
+    button[type=submit] {
+        background-color: #3c5438;
+    }
+}
+
+.login-form .form-group {
+    input[type=checkbox] {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+.login-form .form-group {
+    .remember-me {
+        margin-left: 15px;
+    }
+}
+
+.register-form .form-group {
+    button[type=submit] {
+        background-color: #3c5438;
+    }
+}
+
+.login-form .form-group {
+    .resetp-email {
+        margin-top: 15px;
+    }
+}

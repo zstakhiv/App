@@ -67,7 +67,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -118,7 +118,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -191,7 +191,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -208,7 +208,7 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action(
@@ -231,16 +231,15 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
-
             IDateTime dateTimeConfirming = new DateTimeHelper();
-            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalMinutes;
-            if (totalTime < 180)
+            var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalSeconds;
+            if (totalTime < 30)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
 
                 var result = await _userManager.ConfirmEmailAsync(user, code);
@@ -251,7 +250,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
             }
             else
@@ -317,7 +316,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -328,7 +327,7 @@ namespace EPlast.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
 
             IDateTime dateTimeResetingPassword = new DateTimeHelper();
@@ -338,7 +337,7 @@ namespace EPlast.Controllers
             {
                 if (string.IsNullOrWhiteSpace(code))
                 {
-                    return RedirectToAction("HandleError", "Error", new { code = 505 });
+                    return RedirectToAction("HandleError", "Error", new { code = 500 });
                 }
                 else
                 {
@@ -386,7 +385,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -437,7 +436,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
@@ -545,7 +544,7 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Exception: {0}", e.Message);
-                return RedirectToAction("HandleError", "Error", new { code = 505 });
+                return RedirectToAction("HandleError", "Error", new { code = 500 });
             }
         }
 
