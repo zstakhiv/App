@@ -336,5 +336,48 @@ namespace EPlast.Controllers
                 return 0;
             }
         }
+        [HttpPost]
+        public int AddToClubAdministration([FromBody] ClubAdministrationDTO createdAdmin)
+        {
+            try
+            {
+                var adminType = _repoWrapper.AdminType
+                    .FindByCondition(i => i.AdminTypeName == createdAdmin.AdminType).FirstOrDefault();
+                int AdminTypeId;
+                if(adminType == null)
+                {
+                    var newAdminType = new AdminType() { AdminTypeName = createdAdmin.AdminType };
+                    
+                    _repoWrapper.AdminType.Create(newAdminType);
+                    _repoWrapper.Save();
+
+                    adminType = _repoWrapper.AdminType
+                    .FindByCondition(i => i.AdminTypeName == createdAdmin.AdminType).FirstOrDefault();
+                    AdminTypeId = adminType.ID;
+                }
+                else
+                {
+                    AdminTypeId = adminType.ID;
+                }
+                // ((createdAdmin.enddate) => (createdAdmin.enddate.Date == DateTime.Today)():(null))
+                ClubAdministration newClubAdmin = new ClubAdministration()
+                {
+                    ClubMembersID = createdAdmin.adminId,
+                    StartDate = createdAdmin.startdate,
+                    EndDate = null,
+                    ClubId = createdAdmin.clubIndex,
+                    AdminTypeId = AdminTypeId
+                };
+
+                _repoWrapper.GetClubAdministration.Create(newClubAdmin);
+                _repoWrapper.Save();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
     }
 }

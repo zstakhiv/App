@@ -6,11 +6,13 @@ namespace EPlast.DataAccess.Entities
     public class ClubAdministration
     {
         public int ID { get; set; }
+        public int AdminTypeId { get; set; }
         public AdminType AdminType { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public Club Club { get; set; } //Mb we don`t need this, because this info is in ClubMembers
+        public int ClubId { get; set; } 
+        public Club Club { get; set; }
         public ClubMembers ClubMembers { get; set; }
         public int ClubMembersID { get; set; }
     }
