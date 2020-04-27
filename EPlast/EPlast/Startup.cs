@@ -103,6 +103,8 @@ namespace EPlast
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
             });
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+             options.TokenLifespan = TimeSpan.FromHours(3));
 
             services.AddMvc();
         }
