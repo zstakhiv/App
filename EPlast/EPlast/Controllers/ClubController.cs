@@ -359,12 +359,11 @@ namespace EPlast.Controllers
                 {
                     AdminTypeId = adminType.ID;
                 }
-                // ((createdAdmin.enddate) => (createdAdmin.enddate.Date == DateTime.Today)():(null))
                 ClubAdministration newClubAdmin = new ClubAdministration()
                 {
                     ClubMembersID = createdAdmin.adminId,
                     StartDate = createdAdmin.startdate,
-                    EndDate = null,
+                    EndDate = createdAdmin.enddate,
                     ClubId = createdAdmin.clubIndex,
                     AdminTypeId = AdminTypeId
                 };

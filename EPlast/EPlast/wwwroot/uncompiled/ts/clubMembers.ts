@@ -13,29 +13,34 @@ $(document).ready(function () {
 function AddClubAdmin() {
     const input = <HTMLInputElement>$('#AdminTypeName')[0];
     const AdminTypeName = input.value;
-    if (AdminTypeName === null) {
+    if (AdminTypeName == null || AdminTypeName.length === 0) {
         alert('¬вед≥ть назву д≥ловодства');
         return;
     }
-    alert(AdminTypeName);
 
     const input2 = <HTMLInputElement>$('#ClubAdminStartDate')[0];
     const StartDateValue = input2.value;
     const StartDate = StartDateValue + ' 00:00:00';
-    if (StartDateValue === null) {
+    if (StartDateValue == null || StartDateValue.length === 0) {
         alert('¬вед≥ть дату початку д≥ловодства');
         return;
     }
-    alert(StartDate);
 
 
     const input3 = <HTMLInputElement>$('#ClubAdminEndDate')[0];
     const EndDateValue = input3.value;
     let EndDate = null;
-    if (EndDateValue !== '-') {
+    if (EndDateValue != null && EndDateValue.length !== 0) {
         EndDate = EndDateValue + ' 00:00:00';
+        var StartDateobj = new Date(StartDate);
+        var EndDateobj = new Date(EndDate);
+        if (StartDateobj >= EndDateobj) {
+            alert('ƒата к≥нц€ д≥ловодства маЇ бути п≥сл€ дати початку');
+            return;
+        }
     }
-    alert(EndDateValue);
+
+
 
 
     const adminsData = {
@@ -45,6 +50,8 @@ function AddClubAdmin() {
         startdate: StartDate,
         AdminType: AdminTypeName
     };
+    console.log(adminsData);
+    console.log(JSON.stringify(adminsData));
 
     $.ajax({
         url: '/Club/AddToClubAdministration',

@@ -8,7 +8,7 @@ namespace EPlast.DataAccess.DTO
 
         public int clubIndex { get; set; }
 
-        public DateTime enddate { get; set; }
+        public DateTime? enddate { get; set; }
         public DateTime startdate { get; set; }
         public string AdminType { get; set; }
     }
