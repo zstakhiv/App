@@ -188,8 +188,10 @@ namespace EPlast.Controllers
                     success = true,
                     Text = "Рішення додано!",
                     id = decesionViewModel.Decesion.ID,
+                    name = decesionViewModel.Decesion.Name,
+                    file = decesionViewModel.Decesion.HaveFile,
                     decesionOrganization = _repoWrapper.Organization.FindByCondition(x => x.ID == decesionViewModel.Decesion.Organization.ID).Select(x => x.OrganizationName)
-                });
+                }) ;
             }
             catch (Exception e)
             {

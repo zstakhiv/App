@@ -323,7 +323,7 @@ namespace EPlast.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(string userId, string code = null)  
+        public async Task<IActionResult> ResetPassword(string userId, string code = null)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -635,8 +635,8 @@ namespace EPlast.Controllers
             {
                 return TimeSpan.Zero;
             }
-
         }
+
         public IActionResult ApproveUser(string userId)
         {
             if (userId != null)
@@ -668,6 +668,7 @@ namespace EPlast.Controllers
             _repoWrapper.Save();
             return RedirectToAction("UserProfile", "Account", new { userId = userId });
         }
+
         private EditUserViewModel Edit(string id)
         {
             if (!_repoWrapper.Gender.FindAll().Any())
@@ -732,7 +733,6 @@ namespace EPlast.Controllers
         {
             try
             {
-                model.User.UserProfile.DateTime = DateTime.ParseExact(model.Birthday, "dd-MM-yyyy",null);
                 var oldImageName = _repoWrapper.User.FindByCondition(i => i.Id == model.User.Id).FirstOrDefault().ImagePath;
                 if (file != null && file.Length > 0)
                 {
@@ -795,7 +795,6 @@ namespace EPlast.Controllers
                 {
                     model.User.UserProfile.Degree = null;
                 }
-
 
                 //Education
                 if (model.EducationView.SpecialityID == model.EducationView.PlaceOfStudyID)
@@ -957,7 +956,8 @@ namespace EPlast.Controllers
     {
         DateTime GetCurrentTime();
     }
-    public class DateTimeHelper : IDateTime 
+
+    public class DateTimeHelper : IDateTime
     {
         DateTime IDateTime.GetCurrentTime()
         {
@@ -965,4 +965,3 @@ namespace EPlast.Controllers
         }
     }
 }
-

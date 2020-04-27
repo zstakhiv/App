@@ -15,6 +15,7 @@ namespace EPlast
         {
             CreateWebHostBuilder(args).Build().Run();
         }
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
             .ConfigureLogging((hostingContext, logging) =>
@@ -23,6 +24,5 @@ namespace EPlast
                 logging.AddNLog();
             })
             .UseStartup<Startup>();
-
     }
 }
