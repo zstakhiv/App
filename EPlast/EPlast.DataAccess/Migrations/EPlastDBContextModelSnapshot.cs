@@ -331,7 +331,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("AdminTypeId");
 
-                    b.Property<int>("ClubId");
+                    b.Property<int?>("ClubId");
 
                     b.Property<int>("ClubMembersID");
 
@@ -1225,8 +1225,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.Club", "Club")
                         .WithMany("ClubAdministration")
-                        .HasForeignKey("ClubId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClubId");
 
                     b.HasOne("EPlast.DataAccess.Entities.ClubMembers", "ClubMembers")
                         .WithMany("ClubAdministration")

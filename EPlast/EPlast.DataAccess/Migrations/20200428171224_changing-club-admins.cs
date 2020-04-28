@@ -2,7 +2,7 @@
 
 namespace EPlast.DataAccess.Migrations
 {
-    public partial class fixingclubadmins : Migration
+    public partial class changingclubadmins : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,6 +13,20 @@ namespace EPlast.DataAccess.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_ClubAdministrations_Clubs_ClubID",
                 table: "ClubAdministrations");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ClubMembers_Clubs_ClubID",
+                table: "ClubMembers");
+
+            migrationBuilder.RenameColumn(
+                name: "ClubID",
+                table: "ClubMembers",
+                newName: "ClubId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_ClubMembers_ClubID",
+                table: "ClubMembers",
+                newName: "IX_ClubMembers_ClubId");
 
             migrationBuilder.RenameColumn(
                 name: "ClubID",
@@ -36,7 +50,7 @@ namespace EPlast.DataAccess.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "ClubId",
-                table: "ClubAdministrations",
+                table: "ClubMembers",
                 nullable: false,
                 oldClrType: typeof(int),
                 oldNullable: true);
@@ -62,6 +76,14 @@ namespace EPlast.DataAccess.Migrations
                 column: "ClubId",
                 principalTable: "Clubs",
                 principalColumn: "ID",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ClubMembers_Clubs_ClubId",
+                table: "ClubMembers",
+                column: "ClubId",
+                principalTable: "Clubs",
+                principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
         }
 
@@ -74,6 +96,20 @@ namespace EPlast.DataAccess.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_ClubAdministrations_Clubs_ClubId",
                 table: "ClubAdministrations");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ClubMembers_Clubs_ClubId",
+                table: "ClubMembers");
+
+            migrationBuilder.RenameColumn(
+                name: "ClubId",
+                table: "ClubMembers",
+                newName: "ClubID");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_ClubMembers_ClubId",
+                table: "ClubMembers",
+                newName: "IX_ClubMembers_ClubID");
 
             migrationBuilder.RenameColumn(
                 name: "ClubId",
@@ -97,7 +133,7 @@ namespace EPlast.DataAccess.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "ClubID",
-                table: "ClubAdministrations",
+                table: "ClubMembers",
                 nullable: true,
                 oldClrType: typeof(int));
 
@@ -118,6 +154,14 @@ namespace EPlast.DataAccess.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_ClubAdministrations_Clubs_ClubID",
                 table: "ClubAdministrations",
+                column: "ClubID",
+                principalTable: "Clubs",
+                principalColumn: "ID",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_ClubMembers_Clubs_ClubID",
+                table: "ClubMembers",
                 column: "ClubID",
                 principalTable: "Clubs",
                 principalColumn: "ID",

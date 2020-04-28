@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EPlast.DataAccess.Migrations
 {
     [DbContext(typeof(EPlastDBContext))]
-    [Migration("20200427135325_fixing-club-admins")]
-    partial class fixingclubadmins
+    [Migration("20200428171224_changing-club-admins")]
+    partial class changingclubadmins
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -333,7 +333,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.Property<int>("AdminTypeId");
 
-                    b.Property<int>("ClubId");
+                    b.Property<int?>("ClubId");
 
                     b.Property<int>("ClubMembersID");
 
@@ -358,7 +358,7 @@ namespace EPlast.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClubID");
+                    b.Property<int>("ClubId");
 
                     b.Property<bool>("IsApproved");
 
@@ -366,7 +366,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ClubID");
+                    b.HasIndex("ClubId");
 
                     b.HasIndex("UserId");
 
@@ -1227,8 +1227,7 @@ namespace EPlast.DataAccess.Migrations
 
                     b.HasOne("EPlast.DataAccess.Entities.Club", "Club")
                         .WithMany("ClubAdministration")
-                        .HasForeignKey("ClubId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ClubId");
 
                     b.HasOne("EPlast.DataAccess.Entities.ClubMembers", "ClubMembers")
                         .WithMany("ClubAdministration")
@@ -1240,7 +1239,8 @@ namespace EPlast.DataAccess.Migrations
                 {
                     b.HasOne("EPlast.DataAccess.Entities.Club", "Club")
                         .WithMany("ClubMembers")
-                        .HasForeignKey("ClubID");
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EPlast.DataAccess.Entities.User", "User")
                         .WithMany("ClubMembers")
