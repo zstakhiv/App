@@ -58,7 +58,6 @@
     <Folder Include="wwwroot\bundles\css" />
     <Folder Include="wwwroot\bundles\js\" />
     <Folder Include="wwwroot\compiled\js\" />
-    <Folder Include="wwwroot\images\Club\" />
     <Folder Include="wwwroot\documents\" />
     <Folder Include="wwwroot\documents\" />
     <Folder Include="wwwroot\images\EventsGallery\" />

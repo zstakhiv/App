@@ -19,5 +19,6 @@ namespace EPlast.ViewModels.Events
         public ICollection<Event> CreatedEvents { get; set; }
         public ICollection<Event> VisitedEvents { get; set; }
         public ICollection<Participant> Participants { get; set; }
+        public EditUserViewModel EditView { get; set; }
     }
 }

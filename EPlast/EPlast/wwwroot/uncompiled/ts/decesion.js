@@ -9,6 +9,10 @@ $(document).ready(function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
         $(this).hide();
     });
+    $(".hide_show").on('click', function () {
+        $(this).parent("p").addClass("hidden");
+        $(this).parent("p").parent("td").children(".show_hide").show();
+    });
     function ClearCreateFormData() {
         createDecisionForm.forEach(function (element) {
             $(element).val("");
@@ -18,8 +22,8 @@ $(document).ready(function () {
         var bool = true;
         createDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
-                console.log($(element).val().toString().length);
-                $(element).parent("div").children(".field-validation-valid").text("�� ���� �� ���� ���������.");
+                console.log($(element).val().toString().replace(" ", "").length);
+                $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
                 bool = false;
             }
             else
@@ -37,7 +41,7 @@ $(document).ready(function () {
         let input = document.getElementById("CreateDecesionFormFile");
         var files = input.files;
         if (files[0] != undefined && files[0].size >= 10485760) {
-            alert("���� �� ������� (����� 10 ��)");
+            alert("файл за великий (більше 10 Мб)");
             return;
         }
         $("#CreateDecesionForm-submit").prop('disabled', true);
@@ -54,7 +58,8 @@ $(document).ready(function () {
         formData.append("Decesion.Organization.ID", decesionOrganizationId);
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
-        formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
+        formData.append("Decesion.Date", decesionDate);
+        //formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
         $.ajax({
@@ -69,25 +74,26 @@ $(document).ready(function () {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
                     ClearCreateFormData();
+                    $("#CreateDecesionFormFile").val("");
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     var file = "";
-                    if (files[0] != undefined) {
+                    if (response.file) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
                     }
-                    $("#dtReadDecesion").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([response.id, response.name, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
                 }
             },
             error() {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
                 $("#CreateDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ������ ���!");
+                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
             }
         });
     });
@@ -101,7 +107,7 @@ $(document).ready(function () {
         editDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
                 console.log($(element).val().toString().length);
-                $(element).parent("div").children(".field-validation-valid").text("�� ���� �� ���� ���������.");
+                $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
                 bool = false;
             }
             else
@@ -138,17 +144,18 @@ $(document).ready(function () {
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     let currectRow = $(`#dtReadDecesion tbody tr td:contains(${response.decesion.id})`).parent();
-                    currectRow.children().eq(4).text(response.decesion.description);
+                    currectRow.children().eq(5).text(response.decesion.description);
+                    currectRow.children().eq(1).text(response.decesion.name);
                 }
                 else {
                     $("#EditDecesionModal").modal("hide");
-                    $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ���������� ���!");
+                    $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
                 }
             },
             error() {
                 $("#EditDecesionForm-submit").prop('disabled', false);
                 $("#EditDecesionModal").modal("hide");
-                $("#ModalError.modal-body:first p:first strong:first").html("�� ������� ���������� ���!");
+                $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
             }
         });
     });
@@ -160,7 +167,7 @@ $(document).ready(function () {
                 case "edit":
                     $.get(`/Documentation/GetDecesion?id=${content}`, function (json) {
                         if (!json.success) {
-                            $("#ModalError.modal-body:first p:first strong:first").html("ID ������ ���� � ���!");
+                            $("#ModalError.modal-body:first p:first strong:first").html("ID рішення немає в базі!");
                             return;
                         }
                         $("#Edit-Decesion-ID").val(json.decesion.id);
@@ -175,15 +182,14 @@ $(document).ready(function () {
             }
         },
         items: {
-            "edit": { name: "����������", icon: "far fa-edit" },
-            "pdf": { name: "������������ �� PDF", icon: "far fa-file-pdf" },
-            "quit": { name: "�������", icon: "fas fa-times" }
+            "edit": { name: "Редагувати", icon: "far fa-edit" },
+            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" }
         }
     });
 });
 function createDecesionDataTable() {
     $("#dtReadDecesion").one("preInit.dt", function () {
-        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">������ ���� ������</button>`);
+        var button = $(`<button id="createDecesionButton" class="btn btn-sm btn-primary btn-management" data-toggle="modal" data-target="#CreateDecesionModal">Додати нове рішення</button>`);
         $("#dtReadDecesion_filter label").append(button);
     });
     $("#dtReadDecesion").DataTable({
@@ -191,9 +197,33 @@ function createDecesionDataTable() {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
         responsive: true,
+        "autoWidth": false,
         "createdRow": function (row, data, dataIndex) {
             $(row).addClass("decesion-menu");
         },
+        "columnDefs": [
+            { "width": "10px", "targets": 0 },
+            { "width": "1%", "targets": 1 },
+            { "width": "2%", "targets": 2 },
+            { "width": "7%", "targets": 3 },
+            { "width": "10%", "targets": 4 },
+            { "width": "8%", "targets": 6 },
+            { "width": "4%", "targets": 7 }
+        ],
+        columns: [
+            null,
+            null,
+            null,
+            null,
+            {
+                "render": function (data, type, row) {
+                    return data.replace(/(.{16})/g, "$1</br>");
+                }
+            },
+            null,
+            null,
+            null
+        ]
     });
     $('#dtReadDecesion').on('page.dt', function () {
         $('html, body').animate({

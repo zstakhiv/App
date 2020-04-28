@@ -60,7 +60,11 @@
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
-        responsive: true
+        responsive: true,
+        columnDefs: [
+            { type: 'string', targets: 0 },
+            { type: 'string', targets: 1 },
+        ]
     });
 
     $('#dtUsersTable').on('page.dt', function () {

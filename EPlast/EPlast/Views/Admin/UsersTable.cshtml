@@ -48,20 +48,28 @@
                 @foreach (var item in Model)
                 {
                     <tr class="context-menu-one" data-id="@item.User.Id">
-                        <td><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.LastName</a></td>
-                        <td><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.FirstName</a></td>
+                        <td data-order="@item.User.LastName"><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.LastName</a></td>
+                        <td data-order="@item.User.FirstName"><a asp-controller="Account" asp-action="UserProfile" asp-route-userId="@item.User.Id">@item.User.FirstName</a></td>
                         <td>
                             @if (item.User.UserProfile.GenderID == null)
                             {<span>Не обрано</span>}
                             else
                             {<Span>@item.User.UserProfile.Gender.Name</Span>}
                         </td>
-                        <td>
-                            @if (@item.User.UserProfile.DateTime != null)
-                            {
+
+                        @if (@item.User.UserProfile.DateTime != null)
+                        {
+                            <td data-order="@{
+                                DateTime.UtcNow.Subtract(@item.User.UserProfile.DateTime.Value).TotalSeconds.ToString();
+                                    } ">
                                 @item.User.UserProfile.DateTime.Value.ToString("dd-MM-yyyy")
-                            }
-                        </td>
+                            </td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
                         <td>@item.UserPlastDegreeName</td>
                         <td>@item.User.Email</td>
                         <td>@item.RegionName</td>

@@ -111,7 +111,7 @@
         text-align: center;
     }
 
-    .show_hide {
+    .show_hide, .hide_show {
         cursor: pointer;
     }
 
@@ -141,6 +141,7 @@
             .sorting, .sorting_desc, .sorting_asc, .sorting_asc_disabled, .sorting_desc_disabled {
                 &:after, &:before {
                     right: 14px !important;
+                    visibility: hidden;
                 }
             }
         }
