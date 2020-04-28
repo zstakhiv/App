@@ -36,24 +36,24 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <main class="main-wrapper">
-            <nav class="navbar navbar-light justify-content-between plast-header">
-                <div class="container-header">
-                    <div class="d-block d-sm-none">
-                        <i id="MenuOpener" class="fas fa-bars fa-2x"></i>
+            <nav class="navbar navbar-light plast-header">
+                <div class="d-flex flex-row justify-content-between container-header">
+                    <div class="d-flex flex-row justify-content-start">
+                        <div class="d-block d-sm-none icon-wrapper">
+                            <i id="MenuOpener" class="fas fa-bars fa-2x"></i>
+                        </div>
+                        <div class="navbar-header d-flex flex-row justify-content-start">
+                            <a href="#">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png"
+                                     class="img-fluid plast-logo" alt="logo">
+                            </a>
+                            <a class="d-none d-sm-block navbar-brand page-header-title" href="#">ePlast</a>
+                        </div>
                     </div>
-                    <div class="navbar-header">
-                        <a href="/">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Plast_National_Scout_Organization.svg/803px-Plast_National_Scout_Organization.svg.png" class="plast-logo" alt="logo">
-                        </a>
-
-                        <a class="navbar-brand page-header-title" href="/">ePlast</a>
-                    </div>
-
-                    <div class="nav-content">
+                    <div class="nav-content d-flex flex-row justify-content-end">
                         <div class="menu-container">
-
                             <ul class="navbar-nav form-inline align-self-center d-flex flex-row align-items-center">
-                                <li class="menu-search"><a href="#"><i class="fa fa-search nav-logo" style="margin: 5px;padding-left:25vw; font-size:20px;"></i></a></li>
+                                <li class="d-none d-md-block menu-search"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;padding-left:25vw;">search</i></a></li>
                                 <li class="menu-notification"><a href="#"><i class="material-icons nav-logo" style="margin: 5px;">notification_important</i></a></li>
                                 <li class="menu-settings nav-item dropdown">
                                     <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,12 +69,12 @@
                                 <div class="menu-search-input">
                                     <form method="post" asp-action="Search" asp-controller="Home">
                                         <a asp-action="Search" asp-controller="Home">
-                                            <i class="fa fa-search" aria-hidden="true" style="color:aliceblue;margin-top:8px; font-size:20px;"></i>
+                                            <i class="fa fa-search" aria-hidden="true" style="color:aliceblue;"></i>
                                         </a>
-                                        <input class="menu-search-input" style="background-color:rgba(255,255,255,0.15); margin-top:5px; height:26px;" type="text" name="search" id="serchName" aria-controls="" aria-label="Search ePlast"
+                                        <input class="menu-search-input" style="background-color:rgba(255,255,255,0.15); height:30px;" type="text" name="search" id="serchName" aria-controls="" aria-label="Search ePlast"
                                                placeholder="Шукай на ePlast" autocorrect="off" autocapitalize="off" autocomplete="off" spellcheck="false">
                                         <a class="menu-search-close" href="#" style="left:25vw; right:0;">
-                                            <i class="fa fa-close" aria-hidden="true" style="color:aliceblue; padding-top:7px; font-size:22px; font-weight:100; font-stretch:normal;"></i>
+                                            <i class="fa fa-close" aria-hidden="true" style="color:aliceblue; padding-top:5px;"></i>
                                         </a>
 
                                     </form>
