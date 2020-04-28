@@ -16,9 +16,25 @@
   font-size: 16px;
 }
 
-.event-page-wrapper .logo {
-  color: #3c5438;
-  font-size: 200px;
+@media (max-width: 767px) {
+    .event-page-wrapper .logo {
+        color: #3c5438;
+        font-size: 200px;
+    }
+}
+
+@media (min-width: 768px) {
+    .event-page-wrapper .logo {
+        color: #3c5438;
+        font-size: 175px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .event-page-wrapper .logo {
+        color: #3c5438;
+        font-size: 200px;
+    }
 }
 
 .event-page-wrapper .event-detail {
