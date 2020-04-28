@@ -299,7 +299,7 @@ namespace EPlast.Controllers
                 if (file != null && file.Length > 0)
                 {
                     var img = Image.FromStream(file.OpenReadStream());
-                    var uploads = Path.Combine(_env.WebRootPath, "images\\Club");
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Cities");
 
                     var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                     var filePath = Path.Combine(uploads, fileName);
