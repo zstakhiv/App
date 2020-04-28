@@ -1,8 +1,5 @@
 ﻿@using EPlast.DataAccess.Repositories;
 @using Microsoft.AspNetCore.Identity;
-@{
-    ViewData["Title"] = "Event User Page";
-}
 @model EPlast.ViewModels.Events.EventUserViewModel;
 @inject IRepositoryWrapper  _repository;
 @inject UserManager<EPlast.DataAccess.Entities.User> _userManager;
