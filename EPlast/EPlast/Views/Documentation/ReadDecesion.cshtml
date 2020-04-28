@@ -20,6 +20,9 @@
                         ID
                     </th>
                     <th class="th-sm">
+                        Назва
+                    </th>
+                    <th class="th-sm">
                         Керівний орган
                     </th>
                     <th class="th-sm">
@@ -44,14 +47,15 @@
                 {
                     <tr class="decesion-menu">
                         <td>@item.Decesion.ID</td>
+                        <td>@item.Decesion.Name</td>
                         <td>@item.Decesion.Organization.OrganizationName</td>
                         <td>@item.Decesion.DecesionStatusType.GetDescription()</td>
                         <td>@item.Decesion.DecesionTarget.TargetName</td>
                         <td>
                             @if (item.Decesion.Description.Length > 50 && item.Decesion.Description.Length - 50 > 15)
                             {
-                                @item.Decesion.Description.Substring(0, 50)<span class="show_hide"><strong> читати більше</strong></span>
-                                <p class="hidden">@item.Decesion.Description.Substring(51)</p>
+                                @item.Decesion.Description.Substring(0, 50)<span class="show_hide"><strong>...більше</strong></span>
+                                <p class="hidden">@item.Decesion.Description.Substring(51)<span class="hide_show"><strong>...менше</strong></span></p>
                             }
                             else
                             {
