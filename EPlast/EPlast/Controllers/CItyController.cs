@@ -277,9 +277,76 @@ namespace EPlast.Controllers
             }
 
         }
+
+        [HttpGet]
         public IActionResult Create()
         {
-            return View("Create");
+            try
+            {
+                return View(new CityViewModel());
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Create(CityViewModel model, IFormFile file)
+        {
+            try
+            {
+                if (file != null && file.Length > 0)
+                {
+                    var img = Image.FromStream(file.OpenReadStream());
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Club");
+
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    img.Save(filePath);
+                    model.City.Logo = fileName;
+                }
+                else
+                {
+                    model.City.Logo = null;
+                }
+                if (ModelState.IsValid)
+                {
+                    _repoWrapper.City.Create(model.City);
+                    _repoWrapper.Save();
+
+                    var city = _repoWrapper.City
+                       .FindByCondition(q => q.ID == model.City.ID)
+                       .Include(c => c.CityAdministration)
+                       .ThenInclude(t => t.AdminType)
+                       .Include(k => k.CityAdministration)
+                       .ThenInclude(a => a.User)
+                       .Include(m => m.CityMembers)
+                       .ThenInclude(u => u.User)
+                       .Include(l => l.CityDocuments)
+                       .ThenInclude(d => d.CityDocumentType)
+                       .FirstOrDefault();
+
+                    var cityAdmins = city.CityAdministration
+                                        .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
+                                        .ToList();
+                    var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
+                    var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
+                    var cityDoc = city.CityDocuments.Take(4).ToList();
+                    CityViewModel newmodel = new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers, CityDoc = cityDoc };
+                    return View("CityProfile", newmodel);
+                }
+                else
+                {
+                    
+                    return View("Create", model);
+                }
+            }
+            catch (Exception e)
+            {
+
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
         }
 
         public IActionResult Details(int cityid)
