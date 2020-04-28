@@ -21,6 +21,7 @@ using EPlast.BussinessLayer.AccessManagers;
 using EPlast.BussinessLayer.AccessManagers.Interfaces;
 using EPlast.Wrapper;
 using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace EPlast
 {
@@ -80,7 +81,7 @@ namespace EPlast
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-                //options.Tokens.EmailConfirmationTokenProvider = TimeSpan.FromDays(4);
+                
             });
 
             services.AddAuthentication()
@@ -95,8 +96,8 @@ namespace EPlast
                     options.AppSecret = Configuration.GetSection("FacebookAuthentication:FacebookAppSecret").Value;
                 });
 
-            services.Configure<DataProtectionTokenProviderOptions>(options => 
-                options.TokenLifespan = TimeSpan.FromHours(3));
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                options.TokenLifespan = TimeSpan.FromMinutes(1));
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -106,10 +107,6 @@ namespace EPlast
                 options.LogoutPath = "/Account/Logout";
             });
 
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture("en-US");
-            });
             services.AddMvc();
         }
 
@@ -141,7 +138,7 @@ namespace EPlast
                 EmailConfirmed = true,
                 ImagePath = "default.png",
                 UserProfile = new UserProfile(),
-                RegistredOn=DateTime.Now
+                RegistredOn = DateTime.Now
             };
             if (await userManager.FindByEmailAsync(admin["Email"]) == null)
             {
@@ -168,11 +165,23 @@ namespace EPlast
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
+            var supportedCultures = new[]
+{
+                new CultureInfo("uk-UA")
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("uk-UA"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
             app.UseStaticFiles();
             app.UseDefaultFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            app.UseRequestLocalization();
 
             app.UseMvc(routes =>
             {

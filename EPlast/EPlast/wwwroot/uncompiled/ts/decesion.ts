@@ -11,7 +11,10 @@ $(document).ready(function () {
         $(this).parent("td").children(".hidden").removeClass("hidden");
         $(this).hide();
     });
-
+    $(".hide_show").on('click', function () {
+        $(this).parent("p").addClass("hidden");
+        $(this).parent("p").parent("td").children(".show_hide").show();
+    });
     function ClearCreateFormData() {
         createDecisionForm.forEach(function (element) {
             $(element).val("");
@@ -23,7 +26,7 @@ $(document).ready(function () {
 
         createDecisionForm.forEach(function (element) {
             if ($(element).val().toString().length == 0) {
-                console.log($(element).val().toString().length);
+                console.log($(element).val().toString().replace(" ", "").length);
                 $(element).parent("div").children(".field-validation-valid").text("Це поле має бути заповнене.");
                 bool = false;
             } else
@@ -59,7 +62,8 @@ $(document).ready(function () {
         formData.append("Decesion.Organization.ID", decesionOrganizationId);
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
-        formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
+        formData.append("Decesion.Date", decesionDate);
+        //formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
 
@@ -75,14 +79,15 @@ $(document).ready(function () {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
                     ClearCreateFormData();
+                    $("#CreateDecesionFormFile").val("");
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     var file = "";
-                    if (files[0] != undefined) {
+                    if (response.file) {
                         file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`
                     }
-                    $("#dtReadDecesion").DataTable().row.add([response.id, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([response.id, response.name, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
                         .draw();
                 } else {
                     $("#CreateDecesionModal").modal("hide");
@@ -145,7 +150,8 @@ $(document).ready(function () {
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     let currectRow = $(`#dtReadDecesion tbody tr td:contains(${response.decesion.id})`).parent();
-                    currectRow.children().eq(4).text(response.decesion.description);
+                    currectRow.children().eq(5).text(response.decesion.description);
+                    currectRow.children().eq(1).text(response.decesion.name);
                 } else {
                     $("#EditDecesionModal").modal("hide");
                     $("#ModalError.modal-body:first p:first strong:first").html("Не можливо редагувати звіт!");
@@ -184,8 +190,7 @@ $(document).ready(function () {
         },
         items: {
             "edit": { name: "Редагувати", icon: "far fa-edit" },
-            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" },
-            "quit": { name: "Закрити", icon: "fas fa-times" }
+            "pdf": { name: "Конвертувати до PDF", icon: "far fa-file-pdf" }
         }
     });
 });
@@ -201,9 +206,33 @@ function createDecesionDataTable() {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Ukrainian.json"
         },
         responsive: true,
+        "autoWidth": false,
         "createdRow": function (row, data, dataIndex) {
             $(row).addClass("decesion-menu");
         },
+        "columnDefs": [
+            { "width": "10px", "targets": 0 },
+            { "width": "1%", "targets": 1 },
+            { "width": "2%", "targets": 2 },
+            { "width": "7%", "targets": 3 },
+            { "width": "10%", "targets": 4 },
+            { "width": "8%", "targets": 6 },
+            { "width": "4%", "targets": 7 }
+        ],
+        columns: [
+            null,
+            null,
+            null,
+            null,
+            {
+                "render": function (data, type, row) {
+                    return data.replace(/(.{16})/g, "$1</br>")
+                }
+            },
+            null,
+            null,
+            null
+        ]
     });
 
     $('#dtReadDecesion').on('page.dt', function () {

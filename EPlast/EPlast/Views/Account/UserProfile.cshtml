@@ -14,7 +14,7 @@
             <a class="nav-link" data-toggle="tab" href="#positions">Діловодства</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-action="EventUser" asp-controller="EventUser">Вишколи</a>
+            <a class="nav-link" asp-action="EventUser" asp-controller="EventUser">Події</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#">З'їзди</a>
@@ -35,16 +35,24 @@
     </ul>
     <div class="tab-content">
         <div id="userProfile" class="container tab-pane active UserProfileWrapper">
-            <div class="col-md-12 mt-4 d-flex">
+            <div class="row mt-4 d-flex">
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet bordered">
                         <div class="profile-userpic">
                             <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
                         </div>
                         <div class="profile-usertitle">
+                            <br />
                             @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
                             {
-                                <div class="mt-4 font-weight h5 text-success">@Model.timeToJoinPlast.Days ДНІ ДО ВСТУПУ В ПЛАСТ</div>
+                                double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 366;
+                                int count = @Model.timeToJoinPlast.Days;
+                                <p>@count дні і я Пластун:)</p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="366" aria-valuemax="0">
+                                        @perc%
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>
@@ -173,8 +181,11 @@
                                         </div>
                                     }
                                 }
+                                <div class="form-group row">
+                                    <a asp-controller="Club" asp-action="ChooseAClub"><p style="color: #3c5438;font-weight: bolder; padding-left: 15px;">Додати/ змінити курінь</p></a>
+                                </div>
                             </div>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -182,16 +193,26 @@
         <div id="editProfile" class="container tab-pane fade">
             <partial name="Edit" model="Model.EditView" />
         </div>
-        <div id="positions" class="container tab-pane fade">
-            <div class="col-md-12 mt-4 d-flex">
+        <div id="positions" class="container tab-pane fade positionsWrapper">
+            <div class="row mt-4 d-flex">
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet bordered">
                         <div class="profile-userpic">
                             <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
                         </div>
                         <div class="profile-usertitle">
-                            <div class="profile-usertitle-name">  </div>
-                            <div class="profile-usertitle-job text-uppercase mt-1 font-weight-bold"> Старший пластун </div>
+                            <br />
+                            @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
+                            {
+                                double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 366;
+                                int count = @Model.timeToJoinPlast.Days;
+                                <p>@count дні і я Пластун:)</p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="366" aria-valuemax="0">
+                                        @perc%
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -245,14 +266,27 @@
             </div>
         </div>
         <div id="approvers" class="container tab-pane fade approversWrapper">
-            <div class="col-md-12 mt-4 d-flex">
+            <div class="row mt-4 d-flex">
                 <div class="col-md-4">
                     <div class="portlet light profile-sidebar-portlet bordered">
                         <div class="profile-userpic">
                             <img src="/images/Users/@Model.User.ImagePath" class="img-thumbnail" alt="">
                         </div>
                     </div>
-
+                    <div class="profile-usertitle">
+                        <br />
+                        @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
+                        {
+                            double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 366;
+                            int count = @Model.timeToJoinPlast.Days;
+                            <p>@count дні і я Пластун:)</p>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="366" aria-valuemax="0">
+                                    @perc%
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
 
                 <div class="col-md-8">

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EPlast.Views.City
+namespace EPlast.Views.Organization
 {
-    public class EditCityModel : PageModel
+    public class AllClubsModel : PageModel
     {
         public void OnGet()
         {

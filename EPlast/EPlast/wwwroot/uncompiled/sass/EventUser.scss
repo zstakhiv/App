@@ -23,8 +23,24 @@
         background-color: #ffffff;
     }
 
+    .user-profile {
+        width: 100%;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    @media(max-width:770px) {
+        .container {
+            margin: 5px;
+        }
+
+        .user-profile {
+            width: 84%;
+        }
+    }
+
     #permitedEvents, #notPermitedEvents {
-        width: 263px;
+        width: 95%;
         height: 231px;
         left: 538.73px;
         top: 78px;
@@ -32,9 +48,21 @@
         margin-top: 40px;
     }
 
+    @media (max-width: 770px) {
+        #planedEvents {
+            width: 86%;
+            height: inherit;
+            left: 537.82px;
+            top: 330px;
+            background-color: #ffffff;
+            margin: 20px;
+            object-fit: cover;
+        }
+    }
+
     @media (max-width: 576px) {
         #planedEvents {
-            width: inherit;
+            width: 86%;
             height: inherit;
             left: 537.82px;
             top: 330px;
@@ -45,8 +73,8 @@
     }
 
     #planedEvents {
-        width: 576px;
-        height: 215px;
+        width: 86%;
+        height: 200px;
         left: 537.82px;
         top: 330px;
         background-color: #ffffff;
@@ -220,7 +248,7 @@
 
     .bigSpliter {
         height: 10px;
-        width: 574px;
+        width: inherit;
         margin-bottom: -2px;
     }
 

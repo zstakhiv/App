@@ -33,6 +33,7 @@ namespace EPlast.Controllers
                 .FindAll()
                 .Select(club => new ClubViewModel { Club = club })
                 .ToList());
+            ViewBag.usermanager = _userManager;
 
             return View(clubs);
         }
@@ -376,6 +377,47 @@ namespace EPlast.Controllers
             catch (Exception e)
             {
                 return 0;
+            }
+        }
+        [HttpGet]
+        public IActionResult CreateClub()
+        {
+            try
+            {
+                return View(new ClubViewModel());
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
+            }
+        }
+        [HttpPost]
+        public IActionResult CreateClub(ClubViewModel model, IFormFile file)
+        {
+            try
+            {
+                if (file != null && file.Length > 0)
+                {
+                    var img = Image.FromStream(file.OpenReadStream());
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Club");
+
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    img.Save(filePath);
+                    model.Club.Logo = fileName;
+                }
+                else
+                {
+                    model.Club.Logo = null;
+                }
+                _repoWrapper.Club.Create(model.Club);
+                _repoWrapper.Save();
+                return RedirectToAction("Club", new { index = model.Club.ID });
+            }
+            catch (Exception e)
+            {
+
+                return RedirectToAction("HandleError", "Error", new { code = 505 });
             }
         }
     }
