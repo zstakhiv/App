@@ -206,7 +206,6 @@ namespace EPlast.XUnitTest
             _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
                 .Returns(new List<EventStatus> { new EventStatus { ID = 1 } }.AsQueryable());
             _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
-
             //Act  
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object);
             var actionResult = actionsController.SubscribeOnEvent(testEventId);
@@ -480,8 +479,8 @@ namespace EPlast.XUnitTest
             _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Учасник")).Returns(new List<ParticipantStatus> { new ParticipantStatus { ID = 1 } }.AsQueryable());
             _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Розглядається")).Returns(new List<ParticipantStatus> { new ParticipantStatus { ID = 3 } }.AsQueryable());
             _repoWrapper.Setup(x => x.ParticipantStatus.FindByCondition(p => p.ParticipantStatusName == "Відмовлено")).Returns(new List<ParticipantStatus> { new ParticipantStatus { ID = 2 } }.AsQueryable());
-            int eventID = 1;
-            string expectedID = "abc-2";
+             int eventID = 1;
+             string expectedID = "abc-2";
             _userManager.Setup(x => x.GetUserId(It.IsAny<ClaimsPrincipal>())).Returns(expectedID);
             _repoWrapper.Setup(x => x.Event.FindByCondition(It.IsAny<Expression<Func<Event, bool>>>())).Returns(GetEvents());
             _repoWrapper.Setup(x => x.EventStatus.FindByCondition(It.IsAny<Expression<Func<EventStatus, bool>>>()))
@@ -566,28 +565,18 @@ namespace EPlast.XUnitTest
             Assert.Equal(2, viewModel.Count);
         }
 
-        // a helper to make dbset queryable
-        private Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : class
-        {
-            var mockSet = new Mock<DbSet<T>>();
-            mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(entities.Provider);
-            mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(entities.Expression);
-            mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(entities.ElementType);
-            mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(entities.GetEnumerator());
-            return mockSet;
-        }
-
-
         [Fact]
         public void GetActionEmptyTest()
         {
+            //Arrange
             var eventCategoryList = new List<EventCategory>();
             _repoWrapper.Setup(x => x.EventCategory.FindAll()).Returns(eventCategoryList.AsQueryable());
+            //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object);
             var actionResult = actionsController.GetAction() as ViewResult;
             Assert.NotNull(actionResult);
             Assert.NotNull(actionResult.Model);
-
+            //Assert
             var viewModel = actionResult.Model as List<EventCategoryViewModel>;
             Assert.NotNull(viewModel);
             Assert.Empty(viewModel);
@@ -596,6 +585,7 @@ namespace EPlast.XUnitTest
         [Fact]
         public void GetActionTest()
         {
+            //Arrange
             var eventCategoryList = new List<EventCategory>()
             {
                 new EventCategory()
@@ -606,15 +596,14 @@ namespace EPlast.XUnitTest
                 }
             };
             _repoWrapper.Setup(x => x.EventCategory.FindAll()).Returns(eventCategoryList.AsQueryable());
+            //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object);
             var actionResult = actionsController.GetAction() as ViewResult;
-
+            //Assert
             Assert.NotNull(actionResult);
             Assert.NotNull(actionResult.Model);
-
             var viewModel = actionResult.Model as List<EventCategoryViewModel>;
             Assert.NotNull(viewModel);
-
             Assert.Single(viewModel);
             Assert.NotNull(viewModel[0].EventCategory);
             Assert.Equal(1, viewModel[0].EventCategory.ID);
@@ -627,10 +616,13 @@ namespace EPlast.XUnitTest
         [Fact]
         public void GetActionFailureTest()
         {
+            //Arrange
             var eventCategoryList = new List<EventCategory>();
             _repoWrapper.Setup(x => x.EventCategory.FindAll()).Throws(new Exception());
+            //Act
             var actionsController = new ActionController(_userManager.Object, _repoWrapper.Object, _env.Object);
             var actionResult = actionsController.GetAction();
+            //Assert
             Assert.NotNull(actionResult);
             var viewResult = Assert.IsType<RedirectToActionResult>(actionResult);
             Assert.Equal("HandleError", viewResult.ActionName);
