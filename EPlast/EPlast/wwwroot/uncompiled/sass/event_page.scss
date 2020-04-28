@@ -177,8 +177,18 @@ input.event-page-wrapper.btn-collapse:hover {
         max-height: 400px;
     }
 
-    .gallery-buttons {
-        background-color: #3c5438;
+    @media (max-width: 767px) {
+        .gallery-buttons {
+            background-color: #3c5438;
+            min-width: 110px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .gallery-buttons {
+            background-color: #3c5438;
+            min-width: 153px;
+        }
     }
 
     .spinner-buttons {
