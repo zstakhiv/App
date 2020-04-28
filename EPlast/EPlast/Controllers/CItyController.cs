@@ -332,8 +332,9 @@ namespace EPlast.Controllers
                                         .ToList();
                     var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
                     var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
-                    CityViewModel newmodel = new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers };
-                    return View("City", newmodel);
+                    var cityDoc = city.CityDocuments.Take(4).ToList();
+                    CityViewModel newmodel = new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers, CityDoc = cityDoc };
+                    return View("CityProfile", newmodel);
                 }
                 else
                 {
