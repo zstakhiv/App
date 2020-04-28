@@ -12,11 +12,11 @@
                     <div class="border rounded d-flex justify-content-center" style="width: 100%;height: 100%;background-color: #ffffff;min-height: 374px;">
                         <div class="d-sm-inline-block d-xl-inline-block" style="width: 50%;min-width: 250px;">
                             <div class="d-flex">
-                                <p class="text-center d-table d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця Львів</p>
+                                <p class="text-center d-table d-xl-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-xl-center align-items-xl-center" style="height: 45px;width: 100%;margin: 0px;font-size: 24px;">Станиця @Model.City.Name</p>
                                 <p class="text-center d-flex d-sm-flex align-items-center align-items-sm-center justify-content-xl-center" style="margin: 0px;max-width: 30px;height: 45px;"><a asp-action="Edit" asp-controller="City" asp-route-cityid="@Model.City.ID" class="navbar-link" style="color: rgb(0,0,0);"><i class="fa fa-edit d-xl-flex justify-content-xl-center align-items-xl-center" style="font-size: 18px;"></i></a></p>
                             </div>
                             <div class="d-flex d-lg-inline-flex justify-content-center align-items-center justify-content-md-center align-items-md-center" style="height: 75%;width: 100%;">
-                                <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Coat_of_arms_of_Lviv.svg/135px-Coat_of_arms_of_Lviv.svg.png');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
+                                <div style="height: 200px;max-width: 220px;width: 200px;background-image: url('../../images/Cities/@Model.City.Logo');background-repeat: no-repeat;background-size: contain;background-position: center;"></div>
                                 <div class="d-none d-lg-block mx-auto" style="padding: 10px;width: 60%;">
                                     <p style="margin: 0px;color: rgb(85,85,85);font-size: 14px;">Наша Web-сторінка</p>
                                     <a class="" href="#" style="color: rgb(0,0,0);">
