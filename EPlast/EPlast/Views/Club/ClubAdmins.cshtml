@@ -23,7 +23,6 @@
                     <th class="th-sm">
                         ПІБ
                     </th>
-
                     <th class="th-sm">
                         Час вступу на посаду
                     </th>
@@ -66,7 +65,7 @@
                         @if ((Model.ClubAdmin != null && ViewBag.usermanager.GetUserId(User) == Model.ClubAdmin.Id) || User.IsInRole("Admin"))
                         {
                             <td>
-                                <a class="changeEnddatebutton" data-adminid="@item.ID" style="color: #3c5438;" role="button" data-toggle="modal" href="#changeEnddate">
+                                <a class="changeEnddatebutton" data-adminid="@item.ID" style="color: #3c5438; justify-content: center;    display: flex;" role="button" data-toggle="modal" href="#changeEnddate">
                                     <i class="material-icons">alarm</i>
                                 </a>
                             </td>
