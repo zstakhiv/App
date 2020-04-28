@@ -190,10 +190,33 @@ namespace EPlast.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(CityViewModel model)
+        public IActionResult Edit(CityViewModel model, IFormFile file)
         {
             try
             {
+                var oldImageName = _repoWrapper.City.FindByCondition(i => i.ID == model.City.ID).FirstOrDefault().Logo;
+                if (file != null && file.Length > 0)
+                {
+                    var img = Image.FromStream(file.OpenReadStream());
+                    var uploads = Path.Combine(_env.WebRootPath, "images\\Cities");
+                    if (!string.IsNullOrEmpty(oldImageName) && !string.Equals(oldImageName, "default.png"))
+                    {
+                        var oldPath = Path.Combine(uploads, oldImageName);
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            System.IO.File.Delete(oldPath);
+                        }
+                    }
+
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+                    img.Save(filePath);
+                    model.City.Logo = fileName;
+                }
+                else
+                {
+                    model.City.Logo = oldImageName;
+                }
                 if (ModelState.IsValid)
                 {
                     _repoWrapper.City.Update(model.City);
