@@ -122,7 +122,7 @@ namespace EPlast.Controllers
                     _repoWrapper.EventAdministration.Create(eventAdministration);
                     _repoWrapper.Event.Create(createVM.Event);
                     _repoWrapper.Save();
-                    return RedirectToAction("SetAdministration", new {idUser = createVM.EventAdmin.UserID, id = createVM.Event.ID});
+                    return RedirectToAction("SetAdministration", new { idUser = createVM.EventAdmin.UserID, id = createVM.Event.ID });
                 }
                 else
                 {
@@ -142,14 +142,14 @@ namespace EPlast.Controllers
             }
         }
         [HttpGet]
-        public IActionResult SetAdministration(string idUser,int id)
+        public IActionResult SetAdministration(string idUser, int id)
         {
             var model = new EventCreateViewModel()
             {
                 Event = _repoWrapper.Event.
                 FindByCondition(i => i.ID == id).
                 FirstOrDefault(),
-                Users = _repoWrapper.User.FindByCondition(i=>i.Id != idUser)
+                Users = _repoWrapper.User.FindByCondition(i => i.Id != idUser)
             };
             return View(model);
         }
@@ -172,7 +172,7 @@ namespace EPlast.Controllers
                 _repoWrapper.EventAdmin.Create(eventAdmin);
                 _repoWrapper.EventAdministration.Create(eventAdministration);
                 _repoWrapper.Save();
-                return RedirectToAction("EventInfo", "Action", new { id = createVM.Event.ID});
+                return RedirectToAction("EventInfo", "Action", new { id = createVM.Event.ID });
             }
             else
             {
@@ -184,6 +184,37 @@ namespace EPlast.Controllers
                 };
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        public IActionResult EventEdit(int id)
+        {
+            var @event = _repoWrapper.Event.
+                FindByCondition(q => q.ID == id).
+                Include(i => i.EventType).
+                Include(g=>g.EventStatus).
+                Include(g => g.EventGallarys).
+                Include(g => g.EventCategory).
+                Include(g => g.EventAdmins).
+                Include(g => g.EventAdministrations).
+                FirstOrDefault();
+            var eventCategories = _repoWrapper.EventCategory.FindAll();
+            var model = new EventCreateViewModel()
+            {
+                Users = _repoWrapper.User.FindAll(),
+                Event = @event,
+                EventTypes = _repoWrapper.EventType.FindAll(),
+                EventCategories = _createEventVMInitializer.GetEventCategories(eventCategories)
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EventEdit(EventCreateViewModel model)
+        {
+            _repoWrapper.Event.Update(model.Event);
+            _repoWrapper.Save();
+            return RedirectToAction("EventInfo", "Action", new { id = model.Event.ID });
         }
     }
 }
