@@ -1,5 +1,5 @@
 ﻿#divCityContainer {
-    margin-left: -2px;
+
 }
 
 #formCityContainer {
@@ -9,4 +9,26 @@
 .btn.submitCity {
     background-color: #3c5438;
     color: white;
+}
+
+#divEditCity {
+
+}
+
+#divFormEditCity {
+    margin-bottom: 0;
+}
+
+#divTableEditCity {
+    margin-top: 20px;
+}
+
+@media (max-width: 360px) {
+    #divTableEditCity {
+        width:95vw;
+    }
+}
+
+#linkUser{
+    color:black;
 }

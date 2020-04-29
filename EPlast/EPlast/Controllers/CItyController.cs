@@ -223,29 +223,7 @@ namespace EPlast.Controllers
                     _repoWrapper.Save();
                     _logger.LogInformation("City {0} was edited profile and saved in the database", model.City.Name);
 
-                    var city = _repoWrapper.City
-                   .FindByCondition(q => q.ID == model.City.ID)
-                   .Include(c => c.CityAdministration)
-                   .ThenInclude(t => t.AdminType)
-                   .Include(k => k.CityAdministration)
-                   .ThenInclude(a => a.User)
-                   .Include(m => m.CityMembers)
-                   .ThenInclude(u => u.User)
-                   .Include(l => l.CityDocuments)
-                   .ThenInclude(d => d.CityDocumentType)
-                   .FirstOrDefault();
-
-                    var cityHead = city.CityAdministration
-                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
-                    .FirstOrDefault();
-                    var cityAdmins = city.CityAdministration
-                                        .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
-                                        .ToList();
-                    var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
-                    var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
-                    var cityDoc = city.CityDocuments.Take(4).ToList();
-                    CityViewModel newmodel = new CityViewModel { City = city, CityHead = cityHead, CityAdmins = cityAdmins, Members = members, Followers = followers, CityDoc = cityDoc };
-                    return View("CityProfile", newmodel);
+                    return RedirectToAction("CityProfile", "City", new { cityid = model.City.ID });
                 }
                 else
                 {
