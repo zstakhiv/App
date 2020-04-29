@@ -56,16 +56,20 @@ namespace EPlast.Controllers
                     .ThenInclude(d=>d.CityDocumentType)
                     .FirstOrDefault();
 
-                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate!=null).Take(6).ToList();
-                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).Take(6).ToList();
-                
+                var cityHead = city.CityAdministration
+                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
+                    .FirstOrDefault();
+
                 var cityAdmins = city.CityAdministration
                     .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
                     .ToList();
 
-                var cityHead = city.CityAdministration
-                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName == "Голова Станиці")
-                    .FirstOrDefault();
+                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate!=null).Take(6).ToList();
+                var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).Take(6).ToList();
+                
+                
+
+                
 
                 var cityDoc = city.CityDocuments.Take(4).ToList();
 
@@ -175,10 +179,8 @@ namespace EPlast.Controllers
                     .ThenInclude(d => d.CityDocumentType)
                     .FirstOrDefault();
 
-                var cityAdmins = city.CityAdministration
-                                    .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
-                                    .ToList();
-                var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
+                var cityAdmins = city.CityAdministration.Where(a => a.EndDate == null).ToList();
+                var members = city.CityMembers.Where(p=> cityAdmins.All(a=>a.UserId!=p.UserId)).Where(m => m.EndDate == null && m.StartDate != null).ToList();
                 var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
 
                 return View(new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers });
@@ -353,7 +355,7 @@ namespace EPlast.Controllers
 
                 var cityDoc = city.CityDocuments.ToList();
 
-                return View(new CityViewModel { City = city });
+                return View(new CityViewModel { City = city, CityDoc = cityDoc });
             }
             catch (Exception e)
             {
