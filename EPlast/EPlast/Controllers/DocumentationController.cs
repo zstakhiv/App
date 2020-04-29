@@ -294,7 +294,8 @@ namespace EPlast.Controllers
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
-                {".csv", "text/csv"}
+                {".csv", "text/csv"},
+                {".mp4","video/mp4" }
             };
         }
 
