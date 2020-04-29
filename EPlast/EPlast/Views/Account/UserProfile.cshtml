@@ -45,11 +45,11 @@
                             <br />
                             @if (!_userManager.IsInRoleAsync(Model.User, "Пластун").Result)
                             {
-                                double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 366;
+                                double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 365;
                                 int count = @Model.timeToJoinPlast.Days;
                                 <p>@count дні і я Пластун:)</p>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="366" aria-valuemax="0">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="365" aria-valuemax="0">
                                         @perc%
                                     </div>
                                 </div>
@@ -377,6 +377,7 @@
     <partial name="_SuccessModal" model='""' />
     <partial name="_ErrorModal" model='""' />
 </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
