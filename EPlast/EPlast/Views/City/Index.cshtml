@@ -7,7 +7,19 @@
     <div class="all-clubs-view">
         <h1 class="all-clubs-title">Cтаниці</h1>
         <div class="club-list">
-
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="club-block-wrapper" asp-controller="City" asp-action="Create">
+                    <span class="club-block club-wrappers-radius add-club-border">
+                        <div class="club-block-submit rounded ">
+                            <div class="club-img-wrapper">
+                                <div class="club-img" style="background-image:url('/images/Cities/add_new_city.png')"></div>
+                            </div>
+                            <p class="club-name">Cтворити нову станицю</p>
+                        </div>
+                    </span>
+                </a>
+            }
             @foreach (var city in Model)
             {
                 <form method="get" class="club-block-wrapper" action='~/City/CityProfile'>
