@@ -229,7 +229,11 @@ function createDecesionDataTable() {
         ],
         columns: [
             null,
-            null,
+            {
+                "render": function (data, type, row) {
+                    return data.replace(/(.{16})/g, "$1</br>")
+                }
+            },
             null,
             null,
             {
@@ -237,7 +241,11 @@ function createDecesionDataTable() {
                     return data.replace(/(.{16})/g, "$1</br>")
                 }
             },
-            null,
+            {
+                "render": function (data, type, row) {
+                    return data.replace(/(.{16})/g, "$1</br>")
+                }
+            },
             null,
             null
         ]
