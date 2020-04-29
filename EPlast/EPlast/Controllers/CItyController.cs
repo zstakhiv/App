@@ -308,37 +308,17 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    model.City.Logo = null;
+                    model.City.Logo = "default.jpg";
                 }
                 if (ModelState.IsValid)
                 {
                     _repoWrapper.City.Create(model.City);
                     _repoWrapper.Save();
 
-                    var city = _repoWrapper.City
-                       .FindByCondition(q => q.ID == model.City.ID)
-                       .Include(c => c.CityAdministration)
-                       .ThenInclude(t => t.AdminType)
-                       .Include(k => k.CityAdministration)
-                       .ThenInclude(a => a.User)
-                       .Include(m => m.CityMembers)
-                       .ThenInclude(u => u.User)
-                       .Include(l => l.CityDocuments)
-                       .ThenInclude(d => d.CityDocumentType)
-                       .FirstOrDefault();
-
-                    var cityAdmins = city.CityAdministration
-                                        .Where(a => a.EndDate == null && a.AdminType.AdminTypeName != "Голова Станиці")
-                                        .ToList();
-                    var members = city.CityMembers.Where(m => m.EndDate == null && m.StartDate != null).ToList();
-                    var followers = city.CityMembers.Where(m => m.EndDate == null && m.StartDate == null).ToList();
-                    var cityDoc = city.CityDocuments.Take(4).ToList();
-                    CityViewModel newmodel = new CityViewModel { City = city, CityAdmins = cityAdmins, Members = members, Followers = followers, CityDoc = cityDoc };
-                    return View("CityProfile", newmodel);
+                    return RedirectToAction("CityProfile","City", new { cityid = model.City.ID });
                 }
                 else
                 {
-                    
                     return View("Create", model);
                 }
             }
