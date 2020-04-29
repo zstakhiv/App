@@ -93,7 +93,7 @@
                                     }
                                     else
                                     {
-                                        <h4 style="margin-top:36.5px" class="notCreatedMargin">
+                                        <h4 class="notCreatedMargin">
                                             Тут відображатимуться
                                             <br>Створені події
                                         </h4>
@@ -109,22 +109,22 @@
                             <div class="text-center box">
                                 @if (Model.PlanedEventCount != 0)
                                 {
-                                    <h4 style="margin-top:-15px" class="planedEvents">
+                                    <h4 class="planedEvents">
                                         <br>Заплановані події<br>
                                         @Model.PlanedEventCount
                                     </h4>
-                                    <p style="margin-top:-14px" class=" eventInfo">Події</p>
+                                    <p class=" eventInfo">Події</p>
                                     <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
-                                    <a style="margin-top:15px" id=" planedEvent" class="btn btn-primary btn-lg" role="button"
+                                    <a id=" planedEvent" class="btn btn-primary btn-lg" role="button"
                                        data-toggle="modal" href="#planedModal">Список</a>
                                 }
                                 else
                                 {
-                                    <h4 style="margin-top:-6px" class="planedEvents">
+                                    <h4 class="planedEvents">
                                         <br>Тут відображатимуться заплановані події
                                         <br>На разі, ви не запланували жодної події
                                     </h4>
-                                    <div style=" margin-bottom:15px" class="d-lg-flex bigSpliter" id="infoSplit"></div>
+                                    <div class="d-lg-flex bigSpliter" id="infoSplit"></div>
                                     <a class="btn btn-primary btn-lg" role="button"
                                        asp-action="GetAction" asp-controller="Action">Запланувати подію!</a>
                                 }
