@@ -401,12 +401,13 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync((User)null);
 
             //Act
-            var result = await accountController.ResendEmailForRegistering(GetTestIdForConfirmingEmail());
+            var result = await accountController.ResendEmailForRegistering(GetTestIdForConfirmingEmail()) as RedirectToActionResult;
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("HandleError", viewResult.ActionName);
             Assert.Equal("Error", viewResult.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
             Assert.NotNull(viewResult);
         }
 
@@ -458,12 +459,13 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync((User)null);
 
             //Act
-            var result = await accountController.ConfirmingEmail(GetTestIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail());
+            var result = await accountController.ConfirmingEmail(GetTestIdConfirmingEmail(), GetBadFakeCodeConfirmingEmail()) as RedirectToActionResult;
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("HandleError", viewResult.ActionName);
             Assert.Equal("Error", viewResult.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
             Assert.NotNull(viewResult);
         }
 
@@ -606,12 +608,13 @@ namespace EPlast.XUnitTest
                 .ReturnsAsync((User)null);
 
             //Act
-            var result = await accountController.ResetPassword(GetTestIdConfirmingEmail());
+            var result = await accountController.ResetPassword(GetTestIdConfirmingEmail()) as RedirectToActionResult;
 
             //Assert
             var viewResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("HandleError", viewResult.ActionName);
             Assert.Equal("Error", viewResult.ControllerName);
+            Assert.Equal(500, result.RouteValues["code"]);
             Assert.NotNull(viewResult);
         }
 
