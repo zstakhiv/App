@@ -234,7 +234,7 @@ namespace EPlast.Controllers
             }
             IDateTime dateTimeConfirming = new DateTimeHelper();
             var totalTime = dateTimeConfirming.GetCurrentTime().Subtract(user.EmailSendedOnRegister).TotalMinutes;
-            if (totalTime < 1)
+            if (totalTime < 180)
             {
                 if (string.IsNullOrWhiteSpace(userId) && string.IsNullOrWhiteSpace(code))
                 {
