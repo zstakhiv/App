@@ -373,5 +373,8 @@ EPlast/EPlast/wwwroot/images/EventsGallery/*
 # Ignore UsersPhoto
 EPlast/EPlast/wwwroot/images/Users/*
 
+# Ignore CityLogotypes
+EPlast/EPlast/wwwroot/images/Cities/*
+
 # don't checkin azurekeyvault.json
 **/azurekeyvault.json
