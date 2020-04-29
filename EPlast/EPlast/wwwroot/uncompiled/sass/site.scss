@@ -583,6 +583,7 @@ form input {
     border-radius: 0.2em;
     font-size: 16px;
     color: #FFF;
+    width:117px;
 }
 
 .loginBtn:before {
@@ -688,4 +689,8 @@ form input {
     .resetp-email {
         margin-top: 15px;
     }
+}
+
+#change{
+    margin-top:25px;
 }
