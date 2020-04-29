@@ -589,8 +589,7 @@ namespace EPlast.Controllers
 
                 var _canApprove = user.ConfirmedUsers.Count < 3
                     && !user.ConfirmedUsers.Any(x => x.Approver.UserID == _currentUserId)
-                    && !(_currentUserId == userId)
-                    && _userManager.IsInRoleAsync(user, "Пластун").Result;
+                    && !(_currentUserId == userId);
 
                 TimeSpan _timeToJoinPlast = CheckOrAddPlastunRole(user).Result;
 
