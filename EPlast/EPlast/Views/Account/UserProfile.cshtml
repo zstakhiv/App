@@ -47,7 +47,7 @@
                             {
                                 double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 365;
                                 int count = @Model.timeToJoinPlast.Days;
-                                <p>@count дні і я Пластун:)</p>
+                                <p>@count дні і @Model.User.FirstName @Model.User.LastName Пластун:)</p>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="365" aria-valuemax="0">
                                         @perc%
@@ -206,7 +206,7 @@
                             {
                                 double perc = 100 - @Model.timeToJoinPlast.Days * 100 / 366;
                                 int count = @Model.timeToJoinPlast.Days;
-                                <p>@count дні і я Пластун:)</p>
+                                <p>@count дні і @Model.User.FirstName @Model.User.LastName Пластун:)</p>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @perc%" aria-valuenow="@Model.timeToJoinPlast.Days" aria-valuemin="366" aria-valuemax="0">
                                         @perc%
