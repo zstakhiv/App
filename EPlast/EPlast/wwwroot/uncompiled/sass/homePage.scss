@@ -124,8 +124,9 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    min-height: 80vh;
+    min-height: 66.5vh;
 }
+
 @media (max-height: 700px){
     .acountViewWrapper {
         display: flex;
