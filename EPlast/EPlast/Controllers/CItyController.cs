@@ -288,7 +288,7 @@ namespace EPlast.Controllers
                 }
                 else
                 {
-                    model.City.Logo = "default.jpg";
+                    model.City.Logo = "333493fe-9c81-489f-bce3-5d1ba35a8c36.jpg";
                 }
                 if (ModelState.IsValid)
                 {
