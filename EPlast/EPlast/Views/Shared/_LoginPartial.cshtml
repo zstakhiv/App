@@ -8,10 +8,10 @@
     {
         <div class="d-flex">
             <div style="margin-top:3px;margin-left:5px">
-                <a class="navbar-link navbar-nav nav-link text-light" href="/Account/UserProfile">Привіт @UserManager.GetUserAsync(User).Result.FirstName</a>
+                <a class="d-none d-sm-block navbar-link navbar-nav nav-link text-light" href="/Account/UserProfile">Привіт @UserManager.GetUserAsync(User).Result.FirstName</a>
             </div>
-            <div>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link text-light">Вийти</button>
+            <div class="align-self-center">
+                <button type="submit" class="btn navbar-btn navbar-link text-light">Вийти</button>
             </div>
         </div>
     }
