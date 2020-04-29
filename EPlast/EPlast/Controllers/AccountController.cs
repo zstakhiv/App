@@ -23,7 +23,6 @@ using Ical.Net.DataTypes;
 
 namespace EPlast.Controllers
 {
-    [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
         private SignInManager<User> _signInManager;
