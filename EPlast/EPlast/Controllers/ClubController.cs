@@ -337,6 +337,81 @@ namespace EPlast.Controllers
                 return 0;
             }
         }
+        [HttpPost]
+        public int AddToClubAdministration([FromBody] ClubAdministrationDTO createdAdmin)
+        {
+            try
+            {
+                var adminType = _repoWrapper.AdminType
+                    .FindByCondition(i => i.AdminTypeName == createdAdmin.AdminType).FirstOrDefault();
+                int AdminTypeId;
+                if(adminType == null)
+                {
+                    var newAdminType = new AdminType() { AdminTypeName = createdAdmin.AdminType };
+                    
+                    _repoWrapper.AdminType.Create(newAdminType);
+                    _repoWrapper.Save();
+
+                    adminType = _repoWrapper.AdminType
+                    .FindByCondition(i => i.AdminTypeName == createdAdmin.AdminType).FirstOrDefault();
+                    AdminTypeId = adminType.ID;
+                }
+                else
+                {
+                    AdminTypeId = adminType.ID;
+                }
+                ClubAdministration newClubAdmin = new ClubAdministration()
+                {
+                    ClubMembersID = createdAdmin.adminId,
+                    StartDate = createdAdmin.startdate,
+                    EndDate = createdAdmin.enddate,
+                    ClubId = createdAdmin.clubIndex,
+                    AdminTypeId = AdminTypeId
+                };
+
+                _repoWrapper.GetClubAdministration.Create(newClubAdmin);
+                _repoWrapper.Save();
+
+                return 1;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+        public IActionResult ChooseAClub()
+        {
+            List<ClubViewModel> clubs = new List<ClubViewModel>(
+                _repoWrapper.Club
+                .FindAll()
+                .Select(club => new ClubViewModel { Club = club })
+                .ToList());
+            ViewBag.usermanager = _userManager;
+
+            return View(clubs);
+        }
+        public IActionResult AddAsClubFollower(int clubIndex)
+        {
+            ClubMembers oldMember = 
+                _repoWrapper.ClubMembers.FindByCondition(i => i.UserId == _userManager.GetUserId(User)).FirstOrDefault();
+
+            if(oldMember != null)
+            {
+                _repoWrapper.ClubMembers.Delete(oldMember);
+                _repoWrapper.Save();
+            }
+
+            ClubMembers newMember = new ClubMembers()
+            {
+                ClubId = clubIndex,
+                IsApproved = false,
+                UserId = _userManager.GetUserId(User)
+            };
+            _repoWrapper.ClubMembers.Create(newMember);
+            _repoWrapper.Save();
+
+            return RedirectToAction("UserProfile", "Account", new { userId = _userManager.GetUserId(User) });
+        }
         [HttpGet]
         public IActionResult CreateClub()
         {

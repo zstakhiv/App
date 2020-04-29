@@ -187,11 +187,9 @@ namespace EPlast.Controllers
                 {
                     success = true,
                     Text = "Рішення додано!",
-                    id = decesionViewModel.Decesion.ID,
-                    name = decesionViewModel.Decesion.Name,
-                    file = decesionViewModel.Decesion.HaveFile,
+                    decesion = decesionViewModel.Decesion,
                     decesionOrganization = _repoWrapper.Organization.FindByCondition(x => x.ID == decesionViewModel.Decesion.Organization.ID).Select(x => x.OrganizationName)
-                }) ;
+                });
             }
             catch (Exception e)
             {
@@ -352,7 +350,7 @@ namespace EPlast.Controllers
                 {
                     ViewData["ErrorMessage"] = $"Звіт станиці {city.Name} за {DateTime.Now.Year} рік вже існує!";
                     return View("CreateEditAnnualReport");
-                }    
+                }
             }
             catch (Exception e)
             {
