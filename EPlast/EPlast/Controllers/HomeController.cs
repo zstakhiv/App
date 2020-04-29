@@ -58,13 +58,14 @@ namespace EPlast.Controllers
         
         public IActionResult Search(string search)
         {
-            var surnames = _repoWrapper.User.FindByCondition(q=>q.LastName==search);
+            var surnames = _repoWrapper.User.FindByCondition(q=>q.LastName.StartsWith(search));
+            var names = _repoWrapper.User.FindByCondition(q => q.FirstName.StartsWith(search));
             var model = new SearchSurname();
             model.Users = surnames;
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetSearchUser(string userId)
         {
             var res = _repoWrapper.User.FindByCondition(x => x.Id == userId);

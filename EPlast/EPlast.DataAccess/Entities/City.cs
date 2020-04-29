@@ -22,7 +22,7 @@ namespace EPlast.DataAccess.Entities
         public string HouseNumber { get; set; }
         [MaxLength(10, ErrorMessage = "Номер офісу/квартири розташування станиці не має перевищувати 10 символів")]
         public string OfficeNumber { get; set; }
-        [MaxLength(7, ErrorMessage = "Поштовий станиці не має перевищувати 7 символів")]
+        [MaxLength(7, ErrorMessage = "Поштовий індекс станиці не має перевищувати 7 символів")]
         public string PostIndex { get; set; }
         public Region Region { get; set; }
         [StringLength(int.MaxValue, MinimumLength = 3)]
