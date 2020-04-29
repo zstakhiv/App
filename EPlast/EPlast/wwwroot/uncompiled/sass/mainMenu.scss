@@ -22,7 +22,13 @@
             flex-grow: 1;
             position: relative;
 
+            .icon-wrapper {
+                align-self: center;
+                margin: 0 10px 0 0;
+            }
+
             .navbar-header {
+
                 .plast-logo {
                     width: 40px;
                     height: 40px;
@@ -85,7 +91,7 @@
         object-fit: cover;
         height: 40px;
         background-image: url('https://galinfo.com.ua/media/gallery/full/p/l/plast1.jpg');
-    }  
+    }
 
     .main-block {
         display: flex;
@@ -216,6 +222,18 @@
                 flex-direction: column;
                 height: 100%;
                 width: 100%;
+            }
+        }
+    }
+}
+
+@media (max-width: 575px) {
+    .main-wrapper {
+        .container-header {
+            .profile {
+                .btn {
+                    font-size: 12px;
+                }
             }
         }
     }

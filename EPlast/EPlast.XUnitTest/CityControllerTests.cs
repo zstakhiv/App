@@ -25,6 +25,7 @@ namespace EPlast.XUnitTest
         private Mock<IUserStore<User>> _userStoreMock;
         private Mock<IHostingEnvironment> _env;
         private Mock<UserManager<User>> _userManager;
+        private Mock<ILogger<AccountController>> _logger;
 
         public CityControllerTests()
         {
@@ -32,7 +33,7 @@ namespace EPlast.XUnitTest
             _userStoreMock = new Mock<IUserStore<User>>();
             _userManager = new Mock<UserManager<User>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
             _env = new Mock<IHostingEnvironment>();
-
+            _logger = new Mock<ILogger<AccountController>>();
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace EPlast.XUnitTest
             };
 
             _repoWrapper.Setup(x => x.City.FindAll()).Returns(cityList.AsQueryable());
-            var citycontroller = new CityController(_repoWrapper.Object,_userManager.Object,_env.Object);
+            var citycontroller = new CityController(_repoWrapper.Object,_userManager.Object, _logger.Object, _env.Object);
             var indexResult = citycontroller.Index() as ViewResult;
 
             Assert.NotNull(indexResult);
@@ -189,7 +190,7 @@ namespace EPlast.XUnitTest
                     }
                 }.AsQueryable());
 
-            var citycontroller = new CityController(_repoWrapper.Object, _userManager.Object, _env.Object);
+            var citycontroller = new CityController(_repoWrapper.Object, _userManager.Object, _logger.Object, _env.Object);
             var cityProfileResult = citycontroller.CityProfile(1) as ViewResult;
 
             Assert.NotNull(cityProfileResult);

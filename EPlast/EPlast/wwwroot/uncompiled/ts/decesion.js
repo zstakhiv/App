@@ -59,7 +59,6 @@ $(document).ready(function () {
         formData.append("Decesion.DecesionTarget.TargetName", decesionTargetName);
         formData.append("Decesion.DecesionTarget.ID", decesionTargetId);
         formData.append("Decesion.Date", decesionDate);
-        //formData.append("Decesion.Date", decesionDate.split("-").reverse().join("-"));
         formData.append("Decesion.Description", decesionDescription);
         formData.append("Decesion.DecesionStatusType", decesionDecesionStatusType);
         $.ajax({
@@ -71,24 +70,33 @@ $(document).ready(function () {
             async: true,
             data: formData,
             success(response) {
-                $("#CreateDecesionForm-submit").prop('disabled', false);
                 if (response.success) {
-                    ClearCreateFormData();
-                    $("#CreateDecesionFormFile").val("");
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalSuccess .modal-body:first p:first strong:first").html(response.text);
                     $("#ModalSuccess").modal("show");
                     var file = "";
-                    if (response.file) {
-                        file = `<a asp-controller="Documentation" asp-action="Download" asp-route-id="${response.id}" asp-route-filename="${files[0].name}">${files[0].name}</a>`;
+                    if (response.decesion.haveFile) {
+                        file = `<a href="/Documentation/Download/${response.decesion.id}?filename=${files[0].name}">додаток.${files[0].name.split('.')[1]}</a>`;
                     }
-                    $("#dtReadDecesion").DataTable().row.add([response.id, response.name, response.decesionOrganization, decesionDecesionStatusType, decesionTargetName, decesionDescription, decesionDate, file])
+                    $("#dtReadDecesion").DataTable().row.add([
+                        response.decesion.id,
+                        response.decesion.name,
+                        response.decesionOrganization,
+                        decesionDecesionStatusType,
+                        decesionTargetName,
+                        decesionDescription,
+                        decesionDate,
+                        file
+                    ])
                         .draw();
                 }
                 else {
                     $("#CreateDecesionModal").modal("hide");
                     $("#ModalError.modal-body:first p:first strong:first").html("Не можливо додати звіт!");
                 }
+                ClearCreateFormData();
+                $("#CreateDecesionFormFile").val("");
+                $("#CreateDecesionForm-submit").prop('disabled', false);
             },
             error() {
                 $("#CreateDecesionForm-submit").prop('disabled', false);
